@@ -3,10 +3,10 @@
 <h1 n:block="title">Zmaž album</h1>
 
 {if $album}
-	<p class='delete text-warning'>
-		Naozaj chceš zmazať album <mark>{$album->album}</mark>?
-	</p>
-	{control deleteForm}
+    <p class='delete text-warning'>
+        Naozaj chceš zmazať album <mark>{$album->album}</mark>?
+    </p>
+    {control deleteForm}
 {else}
-	<p>Záznam nebol nájdený.</p>
+    <p>Záznam nebol nájdený.</p>
 {/if}

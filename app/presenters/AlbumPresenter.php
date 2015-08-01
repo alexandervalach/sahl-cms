@@ -21,6 +21,15 @@ class AlbumPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
+        $this->template->default = "/images/sahl.jpg";
+    }
+
+    public function actionCreate() {
+        $this->userIsLogged();
+    }
+
+    public function renderCreate() {
+        $this->getComponent('addAlbumForm');
     }
 
     public function actionEdit($id) {
@@ -44,12 +53,13 @@ class AlbumPresenter extends BasePresenter {
         if (!$this->albumRow) {
             throw new BadRequestException($this->error);
         }
+        $this->template->album = $this->albumRow;
         $this->getComponent('deleteForm');
     }
 
     protected function createComponentAddAlbumForm() {
         $form = new Form;
-        $form->addText('name', 'Názov')
+        $form->addText('album', 'Názov')
                 ->setRequired("Názov je povinné pole.");
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedAddAlbumForm;
@@ -59,7 +69,7 @@ class AlbumPresenter extends BasePresenter {
 
     protected function createComponentEditAlbumForm() {
         $form = new Form;
-        $form->addText('name', 'Názov')
+        $form->addText('album', 'Názov')
                 ->setRequired("Názov je povinné pole");
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedEditAlbumForm;
@@ -79,10 +89,14 @@ class AlbumPresenter extends BasePresenter {
         $this->albumRow->update($values);
         $this->redirect('all');
     }
-    
+
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->albumRow->delete();
+        $this->redirect('all');
+    }
+
+    public function formCancelled() {
         $this->redirect('all');
     }
 }

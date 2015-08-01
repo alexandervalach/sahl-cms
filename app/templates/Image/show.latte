@@ -1,0 +1,97 @@
+{block content}
+
+<h1 n:block="title">{$album->album}</h1>
+<div class='date'>
+	{$album->created_at|date: 'M j, Y'}
+</div>
+
+<p>
+	<a n:href="Gallery:default#primary" class='btn btn-large btn-info'>&larr; späť na výber albumov</a>
+</p>
+
+<p n:if='$user->loggedIn'>
+	<a n:href="add#primary, $album->id" class='btn btn-large btn-success'>Pridaj fotografiu</a>
+</p>
+
+<div n:foreach="$gallery as $img">
+	<div class='gallery'>
+		<a href='{$basePath}/images/{$img->name}' target='_blank'>
+			<img src="{$basePath}/images/{$img->name}" title="{$img->description}" width="320px" class='img-rounded img-gallery img-responsive hidden-xs'>
+			<img src="{$basePath}/images/{$img->name}" title="{$img->description}" width="100%" class='img-rounded img-responsive visible-xs'>
+		</a>
+		<p n:if="$user->loggedIn" class='delete'>
+			<a n:href="delete, $img->id, $album->id" class='btn btn-large btn-danger'>Zmaž</a>
+		</p>
+	</div>
+</div>
+
+{block scripts}
+	<script src="{$basePath}/js/jquery-2.1.3.js"></script>
+	<script src="{$basePath}/js/gallery.js"></script>
+	<script src="{$basePath}/js/steamSlider.js"></script>
+{/block}
+
+{block head}
+	<style>
+	/*
+	#centrator {
+		width: 800px;
+		height: 600px;
+		margin: 0 auto;
+	}
+
+	#current{
+		width: 800px;
+		position: relative;
+		z-index: 2; 
+	}
+
+	#current p { 
+		width: 5600px; 
+		position: relative; 
+		background: red; 
+		left: -800px; 
+	}
+
+	#current img { 
+		position: absolute; 
+		left: 800px; 
+	}
+
+	#centrator img{
+		width:768px;
+		height: auto;
+		float: left;
+		display: inline-block;
+	}
+
+	ul { 
+		border-bottom: 1px solid #121212; 
+	}
+
+	ul, #next, #prev {  
+		position: absolute; 
+		top: 135px; 
+		left: 135px; 
+	}
+	
+	li { 
+		float: left; 
+		margin-right: -5px; 
+		background: #021422; 
+	}
+	
+	li img {
+		opacity: .35; 
+		filter: alpha(opacity=35); 
+	}
+	
+	li, li img, #next, #prev { 
+		width: 875px; 
+		height: 385px; 
+	}
+	*/
+
+	</style>
+{/block}
+

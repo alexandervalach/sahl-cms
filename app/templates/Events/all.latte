@@ -1,0 +1,36 @@
+{block content}
+<div class="table-reponsive">
+	<table class='table table-striped'>
+		<caption class='caption' n:block="title">
+			Udalosti
+			<div class="pull-right" n:if="$user->loggedIn">
+				<a n:href="create" title="pridať">
+					<span class="glyphicon glyphicon-plus"></span>
+				</a>
+			</div>
+		</caption>
+		<thead>
+			<tr>
+				<th>Dátum konania</th>
+				<th>Zápas</th>
+				<th>&nbsp;</th>
+				<th n:if="$user->loggedIn">Akcia</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$events as $event">	
+				<td>{$event->starts_at|date:'d.m.Y'}</td>
+				<td>{$event->event}</td>
+				<td>{$event->note}</td>
+				<td n:if="$user->loggedIn">
+					<a n:href="edit, $event->id" class="text-success" title="upraviť">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</a>&nbsp;
+					<a n:href="delete, $event->id" class="text-warning" title="odstrániť">
+						<span class="glyphicon glyphicon-trash"></span>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

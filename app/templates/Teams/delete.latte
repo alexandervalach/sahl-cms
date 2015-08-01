@@ -1,0 +1,12 @@
+{block content}
+
+<h1 n:block="title">Zmaž tím</h1>
+
+{if $team}
+	<p class='delete text-warning'>
+		Naozaj chceš zmazať tím <mark>{$team->name}</mark>?
+	</p>
+	{control deleteForm}
+{else}
+	<p ='error text-danger'>Záznam nebol nájdený.</p>
+{/if}

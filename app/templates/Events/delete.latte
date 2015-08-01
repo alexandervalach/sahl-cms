@@ -1,0 +1,12 @@
+{block content}
+
+<h1 n:block="title">Zmaž udalosť</h1>
+
+{if $event}
+	<p class='delete text-warning'>
+		Naozaj chceš zmazať udalosť<mark>{$event->event}</mark> z <mark>{$event->starts_at|date:'d.m.Y'}</mark>?
+	</p>
+	{control deleteForm}
+{else}
+	<p>Udalosť nenájdená.</p>
+{/if}

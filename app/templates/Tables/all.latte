@@ -1,0 +1,95 @@
+{block content}
+
+<h3>Tabuľky</h3>
+
+<div class='table-responsive'>
+	<table class='table table-striped'>
+		<caption class='caption' n:block="title">
+			Tabuľky
+			<div class="pull-right">
+				<a n:href="create" class="text-default">
+					<span class="glyphicon glyphicon-plus"></span>
+				</a>
+			</div>
+		</caption>
+		<thead>
+			<tr>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>&nbsp;</th>
+				<th class='col-lg-4	 col-md-4 col-sm-4 col-xs-4'>Mužstvo</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Výhry</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Remízy</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Prehry</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Skóre</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Rozdiel</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Body</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1' n:if="$user->loggedIn">Akcia</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$tables as $table" class="{$iterator->first ? 'first'}">
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$iterator->counter}</td>
+				<td class='col-lg-4	 col-md-4 col-sm-4 col-xs-4'>{$table->ref('teams','team_id')->name}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->win}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->tram}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->lost}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->score1}:{$table->score2}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->diff}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><span class="text-danger">{$table->points}</span></td>
+				<td n:if="$user->loggedIn" class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+					<a n:href="edit, $table->id" class="text-success">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</a>
+					<a n:href="delete, $table->id" class="text-danger">
+						<span class="glyphicon glyphicon-remove"></span>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div class='table-responsive'>
+	<table class='table table-striped'>
+		<caption class='caption' n:block="title">
+			Play off
+			<div class="pull-right">
+				<a n:href="create" class="text-default">
+					<span class="glyphicon glyphicon-plus"></span>
+				</a>
+			</div>
+		</caption>
+		<thead>
+			<tr>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>&nbsp;</th>
+				<th class='col-lg-4	 col-md-4 col-sm-4 col-xs-4'>Mužstvo</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Výhry</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Remízy</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Prehry</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Skóre</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Rozdiel</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>Body</th>
+				<th class='col-lg-1 col-md-1 col-sm-1 col-xs-1' n:if="$user->loggedIn">Akcia</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr n:foreach="$tables as $table" class="{$iterator->first ? 'first'}">
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$iterator->counter}</td>
+				<td class='col-lg-4	 col-md-4 col-sm-4 col-xs-4'>{$table->ref('teams','team_id')->name}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->win}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->tram}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->lost}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->score1}:{$table->score2}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>{$table->diff}</td>
+				<td class='col-lg-1 col-md-1 col-sm-1 col-xs-1'><span class="text-danger">{$table->points}</span></td>
+				<td n:if="$user->loggedIn" class='col-lg-1 col-md-1 col-sm-1 col-xs-1'>
+					<a n:href="edit, $table->id" class="text-success">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</a>
+					<a n:href="delete, $table->id" class="text-danger">
+						<span class="glyphicon glyphicon-remove"></span>
+					</a>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

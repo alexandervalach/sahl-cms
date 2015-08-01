@@ -1,0 +1,48 @@
+{block content}
+
+<p>
+	<a n:href="Homepage:#primary" class='btn btn-large btn-info'>
+		<span class="glyphicon glyphicon-arrow-left"></span>
+		Príspevky
+	</a>
+</p>
+<p n:if="$user->loggedIn">
+	<a n:href="create#primary" class="btn btn-large btn-primary">
+		<span class="glyphicon glyphicon-plus"></span> Nový
+	</a>
+	<a n:href="edit#primary $post->id" class='btn btn-large btn-success'>
+		<span class="glyphicon glyphicon-pencil"></span> Upraviť
+	</a>
+	<a n:href="PostImage:add#primary $post->id" class='btn btn-large btn-default'>
+		<span class="glyphicon glyphicon-picture"></span> Pridaj obrázky
+	</a>
+	<a n:href="delete#primary $post->id" class='btn btn-large btn-warning'>
+		<span class="glyphicon glyphicon-remove"></span> Odstrániť
+	</a>
+</p>
+<article>
+	<header>
+		<h1 n:block="title">{$post->title}</h1>
+		<time datetime='{$post->created_at|date:'d.m.Y'}' pubdate>{$post->created_at|date:'d.m.Y'}</time>
+	</header>
+
+	<main>
+		{$post->content}
+	</main>
+
+	<footer>
+		<div class='images' n:foreach="$images as $image">
+			<figure class='gallery'>
+				<img src='{$basePath}/images/posts/{$image->name}' class='img-responsive img-rounded' />
+				<div n:if="$user->loggedIn">
+					<a n:href="PostImage:delete#primary, $post->id, $image->id" class='btn btn-large btn-danger'>
+						<span class="glyphicon glyphicon-remove"></span> Odstrániť
+					</a>
+					<a n:href="PostImage:Thumbnail#primary, $post->id, $image->id" class='btn btn-large btn-primary'>
+						<span class="glyphicon glyphicon-picture"></span> Prezenčný obrázok
+					</a>
+				</div>	
+			</figure>
+		</div>
+	</footer>
+</article>

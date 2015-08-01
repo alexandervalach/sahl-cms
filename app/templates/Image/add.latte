@@ -1,0 +1,11 @@
+{block content}
+
+<h1 n:block="title">Pridaj obrázky do albumu</h1>
+
+<p n:if="$user->isLoggedIn()">
+	<a n:href="Image:show#primary, $album->id" class='btn btn-large btn-info'>&larr; späť na galériu</a>
+</p>
+
+<div class='form-group col-lg-6 col-md-7 col-sm-12 col-xs-12'>
+	{control galleryForm}
+</div>

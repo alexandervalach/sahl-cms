@@ -1,0 +1,270 @@
+@media screen and (max-width: 768px) {
+	#nav {
+		height : 50px;
+		width : 100%;
+	}
+
+	#main {
+		width : 100%;
+		height : 100%;
+	}
+
+	#footer {
+		width : 100%;
+		height : 50px;
+	}
+
+	.container {
+		width : inherit;
+		height: inherit;
+		margin: 0 auto;
+	}
+
+	body > div#main > main.container > div#switcher{
+		width: 100%;
+		height: 511px;
+		margin: 0;
+	}
+
+	div#main > main.container > div#switcher > img {
+		width: 100%;
+		height: 511px;
+	}
+
+	#primary{
+		width: 100%;
+		height: 100%;
+		margin: 0 auto;
+	}
+
+	div#page{
+		width: 100%;
+	}
+
+
+	/*=====================NAVIGATION BAR=======-==========*/
+	/*
+	Outside border color
+
+	div#nav nav.navbar.navbar-default.container {
+   	 	background-color: navy;
+    	border-color: navy;
+	}
+	*/	
+
+	div#nav .navbar.navbar-default.container .navbar-nav > li > a {
+	    color: black;
+	    background: #FF9900;
+	    height: 40px;
+	    text-align: center;
+	    font-weight: bold;
+	    vertical-align: middle;
+	    z-index: 30;
+	}	
+
+	div#nav .navbar.navbar-default.container .navbar-nav > li > a:focus, div#nav .navbar.navbar-default.container .navbar-nav > li > a:hover,
+	div#nav .navbar.navbar-default.container .navbar-nav .open .dropdown-menu > li > a:focus, div#nav .navbar.navbar-default.container .navbar-nav .open .dropdown-menu > li > a:hover
+	{
+	    color: white;
+	    background: green;
+	}
+
+	div#nav .navbar.navbar-default.container .navbar-nav .open .dropdown-menu > li > a {
+	    color: white;
+	    background: green;
+	    height: 30px;
+	    line-height: 30px;
+	}	
+
+	/*======================GALLERY========================*/
+	.gallery{
+		float: left;
+		display: inline-block;
+		margin: 5px;
+	}
+
+	div.gallery > img.img-gallery {
+		width: 100%;
+	}
+
+	section.gallery {
+		display: block;
+		margin: 5px;
+		clear: both;
+	}
+
+	.comment, .medium-size, .btn{
+		width: 100%;
+		margin: 0;
+		padding: 0;
+	}
+
+	.navbar-toggle {
+    	width: 39px;
+	}
+	
+	.table caption.caption{
+		width: 100%;
+	}
+
+	.table td.col-xs-8, .table th.col-xs-8{
+		width: 100%;
+	}
+
+	ul li.col-xs-12{
+		width: 100%;
+	}
+
+	p.delete{
+		width: 100%;
+		padding: 0;
+		margin: 0;
+	}
+
+	.img{
+		width: 100%;
+	}
+
+	/*================TYPOGRAPHY=============*/
+	div#main > main.container > p.delete.text-warning{
+		padding: 10px;
+	}
+
+	div#main > main.container > h1{
+		border-top-color: blue; 
+		-moz-border-top-color: blue; 
+		-webkit-border-top-color: blue;
+		border-bottom-color: blue;
+		-moz-border-bottom-color: blue;
+		-webkit-border-bottom-color: blue;
+		color: blue;
+	}
+
+	.navbar-header > a {
+	    padding: 0 20px;
+	    line-height: 50px;
+	    font-weight: bold;
+	    color: gold;
+	    font-size: 21px;
+	}
+
+	.navbar-header > a {
+	   
+	}
+}
+
+/*===============TABLES===============*/
+
+/**	Responsive mobile view design for image slider on front page
+  *	Image shrinks when display changes, 
+  * Every 100px I change the height of element to look it much better
+  *	THE SMALLEST SCREEN, especially James Bond has even smaller, but I don't care now.
+  */
+
+@media screen and (min-width: 262px) and (max-width: 362px) {
+
+	body > div#main > main.container > div#switcher{
+		width: 100%;
+		height: 241px;
+    	margin: 0;
+	}
+
+	div#main .container {
+		width: 100%;
+		height: auto;
+		padding: 0;
+		margin: 0;
+	}
+
+	div#main > main.container > div#switcher > img {
+		width: 100%;
+		height: 241px;
+		margin: 0;
+		padding: 0;
+	}
+
+}
+
+/*===============Screen between 363 and 462 pixels============*/
+@media screen and (min-width: 363px) and (max-width: 462px) {
+
+	body > div#main > main.container > div#switcher{
+		width: 100%;
+		height: 308px;
+		margin: 0;
+	}
+
+	div#main .container {
+		width: 100%;
+		height: auto;
+		padding: 0;
+	}
+
+	div#main > main.container > div#switcher > img {
+		width: 100%;
+		height: 308px;
+	}
+
+}
+
+/*============Screen between 463 and 562 px===============*/
+@media screen and (min-width: 463px) and (max-width: 562px) {
+
+	body > div#main > main.container > div#switcher{
+		width: 100%;
+		height: 375px;
+		margin: 0;
+	}
+
+	div#main .container {
+		width: 100%;
+		height: auto;
+	}
+
+	div#main > main.container > div#switcher > img {
+		width: 100%;
+		height: 375px;
+	}
+
+}
+
+@media screen and (min-width: 463px) and (max-width: 562px) {
+
+	body > div#main > main.container > div#switcher{
+		width: 100%;
+		height: 375px;
+		margin: 0;
+	}
+
+	div#main .container {
+		width: 100%;
+		height: auto;
+	}
+
+	div#main > main.container > div#switcher > img {
+		width: 100%;
+		height: 375px;
+	}
+
+}
+
+/* Bigger screen is included in the @media query above at the beginning of the document */
+@media screen and (min-width: 563px) and (max-width: 662px) {
+
+	body > div#main > main.container > div#switcher{
+		width: 100%;
+		height: 441px;
+		margin: 0;
+	}
+
+	div#main .container {
+		width: 100%;
+		height: auto;
+	}
+
+	div#main > main.container > div#switcher > img {
+		width: 100%;
+		height: 441px;
+	}
+
+}

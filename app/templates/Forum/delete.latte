@@ -1,0 +1,13 @@
+{block content}
+
+<h1 n:block="title">Zmaž príspevok</h1>
+
+{if $forum}
+	<p class='delete text-warning'>
+		Naozaj chceš zmazať príspevok, ktorý napísal <mark>{$forum->author}</mark> z 
+		<mark>{$forum->created_at|date:'j.m.Y - h:i'}</mark>
+	</p>
+	{control deleteForm}
+{else}
+	<p>Príspevok nenájdený.</p>
+{/if}

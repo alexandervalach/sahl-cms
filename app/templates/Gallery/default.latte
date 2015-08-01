@@ -1,0 +1,33 @@
+{block content}
+
+<h1 n:block="title">Galéria</h1>
+
+<div class='add' n:if="$user->loggedIn">
+	<a n:href="create#primary" class='btn btn-success btn-large'>Vytvor nový album</a>
+</div>
+
+<div id="secondary">
+	<div class='gallery' n:foreach='$albums as $album'>
+		<ul>
+			<li>
+				<a n:href='Image:show#primary, $album->id'>
+					{if $album->name}
+						<img src='{$basePath}/images/{$album->name}' class='img-gallery img-rounded img-responsive hidden-xs' />
+						<img src='{$basePath}/images/{$album->name}' class='img img-rounded img-responsive visible-xs' />
+					{else}
+						<img src='{$basePath}/images/album.png' class='img-gallery img-rounded img-responsive hidden-xs' />
+						<img src='{$basePath}/images/album.png' class='img img-rounded img-responsive visible-xs' />
+					{/if}
+				</a>
+			</li>
+			<details class='description'>
+				<li class='center'>{$album->album}</li>
+				<div n:if='$user->loggedIn'>
+					<a n:href='edit, $album->id' class='btn btn-large btn-success'>Uprav</a>
+					<a n:href='delete, $album->id' class='btn btn-large btn-danger'>Zmaž</a>
+				</div>
+			</details>
+		</ul>
+	</div>
+</div>
+

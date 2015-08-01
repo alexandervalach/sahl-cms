@@ -1,0 +1,17 @@
+{block content}
+
+<h1 n:block="title">Galéria</h1>
+
+<section id="secondary" class="row">
+    {foreach $albums as $album}
+        <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <a n:href="Gallery:view, $album->id">
+                <img src="{$basePath}/images/{$album->name}" class="img-responsive img-rounded" />
+            </a>
+            <p class="text-center">
+                {$album->album},
+                {$album->created_at|date:'d.m.Y'}
+            </p>
+        </figure>
+    {/foreach}
+</section>

@@ -7,46 +7,45 @@ use Nette\Application\UI\Form;
 use Nette\Mail\Message;
 use Nette\Mail\SendmailMailer;
 
-class ContactPresenter extends BasePresenter
-{
-	protected function createComponentContactForm()
-	{
-		$form = new Form;
+class ContactPresenter extends BasePresenter {
 
-		$form->addText( 'name' , 'Meno:' )
-			 ->setRequired( "Meno je povinné pole." );
+    protected function createComponentContactForm() {
+        $form = new Form;
 
-		$form->addText( 'email' , 'E-mail:' )
-			 ->setRequired( "Email je povinný údaj.")
-			 ->addRule( Form::EMAIL, 'Neplatný e-mail.' );
+        $form->addText('name', 'Meno:')
+                ->setRequired("Meno je povinné pole.");
 
-		$form->addTextArea( 'message' , 'Správa:' )
-			 ->setRequired( "Text je povinný údaj." )
-			 ->setAttribute( 'class' , 'form-control' );
+        $form->addText('email', 'E-mail:')
+                ->setRequired("Email je povinný údaj.")
+                ->addRule(Form::EMAIL, 'Neplatný e-mail.');
 
-		$form->addSubmit( 'save' , 'Odoslať' );
+        $form->addTextArea('message', 'Správa:')
+                ->setRequired("Text je povinný údaj.")
+                ->setAttribute('class', 'form-control');
 
-		$form->onSuccess[] = $this->submittedContactForm;
+        $form->addSubmit('save', 'Odoslať');
 
-		FormHelper::setBootstrapFormRenderer( $form );
-		return $form;
-	}
+        $form->onSuccess[] = $this->submittedContactForm;
 
-	public function submittedContactForm( $form )
-	{
-		$mail = new Message;
-		$mailer = new SendmailMailer;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
 
-		$message = $form->getValues();
+    public function submittedContactForm($form) {
+        $mail = new Message;
+        $mailer = new SendmailMailer;
 
-		$mail->setFrom( $message->email, $message->name)
-			 ->setSubject( 'Spišká amatérska hokejová liga.' )
-			 ->addTo( 'alexander.valach@gmail.com' )
-			 ->setBody( $message->message );
+        $message = $form->getValues();
 
-		$mailer->send( $mail );
+        $mail->setFrom($message->email, $message->name)
+                ->setSubject('Spišká amatérska hokejová liga.')
+                ->addTo('alexander.valach@gmail.com')
+                ->setBody($message->message);
 
-		$this->flashMessage( 'Ďakujeme, e-mail bol úspešne odoslaný.' , 'success' );
-		$this->redirect( 'this' );
-	}
+        $mailer->send($mail);
+
+        $this->flashMessage('Ďakujeme, e-mail bol úspešne odoslaný.', 'success');
+        $this->redirect('this');
+    }
+
 }

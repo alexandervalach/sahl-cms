@@ -78,6 +78,10 @@ class PlayerPresenter extends BasePresenter {
         $form->addText('num', 'Číslo:')
                 ->setType('number');
 
+        $form->addText('born', 'Dátum narodenia:')
+                ->setAttribute('placeholder', 'RRRR-MM-DD')
+                ->setRequired("Dátum narodenia je povinné pole.");
+
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddPlayerForm;
@@ -95,10 +99,10 @@ class PlayerPresenter extends BasePresenter {
 
         $form->addText('num', 'Číslo:')
                 ->setType('number');
-        
+
         $form->addText('goals', 'Góly:')
                 ->setType('number');
-        
+
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'RRRR-MM-DD')
                 ->setRequired("Dátum narodenia je povinné pole.");
@@ -124,12 +128,12 @@ class PlayerPresenter extends BasePresenter {
         $player->update($values);
         $this->redirect('view', $player->team_id);
     }
-    
+
     public function submittedDeleteForm() {
         $player = $this->playerRow;
         $player->delete();
         $this->flashMessage('Hráč odstránený.', 'success');
-        $this->redirect('view', $player->team_id );
+        $this->redirect('view', $player->team_id);
     }
 
     public function formCancelled() {

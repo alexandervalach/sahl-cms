@@ -10,7 +10,7 @@ class StatsPresenter extends BasePresenter
 	private $playerSelection;
 
 	public function actionDefault() {
-		$this->playerSelection = $this->playersRepository->findAll()->order('goals DESC, fights ASC'); 
+		$this->playerSelection = $this->playersRepository->findAll()->order('goals DESC, fname DESC'); 
 	}
 
 	public function renderDefault() {

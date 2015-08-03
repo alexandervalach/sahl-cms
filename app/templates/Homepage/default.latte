@@ -44,7 +44,7 @@
 
     <main>
         <time datetime='{$post->created_at|date:'d.m.Y'}' pubdate>{$post->created_at|date:'d.m.Y'}</time>
-        <div>{$post->content}</div>
+        <div>{$post->content|noescape|truncate:100}</div>
     </main>
 
     <footer n:if="$user->loggedIn">
@@ -58,6 +58,7 @@
 
 </article>
 
-{block head}
+{block scripts}
+<script src="{$basePath}/js/jquery.js"></script>
 <script type="text/javascript" src='{$basePath}/js/switch.js'></script>
 {/block}

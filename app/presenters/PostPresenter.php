@@ -49,6 +49,7 @@ class PostPresenter extends BasePresenter {
         $post = $this->postRow;
         if (!$post)
             throw new BadRequestException($this->error);
+        $this->template->post = $post;
         $this->getComponent('editPostForm')->setDefaults($post);
     }
 
@@ -73,7 +74,7 @@ class PostPresenter extends BasePresenter {
                 ->setRequired("Názov je povinné pole.");
 
         $form->addTextArea('content', 'Obsah:')
-                ->setAttribute('class', 'form-control')
+                ->setAttribute('class', 'form-jqte')
                 ->setRequired("Obsah príspevku je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
@@ -90,7 +91,7 @@ class PostPresenter extends BasePresenter {
                 ->setRequired("Názov je povinné pole.");
 
         $form->addTextArea('content', 'Obsah:')
-                ->setAttribute('class', 'form-control')
+                ->setAttribute('class', 'form-jqte')
                 ->setRequired("Obsah príspevku je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
@@ -117,6 +118,7 @@ class PostPresenter extends BasePresenter {
     }
 
     public function submittedDeleteForm() {
+        $this->userIsLogged();
         $this->postRow->delete();
         $this->redirect('Homepage:');
     }

@@ -40,17 +40,6 @@ class PlayerPresenter extends BasePresenter {
         $this->getComponent('addPlayerForm');
     }
 
-    /*
-      public function actionEditStats($id) {
-      $this->userIsLogged();
-      $this->playerRow = $this->playersRepository->findById($id);
-      }
-
-      public function renderEditStats($id) {
-      $this->getComponent('editStatsForm')->setDefaults($this->playerRow);
-      }
-     */
-
     public function actionEdit($id) {
         $this->userIsLogged();
         $this->playerRow = $this->playersRepository->findById($id);
@@ -105,7 +94,10 @@ class PlayerPresenter extends BasePresenter {
 
         $form->addText('num', 'Číslo:')
                 ->setType('number');
-
+        
+        $form->addText('goals', 'Góly:')
+                ->setType('number');
+        
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'RRRR-MM-DD')
                 ->setRequired("Dátum narodenia je povinné pole.");
@@ -117,20 +109,6 @@ class PlayerPresenter extends BasePresenter {
         return $form;
     }
 
-    /*
-    protected function createComponentEditStatsForm() {
-        $form = new Form;
-        $form->addText('fights', 'Zápasy:')
-                ->setType('number');
-        $form->addText('goals', 'Góly:')
-                ->setType('number');
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedEditStatsForm;
-
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-    */
     public function submittedAddPlayerForm(Form $form) {
         $values = $form->getValues(TRUE);
         $id = $this->teamRow;
@@ -145,15 +123,6 @@ class PlayerPresenter extends BasePresenter {
         $player->update($values);
         $this->redirect('view', $player->team_id);
     }
-
-    /*
-    public function submittedEditStatsForm($form) {
-        $values = $form->getValues();
-        $id = $this->getParameter('id');
-        $this->playerRow->update($values);
-        $this->redirect('view', $id);
-    }
-    */
     
     public function submittedDeleteForm() {
         $player = $this->playerRow;

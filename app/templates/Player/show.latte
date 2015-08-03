@@ -1,45 +1,45 @@
 {block content}
 
 <p n:if="$user->loggedIn">
-	<a n:href="edit $post->id" class='btn btn-class btn-success'>Upraviť</a>
-	<a n:href="editStats $post->id" class='btn btn-class btn-warning'>Upraviť štatistiky</a>
-	<a n:href="delete $post->id" class='btn btn-class btn-danger'>Zmazať</a>
+    <a n:href="edit $post->id" class='btn btn-class btn-success'>Upraviť</a>
+    <a n:href="editStats $post->id" class='btn btn-class btn-warning'>Upraviť štatistiky</a>
+    <a n:href="delete $post->id" class='btn btn-class btn-danger'>Zmazať</a>
 </p>
-	
+
 <div class='table-responsive'>
-	<table class='table'>
-		<caption n:block='title' class='caption'>
-			{$post->fname} {$post->lname}
-		</caption>
-		<tbody>
-			<tr>
-				<td>Číslo</td>
-				<td>{$post->num}</td>
-			</tr>
-			<tr n:if="$post->nick">
-				<td>Prezývka</td>
-				<td>{$post->nick}</td>
-			</tr>
-			<tr>
-				<td>Narodený</td>
-				<td>
-					<time datetime="{$post->born|date:'j.m.Y'}" pubdate>{$post->born|date:'j.m.Y'}</time>
-				</td>
-			</tr>
-			<tr>
-				<td>Góly</td>
-				<td>{$post->goals}</td>
-			</tr>
-			<tr>
-				<td>Zápasy</td>
-				<td>{$post->fights}</td>
-			</tr>
-		</tbody>
-	</table>
+    <table class='table'>
+        <caption n:block='title' class='caption'>
+            {$post->fname} {$post->lname}
+        </caption>
+        <tbody>
+            <tr>
+                <td>Číslo</td>
+                <td>{$post->num}</td>
+            </tr>
+            <tr n:if="$post->nick">
+                <td>Prezývka</td>
+                <td>{$post->nick}</td>
+            </tr>
+            <tr>
+                <td>Narodený</td>
+                <td>
+                    <time datetime="{$post->born|date:'j.m.Y'}" pubdate>{$post->born|date:'j.m.Y'}</time>
+                </td>
+            </tr>
+            <tr>
+                <td>Góly</td>
+                <td>{$post->goals}</td>
+            </tr>
+            <tr>
+                <td>Zápasy</td>
+                <td>{$post->fights}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 {if $post->photo}
-	<div class="container-fluid">
-		<img src='{$basePath}/images/photo/{$post->photo}' title="{$post->fname} {$post->nick} {$post->lname}" class='img-responsive img-rounded img-gallery' />
-	</div>
+    <div class="container-fluid">
+        <img src='{$basePath}/images/photo/{$post->photo}' title="{$post->fname} {$post->nick} {$post->lname}" class='img-responsive img-rounded img-gallery' />
+    </div>
 {/if}
 

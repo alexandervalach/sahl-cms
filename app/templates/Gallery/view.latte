@@ -1,36 +1,37 @@
 {block content}
 
-<h1 n:block="title">Galéria</h1>
+<h1 n:block="title">{$album->album}</h1>
 
-<p n:if="$user->loggedIn">
-    <a n:href="create#primary" class='btn btn-primary btn-large'>
-        <span class="glyphicon glyphicon-plus"></span>
-        Pridať
+<p class='add' n:if="$user->loggedIn">
+    <a n:href="all#primary" class='btn btn-large btn-default'>
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        Albumy
+    </a>
+    <a n:href="create#primary" class='btn btn-large btn-info'>
+        <span class="glyphicon glyphicon-picture"></span>
+        Pridať obrázok
     </a>
 </p>
 
 <section id="secondary" class="row">
-    {foreach $albums as $album}
+    {foreach $galleryImgs as $img}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a n:href="Gallery:view, $album->id">
-                {if $album->name}                
+            <a n:href="Gallery:view, $img->id">
+                {if $img->name}                
                     <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-rounded" />
                 {else}
                     <img src="{$basePath}{$default}" class="img-responsive img-rounded" />
                 {/if}
             </a>
             <p class="text-center">
-                {$album->album},
-                {$album->created_at|date:'d.m.Y'}
-            </p>
-            <p class="text-center">
-                <a n:href="edit, $album->id" class="text-success">
+                <a n:href="edit, $img->id" class="text-success">
                     <span class="glyphicon glyphicon-pencil"></span>
                 </a>
-                 <a n:href="delete, $album->id" class="text-danger">
+                <a n:href="delete, $img->id" class="text-danger">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
             </p>
         </figure>
     {/foreach}
 </section>
+

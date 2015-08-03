@@ -15,13 +15,13 @@ class AlbumPresenter extends BasePresenter {
     /** @var string */
     private $error = "Album not found!";
 
-    public function actionAll() {
-        
+    public function actionAll() {   
     }
 
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
-        $this->template->default = "/images/sahl.jpg";
+        $this->template->default = $this->imgFolder . "sahl.jpg";
+        $this->template->imgFolder = $this->imgFolder;
     }
 
     public function actionCreate() {
@@ -99,4 +99,5 @@ class AlbumPresenter extends BasePresenter {
     public function formCancelled() {
         $this->redirect('all');
     }
+
 }

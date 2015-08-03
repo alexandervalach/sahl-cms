@@ -49,6 +49,7 @@ class PlayerPresenter extends BasePresenter {
         if (!$this->playerRow) {
             throw new BadRequestException($this->error);
         }
+        $this->template->team = $this->playerRow->ref('team_id');
         $this->getComponent('editPlayerForm')->setDefaults($this->playerRow);
     }
 
@@ -132,7 +133,7 @@ class PlayerPresenter extends BasePresenter {
     }
 
     public function formCancelled() {
-        $this->redirect('default');
+        $this->redirect('view', $this->playerRow->team_id);
     }
 
 }

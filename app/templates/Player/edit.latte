@@ -1,5 +1,12 @@
 {block content}
 
-<h1>Upraviť hráča</h1>
+<h1>Upraviť hráča tímu {$team->name}</h1>
+
+<p>
+    <a n:href="Player:view, $team" class="btn btn-large btn-default">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        {$team->name}
+    </a>
+</p>
 
 {control editPlayerForm}

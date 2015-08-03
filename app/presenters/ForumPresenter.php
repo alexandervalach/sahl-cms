@@ -1,78 +1,76 @@
 <?php
+
 namespace App\Presenters;
 
 use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
 use Nette\Application\BadRequestException;
 
-class ForumPresenter extends BasePresenter
-{
-	/** @var ActiveRow */
-	private $forumRow;
+class ForumPresenter extends BasePresenter {
 
-	/** @var Selection */
-	private $forumSelection;
+    /** @var ActiveRow */
+    private $forumRow;
 
-	/** @var string */
-	private $error = "Message not found!";
+    /** @var string */
+    private $error = "Message not found!";
 
-	public function actionAll() {
-		$this->forumSelection = $this->forumRepository->findAll();
-	}
+    public function actionAll() {
+        
+    }
 
-	public function renderAll() {
-		$this->template->forums = $this->forumSelection;
-	}
+    public function renderAll() {
+        $this->template->forums = $this->forumRepository->findAll();
+        $this->template->default = '/images/forum.png';
+    }
 
-	public function actionDelete( $id ) {
-		$this->userIsLogged();
-		$this->forumRow = $this->forumRepository->findById( $id );
-	}
+    public function actionDelete($id) {
+        $this->userIsLogged();
+        $this->forumRow = $this->forumRepository->findById($id);
+    }
 
-	public function renderDelete( $id ) {
-		if( !$this->forumRow ) {
-			throw new BadRequestException( $this->error );
-		}
-		$this->template->forum = $this->forumRow;
-	}
+    public function renderDelete($id) {
+        if (!$this->forumRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->forum = $this->forumRow;
+    }
 
-	protected function createComponentAddMessageForm() {
-		$form = new Form;
+    protected function createComponentAddMessageForm() {
+        $form = new Form;
 
-		$form->addText('author','Meno:')
-			 ->setRequired("Meno je povinné pole.");
+        $form->addText('author', 'Meno:')
+                ->setRequired("Meno je povinné pole.");
 
-		$form->addText('email','E-mail:')
-			 ->setType('email');
+        $form->addText('title', 'Názov:')
+                ->setRequired('Názov je povinné pole');
 
-		$form->addTextArea('message','Príspevok:')
-			 ->setAttribute('class','form-control')
-			 ->setRequired("Príspevok je povinné pole.");
+        $form->addTextArea('message', 'Príspevok:')
+                ->setAttribute('class', 'form-jqte')
+                ->setRequired("Príspevok je povinné pole.");
 
-		$form->addSubmit('add','Pridaj');
+        $form->addSubmit('add', 'Pridaj');
 
-		$form->onSuccess[] = $this->submittedAddMessageForm;
-		FormHelper::setBootstrapFormRenderer( $form );
-		return $form;	
-	}
+        $form->onSuccess[] = $this->submittedAddMessageForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
 
-	public function submittedDeleteForm( $form ) {
-		$this->userIsLogged();	
-		$this->forumRow->delete();
-		$this->flashMessage('Príspevok zmazaný.','success');
-		$this->redirect('all');
-	}
+    public function submittedDeleteForm($form) {
+        $this->userIsLogged();
+        $this->forumRow->delete();
+        $this->flashMessage('Príspevok zmazaný.', 'success');
+        $this->redirect('all');
+    }
 
-	public function submittedAddMessageForm($form)
-	{
-		$values = $form->getValues();
-		$this->forumRepository->insert($values);
-		$this->redirect('all');
-	}
+    public function submittedAddMessageForm($form) {
+        $values = $form->getValues();
+        $this->forumRepository->insert($values);
+        $this->redirect('all');
+    }
 
-	public function formCancelled() {
-		$this->redirect('all');
-	}
+    public function formCancelled() {
+        $this->redirect('all');
+    }
+
 }

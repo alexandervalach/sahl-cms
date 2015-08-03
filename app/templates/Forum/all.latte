@@ -5,25 +5,24 @@
 {control addMessageForm}
 
 <section>
-	<div n:foreach="$forums as $forum" class="forum">
-		<img src='{$basePath}/images/forum.png' />
-		<header>
-			<a href='mailto:{$forum->email}' n:tag-if="$forum->email" class="text-muted">{$forum->author}</a>
-			<div class="pull-right" n:if="$user->loggedIn">
-				<a n:href="delete, $forum->id" class="text-muted" title="odstrániť">
-					<span class="glyphicon glyphicon-remove"></span>
-				</a>
-			</div>
-		</header>
+    <div n:foreach="$forums as $forum" class="forum">
+        <img src='{$basePath}{$default}' />
+        <header>
+            {$forum->title}
+            <div class="pull-right" n:if="$user->loggedIn">
+                <a n:href="delete, $forum->id" class="text-muted" title="odstrániť">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </div>
+        </header>
 
-		<main>
-			{$forum->message}
-		</main>
+        <main>
+            {$forum->message}
+        </main>
 
-		{if $forum->email}
-			<footer>
-				<time pubdate><small>{$forum->created_at|date:'M j, Y h:i'}</small></time>
-			</footer>
-		{/if}
-	</div>
+        <footer>
+            {$forum->author}&nbsp;
+            <time pubdate><small>{$forum->created_at|date:'d.m.Y H:i'}</small></time>
+        </footer>
+    </div>
 </section>

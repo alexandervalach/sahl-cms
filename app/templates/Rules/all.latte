@@ -1,22 +1,23 @@
 {block content}
-<h2 n:block="title">Pravidlá a smernice</h2>
+
+<h3 n:block="title">Pravidlá a smernice</h3>
 
 <section n:if="$user->loggedIn">
-	<a n:href="add" class="btn btn-large btn-primary">
-		<span class="glyphicon glyphicon-plus"></span> Pridať
-	</a>
+    <a n:href="add" class="btn btn-large btn-primary">
+        <span class="glyphicon glyphicon-plus"></span> Pridať
+    </a>
 </section>
 
 <article n:foreach="$rules as $rule">
-	<main>
-		{$rule->rule}
-	</main>
-	<footer n:if="$user->loggedIn">
-		<a n:href="edit, $rule->id" class="text-success">
-			<span class="glyphicon glyphicon-pencil"></span>
-		</a>
-		<a n:href="delete, $rule->id" class="text-danger">
-			<span class="glyphicon glyphicon-remove"></span>
-		</a>
-	</footer>
+    <main>
+        {$rule->rule}
+    </main>
+    <footer n:if="$user->loggedIn">
+        <a n:href="edit, $rule->id" class="text-success">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </a>
+        <a n:href="delete, $rule->id" class="text-danger">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+    </footer>
 </article>

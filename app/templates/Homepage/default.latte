@@ -9,14 +9,14 @@
   {foreach $latests as $latest}
       {if $iterator->last}
         {if $latest->thumbnail}
-          <img src='{$basePath}/images/posts/{$latest->thumbnail}' class='img-responsive' />
+          <img src='{$basePath}{$folder}{$latest->thumbnail}' class='img-responsive' />
         {else}
           <img src='{$basePath}{$default}' class='img-responsive' />
         {/if}
       {/if}
 
       {if $latest->thumbnail}
-        <p data-src="{$basePath}/images/posts/{$latest->thumbnail}">
+        <p data-src="{$basePath}{$folder}{$latest->thumbnail}">
       {else}
         <p data-src='{$basePath}{$default}'>
       {/if}
@@ -36,7 +36,7 @@
 
     <div class="thumbnail">
       {if $post->thumbnail}
-        <img src='{$basePath}/images/posts/{$post->thumbnail}' class='img-responsive' />
+        <img src='{$basePath}{$folder}{$post->thumbnail}' class='img-responsive' />
       {else}
         <img src='{$basePath}{$default}' class='img-responsive' />
       {/if}

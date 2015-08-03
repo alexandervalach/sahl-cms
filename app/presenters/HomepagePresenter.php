@@ -24,5 +24,6 @@ class HomepagePresenter extends BasePresenter
 		$this->template->posts = $posts;
 		$this->template->latests = $latests;
 		$this->template->default = "/images/sahl.jpg";
+                $this->template->folder = "/images/";
 	}
 }

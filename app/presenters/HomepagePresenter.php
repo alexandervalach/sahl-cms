@@ -5,25 +5,24 @@ namespace App\Presenters;
 use Nette;
 use App\Model;
 
-
 /**
  * Homepage presenter.
  */
-class HomepagePresenter extends BasePresenter
-{
-	/** @var Nette\Database\Selection */
-	private $post;
+class HomepagePresenter extends BasePresenter {
 
-	public function renderDefault()
-	{
-		$limit = 4;
-		$posts = $this->postsRepository->findAll();
+    /** @var Nette\Database\Selection */
+    private $post;
 
-		$latests = $posts->order('created_at ASC')->limit($limit);
+    public function renderDefault() {
+        $limit = 4;
+        $posts = $this->postsRepository->findAll();
 
-		$this->template->posts = $posts;
-		$this->template->latests = $latests;
-		$this->template->default = "/images/sahl.jpg";
-                $this->template->folder = "/images/";
-	}
+        $latests = $posts->order('created_at ASC')->limit($limit);
+
+        $this->template->posts = $posts;
+        $this->template->latests = $latests;
+        $this->template->default = "/images/sahl.jpg";
+        $this->template->imgFolder = $this->imgFolder;
+    }
+
 }

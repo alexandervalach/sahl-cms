@@ -72,6 +72,9 @@ abstract class BasePresenter extends Presenter
 
 	/** @var UsersRepository @inject */
 	public $usersRepository;
+        
+        /** @var string */
+        protected $imgFolder = "/images/";
 
 	protected function createComponentDeleteForm()
 	{

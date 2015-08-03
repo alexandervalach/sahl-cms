@@ -1,41 +1,41 @@
 {block content}
 
 <div class='table-responsive'>
-	<table class='table table-striped'>
-		<caption class='caption' n:block="title">
-			Zápasy
-			<div class="pull-right" n:if='$user->loggedIn'>
-				<a n:href="create">
-					<span class='glyphicon glyphicon-plus'></span>
-				</a>
-			</div>
-		</caption>
-		<thead>
-			<tr>
-				<th colspan='3' class='txt-center'>Tím</th>
-				<th colspan='3' class='txt-center'>Výsledok</th>
-				<th n:if="$user->loggedIn" class='txt-center'>Akcia</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr n:foreach="$fights as $fight">
-				{var $team1 = $fight->ref( 'teams', 'team1_id' );}
-				{var $team2 = $fight->ref( 'teams', 'team2_id' );}
-				<td class='txt-right'>{$team1->name}</td>
-				<td class='txt-center'>:</td>
-				<td class='txt-left'>{$team2->name}</td>
-				<td class='txt-right'>{$fight->score1}</td>
-				<td class='txt-center'>:</td>
-				<td class='txt-left'>{$fight->score2}</td>
-				<td n:if="$user->loggedIn">
-					<a n:href="edit, $fight->id" class="text-success">
-						<span class="glyphicon glyphicon-pencil"></span>
-					</a>
-					<a n:href="delete, $fight->id" class="text-warning">
-						<span class="glyphicon glyphicon-trash"></span>
-					</a>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+    <table class='table table-striped'>
+        <caption class='caption' n:block="title">
+            Zápasy
+            <div class="pull-right" n:if='$user->loggedIn'>
+                <a n:href="create">
+                    <span class='glyphicon glyphicon-plus'></span>
+                </a>
+            </div>
+        </caption>
+        <thead>
+            <tr>
+                <th colspan='3' class='txt-center'>Tím</th>
+                <th colspan='3' class='txt-center'>Výsledok</th>
+                <th n:if="$user->loggedIn" class='txt-center'>Akcia</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr n:foreach="$fights as $fight">
+                {var $team1 = $fight->ref( 'teams', 'team1_id' );}
+                {var $team2 = $fight->ref( 'teams', 'team2_id' );}
+                <td class='txt-right'>{$team1->name}</td>
+                <td class='txt-center'>:</td>
+                <td class='txt-left'>{$team2->name}</td>
+                <td class='txt-right'>{$fight->score1}</td>
+                <td class='txt-center'>:</td>
+                <td class='txt-left'>{$fight->score2}</td>
+                <td n:if="$user->loggedIn">
+                    <a n:href="edit, $fight->id" class="text-success">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a n:href="delete, $fight->id" class="text-danger">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

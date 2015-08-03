@@ -30,6 +30,7 @@ class LinksPresenter extends BasePresenter
 	public function renderAll() {
 		$this->template->txtLinks = $this->linkSelection;
 		$this->template->imgLinks = $this->linksRepository->findAll()->where( 'image != ?', ' ' );
+                $this->template->imgFolder = $this->imgFolder;
 	}
 
 	public function actionCreate() {

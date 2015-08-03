@@ -1,63 +1,63 @@
 {block content}
 <h1 class='idea'>
-  Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
-  samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla SAHL – Pravidlá a Smernice.
+    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
+    samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla SAHL – Pravidlá a Smernice.
 </h1>
 
 <!-- Zobrazí prvé štyri novinky-->
 <div id="slider" class='row'>
-  {foreach $latests as $latest}
-      {if $iterator->last}
-        {if $latest->thumbnail}
-          <img src='{$basePath}{$folder}{$latest->thumbnail}' class='img-responsive' />
-        {else}
-          <img src='{$basePath}{$default}' class='img-responsive' />
+    {foreach $latests as $latest}
+        {if $iterator->last}
+            {if $latest->thumbnail}
+                <img src='{$basePath}{$imgFolder}{$latest->thumbnail}' class='img-responsive' />
+            {else}
+                <img src='{$basePath}{$default}' class='img-responsive' />
+            {/if}
         {/if}
-      {/if}
 
-      {if $latest->thumbnail}
-        <p data-src="{$basePath}{$folder}{$latest->thumbnail}">
-      {else}
-        <p data-src='{$basePath}{$default}'>
-      {/if}
-        <a n:href="Post:show#primary $latest->id">
-          {$latest->title|truncate:35}
-        </a>
-      </p>
-  {/foreach}
+        {if $latest->thumbnail}
+            <p data-src="{$basePath}{$imgFolder}{$latest->thumbnail}">
+            {else}
+            <p data-src='{$basePath}{$default}'>
+            {/if}
+            <a n:href="Post:show#primary $latest->id">
+                {$latest->title|truncate:35}
+            </a>
+        </p>
+    {/foreach}
 </div>
 
 <article n:foreach="$posts as $post" class="post">
-   	<header>
-      <h2>
-     		<a n:href="Post:show#primary $post->id">{$post->title}</a>
-     	</h2>
+    <header>
+        <h2>
+            <a n:href="Post:show#primary $post->id">{$post->title}</a>
+        </h2>
     </header>
 
     <div class="thumbnail">
-      {if $post->thumbnail}
-        <img src='{$basePath}{$folder}{$post->thumbnail}' class='img-responsive' />
-      {else}
-        <img src='{$basePath}{$default}' class='img-responsive' />
-      {/if}
+        {if $post->thumbnail}
+            <img src='{$basePath}{$imgFolder}{$post->thumbnail}' class='img-responsive' />
+        {else}
+            <img src='{$basePath}{$default}' class='img-responsive' />
+        {/if}
     </div>
 
     <main>
-     	<time datetime='{$post->created_at|date:'d.m.Y'}' pubdate>{$post->created_at|date:'d.m.Y'}</time>
-     	<div>{$post->content}</div>
+        <time datetime='{$post->created_at|date:'d.m.Y'}' pubdate>{$post->created_at|date:'d.m.Y'}</time>
+        <div>{$post->content}</div>
     </main>
 
     <footer n:if="$user->loggedIn">
-      	<a n:href="Post:edit#primary $post->id" class='btn btn-success btn-large'>
-          <span class="glyphicon glyphicon-pencil"></span> Upraviť
+        <a n:href="Post:edit#primary $post->id" class='btn btn-success btn-large'>
+            <span class="glyphicon glyphicon-pencil"></span> Upraviť
         </a>
-  		  <a n:href="Post:delete#primary $post->id" class='btn btn-large btn-danger'>
-          <span class="glyphicon glyphicon-remove"></span> Odstrániť
+        <a n:href="Post:delete#primary $post->id" class='btn btn-large btn-danger'>
+            <span class="glyphicon glyphicon-remove"></span> Odstrániť
         </a>
-	  </footer>
+    </footer>
 
 </article>
 
 {block head}
-  <script type="text/javascript" src='{$basePath}/js/switch.js'></script>
+<script type="text/javascript" src='{$basePath}/js/switch.js'></script>
 {/block}

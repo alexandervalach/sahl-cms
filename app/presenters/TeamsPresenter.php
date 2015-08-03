@@ -5,8 +5,12 @@ namespace App\Presenters;
 use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequetsException;
+use Nette\Database\Table\ActiveRow;
 
 class TeamsPresenter extends BasePresenter {
+
+    /** @var ActiveRow */
+    private $teamRow;
 
     /** @var string */
     private $error = "Team not found";
@@ -17,31 +21,38 @@ class TeamsPresenter extends BasePresenter {
 
     public function actionDelete($id) {
         $this->userIsLogged();
-
-        $this->template->team = $this->teamsRepository->findById($id);
-
-        if (!$this->template->team) {
+        $this->teamRow = $this->teamsRepository->findById($id);
+    }
+    
+    public function renderDelete($id) {
+        if (!$this->teamRow) {
             throw new BadRequestException($this->error);
         }
+        $this->template->team = $this->teamRow; 
+        $this->getComponent('deleteForm');
     }
 
     public function actionEdit($id) {
         $this->userIsLogged();
+        $this->teamRow = $this->teamsRepository->findById($id);
     }
 
-    public function renderView() {
-        $team = $this->teamsRepository->findAll()->order("name ASC");
-
-        $this->template->teams = $team;
-    }
-
-    public function renderEdit() {
-        $team = $this->teamsRepository->findById($id);
-
-        if (!$team)
+    public function renderEdit($id) {
+        if (!$this->teamRow)
             throw new BadRequestException($this->error);
+        
+        $this->getComponent('editTeamForm')->setDefaults($this->teamRow);
+        $this->template->team = $this->teamRow;
+    }
 
-        $this->getComponent('addTeamForm')->setDefaults($team);
+    public function actionAll() {
+        
+    }
+
+    public function renderAll() {
+        /** $team is instance of Nette\Database\Table\Selection */
+        $team = $this->teamsRepository->findAll()->order("name ASC");
+        $this->template->teams = $team;
     }
 
     protected function createComponentAddTeamForm() {
@@ -53,44 +64,53 @@ class TeamsPresenter extends BasePresenter {
 
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = $this->teamFormSucceeded;
+        $form->onSuccess[] = $this->submittedAddTeamForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
+    protected function createComponentEditTeamForm() {
+        $form = new Form;
+
+        $form->addText('name', 'Tím: ')
+                ->setRequired('Názov tímu je povinné pole.')
+                ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
+
+        $form->addSubmit('save', 'Uložiť');
+
+        $form->onSuccess[] = $this->submittedEditTeamForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedDeleteForm() {
-        $id = $this->getParameter('id');
-        $team = $this->teamsRepository->findById($id);
-        $players = $team->related('players');
+        $players = $this->teamRow->related('players');
 
         foreach ($players as $player) {
             $player->delete();
         }
 
-        $team->delete();
+        $this->teamRow->delete();
+        $this->flashMessage('Tím bol odstránený aj so všetkými hráčmi.', 'success');
+        $this->redirect('all');
+    }
 
-        $this->flashMessage('Tím bol zmazaný.', 'success');
-        $this->redirect('view');
+    public function submittedAddTeamForm(Form $form) {
+        $this->userIsLogged();
+        $values = $form->getValues();
+        $this->teamsRepository->insert($values);
+        $this->redirect('all');
+    }
+
+    public function submittedEditTeamForm(Form $form) {
+        $this->userIsLogged();
+        $values = $form->getValues();
+        $this->teamRow->update($values);
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('view');
-    }
-
-    public function teamFormSucceeded($form) {
-        $this->userIsLogged();
-
-        $values = $form->getValues();
-        $id = $this->getParameter('id');
-        $teamRow = $this->teamsRepository;
-
-        if (!$id) {
-            $teamRow->insert($values);
-        } else {
-            $teamRow->findById($id)->update($values);
-        }
-
-        $this->redirect('view');
+        $this->redirect('all');
     }
 
 }

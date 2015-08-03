@@ -26,21 +26,8 @@ class PlayerPresenter extends BasePresenter {
 
     public function renderView($id) {
         $team = $this->teamRow;
-        $this->template->players = $team->related('players')->order('lname ASC')->order('fname ASC');
+        $this->template->players = $team->related('players')->order('goals ASC, lname ASC, fname ASC');
         $this->template->team = $team;
-    }
-
-    public function actionShow($id) {
-        $this->playerRow = $this->playersRepository->findById($id);
-    }
-
-    public function renderShow($id) {
-        $player = $this->playerRow;
-        if (!$player) {
-            throw new BadRequestException($this->error);
-        }
-
-        $this->template->post = $player;
     }
 
     public function actionCreate($id) {
@@ -53,14 +40,16 @@ class PlayerPresenter extends BasePresenter {
         $this->getComponent('addPlayerForm');
     }
 
-    public function actionEditStats($id) {
-        $this->userIsLogged();
-        $this->playerRow = $this->playersRepository->findById($id);
-    }
+    /*
+      public function actionEditStats($id) {
+      $this->userIsLogged();
+      $this->playerRow = $this->playersRepository->findById($id);
+      }
 
-    public function renderEditStats($id) {
-        $this->getComponent('editStatsForm')->setDefaults($this->playerRow);
-    }
+      public function renderEditStats($id) {
+      $this->getComponent('editStatsForm')->setDefaults($this->playerRow);
+      }
+     */
 
     public function actionEdit($id) {
         $this->userIsLogged();
@@ -71,47 +60,39 @@ class PlayerPresenter extends BasePresenter {
         if (!$this->playerRow) {
             throw new BadRequestException($this->error);
         }
-
         $this->getComponent('editPlayerForm')->setDefaults($this->playerRow);
     }
 
     public function actionDelete($id) {
-        $this->userIsLoggedIn();
-        $player = $this->playersRepository->findById($id);
+        $this->userIsLogged();
+        $this->playerRow = $this->playersRepository->findById($id);
+    }
 
-        if (!$player) {
+    public function renderDelete($id) {
+        if (!$this->playerRow) {
             throw new BadRequestException;
         }
-
-        $this->template->player = $player;
+        $this->template->player = $this->playerRow;
+        $this->getComponent('deleteForm');
     }
 
     protected function createComponentAddPlayerForm() {
         $form = new Form;
 
         $form->addText('fname', 'Meno:')
-                ->setRequired();
+                ->setRequired("Meno je povinné pole.");
 
         $form->addText('lname', 'Priezvisko:')
-                ->setRequired();
+                ->setRequired("Priezvisko je povinné pole.");
 
         $form->addText('num', 'Číslo:')
                 ->setType('number');
 
-        $form->addSubmit('submit', 'Uložiť');
+        $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddPlayerForm;
-
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
-    }
-
-    public function submittedAddPlayerForm($form) {
-        $team_id = $this->getParameter('id');
-        $values = $form->getValues();
-        $values['team_id'] = $team_id;
-        $id = $this->playersRepository->insert($values);
-        $this->redirect('show', $id);
     }
 
     protected function createComponentEditPlayerForm() {
@@ -127,7 +108,7 @@ class PlayerPresenter extends BasePresenter {
 
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'RRRR-MM-DD')
-                ->setRequired("Dátum narodenie je povinné pole.");
+                ->setRequired("Dátum narodenia je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
 
@@ -136,6 +117,7 @@ class PlayerPresenter extends BasePresenter {
         return $form;
     }
 
+    /*
     protected function createComponentEditStatsForm() {
         $form = new Form;
         $form->addText('fights', 'Zápasy:')
@@ -148,78 +130,36 @@ class PlayerPresenter extends BasePresenter {
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
-
-    public function postFormSucceeded($form) {
+    */
+    public function submittedAddPlayerForm(Form $form) {
         $values = $form->getValues(TRUE);
-        $id = $this->getParameter('id');
-        $playerRow = $this->playersRepository;
-
-        if ($id) {
-
-            $file = $values['file'];
-            $player = $this->playerRow->findById($id);
-            $team_id = 1; //$player->teams->id;
-
-            $values['team_id'] = $team_id;
-
-            if ($file_name = $file->getSanitizedName()) {
-
-                if ($file->isOk() && $file->isImage()) {
-                    $file->move('images/photo/' . $file_name);
-                }
-            } else {
-
-                //$file_name = $player->photo;
-            }
-
-            Arrays::renameKey($values, 'file', 'photo');
-            $values['photo'] = $file_name;
-            $this->playerRow->update($values);
-        } else {
-
-            $file = $values['file'];
-            Arrays::renameKey($values, 'file', 'photo');
-            $values['team_id'] = "1";
-
-            if ($file->isOk() && $file->isImage()) {
-                $file_name = $file->name;
-                $file->move('images/photo/' . $file_name);
-                $values['photo'] = $file_name;
-            }
-
-            $player = $this->playerRow->insert($values);
-        }
-
-        $this->flashMessage("Hráč bol pridaný.", 'success');
-        $this->redirect('show', $player->id);
+        $id = $this->teamRow;
+        $values['team_id'] = $id;
+        $player = $this->playersRepository->insert($values);
+        $this->redirect('view', $id);
     }
 
     public function submittedEditPlayerForm($form) {
         $values = $form->getValues();
-        $id = $this->getParameter('id');
-        $this->playerRow->update($values);
-        $this->redirect('show', $id);
+        $player = $this->playerRow;
+        $player->update($values);
+        $this->redirect('view', $player->team_id);
     }
 
+    /*
     public function submittedEditStatsForm($form) {
         $values = $form->getValues();
         $id = $this->getParameter('id');
         $this->playerRow->update($values);
-        $this->redirect('show', $id);
+        $this->redirect('view', $id);
     }
-
+    */
+    
     public function submittedDeleteForm() {
-        $id = $this->getParameter('id');
-
-        $player = $this->playersRepository->findById($id);
-
-        $file = new FileSystem;
-        $file->delete('images/photo/' . $player->photo);
-
+        $player = $this->playerRow;
         $player->delete();
-
-        $this->flashMessage('Hráč zmazaný.', 'success');
-        $this->redirect('default');
+        $this->flashMessage('Hráč odstránený.', 'success');
+        $this->redirect('view', $player->team_id );
     }
 
     public function formCancelled() {

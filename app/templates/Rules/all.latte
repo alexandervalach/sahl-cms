@@ -2,11 +2,11 @@
 
 <h3 n:block="title">Pravidlá a smernice</h3>
 
-<section n:if="$user->loggedIn">
+<p n:if="$user->loggedIn">
     <a n:href="add" class="btn btn-large btn-primary">
         <span class="glyphicon glyphicon-plus"></span> Pridať
     </a>
-</section>
+</p>
 
 <article n:foreach="$rules as $rule">
     <main>

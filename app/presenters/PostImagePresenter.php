@@ -22,6 +22,9 @@ class PostImagePresenter extends BasePresenter
 
 	/** @var string */
 	private $error = "Image not found!";
+        
+        /** @var string */
+        private $storage = "images/";
 
 	public function actionAdd( $id ) {
 		$this->userIsLogged();
@@ -88,7 +91,7 @@ class PostImagePresenter extends BasePresenter
 		$post_id = $this->postRow->id;
 
 		$img = new FileSystem;
-		$img->delete('images/posts/' . $imgRow->name);
+		$img->delete($this->storage . $imgRow->name);
 
 		$imgRow->delete();
 

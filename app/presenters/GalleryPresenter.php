@@ -6,6 +6,7 @@ use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\FileSystem;
 
 class GalleryPresenter extends BasePresenter {
 
@@ -87,9 +88,12 @@ class GalleryPresenter extends BasePresenter {
     }
 
     public function submittedDeleteForm() {
-        $this->galleryRow->delete();
-        $this->flashMessage('Obrázok zmazaný.', 'success');
-        $this->redirect('view', $this->galleryRow->album_id);
+        $gallery = $this->galleryRow;
+        $img = new FileSystem;
+        $img->delete( $this->storage . $gallery->name );
+        $gallery->delete();
+        $this->flashMessage('Obrázok odstránený.', 'success');
+        $this->redirect('view', $gallery->album_id);
     }
 
     public function formCancelled() {

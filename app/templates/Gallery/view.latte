@@ -18,7 +18,7 @@
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <a n:href="Gallery:view, $img->id">
                 {if $img->name}                
-                    <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-rounded" />
+                    <img src="{$basePath}{$imgFolder}{$img->name}" class="img-responsive img-rounded" />
                 {else}
                     <img src="{$basePath}{$default}" class="img-responsive img-rounded" />
                 {/if}

@@ -1,10 +1,10 @@
 {block content}
 
-<h1 n:block="title">Zmaž album</h1>
+<h1 n:block="title">Odstráň obrázok</h1>
 
-{if $album}
+{if $img}
     <p class='delete text-warning'>
-        Naozaj chceš zmazať album <mark>{$album->album}</mark>?
+        Naozaj chceš zmazať obrázok <mark>{$img->name}</mark>?
     </p>
     {control deleteForm}
 {else}

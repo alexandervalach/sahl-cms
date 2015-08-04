@@ -58,6 +58,35 @@ class GalleryPresenter extends BasePresenter {
         $this->template->img = $this->galleryRow;
     }
 
+    public function actionThumbnail($id, $id2) {
+        $this->userIsLogged();
+        $this->albumRow = $this->albumsRepository->findById($id);
+        $this->galleryRow = $this->galleryRepository->findById($id2);
+    }
+
+    public function renderThumbnail($id, $id2) {
+        $this->getComponent('setThumbnailForm');
+    }
+    
+    protected function createComponentSetThumbnailForm() {
+        $form = new Form;
+        $form->addCheckbox('setThumbnail', 'Nastaviť ako prezenčný obrázok');
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = $this->submittedSetThumbnailForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+    
+    public function submittedSetThumbnailForm(Form $form) {
+        $values = $form->getValues();
+        if( $values['setThumbnail'] ) {
+            $data = array();
+            $data['name'] = $this->galleryRow->name;
+            $this->albumRow->update($data);
+        }
+        $this->redirect('Album:all');
+    }
+
     public function submittedAddImagesForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
@@ -90,7 +119,7 @@ class GalleryPresenter extends BasePresenter {
     public function submittedDeleteForm() {
         $gallery = $this->galleryRow;
         $img = new FileSystem;
-        $img->delete( $this->storage . $gallery->name );
+        $img->delete($this->storage . $gallery->name);
         $gallery->delete();
         $this->flashMessage('Obrázok odstránený.', 'success');
         $this->redirect('view', $gallery->album_id);

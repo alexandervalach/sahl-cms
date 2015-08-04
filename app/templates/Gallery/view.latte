@@ -1,6 +1,6 @@
 {block content}
 
-<h1 n:block="title">{$album->album}</h1>
+<h3 n:block="title">{$album->album}</h3>
 
 <p>
     <a n:href="Album:all#primary" class='btn btn-large btn-default'>
@@ -23,10 +23,14 @@
                     <img src="{$basePath}{$default}" class="img-responsive img-rounded" />
                 {/if}
             </a>
-            <p class="text-center">
-                <a n:href="delete, $img->id" class="btn btn-danger">
+            <p class="text-center" n:if="$user->loggedIn">
+                <a n:href="delete, $img" class="btn btn-danger">
                     <span class="glyphicon glyphicon-remove"></span>
-                    Odstrániť
+                    Zmaž
+                </a>
+                <a n:href="thumbnail#primary, $album->id, $img->id" class="btn btn-primary" title="Nastaví obrázok ako miniatúru albumu">
+                    <span class="glyphicon glyphicon-picture"></span>
+                    Miniatúra
                 </a>
             </p>
         </figure>

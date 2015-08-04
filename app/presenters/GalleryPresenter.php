@@ -29,6 +29,19 @@ class GalleryPresenter extends BasePresenter {
         $this->template->imgFolder = $this->imgFolder;
     }
 
+    public function actionAdd($id) {
+        $this->userIsLogged();
+    }
+
+    public function renderAdd($id) {
+        $this->albumRow = $this->albumsRepository->findById($id);
+        $this->template->album = $this->albumRow;
+        if(!$this->albumRow) {
+            throw new BadRequestException( $this->error );
+        }
+        $this->getComponent('addImagesForm');
+    }
+
     public function actionDelete($id) {
         $this->userIsLogged();
         $this->galleryRow = $this->galleryRepository->findById($id);

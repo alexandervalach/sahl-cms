@@ -5,7 +5,7 @@
 <p n:if="$user->loggedIn">
     <a n:href="create#primary" class='btn btn-primary btn-large'>
         <span class="glyphicon glyphicon-plus"></span>
-        Pridať
+        Pridať album
     </a>
 </p>
 
@@ -20,15 +20,16 @@
                 {/if}
             </a>
             <p class="text-center">
-                {$album->album},
-                {$album->created_at|date:'d.m.Y'}
+                {$album->album}
             </p>
             <p class="text-center">
-                <a n:href="edit, $album->id" class="text-success">
+                <a n:href="edit, $album->id" class="btn btn-success">
                     <span class="glyphicon glyphicon-pencil"></span>
+                    Upraviť
                 </a>
-                 <a n:href="delete, $album->id" class="text-danger">
+                 <a n:href="delete, $album->id" class="btn btn-danger">
                     <span class="glyphicon glyphicon-remove"></span>
+                    Odstrániť
                 </a>
             </p>
         </figure>

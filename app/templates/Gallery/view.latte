@@ -2,14 +2,14 @@
 
 <h1 n:block="title">{$album->album}</h1>
 
-<p class='add' n:if="$user->loggedIn">
-    <a n:href="all#primary" class='btn btn-large btn-default'>
+<p n:if="$user->loggedIn">
+    <a n:href="Album:all#primary" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Albumy
     </a>
-    <a n:href="create#primary" class='btn btn-large btn-info'>
+    <a n:href="add#primary, $album" class='btn btn-large btn-info'>
         <span class="glyphicon glyphicon-picture"></span>
-        Pridať obrázok
+        Pridať obrázky
     </a>
 </p>
 
@@ -24,11 +24,9 @@
                 {/if}
             </a>
             <p class="text-center">
-                <a n:href="edit, $img->id" class="text-success">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-                <a n:href="delete, $img->id" class="text-danger">
+                <a n:href="delete, $img->id" class="btn btn-danger">
                     <span class="glyphicon glyphicon-remove"></span>
+                    Odstrániť
                 </a>
             </p>
         </figure>

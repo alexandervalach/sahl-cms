@@ -18,4 +18,7 @@ $configurator->addConfig(__DIR__ . '/config/config.local.neon');
 
 $container = $configurator->createContainer();
 
+//Setup MultipleFileUpload
+MultipleFileUpload\MultipleFileUpload::register();
+
 return $container;

@@ -2,12 +2,12 @@
 
 <h1 n:block="title">{$album->album}</h1>
 
-<p n:if="$user->loggedIn">
+<p>
     <a n:href="Album:all#primary" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Albumy
     </a>
-    <a n:href="add#primary, $album" class='btn btn-large btn-info'>
+    <a n:href="add#primary, $album" class='btn btn-large btn-info' n:if="$user->loggedIn">
         <span class="glyphicon glyphicon-picture"></span>
         Pridať obrázky
     </a>

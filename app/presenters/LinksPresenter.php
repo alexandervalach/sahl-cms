@@ -21,7 +21,7 @@ class LinksPresenter extends BasePresenter
 	private $error = "Link not found!";
 
 	/** @var string */
-	private $storage = 'images/links/';
+	private $storage = 'images/';
 
 	public function actionAll() {
 		$this->linkSelection = $this->linksRepository->findBy( array( 'image' => ' ' ) );
@@ -116,8 +116,8 @@ class LinksPresenter extends BasePresenter
 		$img = $values->image;
 
 	   	if( $img->isOk() && $img->isImage() ) {
-	    	$name = $img->name;
-	    	$img->move( $this->storage . $name);
+	    	$name = $img->getSanitizedName();
+	    	$img->move( $this->storage . $name );
 	    	$values->image = $name;
 	    } 
 

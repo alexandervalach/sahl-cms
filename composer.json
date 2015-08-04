@@ -17,7 +17,8 @@
 	"require": {
 		"php": ">= 5.3.7",
 		"nette/nette": "~2.2.0",
-		"dg/adminer-custom": "~1.5"
+		"dg/adminer-custom": "~1.5",
+		"jkuchar/multiplefileupload": "1.*"
 	},
 	"require-dev": {
 		"nette/tester": "~1.0"

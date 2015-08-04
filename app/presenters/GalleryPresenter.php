@@ -2,19 +2,26 @@
 
 namespace App\Presenters;
 
+use App\FormHelper;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 
 class GalleryPresenter extends BasePresenter {
 
     /** @var ActiveRow */
     private $galleryRow;
-    
+
     /** @var ActiveRow */
     private $albumRow;
-    
+
+    /** @var string */
+    private $error = "Image not found!";
+
     public function actionView($id) {
+        
     }
-    
+
     public function renderView($id) {
         $this->albumRow = $this->albumsRepository->findById($id);
         $this->template->album = $this->albumRow;
@@ -22,81 +29,43 @@ class GalleryPresenter extends BasePresenter {
         $this->template->imgFolder = $this->imgFolder;
     }
 
-    public function actionDelete($albumId) {
-        if (!$this->user->isLoggedIn()) {
-            $this->redirect('Sign:in');
-        }
-
-        $this->template->album = $this->database->table('albums')->get($albumId);
-
-        if (!$this->template->album) {
-            $this->error('Záznam nenájdený.');
-        }
+    public function actionDelete($id) {
+        $this->userIsLogged();
+        $this->galleryRow = $this->galleryRepository->findById($id);
     }
 
-    public function actionEdit($albumId) {
-        if (!$this->user->isLoggedIn()) {
-            $this->redirect('Sign:in');
+    public function renderDelete($id) {
+        if (!$this->galleryRow) {
+            throw new BadRequestException($this->error);
         }
-
-        $album = $this->database->table('albums')->get($albumId);
-
-        if (!$album)
-            $this->error('Album nenájdený.');
-
-        $this['albumForm']->setDefaults($album->toArray());
+        $this->template->img = $this->galleryRow;
     }
 
-    public function albumFormSucceeded($form) {
-        if (!$this->user->isLoggedIn())
-            $this->error('Musíš byť prihlásený.');
-
+    public function submittedAddImagesForm(Form $form) {
+        $this->userIsLogged();
         $values = $form->getValues();
-        $albumId = $this->getParameter('albumId');
-
-        if (!$albumId) {
-            $this->database->table('albums')->insert($values);
-        } else {
-            $this->database->table('albums')->get($albumId)
-                    ->update($values);
-        }
-
-        $this->redirect('default');
+        $img = $this->galleryRepository->insert($values);
+        $this->redirect('view', $img->album_id);
     }
 
-    protected function createComponentAlbumForm() {
-        $form = new Nette\Application\UI\Form;
-
+    protected function createComponentAddImagesForm() {
+        $form = new Form;
         $form->addText('album', 'Názov albumu')
-                ->setAttribute('class', 'form-control')
                 ->setRequired();
-
-        $form->addSubmit('submit', 'Ulož záznam')
-                ->setAttribute('class', 'btn btn-primary btn-large');
-
-        $form->onSuccess[] = $this->albumFormSucceeded;
-
-        $form->addProtection();
+        $form->addSubmit('upload', 'Uložiť');
+        $form->onSuccess[] = $this->submittedAddImagesForm;
+        FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function deleteFormSucceeded() {
-        $id = $this->getParameter('albumId');
-        $this->database->table('albums')->get($id)->delete();
-
-        $this->flashMessage('Príspevok zmazaný.', 'success');
-        $this->redirect('default');
+    public function submittedDeleteForm() {
+        $this->galleryRow->delete();
+        $this->flashMessage('Obrázok zmazaný.', 'success');
+        $this->redirect('view', $this->galleryRow->album_id);
     }
 
     public function formCancelled() {
-        $this->redirect('default');
-    }
-
-    public function renderDefault() {
-        $albums = $this->database->table('albums')
-                ->order('created_at DESC');
-
-        $this->template->albums = $albums;
+        $this->redirect('view', $this->galleryRow->album_id);
     }
 
 }

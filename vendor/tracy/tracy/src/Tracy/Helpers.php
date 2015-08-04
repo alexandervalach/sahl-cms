@@ -22,7 +22,7 @@ class Helpers
 	 * Returns HTML link to editor.
 	 * @return string
 	 */
-	public static function editorLink($file, $line)
+	public static function editorLink($file, $line = NULL)
 	{
 		if ($editor = self::editorUri($file, $line)) {
 			$dir = dirname(strtr($file, '/', DIRECTORY_SEPARATOR));
@@ -34,7 +34,7 @@ class Helpers
 			}
 			return self::createHtml('<a href="%" title="%">%<b>%</b>%</a>',
 				$editor,
-				"$file:$line",
+				$file . ($line ? ":$line" : ''),
 				rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR,
 				basename($file),
 				$line ? ":$line" : ''
@@ -49,10 +49,10 @@ class Helpers
 	 * Returns link to editor.
 	 * @return string
 	 */
-	public static function editorUri($file, $line)
+	public static function editorUri($file, $line = NULL)
 	{
 		if (Debugger::$editor && $file && is_file($file)) {
-			return strtr(Debugger::$editor, array('%file' => rawurlencode($file), '%line' => (int) $line));
+			return strtr(Debugger::$editor, array('%file' => rawurlencode($file), '%line' => $line ? (int) $line : ''));
 		}
 	}
 
@@ -61,7 +61,7 @@ class Helpers
 	{
 		$args = func_get_args();
 		return preg_replace_callback('#%#', function() use (& $args, & $count) {
-			return htmlspecialchars($args[++$count], ENT_IGNORE | ENT_QUOTES);
+			return htmlspecialchars($args[++$count], ENT_IGNORE | ENT_QUOTES, 'UTF-8');
 		}, $mask);
 	}
 

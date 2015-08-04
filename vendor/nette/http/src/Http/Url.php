@@ -414,9 +414,9 @@ class Url extends Nette\Object
 	{
 		$url = new self($url);
 		parse_str($url->query, $query);
-		sort($query);
+		ksort($query);
 		parse_str($this->query, $query2);
-		sort($query2);
+		ksort($query2);
 		$http = in_array($this->scheme, array('http', 'https'), TRUE);
 		return $url->scheme === $this->scheme
 			&& !strcasecmp(rawurldecode($url->host), rawurldecode($this->host))
@@ -435,9 +435,9 @@ class Url extends Nette\Object
 	 */
 	public function canonicalize()
 	{
-		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/');
+		$this->path = $this->path === '' ? '/' : self::unescape($this->path, '%/#?');
 		$this->host = strtolower(rawurldecode($this->host));
-		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+');
+		$this->query = self::unescape(strtr($this->query, '+', ' '), '%&;=+#');
 		return $this;
 	}
 
@@ -452,7 +452,7 @@ class Url extends Nette\Object
 
 
 	/**
-	 * Similar to rawurldecode, but preserve reserved chars encoded.
+	 * Similar to rawurldecode, but preserves reserved chars encoded.
 	 * @param  string to decode
 	 * @param  string reserved characters
 	 * @return string
@@ -462,14 +462,14 @@ class Url extends Nette\Object
 		// reserved (@see RFC 2396) = ";" | "/" | "?" | ":" | "@" | "&" | "=" | "+" | "$" | ","
 		// within a path segment, the characters "/", ";", "=", "?" are reserved
 		// within a query component, the characters ";", "/", "?", ":", "@", "&", "=", "+", ",", "$" are reserved.
-		preg_match_all('#(?<=%)[a-f0-9][a-f0-9]#i', $s, $matches, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
-		foreach (array_reverse($matches) as $match) {
-			$ch = chr(hexdec($match[0][0]));
-			if (strpos($reserved, $ch) === FALSE) {
-				$s = substr_replace($s, $ch, $match[0][1] - 1, 3);
-			}
+		if ($reserved !== '') {
+			$s = preg_replace_callback(
+				'#%(' . substr(chunk_split(bin2hex($reserved), 2, '|'), 0, -1) . ')#i',
+				function ($m) { return '%25' . strtoupper($m[1]); },
+				$s
+			);
 		}
-		return $s;
+		return rawurldecode($s);
 	}
 
 }

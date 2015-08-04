@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Latte (http://latte.nette.org)
+ * Copyright (c) 2008 David Grudl (http://davidgrudl.com)
  */
 
 namespace Latte;
@@ -15,16 +15,19 @@ namespace Latte;
  */
 class Engine extends Object
 {
-	/** Content types */
-	const CONTENT_HTML = Compiler::CONTENT_HTML,
-		CONTENT_XHTML = Compiler::CONTENT_XHTML,
-		CONTENT_XML = Compiler::CONTENT_XML,
-		CONTENT_JS = Compiler::CONTENT_JS,
-		CONTENT_CSS = Compiler::CONTENT_CSS,
-		CONTENT_ICAL = Compiler::CONTENT_ICAL,
-		CONTENT_TEXT = Compiler::CONTENT_TEXT;
+	const VERSION = '2.2.6';
 
-	/** @var array */
+	/** Content types */
+	const CONTENT_HTML = 'html',
+		CONTENT_XHTML = 'xhtml',
+		CONTENT_XML = 'xml',
+		CONTENT_JS = 'js',
+		CONTENT_CSS = 'css',
+		CONTENT_URL = 'url',
+		CONTENT_ICAL = 'ical',
+		CONTENT_TEXT = 'text';
+
+	/** @var callable[] */
 	public $onCompile = array();
 
 	/** @var Parser */
@@ -87,7 +90,7 @@ class Engine extends Object
 	 */
 	public function render($name, array $params = array())
 	{
-		$template = new $this->baseTemplateClass($params, $this->filters, $this, $name);
+		$template = new $this->baseTemplateClass($params, $this, $name);
 		$this->loadCacheFile($name, $template->getParameters());
 	}
 
@@ -146,7 +149,7 @@ class Engine extends Object
 	private function loadCacheFile($name, $params)
 	{
 		if (!$this->tempDirectory) {
-			return call_user_func(function() {
+			return call_user_func(function () {
 				foreach (func_get_arg(1) as $__k => $__v) {
 					$$__k = $__v;
 				}
@@ -176,7 +179,7 @@ class Engine extends Object
 			flock($handle, LOCK_SH); // holds the lock
 		}
 
-		call_user_func(function() {
+		call_user_func(function () {
 			foreach (func_get_arg(1) as $__k => $__v) {
 				$$__k = $__v;
 			}

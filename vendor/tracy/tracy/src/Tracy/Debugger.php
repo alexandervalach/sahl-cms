@@ -22,8 +22,10 @@ use Tracy,
  */
 class Debugger
 {
-	/** @var string */
-	public static $version = '2.2.5';
+	const VERSION = '2.2.7';
+
+	/** @deprecated */
+	public static $version = self::VERSION;
 
 	/** @var bool in production mode is suppressed any debugging output */
 	public static $productionMode = self::DETECT;
@@ -185,9 +187,6 @@ class Debugger
 		} elseif ($logDirectory === FALSE) {
 			self::$logDirectory = NULL;
 		}
-		if (self::$logDirectory) {
-			ini_set('error_log', self::$logDirectory . '/php_error.log');
-		}
 
 		// php configuration
 		if (function_exists('ini_set')) {
@@ -226,7 +225,7 @@ class Debugger
 			self::$blueScreen->info = array(
 				'PHP ' . PHP_VERSION,
 				isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : NULL,
-				'Tracy ' . self::$version,
+				'Tracy ' . self::VERSION,
 			);
 		}
 		return self::$blueScreen;
@@ -247,7 +246,7 @@ class Debugger
 			self::$bar->info = array(
 				'PHP ' . PHP_VERSION,
 				isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : NULL,
-				'Tracy ' . self::$version,
+				'Tracy ' . self::VERSION,
 			);
 		}
 		return self::$bar;
@@ -405,18 +404,18 @@ class Debugger
 			}
 		}
 
-		$logMsg = 'Unable to log error. Check if directory is writable and path is absolute.';
 		if (self::$productionMode) {
 			try {
 				self::log($exception, self::EXCEPTION);
 			} catch (\Exception $e) {
 			}
 
-			$error = isset($e) ? $logMsg : NULL;
 			if (self::isHtmlMode()) {
+				$logged = empty($e);
 				require __DIR__ . '/templates/error.phtml';
 			} elseif (PHP_SAPI === 'cli') {
-				fwrite(STDERR, "ERROR: application encountered an error and can not continue.\n$error\n");
+				fwrite(STDERR, 'ERROR: application encountered an error and can not continue. '
+					. (isset($e) ? "Unable to log error.\n" : "Error was logged.\n"));
 			}
 
 		} elseif (!connection_aborted() && self::isHtmlMode()) {
@@ -434,7 +433,7 @@ class Debugger
 					exec(self::$browser . ' ' . escapeshellarg($file));
 				}
 			} catch (\Exception $e) {
-				echo "$exception\n$logMsg {$e->getMessage()}\n";
+				echo "$exception\nUnable to log error: {$e->getMessage()}\n";
 			}
 		}
 

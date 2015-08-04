@@ -7,8 +7,8 @@
 
 namespace Nette\Http;
 
-use Nette,
-	Nette\Utils\DateTime;
+use Nette;
+use Nette\Utils\DateTime;
 
 
 /**
@@ -151,7 +151,7 @@ class Response extends Nette\Object implements IResponse
 		$this->setCode($code);
 		$this->setHeader('Location', $url);
 		if (preg_match('#^https?:|^\s*+[a-z0-9+.-]*+[^:]#i', $url)) {
-			$escapedUrl = htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES);
+			$escapedUrl = htmlSpecialChars($url, ENT_IGNORE | ENT_QUOTES, 'UTF-8');
 			echo "<h1>Redirect</h1>\n\n<p><a href=\"$escapedUrl\">Please click here to continue</a>.</p>";
 		}
 	}
@@ -323,7 +323,7 @@ class Response extends Nette\Object implements IResponse
 		if (headers_sent($file, $line)) {
 			throw new Nette\InvalidStateException('Cannot send header after HTTP headers have been sent' . ($file ? " (output started at $file:$line)." : '.'));
 
-		} elseif ($this->warnOnBuffer && ob_get_length() && !array_filter(ob_get_status(TRUE), function($i) { return !$i['chunk_size']; })) {
+		} elseif ($this->warnOnBuffer && ob_get_length() && !array_filter(ob_get_status(TRUE), function ($i) { return !$i['chunk_size']; })) {
 			trigger_error('Possible problem: you are sending a HTTP header while already having some data in output buffer. Try Tracy\OutputDebugger or start session earlier.', E_USER_NOTICE);
 		}
 	}

@@ -1,0 +1,10 @@
+queues:
+
+id (token): string - queue identificator
+lastAccess: datum+�as=timestamp
+
+FileInfos:
+
+id: int - autoincrement
+queue: string
+data: serialized PHP object - string

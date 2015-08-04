@@ -31,7 +31,7 @@ class Configurator extends Object
 
 	const COOKIE_SECRET = 'nette-debug';
 
-	/** @var array of function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
+	/** @var callable[]  function(Configurator $sender, DI\Compiler $compiler); Occurs after the compiler is created */
 	public $onCompile;
 
 	/** @var array */
@@ -53,7 +53,6 @@ class Configurator extends Object
 	public function __construct()
 	{
 		$this->parameters = $this->getDefaultParameters();
-		Nette\Bridges\Framework\TracyBridge::initialize();
 	}
 
 
@@ -64,7 +63,12 @@ class Configurator extends Object
 	 */
 	public function setDebugMode($value)
 	{
-		$this->parameters['debugMode'] = is_string($value) || is_array($value) ? static::detectDebugMode($value) : (bool) $value;
+		if (is_string($value) || is_array($value)) {
+			$value = static::detectDebugMode($value);
+		} elseif (!is_bool($value)) {
+			throw new Nette\InvalidArgumentException(sprintf('Value must be either a string, array, or boolean, %s given.', gettype($value)));
+		}
+		$this->parameters['debugMode'] = $value;
 		$this->parameters['productionMode'] = !$this->parameters['debugMode']; // compatibility
 		return $this;
 	}
@@ -134,6 +138,7 @@ class Configurator extends Object
 	{
 		Tracy\Debugger::$strictMode = TRUE;
 		Tracy\Debugger::enable(!$this->parameters['debugMode'], $logDirectory, $email);
+		Nette\Bridges\Framework\TracyBridge::initialize();
 	}
 
 

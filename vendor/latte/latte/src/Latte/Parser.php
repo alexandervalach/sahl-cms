@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Latte (http://latte.nette.org)
+ * Copyright (c) 2008 David Grudl (http://davidgrudl.com)
  */
 
 namespace Latte;
@@ -57,6 +57,9 @@ class Parser extends Object
 	/** @var string used by filter() */
 	private $syntaxEndTag;
 
+	/** @var int */
+	private $syntaxEndLevel = 0;
+
 	/** @var bool */
 	private $xmlMode;
 
@@ -92,7 +95,7 @@ class Parser extends Object
 		$this->lastHtmlTag = $this->syntaxEndTag = NULL;
 
 		while ($this->offset < strlen($input)) {
-			$matches = $this->{"context".$this->context[0]}();
+			$matches = $this->{'context' . $this->context[0]}();
 
 			if (!$matches) { // EOF
 				break;
@@ -353,7 +356,7 @@ class Parser extends Object
 				(?P<name>\?|/?[a-z]\w*+(?:[.:]\w+)*+(?!::|\(|\\\\))|   ## ?, name, /name, but not function( or class:: or namespace\
 				(?P<noescape>!?)(?P<shortname>/?[=\~#%^&_]?)      ## !expression, !=expression, ...
 			)(?P<args>.*?)
-			(?P<modifiers>\|[a-z](?:'.Parser::RE_STRING.'|[^\'"])*(?<!/))?
+			(?P<modifiers>\|[a-z](?:' . self::RE_STRING . '|[^\'"])*(?<!/))?
 			(?P<empty>/?\z)
 		()\z~isx', $tag, $match)) {
 			if (preg_last_error()) {
@@ -406,12 +409,13 @@ class Parser extends Object
 
 		} elseif ($token->type === Token::HTML_ATTRIBUTE && $token->name === 'n:syntax') {
 			$this->setSyntax($token->value);
-			$this->syntaxEndTag = '/' . $this->lastHtmlTag;
+			$this->syntaxEndTag = $this->lastHtmlTag;
+			$this->syntaxEndLevel = 1;
 			$token->type = Token::COMMENT;
-
-		} elseif ($token->type === Token::HTML_TAG_END && $this->lastHtmlTag === $this->syntaxEndTag) {
+		} elseif ($token->type === Token::HTML_TAG_BEGIN && $this->lastHtmlTag === $this->syntaxEndTag) {
+			$this->syntaxEndLevel++;
+		} elseif ($token->type === Token::HTML_TAG_END && $this->lastHtmlTag === ('/' . $this->syntaxEndTag) && --$this->syntaxEndLevel === 0) {
 			$this->setSyntax($this->defaultSyntax);
-
 		} elseif ($token->type === Token::MACRO_TAG && $token->name === 'contentType') {
 			$this->setContentType($token->value);
 		}

@@ -7,9 +7,9 @@
 
 namespace Nette\Application\Routers;
 
-use Nette,
-	Nette\Application,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Application;
+use Nette\Utils\Strings;
 
 
 /**
@@ -56,7 +56,6 @@ class Route extends Nette\Object implements Application\IRouter
 	public static $styles = array(
 		'#' => array( // default style for path parameters
 			self::PATTERN => '[^/]+',
-			self::FILTER_IN => 'rawurldecode',
 			self::FILTER_OUT => array(__CLASS__, 'param2path'),
 		),
 		'?#' => array( // default style for query parameters
@@ -107,6 +106,12 @@ class Route extends Nette\Object implements Application\IRouter
 
 	/** @var int */
 	private $flags;
+
+	/** @var Nette\Http\Url */
+	private $lastRefUrl;
+
+	/** @var string */
+	private $lastBaseUrl;
 
 
 	/**
@@ -171,7 +176,7 @@ class Route extends Nette\Object implements Application\IRouter
 		}
 
 		if ($path !== '') {
-			$path = rtrim($path, '/') . '/';
+			$path = rtrim(rawurldecode($path), '/') . '/';
 		}
 
 		if (!$matches = Strings::match($path, $re)) {
@@ -388,12 +393,14 @@ class Route extends Nette\Object implements Application\IRouter
 		} while (TRUE);
 
 
-		// absolutize path
-		if ($this->type === self::RELATIVE) {
-			$url = '//' . $refUrl->getAuthority() . $refUrl->getBasePath() . $url;
-
-		} elseif ($this->type === self::PATH) {
-			$url = '//' . $refUrl->getAuthority() . $url;
+		if ($this->type !== self::HOST) {
+			if ($this->lastRefUrl !== $refUrl) {
+				$scheme = ($this->flags & self::SECURED ? 'https://' : 'http://');
+				$basePath = ($this->type === self::RELATIVE ? $refUrl->getBasePath() : '');
+				$this->lastBaseUrl = $scheme . $refUrl->getAuthority() . $basePath;
+				$this->lastRefUrl = $refUrl;
+			}
+			$url = $this->lastBaseUrl . $url;
 
 		} else {
 			$host = $refUrl->getHost();
@@ -403,13 +410,12 @@ class Route extends Nette\Object implements Application\IRouter
 				'%tld%' => $host[0],
 				'%domain%' => isset($host[1]) ? "$host[1].$host[0]" : $host[0],
 			));
+			$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
 		}
 
-		if (strpos($url, '//', 2) !== FALSE) {
+		if (strpos($url, '//', 7) !== FALSE) {
 			return NULL;
 		}
-
-		$url = ($this->flags & self::SECURED ? 'https:' : 'http:') . $url;
 
 		// build query string
 		if ($this->xlat) {
@@ -454,6 +460,13 @@ class Route extends Nette\Object implements Application\IRouter
 			} elseif (array_key_exists(self::VALUE, $meta)) {
 				$metadata[$name]['fixity'] = self::CONSTANT;
 			}
+		}
+
+		if (strpbrk($mask, '?<[') === FALSE) {
+			$this->re = '#' . preg_quote($mask, '#') . '/?\z#A';
+			$this->sequence = array($mask);
+			$this->metadata = $metadata;
+			return;
 		}
 
 		// PARSE MASK

@@ -13,8 +13,6 @@ use Nette;
 /**
  * ComponentContainer is default implementation of IContainer.
  *
- * @author     David Grudl
- *
  * @property-read \ArrayIterator $components
  */
 class Container extends Component implements IContainer
@@ -139,8 +137,13 @@ class Container extends Component implements IContainer
 
 		if (!isset($this->components[$name])) {
 			$component = $this->createComponent($name);
-			if ($component instanceof IComponent && $component->getParent() === NULL) {
-				$this->addComponent($component, $name);
+			if ($component) {
+				if (!$component instanceof IComponent) {
+					throw new Nette\UnexpectedValueException('Method createComponent() did not return Nette\ComponentModel\IComponent.');
+
+				} elseif (!isset($this->components[$name])) {
+					$this->addComponent($component, $name);
+				}
 			}
 		}
 
@@ -195,7 +198,8 @@ class Container extends Component implements IContainer
 			$iterator = new \RecursiveIteratorIterator($iterator, $deep);
 		}
 		if ($filterType) {
-			$iterator = new Nette\Iterators\Filter($iterator, function($item) use ($filterType) {
+			$class = PHP_VERSION_ID < 50400 ? 'Nette\Iterators\Filter' : 'CallbackFilterIterator';
+			$iterator = new $class($iterator, function ($item) use ($filterType) {
 				return $item instanceof $filterType;
 			});
 		}

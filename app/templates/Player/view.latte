@@ -9,6 +9,12 @@
     </a>
 </p>
 
+{if $team->image}
+    <figure>
+        <img class="img img-responsive img-rounded" src="{$basePath}{$imgFolder}{$team->image}" title="{$team->name}" alt="{$team->name}" />
+    </figure>
+{/if}
+
 <div class='table-responsive'>
     <table class='table table-striped table-condensed'>
         <caption class='caption'>

@@ -28,6 +28,7 @@ class PlayerPresenter extends BasePresenter {
         $team = $this->teamRow;
         $this->template->players = $team->related('players')->order('goals ASC, lname ASC, fname ASC');
         $this->template->team = $team;
+        $this->template->imgFolder = $this->imgFolder;
     }
 
     public function actionCreate($id) {

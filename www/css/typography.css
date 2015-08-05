@@ -228,3 +228,8 @@ table.table > tbody > tr > td > span.text-danger{
 .first{
     font-weight: bold;
 }
+
+.table-responsive > table.table {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

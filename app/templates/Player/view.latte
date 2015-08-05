@@ -23,19 +23,19 @@
             <tr>
                 <th>&nbsp;</th>
                 <th>Meno a priezvisko</th>
-                <th>Číslo</th>
                 <th>Dátum narodenia</th>
+                <th>Číslo dresu</th>
                 <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
             <tr n:foreach="$players as $player">
                 <td>{$iterator->counter}.</td>
-                <td>{$player->fname}&nbsp;{$player->lname}</td>
-                <td>{$player->num}</td>
+                <td>{$player->lname}</td>
                 <td>
                     <time datetime='{$player->born|date:'d.m.Y'}' pubdate>{$player->born|date:'d.m.Y'}</time>
                 </td>
+                <td>{$player->num}</td>
                 <td n:if="$user->loggedIn" class="text-center">
                     <a n:href="edit, $player->id" class="text-success">
                         <span class='glyphicon glyphicon-pencil'></span>

@@ -15,21 +15,11 @@
         </thead>
         <tbody>
             <tr n:foreach="$stats as $stat">
-                <td>
-                    {$iterator->counter}.
-                </td>
-                <td>
-                    {$stat->fname}&nbsp;{$stat->lname} 
-                </td>
-                <td>
-                    {$stat->num}
-                </td>
-                <td>
-                    {$stat->ref('team_id')->name}
-                </td>
-                <td>
-                    {$stat->goals}
-                </td>
+                <td>{$iterator->counter}.</td>
+                <td>{$stat->lname}</td>
+                <td>{$stat->num}</td>
+                <td>{$stat->ref('team_id')->name}</td>
+                <td>{$stat->goals}</td>
                 <td n:if="$user->loggedIn">
                     <a n:href="Player:edit, $stat->id" class="text-success">
                         <span class='glyphicon glyphicon-pencil'></span>

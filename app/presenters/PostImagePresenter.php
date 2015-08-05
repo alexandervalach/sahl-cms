@@ -122,7 +122,7 @@ class PostImagePresenter extends BasePresenter
 
 		if( $image->isOk() && $image->isImage() ) {
 			$name = $image->getSanitizedName();
-			$image->move('images/posts/' . $name);
+			$image->move($this->storage . $name);
 
 			$values = array(
 					'posts_id' => $id,

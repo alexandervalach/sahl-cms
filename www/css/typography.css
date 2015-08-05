@@ -4,227 +4,227 @@
 #main main.container h1, 
 #main main.container h3,
 aside.container h3{
-	text-align: left;
-	font-size: 1.7em;
-	font-family: "Times New Roman", Georgia, Serif;
-	color: navy;
-	display: block;
-	clear: both;
-	background-color: rgba(173,216,230,0.8);
-	padding: 10px;
-	font-weight: bold;
-	margin: 0 0 10px 0;
+    text-align: left;
+    font-size: 1.7em;
+    font-family: "Times New Roman", Georgia, Serif;
+    color: navy;
+    display: block;
+    clear: both;
+    background-color: rgba(173,216,230,0.8);
+    padding: 10px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
 }
 
 #main main.container > h1{
-	text-align: center;
+    text-align: center;
 }
 
 #main main h1.idea{
-	font-size: 17px;
-	font-style: italic;
+    font-size: 17px;
+    font-style: italic;
 }
 
 #main main.container h2{
-	text-align: left;
-	font-size: 1.5em;
-	font-family: Verdana, sans-serif;
-	color: #FF8C00;
-	display: block;
-	clear: both;
-	background: #FFE4B2;
-	padding: 10px;
-	font-weight: bold;
+    text-align: left;
+    font-size: 1.5em;
+    font-family: Verdana, sans-serif;
+    color: #FF8C00;
+    display: block;
+    clear: both;
+    background: #FFE4B2;
+    padding: 10px;
+    font-weight: bold;
 }
 
 #main main.container h2 > a{
-	text-decoration: none;
-	color: #FF8C00;
+    text-decoration: none;
+    color: #FF8C00;
 }
 
 #main main.container h2 > a:hover{
-	text-decoration: none;
-	color: #CC7000;
+    text-decoration: none;
+    color: #CC7000;
 }
 
 #main main.container > a, #nav > nav.container > a{
-	text-decoration: none;
+    text-decoration: none;
 }
 
 /*=================TYPOGRAPHY=========================*/
 .error, .success {
-	font-style: italic;
-	font-weight: bold;
-	color: red;
-	padding: 15px;
+    font-style: italic;
+    font-weight: bold;
+    color: red;
+    padding: 15px;
 }
 
 .success {
-	color: green;
-	background: lightgreen;
-	border: 1px solid green;
+    color: green;
+    background: lightgreen;
+    border: 1px solid green;
 }
 
 .gallery .delete{
-	background: none;
-	border: none;
-	text-align: center;
+    background: none;
+    border: none;
+    text-align: center;
 }
 
 footer.container {
-	text-align: center;
-	line-height: 50px;
-	vertical-align: middle;
+    text-align: center;
+    line-height: 50px;
+    vertical-align: middle;
 }
 
 .center{
-	text-align: center;
+    text-align: center;
 }	
 
 .glyphicon{
-	position: relative;
-	z-index: 0;
+    position: relative;
+    z-index: 0;
 }
 /*===============TEXT ALIGNING=======================*/
 div#secondary > div.gallery > footer{
-	text-align: center;
+    text-align: center;
 }
 /*===========Documentation for NAVIGATION MENU BAR===============*/
 @media screen and (min-width: 768px){
 
-	#nav .navbar-default {
-	    border: 0;
-	    padding: 0;
-	}
+    #nav .navbar-default {
+        border: 0;
+        padding: 0;
+    }
 
-	#nav .navbar-nav > li > a{
-	    color: black;
-	}
+    #nav .navbar-nav > li > a{
+        color: black;
+    }
 
-	#nav .navbar-nav > li {
-	    text-align: center;
-	    padding: 0;
-	    margin: 0;
-	}
+    #nav .navbar-nav > li {
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
 
-	#nav .navbar-nav > li > a:hover, #nav .navbar-nav > li >a:focus {
-	    background: url('layout/nav-hover-b.gif') repeat-x top left;
-	    display: block;
-	    width: 100%;
-	}
+    #nav .navbar-nav > li > a:hover, #nav .navbar-nav > li >a:focus {
+        background: url('layout/nav-hover-b.gif') repeat-x top left;
+        display: block;
+        width: 100%;
+    }
 
-	#nav .navbar-nav > li > a:hover, #nav .navbar-nav > li > a:focus{
-	    color: white;
-	}
+    #nav .navbar-nav > li > a:hover, #nav .navbar-nav > li > a:focus{
+        color: white;
+    }
 
-	div#nav .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
-		background-color: transparent;
-	}
+    div#nav .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+        background-color: transparent;
+    }
 }
 
 /*========================TABLES==================================*/
 .caption {
-	background:#3071a9;
-	color:white;
-	font-size:1.2em;
-	line-height:2em;
-	font-weight: bold;
+    background:#3071a9;
+    color:white;
+    font-size:1.2em;
+    line-height:2em;
+    font-weight: bold;
 }
 
 div#main > main.container > table{
-	margin: 30px 0;
+    margin: 30px 0;
 }
 
 /* CALENDAR */
 aside.container > .table-responsive {
-	margin-top: 15px;
-	margin-bottom: 10px;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }
 
 .cal-item {
-	margin: 2px auto;
+    margin: 2px auto;
 }
 /*===================ORDERED AND UNORDERED LIST======================*/
 ul {
-	list-style: none;
+    list-style: none;
 }
 
 .content ul li a {
-	font-weight: bold;
-	color: green;
-	text-decoration: none;
+    font-weight: bold;
+    color: green;
+    text-decoration: none;
 }
 
 .content ul li a:hover{
-	color: #934A15;
+    color: #934A15;
 }
 
 .content ul li a.danger{
-	color: #C9302C;
+    color: #C9302C;
 }
 
 .content ul li a.danger:hover{
-	color: #AC2925;;
+    color: #AC2925;;
 }
 
 
 /*===================BUTTONS AND FORMS============================*/
 .btn {
-	margin: 5px;
+    margin: 5px;
 }
 
 .delete {
-	background: #FFE4B2;
-	border: 1px solid #D58512;
-	padding: 15px;
+    background: #FFE4B2;
+    border: 1px solid #D58512;
+    padding: 15px;
 }
 
 /*===========================IMAGES==================================*/
 .img-gallery{
-	width: 210px;
-	height: auto;
-	float: left;
-	display: inline-block;
-	margin-top: 5px;
+    width: 210px;
+    height: auto;
+    float: left;
+    display: inline-block;
+    margin-top: 5px;
 }
 
 div#slider a{
-	color: white;
-	font-weight: bold;
-	font-size: 15px;
-	line-height: 60px;
-	text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 60px;
+    text-decoration: none;
 }
 
 div#slider p:hover, div#slider p:focus{
-	background: #FF8C00;
+    background: #FF8C00;
 }
 
 div.pull-right{
-	margin-right: 10px;
+    margin-right: 10px;
 }
 
 div.pull-right > a > span.glyphicon.glyphicon-plus{
-	color: white;
+    color: white;
 }
 
 table.table,
 table.table > tbody > tr{
-	border: 1px solid rgb( 173, 216, 230);
+    border: 1px solid rgb( 173, 216, 230);
 }
 
 table.table > tbody > tr:nth-child(even){
-	background-color: rgb(173,216,230);
+    background-color: rgb(173,216,230);
 } 
 
 table.table > tbody > tr:nth-child(odd){
-	background-color: rgb(255,255,255);
+    background-color: rgb(255,255,255);
 } 
 
 table.table > tbody > tr > td > span.text-danger{
-	font-weight: bold;
+    font-weight: bold;
 } 
 
 .first{
-	font-weight: bold;
+    font-weight: bold;
 }

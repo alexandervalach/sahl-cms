@@ -1,100 +1,100 @@
 /* CSS document - Basic layout */
 * {
-	box-sizing : border-box;
-	margin: 0;
-	padding: 0;
+    box-sizing : border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html, body {
-	width: 100%;
-	height: 100%;
-	font-family: Comfortaa, sans-serif;
-	position: relative;
-	background: url('layout/ice-lg.jpg');
+    width: 100%;
+    height: 100%;
+    font-family: Comfortaa, sans-serif;
+    position: relative;
+    background: url('layout/ice-lg.jpg');
 }
 
 #nav {
-	background : url('layout/navd.gif');
-	color : white;
-	margin: 0 auto;
+    background : url('layout/navd.gif');
+    color : white;
+    margin: 0 auto;
 }
 
 #main {
-	position: relative;
-	background-color: rgba(255,255,255,0.7);
+    position: relative;
+    background-color: rgba(255,255,255,0.7);
 }
 
 #header {
-	width: 100%;
-	height: 300px;
+    width: 100%;
+    height: 300px;
 }
 
 #switcher {
-	width: 909px;
-	height: 606px;
-	margin: -15px auto; 
-	position: relative;
+    width: 909px;
+    height: 606px;
+    margin: -15px auto; 
+    position: relative;
 }
 
 #switcher > img {
-	position: absolute; 
-	top: 0; 
-	left: 0; 
-	width: 100%; 
-	height: 100%;
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
 }
 
 #footer {
-	background : black;
-	color : white;
+    background : black;
+    color : white;
 }
 
 .container {
-	background : inherit;
-	height : inherit;
-	margin : 0 auto;
+    background : inherit;
+    height : inherit;
+    margin : 0 auto;
 }
 
 div#page{
-	box-shadow: 12px 0 15px -4px #888888, -12px 0 8px -4px #888888;
+    box-shadow: 12px 0 15px -4px #888888, -12px 0 8px -4px #888888;
 }
 
 #main div.flash.success, #main div.flash.error {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 
 /*=========FORUM TYPOGRAPHY===========*/
 main.container > section.forum {
-	padding: 10px 0 0 0;
-	clear: both;
+    padding: 10px 0 0 0;
+    clear: both;
 }
 
 main.container > section > div > img{
-	width: 80px;
-	height: 100%;
-	float: left;
-	margin: 0 5px;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+    width: 80px;
+    height: 100%;
+    float: left;
+    margin: 0 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
 }
 
 main.container > section > div {
-	background-color: rgb(173,216,230);
-	padding: 10px 5px;
-	min-height: 110px;
-	height: auto;
+    background-color: rgb(173,216,230);
+    padding: 10px 5px;
+    min-height: 110px;
+    height: auto;
 }
 
 main.container > section header a,
 main.container > section >figure > a {
-	text-decoration: none;
-	font-weight: bold;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 main.container > section > figure {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
 }
 
 main.container > section > figure > footer {
@@ -108,40 +108,40 @@ main.container > section > figure > footer {
 }
 
 div#slider {
-	width: 100%;
-	margin: 0px auto;
-	position: relative;
-	display: block;
-	height: 393px;
-	margin-bottom: 20px;
+    width: 100%;
+    margin: 0px auto;
+    position: relative;
+    display: block;
+    height: 393px;
+    margin-bottom: 20px;
 }
 
 div#slider img{
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	float: left;
-	width: 100%;
-	height: 313px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    float: left;
+    width: 100%;
+    height: 313px;
 }
 
 div#slider p{
-	float: left;
-	width: calc(100%/4);
-	display: inline-block;
-	text-align: center;
-	position: relative;
-	height: 60px;
-	top: 313px;
-	background: #9ACD32;
+    float: left;
+    width: calc(100%/4);
+    display: inline-block;
+    text-align: center;
+    position: relative;
+    height: 60px;
+    top: 313px;
+    background: #9ACD32;
 }
 
 /* ===============ASIDE WIDGETS LAYOUT=================*/
 div#page > div#main > div#primary.row > aside.container > div.panel.panel-primary{
-	margin-top: 15px;
+    margin-top: 15px;
 }
 /*===================SECONDARY=================*/
 .switch {
-	margin: 0 auto;
-	width: 300px;
+    margin: 0 auto;
+    width: 300px;
 }

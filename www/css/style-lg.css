@@ -1,111 +1,111 @@
 /* Large devices (large desktops, 1200px and up) */
 @media screen and (min-width: 1200px) {
     #nav {
-		height : 50px;
-		width : 1170px;
-	}
+        height : 50px;
+        width : 1170px;
+    }
 
-	#header {
-		width: 100%;
-		height: 300px;
-	}
+    #header {
+        width: 100%;
+        height: 343px;
+    }
 
-	#header .container {
-		background: url('layout/banner-lg.png') no-repeat top left;
-	} 
+    #header .container {
+        background: url('layout/banner-lg-1.png') no-repeat top left;
+    } 
 
-	#main {
-		width : 100%;
-		height : auto;
-	}
+    #main {
+        width : 100%;
+        height : auto;
+    }
 
-	#main .container{
-		padding: 15px;
-	}
+    #main .container{
+        padding: 15px;
+    }
 
-	#footer {
-		width: 1170px;
-		height: 50px;
-		margin: 0 auto;
-	}
+    #footer {
+        width: 1170px;
+        height: 50px;
+        margin: 0 auto;
+    }
 
-	#primary{
-		width: 1170px;
-		height: 100%;
-		margin: 0 auto;
-	}
+    #primary{
+        width: 1170px;
+        height: 100%;
+        margin: 0 auto;
+    }
 
-	div#page{
-		width: 1170px;
-		margin: 0 auto;
-		height: auto;
-	}
+    div#page{
+        width: 1170px;
+        margin: 0 auto;
+        height: auto;
+    }
 
-	/*=====================NAVIGATION BAR=======-==========*/
-	nav.navbar.navbar-default.container {
-		width: 1170px;
-	}
+    /*=====================NAVIGATION BAR=======-==========*/
+    nav.navbar.navbar-default.container {
+        width: 1170px;
+    }
 
-	div#example-navbar-collapse.collapse.navbar-collapse {
-		width: 1170px;
-		margin: 0;
-		padding: 0;
-	}
+    div#example-navbar-collapse.collapse.navbar-collapse {
+        width: 1170px;
+        margin: 0;
+        padding: 0;
+    }
 
-	ul.navbar-nav.nav {
-		width: 1170px;
-	}
+    ul.navbar-nav.nav {
+        width: 1170px;
+    }
 
-	#nav ul.nav.navbar-nav > li > a {
-	    height: 50px;
-	    padding: 0px;
-	    font-weight: bold;
-	    line-height: 50px;
-	}
-	
-	#nav ul.dropdown-menu{
-		margin-top: -6px;
-		background: none;
-		border: 0;
-		box-shadow: none;
-	}
+    #nav ul.nav.navbar-nav > li > a {
+        height: 50px;
+        padding: 0px;
+        font-weight: bold;
+        line-height: 50px;
+    }
 
-	#nav ul.dropdown-menu > li > a{
-		background: #449D44;
-		color: white;
-		padding:0;
-		margin:0;
-		width: 200px;
-		line-height:40px;
-		height: 40px;
-		text-align: center;
-		font-weight: bold;
-	}
+    #nav ul.dropdown-menu{
+        margin-top: -6px;
+        background: none;
+        border: 0;
+        box-shadow: none;
+    }
 
-	#nav ul.dropdown-menu > li > a:hover{
-		background: #FFD700;
-		color: black;
-		height: 40px;
-	}
-	/*===============ADDITIONAL LAYOUT=====================*/
+    #nav ul.dropdown-menu > li > a{
+        background: #449D44;
+        color: white;
+        padding:0;
+        margin:0;
+        width: 200px;
+        line-height:40px;
+        height: 40px;
+        text-align: center;
+        font-weight: bold;
+    }
 
-	div#main section.comment{
-		clear: both;
-	}
+    #nav ul.dropdown-menu > li > a:hover{
+        background: #FFD700;
+        color: black;
+        height: 40px;
+    }
+    /*===============ADDITIONAL LAYOUT=====================*/
 
-	/*======================GALLERY========================*/
-	.gallery{
-		float: left;
-		display: inline-block;
-		margin: 5px;
-	}
+    div#main section.comment{
+        clear: both;
+    }
 
-	div.images > div.gallery{
-		width: 200px;
-	}
+    /*======================GALLERY========================*/
+    .gallery{
+        float: left;
+        display: inline-block;
+        margin: 5px;
+    }
 
-	/*===============PAGE COMPONENTS AND SECONDARY LAYOUT============*/
-	.medium-size{
-		width: 500px;
-	}
+    div.images > div.gallery{
+        width: 200px;
+    }
+
+    /*===============PAGE COMPONENTS AND SECONDARY LAYOUT============*/
+    .medium-size{
+        width: 500px;
+    }
 }

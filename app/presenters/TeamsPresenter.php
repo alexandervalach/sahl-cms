@@ -6,6 +6,7 @@ use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequetsException;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\FileSystem;
 
 class TeamsPresenter extends BasePresenter {
 
@@ -119,13 +120,16 @@ class TeamsPresenter extends BasePresenter {
     }
 
     public function submittedDeleteForm() {
-        $players = $this->teamRow->related('players');
+        $team = $this->teamRow;
+        $players = $team->related('players');
+        $img = new FileSystem;
 
         foreach ($players as $player) {
             $player->delete();
         }
-
-        $this->teamRow->delete();
+        
+        $img->delete( $this->storage . $team->image );
+        $team->delete();
         $this->flashMessage('Tím bol odstránený aj so všetkými hráčmi.', 'success');
         $this->redirect('all');
     }

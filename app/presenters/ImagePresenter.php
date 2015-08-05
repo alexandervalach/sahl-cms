@@ -4,122 +4,110 @@ namespace App\Presenters;
 
 use Nette;
 
-class ImagePresenter extends BasePresenter
-{
-	private $database;
+class ImagePresenter extends BasePresenter {
 
-	public function __construct(Nette\Database\Context $database)
-	{
-	    $this->database = $database;
-	}
+    private $database;
 
-	public function actionAdd($albumId)
-	{
-	    if(!$this->user->isLoggedIn() )
-	    {
-	        $this->redirect('Sign:in');
-	    }
+    public function __construct(Nette\Database\Context $database) {
+        $this->database = $database;
+    }
 
-	    $this->template->album = $this->database->table('albums')->get($albumId);
-	}
+    public function actionAdd($albumId) {
+        if (!$this->user->isLoggedIn()) {
+            $this->redirect('Sign:in');
+        }
 
-	//Funkcia skontroluje, či existuje hľadaný záznam
-	public function actionDelete($imgId, $albumId)
-	{
-		if(!$this->user->isLoggedIn() )
-	    {
-	        $this->redirect('Sign:in');
-	    }	
+        $this->template->album = $this->database->table('albums')->get($albumId);
+    }
 
-	    $this->template->img = $this->database->table('gallery')->get($imgId);
+    //Funkcia skontroluje, či existuje hľadaný záznam
+    public function actionDelete($imgId, $albumId) {
+        if (!$this->user->isLoggedIn()) {
+            $this->redirect('Sign:in');
+        }
 
-	    if(!$this->template->img) {
-	    	$this->error('Záznam neexistuje.');
-	    }
-	}
+        $this->template->img = $this->database->table('gallery')->get($imgId);
 
-	protected function createComponentGalleryForm()
-  	{
-	    $form = new Nette\Application\UI\Form;
+        if (!$this->template->img) {
+            $this->error('Záznam neexistuje.');
+        }
+    }
 
-	    $form->addUpload("file", 'Obrázok:');
+    protected function createComponentGalleryForm() {
+        $form = new Nette\Application\UI\Form;
 
-	    $form->addTextArea('description','Popis:')
-	    	 ->setAttribute('class','form-control');
+        $form->addUpload("file", 'Obrázok:');
 
-	    $form->addSubmit("save", "Uložiť")
-	    	 ->setAttribute('class','btn btn-large btn-primary');
+        $form->addTextArea('description', 'Popis:')
+                ->setAttribute('class', 'form-control');
 
-	    $form->onSuccess[] = $this->galleryFormSuceeded;
-	    return $form;
-  	}
+        $form->addSubmit("save", "Uložiť")
+                ->setAttribute('class', 'btn btn-large btn-primary');
 
-  	public function deleteFormSucceeded()
-  	{
-	    $albumId = $this->getParameter('albumId');
-	    $imgId = $this->getParameter('imgId');
+        $form->onSuccess[] = $this->galleryFormSuceeded;
+        return $form;
+    }
 
-	    $onDelete = $this->database->table('gallery')->get($imgId);
+    public function deleteFormSucceeded() {
+        $albumId = $this->getParameter('albumId');
+        $imgId = $this->getParameter('imgId');
 
-	    $file = new Nette\Utils\FileSystem;
-	    $file->delete('images/' . $onDelete->name);
-	      
-	    $onDelete->delete();
+        $onDelete = $this->database->table('gallery')->get($imgId);
 
-	    $this->flashMessage('Obrázok zmazaný.','success');
-	    $this->redirect('show', $albumId);
- 	}
+        $file = new Nette\Utils\FileSystem;
+        $file->delete('images/' . $onDelete->name);
 
- 	public function formCancelled()
- 	{
- 		$albumId = $this->getParameter('albumId');
- 		$this->redirect('show', $albumId);
- 	}
+        $onDelete->delete();
 
- 	public function galleryFormSuceeded($form)
-  	{
-	    $values = $form->getValues();
-	    $file = $values->file;
-	    $albumId = $this->getParameter('albumId');
-	    $description = $values->description;
+        $this->flashMessage('Obrázok zmazaný.', 'success');
+        $this->redirect('show', $albumId);
+    }
 
-	    if( $file->isOk() && $file->isImage() ) 
-	    {
-		    $file_name = $file->getSanitizedName();
-		    $file->move('images/' . $file_name);
+    public function formCancelled() {
+        $albumId = $this->getParameter('albumId');
+        $this->redirect('show', $albumId);
+    }
 
-		    $data = array(
-		        'album_id' => $albumId,
-		        'name' => $file_name,
-		        'description' => $description
-		    );
+    public function galleryFormSuceeded($form) {
+        $values = $form->getValues();
+        $file = $values->file;
+        $albumId = $this->getParameter('albumId');
+        $description = $values->description;
 
-		    $albumData = array(
-		    	'name' => $file_name
-		    );
+        if ($file->isOk() && $file->isImage()) {
+            $file_name = $file->getSanitizedName();
+            $file->move('images/' . $file_name);
 
-		    $this->database->table('gallery')->insert($data);
-		    $this->database->table('albums')->get($albumId)->update($albumData);
-		      
-		    $this->flashMessage('Obrázok pridaný do galérie.','success');
-	    	$this->redirect('add', $albumId);
-	    } else {
+            $data = array(
+                'album_id' => $albumId,
+                'name' => $file_name,
+                'description' => $description
+            );
 
-	    	$this->error('Obrázok smie byť len vo formátoch GIF, PNG, JPG.');
+            $albumData = array(
+                'name' => $file_name
+            );
 
-	    }
-  	}
+            $this->database->table('gallery')->insert($data);
+            $this->database->table('albums')->get($albumId)->update($albumData);
 
-  	public function renderShow($albumId = 1)
-  	{	
-	    $album = $this->database->table('albums')->get($albumId);
+            $this->flashMessage('Obrázok pridaný do galérie.', 'success');
+            $this->redirect('add', $albumId);
+        } else {
 
-	    if(!$album)
-	    {
-	       	$this->error('Stránka nenájdená.');
-	    }
+            $this->error('Obrázok smie byť len vo formátoch GIF, PNG, JPG.');
+        }
+    }
 
-	    $this->template->album = $album;
-	    $this->template->gallery = $album->related('gallery')->order('id DESC');
-	}
+    public function renderShow($albumId = 1) {
+        $album = $this->database->table('albums')->get($albumId);
+
+        if (!$album) {
+            $this->error('Stránka nenájdená.');
+        }
+
+        $this->template->album = $album;
+        $this->template->gallery = $album->related('gallery')->order('id DESC');
+    }
+
 }

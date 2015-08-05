@@ -15,6 +15,9 @@ class TeamsPresenter extends BasePresenter {
     /** @var string */
     private $error = "Team not found";
 
+    /** @var string */
+    private $storage = "images/";
+
     public function actionCreate() {
         $this->userIsLogged();
     }
@@ -23,12 +26,12 @@ class TeamsPresenter extends BasePresenter {
         $this->userIsLogged();
         $this->teamRow = $this->teamsRepository->findById($id);
     }
-    
+
     public function renderDelete($id) {
         if (!$this->teamRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequetsException($this->error);
         }
-        $this->template->team = $this->teamRow; 
+        $this->template->team = $this->teamRow;
         $this->getComponent('deleteForm');
     }
 
@@ -39,8 +42,8 @@ class TeamsPresenter extends BasePresenter {
 
     public function renderEdit($id) {
         if (!$this->teamRow)
-            throw new BadRequestException($this->error);
-        
+            throw new BadRequetsException($this->error);
+
         $this->getComponent('editTeamForm')->setDefaults($this->teamRow);
         $this->template->team = $this->teamRow;
     }
@@ -53,6 +56,25 @@ class TeamsPresenter extends BasePresenter {
         /** $team is instance of Nette\Database\Table\Selection */
         $team = $this->teamsRepository->findAll()->order("name ASC");
         $this->template->teams = $team;
+    }
+
+    public function actionUpload($id) {
+        $this->userIsLogged();
+        $this->teamRow = $this->teamsRepository->findById($id);
+    }
+
+    public function renderUpload($id) {
+        $this->template->team = $this->teamRow;
+        $this->getComponent('uploadForm');
+    }
+
+    protected function createComponentUploadForm() {
+        $form = new Form;
+        $form->addUpload('image', 'Nahraj obrázok');
+        $form->addSubmit('upload', 'Uložiť');
+        $form->onSuccess[] = $this->submittedUploadForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
     }
 
     protected function createComponentAddTeamForm() {
@@ -81,6 +103,19 @@ class TeamsPresenter extends BasePresenter {
         $form->onSuccess[] = $this->submittedEditTeamForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
+    }
+
+    public function submittedUploadForm(Form $form) {
+        $values = $form->getValues();
+        $img = $values->image;
+
+        if ($img->isOk() AND $img->isImage()) {
+            $name = $img->getSanitizedName();
+            $img->move($this->storage . $name);
+            $data = array('image' => $name);
+            $this->teamRow->update($data);
+        }
+        $this->redirect('Player:view', $this->teamRow);
     }
 
     public function submittedDeleteForm() {

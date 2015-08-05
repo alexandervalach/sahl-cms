@@ -1,0 +1,19 @@
+{block content}
+
+{*
+<div class="fileUpload btn btn-primary">
+    <span>Upload</span>
+    <input type="file" class="upload" />
+</div>
+*}
+<h1>Pridať obrázok tímu {$team->name}</h1>
+
+<p>
+    <a n:href="all" class="btn btn-large btn-default">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        Tímy
+    </a>
+</p>
+<section>
+    {control uploadForm}
+</section>

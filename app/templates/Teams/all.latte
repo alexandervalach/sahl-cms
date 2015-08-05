@@ -15,7 +15,7 @@
                 <tr>
                     <th>&nbsp;</th>
                     <th>Názov</th>
-                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
+                    <th n:if="$user->loggedIn" colspan="3">&nbsp;</th>
                 </tr>
             </thead>
             <tbody n:foreach='$teams as $team'>
@@ -34,6 +34,11 @@
                     <td  n:if='$user->loggedIn' class="text-center">
                         <a n:href='delete, $team->id' class="text-danger">
                             <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                    <td  n:if='$user->loggedIn' class="text-center">
+                        <a n:href='upload, $team->id' class="text-info">
+                            <span class="glyphicon glyphicon-picture"></span>
                         </a>
                     </td>
                 </tr>

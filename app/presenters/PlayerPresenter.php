@@ -69,17 +69,13 @@ class PlayerPresenter extends BasePresenter {
     protected function createComponentAddPlayerForm() {
         $form = new Form;
 
-        $form->addText('fname', 'Meno:')
-                ->setRequired("Meno je povinné pole.");
+        $form->addText('lname', 'Meno a priezvisko:')
+                ->setRequired("Meno a priezvisko je povinné pole.");
 
-        $form->addText('lname', 'Priezvisko:')
-                ->setRequired("Priezvisko je povinné pole.");
-
-        $form->addText('num', 'Číslo:')
-                ->setType('number');
+        $form->addText('num', 'Číslo:');
 
         $form->addText('born', 'Dátum narodenia:')
-                ->setAttribute('placeholder', 'RRRR-MM-DD')
+                ->setAttribute('placeholder', 'DD.MM.RRRR')
                 ->setRequired("Dátum narodenia je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
@@ -91,20 +87,15 @@ class PlayerPresenter extends BasePresenter {
 
     protected function createComponentEditPlayerForm() {
         $form = new Form;
-        $form->addText('fname', 'Meno:')
-                ->setRequired("Meno je povinné pole.");
+        $form->addText('lname', 'Meno a priezvisko:')
+                ->setRequired("Meno a priezvisko je povinné pole.");
 
-        $form->addText('lname', 'Priezvisko:')
-                ->setRequired("Priezvisko je povinné pole.");
+        $form->addText('num', 'Číslo:');
 
-        $form->addText('num', 'Číslo:')
-                ->setType('number');
-
-        $form->addText('goals', 'Góly:')
-                ->setType('number');
+        $form->addText('goals', 'Góly:');
 
         $form->addText('born', 'Dátum narodenia:')
-                ->setAttribute('placeholder', 'RRRR-MM-DD')
+                ->setAttribute('placeholder', 'DD.MM.RRRR')
                 ->setRequired("Dátum narodenia je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');

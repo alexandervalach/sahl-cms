@@ -13,6 +13,7 @@ use App\Model\PlayersRepository;
 use App\Model\PostImageRepository;
 use App\Model\PostsRepository;
 use App\Model\RulesRepository;
+use App\Model\RoundsRepository;
 use App\Model\Table_namesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
@@ -58,6 +59,9 @@ abstract class BasePresenter extends Presenter
 	/** @var PostsRepository @inject */
 	public $postsRepository;
 
+        /** @var RoundsRepository @inject */
+        public $roundsRepository;
+        
 	/** @var RulesRepository @inject */
 	public $rulesRepository;
 

@@ -51,6 +51,10 @@ aside.container h3{
     text-decoration: none;
 }
 
+h3 {
+    text-align: center;
+}
+
 /*=================TYPOGRAPHY=========================*/
 .error, .success {
     font-style: italic;
@@ -232,4 +236,11 @@ table.table > tbody > tr > td > span.text-danger{
 .table-responsive > table.table {
     margin-top: 10px;
     margin-bottom: 10px;
+}
+
+section#rounds > ul > li > a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #FF8C00;
+    font-size: 1.2em;
 }

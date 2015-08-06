@@ -208,8 +208,14 @@ div.pull-right{
     margin-right: 10px;
 }
 
-div.pull-right > a > span.glyphicon.glyphicon-plus{
+div.pull-right > a > span.glyphicon.glyphicon-plus,
+div.pull-left > a > span.glyphicon.glyphicon-pencil,
+div.pull-left > a > span.glyphicon.glyphicon-remove{
     color: white;
+}
+
+div.pull-left{
+    margin-left: 10px;
 }
 
 table.table,

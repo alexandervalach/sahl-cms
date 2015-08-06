@@ -26,11 +26,13 @@ class FightsPresenter extends BasePresenter {
         $this->template->fights = $this->fightsRepository->findAll()->order('time');
     }
 
-    protected function actionCreate() {
+    protected function actionCreate($id) {
         $this->userIsLogged();
+        $this->roundRow = $this->roundsRepository->findById($id);
     }
 
-    public function renderCreate() {
+    public function renderCreate($id) {
+        $this->template->round = $this->roundRow;
         $this->getComponent('addFightForm');
     }
 
@@ -40,8 +42,9 @@ class FightsPresenter extends BasePresenter {
     }
 
     public function renderEdit($id) {
-        if (!$this->fightRow)
+        if (!$this->fightRow) {
             throw new BadRequestException($this->error);
+        }
 
         $this->getComponent('editFightForm')->setDefaults($this->fightRow);
     }
@@ -122,6 +125,7 @@ class FightsPresenter extends BasePresenter {
             return false;
         }
 
+        $values['round_id'] = $this->roundRow;
         $this->fightsRepository->insert($values);
         $this->redirect('all');
     }

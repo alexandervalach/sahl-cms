@@ -11,9 +11,16 @@
 <section id="rounds">
     <p class="table-responsive">
         {foreach $rounds as $round}
-            {var $fights = $round->related('fights')}
+        {var $fights = $round->related('fights')}
         <table class="table table-condensed">
-            <caption class="caption">{$round->name}</caption>
+            <caption class="caption">
+                {$round->name}
+                <div class="pull-right">
+                    <a n:href="Fights:create" title="pridať zápas">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                </div>
+            </caption>
             <thead>
             <tr>
                 <th colspan="3" class="text-center">Tím</th>

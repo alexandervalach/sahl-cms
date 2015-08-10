@@ -53,7 +53,9 @@
                             </li>
 
                             <li n:if="$user->loggedIn" class="dropdown col-lg-1 col-md-1 col-sm-1">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pridaj</a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    Pridaj <span class="caret"></span>
+                                </a>
 
                                 <ul class="dropdown-menu">
                                     <li>
@@ -110,10 +112,13 @@
                                 </a>
                             </li>
 
-                            <li class='col-lg-1 col-md-1 col-sm-1'>
-                                <a n:href="Rules:all#nav" role='link'>
-                                    Pravidlá
-                                </a>
+                            <li class='col-lg-1 col-md-1 col-sm-1 dropdown'>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role='link'>
+                                    Pravidlá <span class="caret"></span>
+                                </a>          
+                                <ul class="dropdown-menu">
+                                    <li><a href="#"  role='link'>Tresty hráčov</a></li>
+                                </ul>
                             </li>
 
                             <li class='col-lg-1 col-md-1 col-sm-1'>

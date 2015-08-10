@@ -1,0 +1,28 @@
+{block content}
+
+<h1 n:block="title">Tresty hráčov</h1>
+
+<section id="punishments">
+    {foreach $punishments as $punishment}
+        {var $player = $punishment->ref('players', 'player_id')}
+        <article>
+            <header>
+                Hráč č. {$player->num} - {$player->lname} {$player->ref('teams', 'team_id')->name} 
+            </header>
+            <main>
+                <span class="text-warning">{$punishment->text}</span>
+                <span class="text-primary">{$punishment->round}</span>
+            </main>
+            <footer>
+                <a n:href="edit, $punishment->id" class="text-success">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    Upraviť
+                </a>
+                <a n:href="delete, $punishment->id" class="text-danger">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    Odstrániť
+                </a>
+            </footer>
+        </article>
+    {/foreach}
+</section>

@@ -172,3 +172,14 @@ div#page > div#main > div#primary.row > aside.container > div.panel.panel-primar
     opacity: 0;
     filter: alpha(opacity=0);
 }
+
+section#punishments > article,
+section#rules > article{
+    margin: 15px auto;
+}
+
+section#punishments > article *,
+section#rules > article *{
+    font-weight: bold;
+    text-decoration: none;
+} 

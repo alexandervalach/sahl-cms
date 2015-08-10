@@ -8,16 +8,20 @@
     </a>
 </p>
 
-<article n:foreach="$rules as $rule">
-    <main>
-        {$rule->rule}
-    </main>
-    <footer n:if="$user->loggedIn">
-        <a n:href="edit, $rule->id" class="text-success">
-            <span class="glyphicon glyphicon-pencil"></span>
-        </a>
-        <a n:href="delete, $rule->id" class="text-danger">
-            <span class="glyphicon glyphicon-remove"></span>
-        </a>
-    </footer>
-</article>
+<section id="rules">
+    <article n:foreach="$rules as $rule">
+        <main>
+            {$rule->rule}
+        </main>
+        <footer n:if="$user->loggedIn">
+            <a n:href="edit, $rule->id" class="text-success">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Upraviť
+            </a>
+            <a n:href="delete, $rule->id" class="text-danger">
+                <span class="glyphicon glyphicon-remove"></span>
+                Odstrániť
+            </a>
+        </footer>
+    </article>
+</section>

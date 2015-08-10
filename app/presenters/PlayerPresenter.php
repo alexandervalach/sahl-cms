@@ -26,7 +26,8 @@ class PlayerPresenter extends BasePresenter {
 
     public function renderView($id) {
         $team = $this->teamRow;
-        $this->template->players = $team->related('players')->order('goals ASC, lname ASC, fname ASC');
+        $this->template->players = $team->related('players')->where('goalie', 0)->order('goals ASC, lname ASC, num ASC');
+        $this->template->goalies = $team->related('players')->where('goalie', 1)->order('goals ASC, lname ASC, num ASC');
         $this->template->team = $team;
         $this->template->imgFolder = $this->imgFolder;
     }
@@ -78,6 +79,8 @@ class PlayerPresenter extends BasePresenter {
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'DD.MM.RRRR')
                 ->setRequired("Dátum narodenia je povinné pole.");
+        
+        $form->addCheckbox('goalie', ' Brankár');
 
         $form->addSubmit('save', 'Uložiť');
 
@@ -98,6 +101,8 @@ class PlayerPresenter extends BasePresenter {
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'DD.MM.RRRR')
                 ->setRequired("Dátum narodenia je povinné pole.");
+        
+        $form->addCheckbox('goalie', ' Brankár');
 
         $form->addSubmit('save', 'Uložiť');
 

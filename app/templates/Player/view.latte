@@ -52,7 +52,30 @@
                         <span class='glyphicon glyphicon-remove'></span>
                     </a>
                 </td>
+                {var $i = $iterator->counter}
             </tr>
+            {var $i = $i + 1}
+            {foreach $goalies as $goalie}
+                <tr>
+                    <td>{$i}.</td>
+                    <td>{$goalie->lname}</td>
+                    <td>
+                        <time datetime="{$goalie->born|date:'d.m.Y'}" pubdate>{$goalie->born|date:'d.m.Y'}</time>
+                    </td>
+                    <td>Brankár, {$goalie->num}</td>
+                    <td n:href="$user->loggedIn">
+                        <a n:href="edit, $goalie->id" class="text-success">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                    <td n:href="$user->loggedIn">
+                        <a n:href="delete, $goalie->id" class="text-danger">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>    
+                </tr>
+                {var $i = $i + 1}
+            {/foreach}
         </tbody>
     </table>
 </div>

@@ -18,125 +18,138 @@ use App\Model\RoundsRepository;
 use App\Model\Table_namesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
-use App\Model\UserManager;
 use App\Model\UsersRepository;
-use DateInterval;
-use DatePeriod;
-use Nette\Utils\DateTime;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Security\AuthenticationException;
-use Nette\Database\Context;
 
 /**
  * Base presenter for all application presenters.
  */
-abstract class BasePresenter extends Presenter
-{
-	/** @var AlbumsRepository @inject */
-	public $albumsRepository;
+abstract class BasePresenter extends Presenter {
 
-	/** @var EventsRepository @inject */
-	public $eventsRepository;
+    /** @var AlbumsRepository */
+    protected $albumsRepository;
 
-	/** @var FightsRepository @inject */
-	public $fightsRepository;
+    /** @var EventsRepository */
+    protected $eventsRepository;
 
-	/** @var ForumRepository @inject */
-	public $forumRepository;
+    /** @var FightsRepository */
+    protected $fightsRepository;
 
-	/** @var GalleryRepository @inject */
-	public $galleryRepository;
+    /** @var ForumRepository */
+    protected $forumRepository;
 
-	/** @var LinksRepository @inject */
-	public $linksRepository;
+    /** @var GalleryRepository */
+    protected $galleryRepository;
 
-	/** @var PlayersRepository @inject */
-	public $playersRepository;
+    /** @var LinksRepository */
+    protected $linksRepository;
 
-	/** @var PostImageRepository @inject */
-	public $postImageRepository;
+    /** @var PlayersRepository */
+    protected $playersRepository;
 
-	/** @var PostsRepository @inject */
-	public $postsRepository;
-        
-        /** @var PunishmentsRepository @inject */
-        public $punishmentsRepository;
+    /** @var PostImageRepository */
+    protected $postImageRepository;
 
-        /** @var RoundsRepository @inject */
-        public $roundsRepository;
-        
-	/** @var RulesRepository @inject */
-	public $rulesRepository;
+    /** @var PostsRepository */
+    protected $postsRepository;
 
-	/** @var TablesRepository @inject */
-	public $tablesRepository;
+    /** @var PunishmentsRepository */
+    protected $punishmentsRepository;
 
-	/** @var Table_namesRepository @inject */
-	public $tableNameRepository;
+    /** @var RoundsRepository */
+    protected $roundsRepository;
 
-	/** @var TeamsRepository @inject */
-	public $teamsRepository;
+    /** @var RulesRepository */
+    protected $rulesRepository;
 
-	/** @var UsersRepository @inject */
-	public $usersRepository;
-        
-        /** @var string */
-        protected $imgFolder = "/images/";
+    /** @var TablesRepository */
+    protected $tablesRepository;
 
-	protected function createComponentDeleteForm()
-	{
-		$form = new Form;
+    /** @var Table_namesRepository */
+    protected $tableNameRepository;
 
-		$form->addSubmit('cancel','Zruš')
-			 ->setAttribute('class','btn btn-warning btn-large')
-			 ->onClick[] = $this->formCancelled;
+    /** @var TeamsRepository */
+    protected $teamsRepository;
 
-		$form->addSubmit('delete','Zmaž')
-			 ->setAttribute('class','btn btn-danger btn-large')
-			 ->onClick[] = $this->submittedDeleteForm;
+    /** @var UsersRepository */
+    protected $usersRepository;
 
-		$form->addProtection();
-		return $form;
-	}
+    /** @var string */
+    protected $imgFolder = "/images/";
 
-	protected function createComponentSignInForm()
-	{
-		$form = new Form;
-		$form->addText('username', 'Užívateľské meno:')
-			 ->setRequired('Zadaj, prosím, užívateľské meno.');
+    public function __construct(
+    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, Table_namesRepository $tableNameRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
 
-		$form->addPassword('password', 'Heslo:')
-			 ->setRequired('Zadaj, prosím, heslo.');
+        $this->albumsRepository = $albumsRepository;
+        $this->eventsRepository = $eventsRepository;
+        $this->fightsRepository = $fightsRepository;
+        $this->forumRepository = $forumRepository;
+        $this->galleryRepository = $galleryRepository;
+        $this->linksRepository = $linksRepository;
+        $this->playersRepository = $playersRepository;
+        $this->postImageRepository = $postImageRepository;
+        $this->postsRepository = $postsRepository;
+        $this->punishmentsRepository = $punishmentsRepository;
+        $this->roundsRepository = $roundsRepository;
+        $this->rulesRepository = $rulesRepository;
+        $this->tableNameRepository = $tableNameRepository;
+        $this->tablesRepository = $tablesRepository;
+        $this->teamsRepository = $teamsRepository;
+        $this->usersRepository = $usersRepository;
+    }
 
-		$form->addSubmit('send', 'Prihlásiť');
+    protected function createComponentDeleteForm() {
+        $form = new Form;
 
-		$form->onSuccess[] = $this->submittedSignInForm;
-		FormHelper::setBootstrapFormRenderer( $form );
-		return $form;
-	}
+        $form->addSubmit('cancel', 'Zruš')
+                        ->setAttribute('class', 'btn btn-warning btn-large')
+                ->onClick[] = $this->formCancelled;
 
-	public function submittedSignInForm( $form )
-	{
-		$values = $form->values;
+        $form->addSubmit('delete', 'Zmaž')
+                        ->setAttribute('class', 'btn btn-danger btn-large')
+                ->onClick[] = $this->submittedDeleteForm;
 
-		try {
-			$this->getUser()->login( $values->username, $values->password );
-			$this->redirect('Homepage:');
+        $form->addProtection();
+        return $form;
+    }
 
-		} catch ( AuthenticationException $e ) {
-			$form->addError('Nesprávne meno alebo heslo.');
-		}
-	}
+    protected function createComponentSignInForm() {
+        $form = new Form;
+        $form->addText('username', 'Užívateľské meno:')
+                ->setRequired('Zadaj, prosím, užívateľské meno.');
 
-	public function actionOut()
-	{
-		$this->getUser()->logout();
-		$this->flashMessage('Boli ste odhlásený.','success');
-		$this->redirect('Homepage:');
-	}
+        $form->addPassword('password', 'Heslo:')
+                ->setRequired('Zadaj, prosím, heslo.');
 
-	protected function userIsLogged() {		
-		if( !$this->user->isLoggedIn() ) 	$this->redirect('Sign:in');
-	}
+        $form->addSubmit('send', 'Prihlásiť');
+
+        $form->onSuccess[] = $this->submittedSignInForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
+    public function submittedSignInForm($form) {
+        $values = $form->values;
+
+        try {
+            $this->getUser()->login($values->username, $values->password);
+            $this->redirect('Homepage:');
+        } catch (AuthenticationException $e) {
+            $form->addError('Nesprávne meno alebo heslo.');
+        }
+    }
+
+    public function actionOut() {
+        $this->getUser()->logout();
+        $this->flashMessage('Boli ste odhlásený.', 'success');
+        $this->redirect('Homepage:');
+    }
+
+    protected function userIsLogged() {
+        if (!$this->user->isLoggedIn())
+            $this->redirect('Sign:in');
+    }
+
 }

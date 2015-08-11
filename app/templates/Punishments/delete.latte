@@ -1,0 +1,12 @@
+{block content}
+
+<h1 n:block="title">Odstráň trest</h1>
+
+{if $punishment}
+    <p class="delete text-warnig">
+        Naozaj chceš odstrániť tento trest?
+    </p>
+    {control deleteForm}
+{else}
+    <p class="text-danger">Nemôžem nájsť vhodný trest.</p>
+{/if}

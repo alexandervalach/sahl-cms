@@ -19,6 +19,14 @@ class PunishmentsPresenter extends BasePresenter {
         $this->template->punishments = $this->punishmentsRepository->findAll();
     }
 
+    public function actionAdd() {
+        $this->userIsLogged();
+    }
+
+    public function rednerAdd() {
+        $this->getComponent('addPunishmentForm');
+    }
+
     public function actionEdit($id) {
         $this->userIsLogged();
         $this->punishmentRow = $this->punishmentsRepository->findById($id);
@@ -29,11 +37,13 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function actionDelete($id) {
-        
+        $this->userIsLogged();
+        $this->punishmentRow = $this->punishmentsRepository->findById($id);
     }
 
     public function renderDelete($id) {
-        
+        $this->template->punishment = $this->punishmentRow;
+        $this->getComponent('deleteForm');
     }
 
     protected function createComponentEditPunishmentForm() {
@@ -46,17 +56,39 @@ class PunishmentsPresenter extends BasePresenter {
         return $form;
     }
 
+    protected function createComponentAddPunishmentForm() {
+        $form = new Form;
+        $form->addText('text', 'Trest');
+        $form->addText('round', 'Kolá');
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = $this->submittedAddPunishmentForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
     public function submittedEditPunishmentForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->punishmentRow->update($values);
         $this->redirect('all');
     }
-    
-    public function submittedDeleteForm() {
+
+    public function submittedAddPunishmentForm(Form $form) {
+        $this->userIsLogged();
+        $values = $form->getValues();
+        $this->punishmentsRepository->insert($values);
+        $this->redirect('all');
     }
-    
+
+    public function submittedDeleteForm() {
+        $this->userIsLogged();
+        $this->punishmentRow->delete();
+        $this->flashMessage('Trest bol odstránený', 'success');
+        $this->redirect('all');
+    }
+
     public function formCancelled() {
         $this->redirect('all');
     }
+
 }

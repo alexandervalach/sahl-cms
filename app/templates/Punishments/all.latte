@@ -2,6 +2,12 @@
 
 <h1 n:block="title">Tresty hráčov</h1>
 
+<p n:if="$user->loggedIn">
+    <a n:href="add" class="btn btn-large btn-primary">
+        <span class="glyphicon glyphicon-plus"></span> Pridať
+    </a>
+</p>
+
 <section id="punishments">
     {foreach $punishments as $punishment}
         {var $player = $punishment->ref('players', 'player_id')}

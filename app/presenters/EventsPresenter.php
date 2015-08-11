@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Presenters;
 
 use App\FormHelper;
@@ -6,124 +7,106 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 
-class EventsPresenter extends BasePresenter
-{
-	/** @var ActiveRow */
-	private $eventRow;
+class EventsPresenter extends BasePresenter {
 
-	/** @var Selection */
-	private $eventSelection;
+    /** @var ActiveRow */
+    private $eventRow;
 
-	/** @var string */
-	private $error = "Event not found!";
-	
-	public function actionAll() {
-		$this->eventSelection = $this->eventsRepository->findAll()->order('starts_at DESC');
-	}
+    /** @var string */
+    private $error = "Event not found!";
 
-	public function renderAll(){
-		$this->template->events = $this->eventSelection;
-	}
+    public function actionAll() {
+        
+    }
 
-	public function actionEdit( $id )
-	{
-		$this->userIsLogged();
+    public function renderAll() {
+        $this->template->events = $this->eventsRepository->findAll();
+    }
 
-		$this->eventRow = $this->eventsRepository->findById( $id );
-	}
+    public function actionEdit($id) {
+        $this->userIsLogged();
 
-	public function renderEdit( $id ) {
-		if( !$this->eventRow )
-			throw new BadRequestException( $this->error );
+        $this->eventRow = $this->eventsRepository->findById($id);
+    }
 
-		$this->getComponent('editEventForm')->setDefaults( $this->eventRow );
-	}
+    public function renderEdit($id) {
+        if (!$this->eventRow) {
+            throw new BadRequestException($this->error);
+        }
 
-	public function actionDelete( $id )
-	{
-		$this->userIsLogged();
-		$this->eventRow = $this->eventsRepository->findById( $id );
-		$this->template->event = $this->eventRow;
-	}
+        $this->getComponent('editEventForm')->setDefaults($this->eventRow);
+    }
 
-	public function renderDelete( $id ) {
-		if( !$this->eventRow ) {
-			throw new BadRequestException( $this->error );
-		}
-		$this->getComponent('deleteForm');
-	}
+    public function actionDelete($id) {
+        $this->userIsLogged();
+        $this->eventRow = $this->eventsRepository->findById($id);
+    }
 
-	public function actionCreate() {
-		$this->userIsLogged();
-	}
+    public function renderDelete($id) {
+        if (!$this->eventRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->event = $this->eventRow;
+        $this->getComponent('deleteForm');
+    }
 
-	public function renderCreate() {
-		$this->getComponent('addEventForm');
-	}
+    public function actionCreate() {
+        $this->userIsLogged();
+    }
 
-	protected function createComponentAddEventForm(){
-		$form = new Form;
-		$form->addText( 'starts_at' , 'Dátum' )
-			 ->setAttribute( 'value' , date('Y-m-d') )
-			 ->setRequired( "Dátume je povinné pole." );
+    public function renderCreate() {
+        $this->getComponent('addEventForm');
+    }
 
-		$form->addTextArea( 'event' , 'Udalosť:' )
-			 ->setRequired( "Názov udalosti je povinné pole." );
+    protected function createComponentAddEventForm() {
+        $form = new Form;
 
-		$form->addTextArea( 'note' , 'Poznámka:' )
-			 ->setAttribute( 'class', 'form-control' );
+        $form->addTextArea('event', 'Rozpis zápasov:')
+                ->setRequired("Rozpis zápasov je povinné pole.");
 
-		$form->addSubmit( 'save' , 'Uložiť' );
-		
-		$form->onSuccess[] = $this->submittedAddEventForm;
+        $form->addSubmit('save', 'Uložiť');
 
-		FormHelper::setBootstrapFormRenderer( $form );
-		return $form;	
-	}
+        $form->onSuccess[] = $this->submittedAddEventForm;
 
-	protected function createComponentEditEventForm(){
-		$form = new Form;
-		$form->addText( 'starts_at', 'Dátum' )
-			 ->setAttribute( 'value' , date('Y-m-d') )
-			 ->setRequired( 'Dátum je povinné pole ');
-		
-		$form->addTextArea( 'event', 'Udalosť' )
-			 ->setRequired( 'Názov udalosti je povinné pole.' );
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
 
-		$form->addTextArea( 'note', 'Poznámka' )
-			 ->setAttribute( 'class', 'form-control' );
+    protected function createComponentEditEventForm() {
+        $form = new Form;
 
-		$form->addSubmit( 'save', 'Uložiť' );
+        $form->addTextArea('event', 'Rozpis zápasov')
+                ->setRequired('Rozpis zápasov je povinné pole.');
 
-		$form->onSuccess[] = $this->submittedEditEventForm;
+        $form->addSubmit('save', 'Uložiť');
 
-		FormHelper::setBootstrapFormRenderer( $form );
-		return $form;
-	}
+        $form->onSuccess[] = $this->submittedEditEventForm;
 
-	public function submittedAddEventForm( $form )
-	{
-		$values = $form->getValues();
-		$this->eventsRepository->insert($values);
-		$this->redirect('Events:all');
-	}
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
 
-	public function submittedEditEventForm( $form ) {
-		$values = $form->getValues();
-		$this->eventRow->update( $values );
-		$this->redirect('all');
-	}
+    public function submittedAddEventForm(Form $form) {
+        $values = $form->getValues();
+        $this->eventsRepository->insert($values);
+        $this->redirect('all');
+    }
 
-	public function submittedDeleteForm()
-	{
-		$this->userIsLogged();
-		$this->eventRow->delete();
-		$this->flashMessage('Udalosť zmazaná!','muted');
-		$this->redirect('all');
-	}
+    public function submittedEditEventForm(Form $form) {
+        $values = $form->getValues();
+        $this->eventRow->update($values);
+        $this->redirect('all');
+    }
 
-	public function formCancelled()
-	{
-		$this->redirect('all');
-	}
+    public function submittedDeleteForm() {
+        $this->userIsLogged();
+        $this->eventRow->delete();
+        $this->flashMessage('Rozpis odstránený!', 'success');
+        $this->redirect('all');
+    }
+
+    public function formCancelled() {
+        $this->redirect('all');
+    }
+
 }

@@ -174,7 +174,8 @@ div#page > div#main > div#primary.row > aside.container > div.panel.panel-primar
 }
 
 section#punishments > article,
-section#rules > article{
+section#rules > article,
+section#events > article{
     margin: 15px auto;
 }
 
@@ -183,3 +184,9 @@ section#rules > article *{
     font-weight: bold;
     text-decoration: none;
 } 
+
+section#events > article{
+    background: rgba(173,216,230,0.7);
+    padding: 10px;
+    border-radius: 4px;
+}

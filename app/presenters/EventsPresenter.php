@@ -61,7 +61,8 @@ class EventsPresenter extends BasePresenter {
     protected function createComponentAddEventForm() {
         $form = new Form;
 
-        $form->addTextArea('event', 'Rozpis zápasov:')
+        $form->addTextArea('event', 'Rozpis zápasov')
+                ->setAttribute('class', 'form-jqte')
                 ->setRequired("Rozpis zápasov je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
@@ -76,6 +77,7 @@ class EventsPresenter extends BasePresenter {
         $form = new Form;
 
         $form->addTextArea('event', 'Rozpis zápasov')
+                ->setAttribute('class', 'form-jqte')
                 ->setRequired('Rozpis zápasov je povinné pole.');
 
         $form->addSubmit('save', 'Uložiť');

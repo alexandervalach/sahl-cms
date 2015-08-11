@@ -12,9 +12,6 @@ class PostPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $postRow;
 
-    /** @var Nette\Database\Seletcion */
-    private $postSelection;
-
     /** @var string */
     private $error = "Post not found!";
 
@@ -47,8 +44,9 @@ class PostPresenter extends BasePresenter {
 
     public function renderEdit($id) {
         $post = $this->postRow;
-        if (!$post)
+        if (!$post) {
             throw new BadRequestException($this->error);
+        }
         $this->template->post = $post;
         $this->getComponent('editPostForm')->setDefaults($post);
     }

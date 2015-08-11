@@ -1,10 +1,26 @@
 {block content}
 <h1 n:block="title">Rozpis zápasov</h1>
 
+<p n:if="$user->loggedIn">
+    <a n:href="add" class="btn btn-primary">
+        <span class="glyphicon glyphicon-plus"></span> Pridať
+    </a>
+</p>
+
 <section id="events">
     {foreach $events as $event}
     <article>
-        {$event->event}
+        <main>
+            {$event->event|noescape}
+        </main>
+        <footer n:if="$user->loggedIn">
+            <a n:href="edit, $event->id" class="text-success">
+                <span class="glyphicon glyphicon-pencil"></span> Upraviť
+            </a>&nbsp;
+            <a n:href="delete, $event->id" class="text-danger">    
+                <span class="glyphicon glyphicon-remove"></span> Odstrániť
+            </a>
+        </footer>
     </article>
     {/foreach}
 </section>

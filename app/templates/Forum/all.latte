@@ -4,25 +4,37 @@
 
 {control addMessageForm}
 
-<section>
-    <div n:foreach="$forums as $forum" class="forum">
-        <img src='{$basePath}{$default}' />
-        <header>
-            {$forum->title}
-            <div class="pull-right" n:if="$user->loggedIn">
-                <a n:href="delete, $forum->id" class="text-muted" title="odstrániť">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a>
-            </div>
-        </header>
+<section id="forum">
+    {foreach $forums as $forum}
+        <div class="row">
+            <figure class="col-xs-3 col-sm-3 col-md-2 col-lg-2">
+                <img src='{$basePath}{$default}' class="img img-responsive "/>
+            </figure>
 
-        <main>
-            {$forum->message}
-        </main>
+            <article class="col-xs-9 col-sm-9 col-md-10 col-log-10">
+                <header>
+                    {$forum->title}
+                    <div class="pull-right" n:if="$user->loggedIn">
+                        <a n:href="delete, $forum->id" class="text-primary" title="odstrániť">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </div>
+                </header>
 
-        <footer>
-            {$forum->author}&nbsp;
-            <time pubdate><small>{$forum->created_at|date:'d.m.Y H:i'}</small></time>
-        </footer>
-    </div>
+                <main>
+                    {$forum->message|noescape}
+                </main>
+
+                <footer>
+                    {$forum->author}&nbsp;
+                    <time datetime={$forum->created_at|date:'d.m.Y H:i'} pubdate>
+                        <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
+                    </time>
+                    <a href="#" class="text-primary">
+                        <span class="glyphicon glyphicon-share-alt"></span> Odpovedať
+                    </a>
+                </footer>
+            </article>
+        </div>
+    {/foreach}
 </section>

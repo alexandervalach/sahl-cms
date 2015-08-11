@@ -63,43 +63,19 @@ div#page{
     margin-bottom: 20px;
 }
 
-
 /*=========FORUM TYPOGRAPHY===========*/
-main.container > section.forum {
-    padding: 10px 0 0 0;
-    clear: both;
+main.container > section#forum > div.row{
+    margin-bottom: 15px;
+    background: rgba(173,216,230,0.7);
+    padding: 10px 0;
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
 }
 
-main.container > section > div > img{
-    width: 80px;
-    height: 100%;
-    float: left;
-    margin: 0 5px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+main.container > section#forum > div.row > article > footer > time{
+    display: block;
 }
-
-main.container > section > div {
-    background-color: rgb(173,216,230);
-    padding: 10px 5px;
-    min-height: 110px;
-    height: auto;
-}
-
-main.container > section header a,
-main.container > section >figure > a {
-    text-decoration: none;
-    font-weight: bold;
-}
-
-main.container > section > figure {
-    margin-bottom: 10px;
-}
-
-main.container > section > figure > footer {
-}
-
 /*=============NEWS THUMBNAIL LAYOUT===========*/
 .thumbnail {
     width: 160px;

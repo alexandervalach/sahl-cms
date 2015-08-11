@@ -27,15 +27,36 @@
     <figure n:foreach="$imgLinks as $link">
         <div class="clearfix">
             <a href='{$link->anchor}' target="_blank">
-                <img src='{$basePath}{$imgFolder}{$link->image}' title='{$link->title}' class='img-gallery img-rounded img-responsive'/>
+                <img src='{$basePath}{$imgFolder}{$link->image}' title='{$link->title}' 
+                     alt='{$link->title}' class='img-gallery img-rounded img-responsive'/>
             </a>
         </div>
         <footer n:if="$user->loggedIn">
             <a n:href="edit, $link->id" class="text-success">
                 <span class="glyphicon glyphicon-pencil"></span>
-                 Upraviť
+                Upraviť
             </a>
             <a n:href="delete, $link->id" class="text-danger">
+                <span class="glyphicon glyphicon-remove"></span>
+                Odstrániť
+            </a>
+        </footer>
+    </figure>
+
+    <h2 n:if="$user->loggedIn">Sponzori</h2>
+    <figure n:if="$user->loggedIn" n:foreach="$sponsors as $sponsor">
+        <div class="clearfix">
+            <a href='{$sponsor->anchor}' target="_blank">
+                <img src='{$basePath}{$imgFolder}{$sponsor->image}' title='{$sponsor->title}' 
+                     alt='{$sponsor->title}' class='img-gallery img-rounded img-responsive'/>
+            </a>
+        </div>
+        <footer>
+            <a n:href="edit, $sponsor->id" class="text-success">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Upraviť
+            </a>
+            <a n:href="delete, $sponsor->id" class="text-danger">
                 <span class="glyphicon glyphicon-remove"></span>
                 Odstrániť
             </a>

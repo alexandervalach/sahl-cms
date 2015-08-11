@@ -24,10 +24,7 @@ class LinksPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        if ( $this->user->isLoggedIn() ) {
-            $this->template->sponsors = $this->linksRepository->findAll()->where('sponsors', '1');
-        }
-        
+        $this->template->sponsors = $this->linksRepository->findAll()->where('sponsor', '1');
         $this->template->txtLinks = $this->linksRepository->findBy(array('image' => ' '))->where('sponsor', '0');
         $this->template->imgLinks = $this->linksRepository->findAll()->where('image != ?', ' ')->where('sponsor', '0');
         $this->template->imgFolder = $this->imgFolder;

@@ -15,9 +15,11 @@
         <footer n:if="$user->loggedIn">
             <a n:href="edit, $link->id" class="text-success">
                 <span class="glyphicon glyphicon-pencil"></span>
+                Upraviť
             </a>
             <a n:href="delete, $link->id" class="text-danger">
                 <span class="glyphicon glyphicon-remove"></span>
+                Odstrániť
             </a>
         </footer>
     </figure>
@@ -31,9 +33,11 @@
         <footer n:if="$user->loggedIn">
             <a n:href="edit, $link->id" class="text-success">
                 <span class="glyphicon glyphicon-pencil"></span>
+                 Upraviť
             </a>
             <a n:href="delete, $link->id" class="text-danger">
                 <span class="glyphicon glyphicon-remove"></span>
+                Odstrániť
             </a>
         </footer>
     </figure>
@@ -47,8 +51,4 @@
 <script src="{$basePath}/js/netteForms.js"></script>
 <script src="{$basePath}/bootstrap/js/bootstrap.min.js"></script>
 <script src="{$basePath}/js/textEditor/jquery-te-1.4.0.min.js"></script>
-{*<script type="text/javascript">
-        $('#frm-forumForm-message').jqte();
-        console.log("AHOJ");
-</script>*}
 {/block}

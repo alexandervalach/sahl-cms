@@ -3,10 +3,10 @@
 <h1 n:block="title">Odstrániť link</h1>
 
 {if $link}
-	<p class='delete text-warning'>
-		Naozaj chceš zmazať link<mark>{$link->title}</mark>?
-	</p>
-	{control deleteForm}
+    <p class='delete text-warning'>
+        Naozaj chceš zodstrániť link <mark>{$link->title}</mark>?
+    </p>
+    {control deleteForm}
 {else}
-	<p>Link nenájdený.</p>
+    <p>Link nenájdený.</p>
 {/if}

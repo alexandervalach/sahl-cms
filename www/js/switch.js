@@ -18,7 +18,6 @@ $(function() {
 
 	para.bind('mouseenter', function() {
 		var item = $(this).not(":animated");
-
 		item.animate({height : paraHeight + 10}, 250)
 		
 	}).bind('mouseleave', function() {

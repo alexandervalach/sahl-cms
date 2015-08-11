@@ -33,6 +33,7 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function renderEdit($id) {
+        $this->template->player = $this->punishmentRow->ref('players', 'player_id');
         $this->getComponent('editPunishmentForm')->setDefaults($this->punishmentRow);
     }
 
@@ -57,7 +58,9 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     protected function createComponentAddPunishmentForm() {
+        $players = $this->playersRepository->getPlayers();
         $form = new Form;
+        $form->addSelect('player_id', 'Hráč', $players);
         $form->addText('text', 'Trest');
         $form->addText('round', 'Kolá');
         $form->addSubmit('save', 'Uložiť');

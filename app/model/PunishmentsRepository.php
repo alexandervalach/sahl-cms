@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use Nette\Database\Table\ActiveRow;
-
 class PunishmentsRepository extends Repository {
 
     /**

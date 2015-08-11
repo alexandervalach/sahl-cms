@@ -19,7 +19,7 @@
                 <span class="text-warning">{$punishment->text}</span>
                 <span class="text-primary">{$punishment->round}</span>
             </main>
-            <footer>
+            <footer n:if="$user->loggedIn">
                 <a n:href="edit, $punishment->id" class="text-success">
                     <span class="glyphicon glyphicon-pencil"></span>
                     Upraviť

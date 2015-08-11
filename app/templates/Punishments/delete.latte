@@ -4,7 +4,8 @@
 
 {if $punishment}
     <p class="delete text-warnig">
-        Naozaj chceš odstrániť tento trest?
+        Naozaj chceš odstrániť trest hráča 
+        <mark>{$punishment->ref('players','player_id')->lname}</mark>?
     </p>
     {control deleteForm}
 {else}

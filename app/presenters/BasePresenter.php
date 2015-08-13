@@ -100,6 +100,11 @@ abstract class BasePresenter extends Presenter {
         $this->usersRepository = $usersRepository;
     }
 
+    public function beforeRender() {
+        $this->template->round = $this->roundsRepository->getLatestRound();
+        $this->template->fights = $this->roundsRepository->getLatestRoundFights();
+    }
+
     protected function createComponentDeleteForm() {
         $form = new Form;
 

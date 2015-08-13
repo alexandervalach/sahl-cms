@@ -1,3 +1,12 @@
-{* Latte template *}
-
 {block content}
+
+<h1 n:block="title">Upraviť kolo {$round->name}</h1>
+
+<p>
+    <a n:href="all" class="btn btn-large btn-default">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        Kolá
+    </a>
+</p>
+
+{control editRoundForm}

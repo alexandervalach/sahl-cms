@@ -166,3 +166,7 @@ section#events > article{
     padding: 10px;
     border-radius: 4px;
 }
+
+footer#images > figure{
+    margin-bottom: 15px;
+} 

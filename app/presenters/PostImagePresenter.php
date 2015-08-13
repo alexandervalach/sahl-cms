@@ -35,12 +35,6 @@ class PostImagePresenter extends BasePresenter {
         $this->getComponent('addImageForm');
     }
 
-    public function actionDelete($id, $id2) {
-        $this->userIsLogged();
-        $this->imgRow = $this->postImageRepository->findById($id2);
-        $this->postRow = $this->postsRepository->findBy($id1);
-    }
-
     public function actionThumbnail($id, $id2) {
         $this->userIsLogged();
         $this->postRow = $this->postsRepository->findById($id);
@@ -49,6 +43,12 @@ class PostImagePresenter extends BasePresenter {
 
     public function renderThumbnail($id, $id2) {
         $this->getComponent('setThumbnailForm');
+    }
+
+    public function actionDelete($id, $id2) {
+        $this->userIsLogged();
+        $this->imgRow = $this->postImageRepository->findById($id2);
+        $this->postRow = $this->postsRepository->findById($id);
     }
 
     public function renderDelete($id, $id2) {
@@ -86,11 +86,17 @@ class PostImagePresenter extends BasePresenter {
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $img = $this->imgRow;
+        $post = $this->postRow;
+
+        if ($post->thumbnail == $img->name) {
+            $post->update(array('thumbnail' => 'sahl.jpg'));
+        }
+
         $image = new FileSystem;
         $image->delete($this->storage . $img->name);
         $img->delete();
         $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('view', $img->album_id);
+        $this->redirect('Post:show', $img->posts_id);
     }
 
     public function submittedSetThumbnailForm(Form $form) {

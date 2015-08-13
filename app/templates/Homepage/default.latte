@@ -14,18 +14,10 @@
 <div id="slider" class='row'>
     {foreach $latests as $latest}
         {if $iterator->last}
-            {if $latest->thumbnail}
-                <img src='{$basePath}{$imgFolder}{$latest->thumbnail}' class='img-responsive' />
-            {else}
-                <img src='{$basePath}{$default}' class='img-responsive' />
-            {/if}
+            <img src='{$basePath}{$imgFolder}{$latest->thumbnail}' class='img-responsive' />
         {/if}
 
-        {if $latest->thumbnail}
-            <p data-src="{$basePath}{$imgFolder}{$latest->thumbnail}">
-            {else}
-            <p data-src='{$basePath}{$default}'>
-            {/if}
+        <p data-src="{$basePath}{$imgFolder}{$latest->thumbnail}">
             <a n:href="Post:show#nav $latest->id">
                 {$latest->title|truncate:35}
             </a>
@@ -41,11 +33,7 @@
     </header>
 
     <div class="thumbnail">
-        {if $post->thumbnail}
-            <img src='{$basePath}{$imgFolder}{$post->thumbnail}' class='img-responsive' />
-        {else}
-            <img src='{$basePath}{$default}' class='img-responsive' />
-        {/if}
+        <img src='{$basePath}{$imgFolder}{$post->thumbnail}' class='img-responsive' />
     </div>
 
     <main>

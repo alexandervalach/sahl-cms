@@ -30,19 +30,21 @@
         {$post->content|noescape}
     </main>
 
-    <footer>
-        <div class='images' n:foreach="$images as $image">
-            <figure class='gallery'>
-                <img src='{$basePath}{$imgFolder}{$image->name}' class='img-responsive img-rounded' />
-                <div n:if="$user->loggedIn">
+    <footer id="images">
+        {foreach $images as $image}
+            <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
+                <a href="{$basePath}{$imgFolder}{$image->name}">
+                    <img src='{$basePath}{$imgFolder}{$image->name}' class='img-responsive img-rounded' />
+                </a>
+                <div n:if="$user->loggedIn" class="text-center">
                     <a n:href="PostImage:delete#nav, $post->id, $image->id" class='btn btn-large btn-danger'>
-                        <span class="glyphicon glyphicon-remove"></span> Odstrániť
+                        <span class="glyphicon glyphicon-remove"></span> Odstráň
                     </a>
                     <a n:href="PostImage:Thumbnail#nav, $post->id, $image->id" class='btn btn-large btn-primary'>
-                        <span class="glyphicon glyphicon-picture"></span> Prezenčný obrázok
+                        <span class="glyphicon glyphicon-picture"></span> Prezenčný
                     </a>
                 </div>	
             </figure>
-        </div>
+        {/foreach}
     </footer>
 </article>

@@ -57,12 +57,11 @@ class PostPresenter extends BasePresenter {
     }
 
     public function renderDelete($id) {
-        $post = $this->postRow;
-        if (!$post) {
+        if (!$this->postRow) {
             throw new BadRequestException($this->error);
         }
         $this->getComponent('deleteForm');
-        $this->template->post = $this->post;
+        $this->template->post = $this->postRow;
     }
 
     protected function createComponentAddPostForm() {

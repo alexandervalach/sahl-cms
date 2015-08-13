@@ -67,7 +67,7 @@ class GalleryPresenter extends BasePresenter {
     public function renderThumbnail($id, $id2) {
         $this->getComponent('setThumbnailForm');
     }
-    
+
     protected function createComponentSetThumbnailForm() {
         $form = new Form;
         $form->addCheckbox('setThumbnail', 'Nastaviť ako prezenčný obrázok');
@@ -76,10 +76,10 @@ class GalleryPresenter extends BasePresenter {
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
-    
+
     public function submittedSetThumbnailForm(Form $form) {
         $values = $form->getValues();
-        if( $values['setThumbnail'] ) {
+        if ($values['setThumbnail']) {
             $data = array();
             $data['name'] = $this->galleryRow->name;
             $this->albumRow->update($data);
@@ -107,9 +107,8 @@ class GalleryPresenter extends BasePresenter {
 
     protected function createComponentAddImagesForm() {
         $form = new Form;
-        $form->addMultipleFileUpload('images', "Nahrať obrázok", 5)
-                ->addRule('MultipleFileUpload\MultipleFileUpload::validateFilled', "Musíš nahrať aspoň jeden obrázok");
-        //->addRule('MultipleFileUpload\MultipleFileUpload::validateFileSize', "Súbory, ktoré si vybral sú príliš veľké", 10240);
+        $form->addUpload('images', "Nahrať obrátok")
+                ->setAttribute("multiple", "multiple");
         $form->addSubmit('upload', 'Uložiť');
         $form->onSuccess[] = $this->submittedAddImagesForm;
         FormHelper::setBootstrapFormRenderer($form);
@@ -117,6 +116,7 @@ class GalleryPresenter extends BasePresenter {
     }
 
     public function submittedDeleteForm() {
+        $this->userIsLogged();
         $gallery = $this->galleryRow;
         $img = new FileSystem;
         $img->delete($this->storage . $gallery->name);

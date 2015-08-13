@@ -3,11 +3,11 @@
 <h3 n:block="title">{$album->album}</h3>
 
 <p>
-    <a n:href="Album:all#primary" class='btn btn-large btn-default'>
+    <a n:href="Album:all#nav" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Albumy
     </a>
-    <a n:href="add#primary, $album" class='btn btn-large btn-info' n:if="$user->loggedIn">
+    <a n:href="add#nav, $album" class='btn btn-large btn-info' n:if="$user->loggedIn">
         <span class="glyphicon glyphicon-picture"></span>
         Pridať obrázky
     </a>
@@ -28,7 +28,7 @@
                     <span class="glyphicon glyphicon-remove"></span>
                     Zmaž
                 </a>
-                <a n:href="thumbnail#primary, $album->id, $img->id" class="btn btn-primary" title="Nastaví obrázok ako miniatúru albumu">
+                <a n:href="thumbnail#nav, $album->id, $img->id" class="btn btn-primary" title="Nastaví obrázok ako miniatúru albumu">
                     <span class="glyphicon glyphicon-picture"></span>
                     Miniatúra
                 </a>

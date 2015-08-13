@@ -1,12 +1,12 @@
 {block content}
 
-<h1 n:block="title">Odober obrázok</h1>
+<h1 n:block="title">Odstráň obrázok</h1>
 
 {if $img}
-	<p class="delete text-warning">
-		Naozaj chceš zmazať obrázok <mark>{$img->name}</mark>?
-	</p>
-	{control deleteForm}
+    <p class="delete text-warning">
+        Naozaj chceš zmazať obrázok <mark>{$img->name}</mark>?
+    </p>
+    {control deleteForm}
 {else}
-	<p>Záznam nenájdený.</p>
+    <p>Záznam nenájdený.</p>
 {/if}

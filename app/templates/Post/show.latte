@@ -1,22 +1,22 @@
 {block content}
 
 <p>
-    <a n:href="Homepage:#primary" class='btn btn-large btn-default'>
+    <a n:href="Homepage:#nav" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Príspevky
     </a>
 </p>
 <p n:if="$user->loggedIn">
-    <a n:href="create#primary" class="btn btn-large btn-primary">
+    <a n:href="create#nav" class="btn btn-large btn-primary">
         <span class="glyphicon glyphicon-plus"></span> Nový
     </a>
-    <a n:href="edit#primary $post->id" class='btn btn-large btn-success'>
+    <a n:href="edit#nav $post->id" class='btn btn-large btn-success'>
         <span class="glyphicon glyphicon-pencil"></span> Upraviť
     </a>
-    <a n:href="PostImage:add#primary $post->id" class='btn btn-large btn-info'>
+    <a n:href="PostImage:add#nav $post->id" class='btn btn-large btn-info'>
         <span class="glyphicon glyphicon-picture"></span> Pridaj obrázky
     </a>
-    <a n:href="delete#primary $post->id" class='btn btn-large btn-warning'>
+    <a n:href="delete#nav $post->id" class='btn btn-large btn-warning'>
         <span class="glyphicon glyphicon-remove"></span> Odstrániť
     </a>
 </p>
@@ -35,10 +35,10 @@
             <figure class='gallery'>
                 <img src='{$basePath}{$imgFolder}{$image->name}' class='img-responsive img-rounded' />
                 <div n:if="$user->loggedIn">
-                    <a n:href="PostImage:delete#primary, $post->id, $image->id" class='btn btn-large btn-danger'>
+                    <a n:href="PostImage:delete#nav, $post->id, $image->id" class='btn btn-large btn-danger'>
                         <span class="glyphicon glyphicon-remove"></span> Odstrániť
                     </a>
-                    <a n:href="PostImage:Thumbnail#primary, $post->id, $image->id" class='btn btn-large btn-primary'>
+                    <a n:href="PostImage:Thumbnail#nav, $post->id, $image->id" class='btn btn-large btn-primary'>
                         <span class="glyphicon glyphicon-picture"></span> Prezenčný obrázok
                     </a>
                 </div>	

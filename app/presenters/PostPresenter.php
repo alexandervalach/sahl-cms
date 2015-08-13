@@ -6,6 +6,7 @@ use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\FileSystem;
 
 class PostPresenter extends BasePresenter {
 
@@ -14,6 +15,9 @@ class PostPresenter extends BasePresenter {
 
     /** @var string */
     private $error = "Post not found!";
+    
+    /** @var string */
+    private $storage = 'images/';
 
     public function actionShow($id) {
         $this->postRow = $this->postsRepository->findById($id);
@@ -116,7 +120,16 @@ class PostPresenter extends BasePresenter {
 
     public function submittedDeleteForm() {
         $this->userIsLogged();
+
+        $imgs = $this->postRow->related('images');
+        foreach ($imgs as $img) {
+            $file = new FileSystem;
+            $file->delete($this->storage . $img->name);
+            $img->delete();
+        }
+
         $this->postRow->delete();
+        $this->flashMessage('Príspevok odstránený aj so všetkými obrázkami.', 'success');
         $this->redirect('Homepage:');
     }
 

@@ -66,18 +66,13 @@
                             <table class='table table-striped table-condensed'>
                                 <caption class='caption'>Tabuľky</caption>
                                 <tbody>
-                                    <tr>
-                                        <td>Prvé miesto</td>
-                                        <td>1</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Druhé miesto</td>
-                                        <td>5</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Tretie miesto</td>
-                                        <td>8</td>
-                                    </tr>
+                                    {foreach $tables as $table}
+                                        <tr>
+                                            {var $team = $table->ref('teams', 'team_id')}
+                                            <td>{$team->name}</td>
+                                            <td>{$table->points}</td>
+                                        </tr>
+                                    {/foreach}
                                 </tbody>
                             </table>
                         </div>

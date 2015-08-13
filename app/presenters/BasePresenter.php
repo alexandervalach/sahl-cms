@@ -103,6 +103,7 @@ abstract class BasePresenter extends Presenter {
     public function beforeRender() {
         $this->template->round = $this->roundsRepository->getLatestRound();
         $this->template->fights = $this->roundsRepository->getLatestRoundFights();
+        $this->template->tables = $this->tablesRepository->getTableStats();
     }
 
     protected function createComponentDeleteForm() {

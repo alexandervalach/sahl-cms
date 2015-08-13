@@ -94,6 +94,20 @@
                                 </a>
                             {/if}
                         </div>
+                        <section id="terciary">
+                            {if $sponsors != null}
+                                <h3>Sponzori</h3>
+                                {foreach $sponsors as $sponsor}
+                                    <figure>
+                                        <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
+                                            <img class="img img-responsive img-rounded" 
+                                                 src="{$basePath}{$imgFolder}{$sponsor->image}" 
+                                                 alt="{$sponsor->title}" />
+                                        </a>
+                                    </figure>
+                                {/foreach}
+                            {/if}
+                        </section>
                     </aside>
 
                 </div>

@@ -44,6 +44,19 @@ class RoundPresenter extends BasePresenter {
         $this->getComponent('editRoundForm')->setDefaults($this->roundRow);
     }
 
+    public function actionDelete($id) {
+        $this->userIsLogged();
+        $this->roundRow = $this->roundsRepository->findById($id);
+    }
+
+    public function renderDelete($id) {
+        if (!$this->roundRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->round = $this->roundRow;
+        $this->getComponent('deleteForm');
+    }
+
     protected function createComponentAddRoundForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
@@ -67,14 +80,28 @@ class RoundPresenter extends BasePresenter {
     }
 
     public function submittedAddRoundForm(Form $form) {
+        $this->userIsLogged();
         $values = $form->getValues();
         $this->roundsRepository->insert($values);
         $this->redirect('all');
     }
-    
+
     public function submittedEditRoundForm(Form $form) {
+        $this->userIsLogged();
         $values = $form->getValues();
         $this->roundRow->update($values);
+        $this->redirect('all');
+    }
+
+    public function submittedDeleteForm() {
+        $this->userIsLogged();
+        $fights = $this->roundRow->related('fights');
+        /* Odstráni všetky zápasy daného kola */
+        foreach ($fights as $fight) {
+            $fight->delete();
+        }
+        $this->roundRow->delete();
+        $this->flashMessage('Kolo bolo odstránené.', 'success');
         $this->redirect('all');
     }
 

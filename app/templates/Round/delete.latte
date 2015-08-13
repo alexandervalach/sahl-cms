@@ -1,3 +1,9 @@
-{* Latte template *}
-
 {block content}
+
+<h1 n:block="title">Odstráň {$round->name}</h1>
+<p class="text-warning delete">
+    Naozaj chceš odstrániť
+    <mark>{$round->name}</mark>?
+</p>
+
+{control deleteForm}

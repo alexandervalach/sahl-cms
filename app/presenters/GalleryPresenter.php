@@ -70,7 +70,7 @@ class GalleryPresenter extends BasePresenter {
 
     protected function createComponentSetThumbnailForm() {
         $form = new Form;
-        $form->addCheckbox('setThumbnail', 'Nastaviť ako prezenčný obrázok');
+        $form->addCheckbox('setThumbnail', ' Nastaviť ako prezenčný obrázok');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedSetThumbnailForm;
         FormHelper::setBootstrapFormRenderer($form);

@@ -16,7 +16,7 @@
 <section id="secondary" class="row">
     {foreach $galleryImgs as $img}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a n:href="Gallery:view, $img->id">
+            <a href="{$baseUrl}{$imgFolder}{$img->name}">
                 {if $img->name}                
                     <img src="{$basePath}{$imgFolder}{$img->name}" class="img-responsive img-rounded" />
                 {else}

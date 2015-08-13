@@ -240,8 +240,8 @@ table.table > tbody > tr > td > span.text-danger{
 }
 
 .table-responsive > table.table {
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 25px;
+    margin-bottom: 25px;
 }
 
 section#rounds > ul > li > a{

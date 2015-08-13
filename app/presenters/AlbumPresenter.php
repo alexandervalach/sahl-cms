@@ -6,6 +6,7 @@ use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\FileSystem;
 
 class AlbumPresenter extends BasePresenter {
 
@@ -15,7 +16,11 @@ class AlbumPresenter extends BasePresenter {
     /** @var string */
     private $error = "Album not found!";
 
-    public function actionAll() {   
+    /** @var string */
+    private $storage = 'images/';
+
+    public function actionAll() {
+        
     }
 
     public function renderAll() {
@@ -92,7 +97,16 @@ class AlbumPresenter extends BasePresenter {
 
     public function submittedDeleteForm() {
         $this->userIsLogged();
+        $imgs = $this->albumRow->related('gallery');
+
+        foreach ($imgs as $img) {
+            $file = new FileSystem;
+            $file->delete($this->storage . $img->name);
+            $img->delete();
+        }
+
         $this->albumRow->delete();
+        $this->flashMessage('Album odstránený aj so všetkými obrázkami.', 'success');
         $this->redirect('all');
     }
 

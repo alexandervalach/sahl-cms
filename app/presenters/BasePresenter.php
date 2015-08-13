@@ -15,7 +15,6 @@ use App\Model\PostsRepository;
 use App\Model\PunishmentsRepository;
 use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
-use App\Model\Table_namesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
 use App\Model\UsersRepository;
@@ -67,9 +66,6 @@ abstract class BasePresenter extends Presenter {
     /** @var TablesRepository */
     protected $tablesRepository;
 
-    /** @var Table_namesRepository */
-    protected $tableNameRepository;
-
     /** @var TeamsRepository */
     protected $teamsRepository;
 
@@ -80,7 +76,7 @@ abstract class BasePresenter extends Presenter {
     protected $imgFolder = "/images/";
 
     public function __construct(
-    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, Table_namesRepository $tableNameRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
+    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
 
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
@@ -94,7 +90,6 @@ abstract class BasePresenter extends Presenter {
         $this->punishmentsRepository = $punishmentsRepository;
         $this->roundsRepository = $roundsRepository;
         $this->rulesRepository = $rulesRepository;
-        $this->tableNameRepository = $tableNameRepository;
         $this->tablesRepository = $tablesRepository;
         $this->teamsRepository = $teamsRepository;
         $this->usersRepository = $usersRepository;

@@ -1,4 +1,4 @@
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
     #nav {
         height : 50px;
         width : 100%;
@@ -58,7 +58,7 @@
         height: 40px;
         text-align: center;
         vertical-align: middle;
-        z-index: 999;
+        z-index: 1001;
     }	
 
     div#nav .navbar.container .navbar-nav > li > a:focus, 
@@ -66,13 +66,10 @@
     {
         color: white;
         background: green;
-        box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
-        -webkit-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
-        -moz-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
     }
 
-    div.navbar-collapse > ul.nav.navbar-nav.row > li.dropdown > ul.dropdown-menu > li > a {
-        background: green;
+    #nav ul.dropdown-menu > li > a {
+        background: rgb(68, 157, 68);
         color: white;
         padding:0;
         margin:0;
@@ -80,28 +77,57 @@
         line-height: 35px;
         height: 35px;
         text-align: center;
-        z-index: 999;
+        z-index: 1001;
     }	
 
-    div#nav .navbar.container .navbar-nav .open .dropdown-menu > li > a:focus,
-    div#nav .navbar.container .navbar-nav .open .dropdown-menu > li > a:hover {
+    #nav ul.dropdown-menu > li > a:hover,
+    #nav ul.dropdown-menu > li > a:focus {
         background: #FFD700;
         color: black;
-        height: 35px; 
     }
-    
+
+    ul.dropdown-menu {
+        z-index: 1001;
+    }
+
     button.navbar-toggle.btn {
         color: black;
         border: none; 
     }
-    
+
     button.navbar-toggle.btn:hover,
     button.navbar-toggle.btn:focus{
-       color: white;
-       background: gold;
-       border: none;
+        color: white;
+        background: gold;
+        border: none;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        margin: 2px 0 0;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
     }
     
+    .navbar-nav .open .dropdown-menu {
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+
     /*======================GALLERY========================*/
     .gallery{
         float: left;
@@ -117,12 +143,6 @@
         display: block;
         margin: 5px;
         clear: both;
-    }
-
-    .comment, .medium-size, .btn{
-        width: 100%;
-        margin: 0;
-        padding: 0;
     }
 
     .navbar-toggle {
@@ -170,12 +190,7 @@
         padding: 0 20px;
         line-height: 50px;
         font-weight: bold;
-        color: gold;
         font-size: 21px;
-    }
-
-    .navbar-header > a {
-
     }
 }
 

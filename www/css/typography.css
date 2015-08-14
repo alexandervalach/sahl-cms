@@ -139,7 +139,7 @@ footer.container {
     }
 
     #nav ul.dropdown-menu > li > a{
-        background: rgba(68, 157, 68, 0.8);
+        background: rgb(68, 157, 68);
         color: white;
         padding:0;
         margin:0;

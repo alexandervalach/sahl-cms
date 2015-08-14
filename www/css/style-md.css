@@ -47,7 +47,7 @@
     }
 
     /*=====================NAVIGATION BAR=======-==========*/
-
+    
     nav.navbar.container {
         width: 970px;
     }
@@ -62,53 +62,6 @@
         width: 970px;
     }
 
-    #nav ul.nav.navbar-nav > li > a {
-        height: 50px;
-        padding: 0;
-        margin: 0;
-        width: 100%;
-        font-size: 14px;
-        word-wrap: break-word;
-        font-weight: bold;
-        line-height: 50px;
-    }
-
-    #nav ul.nav.navbar-nav > li{
-        height: inherit;
-        padding: 0;
-        margin: 0;
-    }
-
-    #nav ul.dropdown-menu{
-        margin-top: -6px;
-        background: none;
-        border: 0;
-        box-shadow: none;
-    }
-
-    #nav ul.dropdown-menu > li > a{
-        background: #449D44;
-        color: white;
-        padding:0;
-        margin:0;
-        width: 200px;
-        line-height:40px;
-        height: 40px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    #nav ul.dropdown-menu > li > a:hover{
-        background: #FFD700;
-        color: black;
-        height: 40px;
-    }
-    /*===============ADDITIONAL LAYOUT=====================*/
-
-    div#main section.comment{
-        clear: both;
-    }
-
     /*======================GALLERY========================*/
     .gallery{
         float: left;
@@ -119,6 +72,4 @@
     div.images > div.gallery{
         width: 200px;
     }
-
-    /*===============PAGE COMPONENTS AND SECONDARY LAYOUT============*/
 }

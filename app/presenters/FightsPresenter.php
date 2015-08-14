@@ -3,17 +3,17 @@
 namespace App\Presenters;
 
 use App\FormHelper;
-use Nette\Database\Table\ActiveRow;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
+use Nette\Database\Table\ActiveRow;
 
 class FightsPresenter extends BasePresenter {
 
     /** @var ActiveRow */
-    private $fightRow;
-
-    /** @var ActioveRow */
     private $roundRow;
+
+    /** @var ActiveRow */
+    private $fightRow;
 
     /** @var string */
     private $error = "Match not found!";
@@ -26,12 +26,15 @@ class FightsPresenter extends BasePresenter {
         $this->template->fights = $this->fightsRepository->findAll()->order('time');
     }
 
-    protected function actionCreate($id) {
+    protected function actionAdd($id) {
         $this->userIsLogged();
         $this->roundRow = $this->roundsRepository->findById($id);
     }
 
-    public function renderCreate($id) {
+    public function renderAdd($id) {
+        if (!$this->roundRow) {
+            throw new BadRequestException("Round not found!");
+        }
         $this->template->round = $this->roundRow;
         $this->getComponent('addFightForm');
     }
@@ -73,11 +76,9 @@ class FightsPresenter extends BasePresenter {
                 ->setRequired("Názov tímu 2 je povinné pole");
 
         $form->addText('score1', 'Skóre 1')
-                ->setType('number')
                 ->setRequired("Počet bodov je povinné pole");
 
         $form->addText('score2', 'Skóre 2')
-                ->setType('number')
                 ->setRequired("Počet bodov je povinné pole");
 
         $form->addText('time', 'Dátum')
@@ -102,11 +103,9 @@ class FightsPresenter extends BasePresenter {
                 ->setRequired("Názov tímu je povinné pole");
 
         $form->addText('score1', 'Skóre 1')
-                ->setType('number')
                 ->setRequired("Počet bodov je povinné pole");
 
         $form->addText('score2', 'Skóre 2')
-                ->setType('number')
                 ->setRequired("Počet bodov je povinné pole");
 
         $form->addText('time', 'Dátum');

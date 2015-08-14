@@ -15,16 +15,16 @@
         <table class="table table-condensed">
             <caption class="caption">
                 <div class="pull-left">
-                    <a n:href="Fights:delete, $round" title="odstrániť kolo">
+                    <a n:href="delete $round->id" title="odstrániť kolo">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
-                    <a n:href="Fights:edit, $round" title="upraviť kolo">
+                    <a n:href="edit $round->id" title="upraviť kolo">
                         <span class="glyphicon glyphicon-pencil"></span>
                     </a>
                 </div>
                 {$round->name}
                 <div class="pull-right">
-                    <a n:href="Fights:create, $round" title="pridať zápas">
+                    <a n:href="Fights:add $round->id" title="pridať zápas">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </div>
@@ -48,12 +48,12 @@
                         <td class="text-center">:</td>
                         <td class="text-left">{$fight->score2}</td>
                         <td n:if="$user->loggedIn">
-                            <a n:href="Fights:edit, $fight" class="text-success">
+                            <a n:href="Fights:edit, $fight->id" class="text-success">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </a>
                         </td>
                         <td n:if="$user->loggedIn">
-                            <a n:href="Fights:delete, $fight" class="text-danger">
+                            <a n:href="Fights:delete, $fight->id" class="text-danger">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </a>
                         </td>

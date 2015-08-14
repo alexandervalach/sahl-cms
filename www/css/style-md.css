@@ -46,10 +46,9 @@
         height: auto;
     }
 
-
     /*=====================NAVIGATION BAR=======-==========*/
 
-    nav.navbar.navbar-default.container {
+    nav.navbar.container {
         width: 970px;
     }
 
@@ -73,13 +72,6 @@
         font-weight: bold;
         line-height: 50px;
     }
-
-    /*
-    #nav ul.nav.navbar-nav > li > a:hover {
-            background: url('layout/nav-hover-b.gif');
-            color: black;
-    }
-    */
 
     #nav ul.nav.navbar-nav > li{
         height: inherit;

@@ -14,6 +14,7 @@ aside.container h3{
     padding: 10px;
     font-weight: bold;
     margin: 0 0 10px 0;
+    text-align: center;
 }
 
 #main main.container > h1{
@@ -51,10 +52,6 @@ aside.container h3{
     text-decoration: none;
 }
 
-h3 {
-    text-align: center;
-}
-
 /*=================TYPOGRAPHY=========================*/
 .error, .success {
     font-style: italic;
@@ -89,16 +86,16 @@ footer.container {
     position: relative;
     z-index: 0;
 }
-/*===============TEXT ALIGNING=======================*/
-div#secondary > div.gallery > footer{
-    text-align: center;
-}
 /*===========Documentation for NAVIGATION MENU BAR===============*/
 @media screen and (min-width: 768px){
 
-    #nav .navbar-default {
+    #nav .navbar.container {
         border: 0;
         padding: 0;
+    }
+
+    #nav .navbar.container * {
+        font-weight: bold;
     }
 
     #nav .navbar-nav > li > a{
@@ -111,18 +108,53 @@ div#secondary > div.gallery > footer{
         margin: 0;
     }
 
-    #nav .navbar-nav > li > a:hover, #nav .navbar-nav > li >a:focus {
-        background: url('layout/nav-hover-b.gif') repeat-x top left;
-        display: block;
-        width: 100%;
-    }
-
-    #nav .navbar-nav > li > a:hover, #nav .navbar-nav > li > a:focus{
+    #nav .navbar-nav > li > a:hover, 
+    #nav .navbar-nav > li >a:focus {
         color: white;
+        background: green;
+        box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
+        -webkit-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
+        -moz-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
     }
 
-    div#nav .nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
-        background-color: transparent;
+    #nav ul.nav.navbar-nav > li > a {
+        height: 50px;
+        padding: 0;
+        margin: 0;
+        font-size: 14px;
+        word-wrap: break-word;
+        line-height: 50px
+    }
+
+    #nav ul.nav.navbar-nav > li{
+        height: inherit;
+        padding: 0;
+        margin: 0;
+    }
+
+    #nav ul.dropdown-menu{
+        margin-top: -6px;
+        background: none;
+        border: 0;
+    }
+
+    #nav ul.dropdown-menu > li > a{
+        background: rgba(68, 157, 68, 0.8);
+        color: white;
+        padding:0;
+        margin:0;
+        width: 200px;
+        line-height: 40px;
+        height: 40px;
+        text-align: center;
+    }
+
+    #nav ul.dropdown-menu > li > a:hover{
+        background: #FFD700;
+        color: black;
+        box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
+        -webkit-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
+        -moz-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
     }
 }
 
@@ -200,12 +232,12 @@ div#slider a{
     text-decoration: none;
 }
 
-div#slider p:hover, div#slider p:focus{
-    background: #FF8C00;
-}
-
 div.pull-right{
     margin-right: 10px;
+}
+
+div.pull-left{
+    margin-left: 10px;
 }
 
 div.pull-right > a > span.glyphicon.glyphicon-plus,
@@ -214,13 +246,9 @@ div.pull-left > a > span.glyphicon.glyphicon-remove{
     color: white;
 }
 
-div.pull-left{
-    margin-left: 10px;
-}
-
 table.table,
 table.table > tbody > tr{
-    border: 1px solid rgb( 173, 216, 230);
+    border: 1px solid rgb(173, 216, 230);
 }
 
 table.table > tbody > tr:nth-child(even){
@@ -231,22 +259,7 @@ table.table > tbody > tr:nth-child(odd){
     background-color: rgb(255,255,255);
 } 
 
-table.table > tbody > tr > td > span.text-danger{
-    font-weight: bold;
-} 
-
+table.table > tbody > tr > td > span.text-danger,
 .first{
     font-weight: bold;
-}
-
-.table-responsive > table.table {
-    margin-top: 25px;
-    margin-bottom: 25px;
-}
-
-section#rounds > ul > li > a{
-    text-decoration: none;
-    font-weight: bold;
-    color: #FF8C00;
-    font-size: 1.2em;
-}
+} 

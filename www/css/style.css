@@ -126,11 +126,7 @@ div#slider p:nth-child(4):focus, div#slider p:nth-child(4):hover { background: #
 div#page > div#main > div#primary.row > aside.container > div.panel.panel-primary{
     margin-top: 15px;
 }
-/*===================SECONDARY=================*/
-.switch {
-    margin: 0 auto;
-    width: 300px;
-}
+/*===================FILE UPLOAD BUTTON=================*/
 
 .fileUpload {
     position: relative;
@@ -180,4 +176,16 @@ section#terciary > figure{
     width: 80%;
     margin: 15px auto;
     height: auto;
+}
+
+.table-responsive > table.table {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+section#rounds > ul > li > a{
+    text-decoration: none;
+    font-weight: bold;
+    color: #FF8C00;
+    font-size: 1.2em;
 }

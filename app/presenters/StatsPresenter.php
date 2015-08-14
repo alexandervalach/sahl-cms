@@ -2,20 +2,18 @@
 
 namespace App\Presenters;
 
-use Nette\Database\Table\Selection;
 
-class StatsPresenter extends BasePresenter
-{
-	/** $var Selection */
-	private $playerSelection;
+class StatsPresenter extends BasePresenter {
 
-	public function actionDefault() {
-		$this->playerSelection = $this->playersRepository->findAll()->order('goals DESC, fname DESC'); 
-	}
+    /** @var Nette\Databasq\Table\Selection */
+    private $playerSelection;
 
-	public function renderDefault() {
-		$this->template->stats = $this->playerSelection;
-	}
+    public function actionDefault() {
+        $this->playerSelection = $this->playersRepository->findAll()->order('goals DESC, lname DESC');
+    }
+
+    public function renderDefault() {
+        $this->template->stats = $this->playerSelection;
+    }
 
 }
-

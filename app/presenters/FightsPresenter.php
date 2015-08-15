@@ -64,6 +64,19 @@ class FightsPresenter extends BasePresenter {
         $this->template->fight = $this->fightRow;
     }
 
+    public function actionEditThird($id) {
+        $this->userIsLogged();
+        $this->fightRow = $this->fightsRepository->findById($id);
+    }
+
+    public function renderEditThird($id) {
+        if (!$this->fightRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->fight = $this->fightRow;
+        $this->getComponent('editThirdForm')->setDefaults($this->fightRow);
+    }
+
     protected function createComponentAddFightForm() {
         $form = new Form;
 
@@ -116,6 +129,30 @@ class FightsPresenter extends BasePresenter {
         return $form;
     }
 
+    protected function createComponentEditThirdForm() {
+        $form = new Form;
+
+        $team1 = $this->fightsRepository->getTeam1($this->fightRow);
+        $team2 = $this->fightsRepository->getTeam2($this->fightRow);
+
+        $form->addGroup('Tím ' . $team1->name);
+        $form->addText('st_third_1', 'Počet gólov v 1. tretine');
+        $form->addText('nd_third_1', 'Počet gólov v 2. tretine');
+        $form->addText('th_third_1', 'Počet gólov v 3. tretine');
+        $form->addText('score1', 'Počet gólov v zápase');
+
+        $form->addGroup('Tím ' . $team2->name);
+        $form->addText('st_third_2', 'Počet gólov v 1. tretine');
+        $form->addText('nd_third_2', 'Počet gólov v 2. tretine');
+        $form->addText('th_third_2', 'Počet gólov v 3. tretine');
+        $form->addText('score2', 'Počet gólov v zápase');
+
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = $this->submittedEditThirdForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
     public function submittedAddFightForm($form) {
         $values = $form->getValues();
 
@@ -141,15 +178,44 @@ class FightsPresenter extends BasePresenter {
         $this->redirect('all');
     }
 
+    public function submittedEditThirdForm(Form $form) {
+        $values = $form->getValues();
+
+        $team1 = $this->fightsRepository->getTeam1($this->fightRow);
+        $team2 = $this->fightsRepository->getTeam2($this->fightRow);
+
+        foreach ($values as $value) {
+            if (empty($value)) {
+                $value = 0;
+            }
+        }
+
+        $score1 = $values['st_third_1'] + $values['nd_third_1'] + $values['th_third_1'];
+        $score2 = $values['st_third_2'] + $values['nd_third_2'] + $values['th_third_2'];
+       
+        if ( $score1 != $values['score1']) {
+            $form->addError("Pre tím " . $team1->name . " nesedí súčet gólov v tretinách s celkovým počtom gólov.");
+            return false;
+        }
+
+        if ( $score2 != $values['score2']) {
+            $form->addError("Pre tím " . $team2->name . " nesedí súčet gólov v tretinách s celkovým počtom gólov.");
+            return false;
+        }
+
+        $this->fightRow->update($values);
+        $this->redirect('Round:all');
+    }
+
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->fightRow->delete();
         $this->flashMessage('Zápas odstránený.', 'success');
-        $this->redirect('all');
+        $this->redirect('Round:all');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('Round:all');
     }
 
 }

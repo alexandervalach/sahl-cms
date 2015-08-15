@@ -33,7 +33,7 @@
                 <tr>
                     <th colspan="3" class="text-center">Tím</th>
                     <th colspan="3" class="text-center">Výsledok</th>
-                    <th colspan="2" n:if="$user->loggedIn">&nbsp;</th>
+                    <th colspan="3" n:if="$user->loggedIn">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,6 +55,11 @@
                         <td n:if="$user->loggedIn">
                             <a n:href="Fights:delete, $fight->id" class="text-danger">
                                 <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="Fights:editThird, $fight->id" class="text-warning" title="upraviť tretiny">
+                                <span class="glyphicon glyphicon-edit"></span>
                             </a>
                         </td>
                     </tr>

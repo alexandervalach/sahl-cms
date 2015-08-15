@@ -6,14 +6,13 @@ use Nette\Database\Table\ActiveRow;
 
 class FightsRepository extends Repository {
 
-    public function getTeam1(ActiveRow $row) {
-        return $row->ref('teams', 'team1_id');
+    public function getTeamForFight(ActiveRow $row, $key) {
+        return $row->ref('teams', $key);
     }
-
-    public function getTeam2(ActiveRow $row) {
-        return $row->ref('teams', 'team2_id');
+    
+    public function getPlayersFormTeam(ActiveRow $row, $key) {
+       return $this->getTeamForFight($row, $key)->related('players'); 
     }
-
 }
 
 ?>

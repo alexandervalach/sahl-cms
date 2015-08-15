@@ -77,6 +77,18 @@ class FightsPresenter extends BasePresenter {
         $this->getComponent('editThirdForm')->setDefaults($this->fightRow);
     }
 
+    public function actionAddPlayerGoals($id) {
+        $this->userIsLogged();
+        $this->fightRow = $this->fightsRepository->findById($id);
+    }
+
+    public function renderAddPlayerGoals($id) {
+        if( !$this->fightRow ) {
+            throw new BadRequestException( $this->error );
+        }
+        $this->getComponent('addPlayerGoalsForm');
+    }
+
     protected function createComponentAddFightForm() {
         $form = new Form;
 
@@ -132,8 +144,8 @@ class FightsPresenter extends BasePresenter {
     protected function createComponentEditThirdForm() {
         $form = new Form;
 
-        $team1 = $this->fightsRepository->getTeam1($this->fightRow);
-        $team2 = $this->fightsRepository->getTeam2($this->fightRow);
+        $team1 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team1_id');
+        $team2 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team2_id');
 
         $form->addGroup('Tím ' . $team1->name);
         $form->addText('st_third_1', 'Počet gólov v 1. tretine');
@@ -152,7 +164,12 @@ class FightsPresenter extends BasePresenter {
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
-
+    
+    /*
+    protected function addPlayerGoalsForm() {
+        $form = new Form;
+    }
+    */
     public function submittedAddFightForm($form) {
         $values = $form->getValues();
 
@@ -181,8 +198,8 @@ class FightsPresenter extends BasePresenter {
     public function submittedEditThirdForm(Form $form) {
         $values = $form->getValues();
 
-        $team1 = $this->fightsRepository->getTeam1($this->fightRow);
-        $team2 = $this->fightsRepository->getTeam2($this->fightRow);
+        $team1 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team1_id');
+        $team2 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team2_id');
 
         foreach ($values as $value) {
             if (empty($value)) {
@@ -192,13 +209,13 @@ class FightsPresenter extends BasePresenter {
 
         $score1 = $values['st_third_1'] + $values['nd_third_1'] + $values['th_third_1'];
         $score2 = $values['st_third_2'] + $values['nd_third_2'] + $values['th_third_2'];
-       
-        if ( $score1 != $values['score1']) {
+
+        if ($score1 != $values['score1']) {
             $form->addError("Pre tím " . $team1->name . " nesedí súčet gólov v tretinách s celkovým počtom gólov.");
             return false;
         }
 
-        if ( $score2 != $values['score2']) {
+        if ($score2 != $values['score2']) {
             $form->addError("Pre tím " . $team2->name . " nesedí súčet gólov v tretinách s celkovým počtom gólov.");
             return false;
         }

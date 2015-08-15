@@ -8,6 +8,7 @@ use App\Model\EventsRepository;
 use App\Model\FightsRepository;
 use App\Model\ForumRepository;
 use App\Model\GalleryRepository;
+use App\Model\GoalsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
 use App\Model\PostImageRepository;
@@ -41,6 +42,9 @@ abstract class BasePresenter extends Presenter {
 
     /** @var GalleryRepository */
     protected $galleryRepository;
+    
+    /** @var GoalsRepository */
+    protected $goalsRepository;
 
     /** @var LinksRepository */
     protected $linksRepository;
@@ -76,13 +80,14 @@ abstract class BasePresenter extends Presenter {
     protected $imgFolder = "/images/";
 
     public function __construct(
-    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
+    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
 
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
         $this->fightsRepository = $fightsRepository;
         $this->forumRepository = $forumRepository;
         $this->galleryRepository = $galleryRepository;
+        $this->goalsRepository = $goalsRepository;
         $this->linksRepository = $linksRepository;
         $this->playersRepository = $playersRepository;
         $this->postImageRepository = $postImageRepository;

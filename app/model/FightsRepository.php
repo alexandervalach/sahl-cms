@@ -10,7 +10,7 @@ class FightsRepository extends Repository {
         return $row->ref('teams', $key);
     }
     
-    public function getPlayersFormTeam(ActiveRow $row, $key) {
+    public function getPlayersForTeam(ActiveRow $row, $key) {
        return $this->getTeamForFight($row, $key)->related('players'); 
     }
 }

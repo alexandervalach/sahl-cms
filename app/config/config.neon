@@ -45,3 +45,4 @@ services:
 	- App\Model\AlbumsRepository
 	- App\Model\RoundsRepository
 	- App\Model\PunishmentsRepository
+	- App\Model\GoalsRepository

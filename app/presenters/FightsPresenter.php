@@ -172,17 +172,17 @@ class FightsPresenter extends BasePresenter {
         return $form;
     }
 
-    protected function addPlayerGoalsForm() {
+    protected function createComponentAddPlayerGoalsForm() {
         $form = new Form;
         $teamOnePlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team1_id');
-        $teamTwoPlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team2_id');
+        //$teamTwoPlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team2_id');
 
-        $form->addSelect('player_id', 'Hráči tímu' . $this->team1->name, $teamOnePlayers);
-        $form->addSelect('player_id', 'Hráči tímu' . $this->team2->name, $teamTwoPlayers);
+        $form->addSelect('player_id', 'Hráči tímu ' . $this->team1->name, $teamOnePlayers);
+        //$form->addSelect('player2_id', 'Hráči tímu ' . $this->team2->name, $teamTwoPlayers);
         $form->addText('goals', 'Počet gólov');
-        $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('save', 'Uložiť'); 
 
-        $this->onSuccess[] = $this->submittedAddPlayerGoalsForm;
+        $form->onSuccess[] = $this->submittedAddPlayerGoalsForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -239,7 +239,9 @@ class FightsPresenter extends BasePresenter {
     }
 
     public function submittedAddPlayerGoalsForm(Form $form) {
-        
+        $values = $form->getValues();
+        $this->goalsRepository->insert($values);
+        $this->redirect('addPlayerGoals', $this->fightRow);
     }
 
     public function submittedDeleteForm() {

@@ -11,7 +11,12 @@ class FightsRepository extends Repository {
     }
     
     public function getPlayersForTeam(ActiveRow $row, $key) {
-       return $this->getTeamForFight($row, $key)->related('players'); 
+       $players = $this->getTeamForFight($row, $key)->related('players'); 
+       $list = array();
+       foreach( $players as $player ) {
+           $list[$player->id] = $player->lname;
+       }
+       return $list;
     }
 }
 

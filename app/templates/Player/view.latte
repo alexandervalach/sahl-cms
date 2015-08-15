@@ -54,8 +54,8 @@
                 </td>
                 {var $i = $iterator->counter}
             </tr>
-            {var $i = $i + 1}
             {foreach $goalies as $goalie}
+                {var $i = $i + 1}
                 <tr>
                     <td>{$i}.</td>
                     <td>{$goalie->lname}</td>
@@ -74,7 +74,6 @@
                         </a>
                     </td>    
                 </tr>
-                {var $i = $i + 1}
             {/foreach}
         </tbody>
     </table>

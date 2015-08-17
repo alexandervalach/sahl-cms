@@ -41,10 +41,7 @@ class ForumPresenter extends BasePresenter {
 
         $form->addText('author', 'Meno:')
                 ->setRequired("Meno je povinné pole.");
-
-        $form->addText('title', 'Názov:')
-                ->setRequired('Názov je povinné pole');
-
+        $form->addText('title', 'Názov:');
         $form->addTextArea('message', 'Príspevok:')
                 ->setAttribute('class', 'form-jqte')
                 ->setRequired("Príspevok je povinné pole.");

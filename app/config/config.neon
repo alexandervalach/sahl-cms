@@ -46,3 +46,4 @@ services:
 	- App\Model\RoundsRepository
 	- App\Model\PunishmentsRepository
 	- App\Model\GoalsRepository
+	- App\Model\ReplyRepository

@@ -1,0 +1,13 @@
+{block content}
+
+<h1 n:block="title">Odstráň odpoveď</h1>
+
+{if $reply}
+    <p class="delete text-warnig">
+        Naozaj chceš odstrániť odpoveď 
+        <mark>{$reply->forum->title}</mark>?
+    </p>
+    {control deleteForm}
+{else}
+    <p class="text-danger">Nemôžem nájsť odpoveď.</p>
+{/if}

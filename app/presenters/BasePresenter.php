@@ -14,6 +14,7 @@ use App\Model\PlayersRepository;
 use App\Model\PostImageRepository;
 use App\Model\PostsRepository;
 use App\Model\PunishmentsRepository;
+use App\Model\ReplyRepository;
 use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
 use App\Model\TablesRepository;
@@ -61,6 +62,9 @@ abstract class BasePresenter extends Presenter {
     /** @var PunishmentsRepository */
     protected $punishmentsRepository;
 
+    /** @var ReplyRepository */
+    protected $replyRepository;
+    
     /** @var RoundsRepository */
     protected $roundsRepository;
 
@@ -80,7 +84,7 @@ abstract class BasePresenter extends Presenter {
     protected $imgFolder = "/images/";
 
     public function __construct(
-    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
+    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
 
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
@@ -93,6 +97,7 @@ abstract class BasePresenter extends Presenter {
         $this->postImageRepository = $postImageRepository;
         $this->postsRepository = $postsRepository;
         $this->punishmentsRepository = $punishmentsRepository;
+        $this->replyRepository = $replyRepository;
         $this->roundsRepository = $roundsRepository;
         $this->rulesRepository = $rulesRepository;
         $this->tablesRepository = $tablesRepository;

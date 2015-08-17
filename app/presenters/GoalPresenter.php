@@ -20,6 +20,15 @@ class GoalPresenter extends BasePresenter {
     /** @var string */
     private $error = "Player not found!";
 
+    public function actionView($id) {
+        $this->fightRow = $this->fightsRepository->findById($id);
+    }
+
+    public function renderView($id) {
+        $this->template->fight = $this->fightRow;
+        $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow->id);
+    }
+
     public function actionAdd($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
@@ -32,6 +41,22 @@ class GoalPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->getComponent('addForm');
+    }
+
+    public function actionEdit($id) {
+       
+    }
+
+    public function renderEdit($id) {
+        
+    }
+
+    public function actionDelete($id) {
+        
+    }
+
+    public function renderDelete($id) {
+        
     }
 
     protected function createComponentAddForm() {

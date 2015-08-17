@@ -3,10 +3,14 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 
 class GoalPresenter extends BasePresenter {
+
+    /** @var ActiveRow */
+    private $goalRow;
 
     /** @var ActiveRow */
     private $fightRow;
@@ -44,19 +48,31 @@ class GoalPresenter extends BasePresenter {
     }
 
     public function actionEdit($id) {
-        
+        $this->userIsLogged();
+        $this->goalRow = $this->goalsRepository->findById($id);
+        $this->fightRow = $this->fightsRepository->ref('fights', 'fight_id');
     }
 
     public function renderEdit($id) {
-        
+        if (!$this->goalRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->goal = $this->goalRow;
+        $this->getComponent('editForm')->setDefaults($this->goalRow);
     }
 
     public function actionDelete($id) {
-        
+        $this->userIsLogged();
+        $this->goalRow = $this->goalsRepository->findById($id);
+        $this->fightRow = $this->goalRow->ref('fights', 'fight_id');
     }
 
     public function renderDelete($id) {
-        
+        if (!$this->goalRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->goal = $this->goalRow;
+        $this->getComponent('deleteForm');
     }
 
     protected function createComponentAddForm() {
@@ -71,7 +87,7 @@ class GoalPresenter extends BasePresenter {
         return $form;
     }
 
-    protected function createComponenrEditForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
         $players = $this->fightsRepository->getPlayersForSelect($this->fightRow, 'team1_id', 'team2_id');
         $form->addSelect('player_id', 'Hráči', $players);
@@ -98,11 +114,26 @@ class GoalPresenter extends BasePresenter {
     }
 
     public function submittedEditForm(Form $form) {
-        /* Doplniť akciu pre úpravu */
+        $values = $form->getValues();
+        $this->goalRow->update($values);
+
+        $player = $this->playersRepository->findById($this->goalRow->id);
+        $numOfGoals = $player->goals + $values['goals'];
+        $goals = array('goals' => $numOfGoals);
+        $player->update($goals);
+
+        $this->redirect('view', $this->fightRow);
     }
 
     public function submittedDeleteForm() {
-        /** Doplniť akciu pre odstránenie */
+        $player = $this->playersRepository->findById($this->goalRow->player_id);
+        $numOfGoals = $player->goals - $this->goalRow->goals;
+        $goals = array('goals' => $numOfGoals);
+        $player->update($goals);
+
+        $this->goalRow->delete();
+        $this->flashMessage("Góly boli hráčovi odpočítané", 'success');
+        $this->redirect('view', $this->fightRow->id);
     }
 
     public function formCancelled() {

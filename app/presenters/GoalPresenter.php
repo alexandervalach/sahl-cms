@@ -36,11 +36,8 @@ class GoalPresenter extends BasePresenter {
 
     protected function createComponentAddForm() {
         $form = new Form;
-        $teamOnePlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team1_id');
-        //$teamTwoPlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team2_id');
-
-        $form->addSelect('player_id', 'Hráči tímu ' . $this->team1->name, $teamOnePlayers);
-        //$form->addSelect('player2_id', 'Hráči tímu ' . $this->team2->name, $teamTwoPlayers);
+        $players = $this->fightsRepository->getPlayersForSelect($this->fightRow, 'team1_id', 'team2_id');
+        $form->addSelect('player_id', 'Hráči', $players);
         $form->addText('goals', 'Počet gólov');
         $form->addSubmit('save', 'Uložiť');
 
@@ -51,6 +48,7 @@ class GoalPresenter extends BasePresenter {
 
     public function submittedAddForm(Form $form) {
         $values = $form->getValues();
+        $values['fight_id'] = $this->fightRow;
         $this->goalsRepository->insert($values);
         $this->redirect('add', $this->fightRow);
     }

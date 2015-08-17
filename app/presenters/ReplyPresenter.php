@@ -1,16 +1,35 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+namespace App\Presenters;
 
-/**
- * Description of ReplyPresenter
- *
- * @author Jon Snow
- */
-class ReplyPresenter {
-    //put your code here
+use Nette\Database\Table\ActiveRow;
+
+class ReplyPresenter extends BasePresenter {
+
+    /** @var ActiveRow */
+    private $replyRow;
+
+    /** @var string */
+    private $error = "Reply not found!";
+
+    public function actionAdd($id) {
+        
+    }
+
+    public function renderAdd($id) {
+        
+    }
+
+    public function actionDelete($id) {
+        
+    }
+
+    public function renderDelete($id) {
+        
+    }
+    
+    public function formCancelled() {
+        $this->redirect('Forum:all');
+    }
+
 }

@@ -1,5 +1,11 @@
 <?php
 
+namespace App\Presenters;
+
+use App\FormHelper;
+use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
+
 class GoalPresenter extends BasePresenter {
 
     /** @var ActiveRow */
@@ -14,21 +20,21 @@ class GoalPresenter extends BasePresenter {
     /** @var string */
     private $error = "Player not found!";
 
-    public function actionAddPlayerGoals($id) {
+    public function actionAdd($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
         $this->team1 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team1_id');
         $this->team2 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team2_id');
     }
 
-    public function renderAddPlayerGoals($id) {
+    public function renderAdd($id) {
         if (!$this->fightRow) {
             throw new BadRequestException($this->error);
         }
-        $this->getComponent('addPlayerGoalsForm');
+        $this->getComponent('addForm');
     }
 
-    protected function createComponentAddPlayerGoalsForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
         $teamOnePlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team1_id');
         //$teamTwoPlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team2_id');
@@ -38,18 +44,19 @@ class GoalPresenter extends BasePresenter {
         $form->addText('goals', 'Počet gólov');
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = $this->submittedAddPlayerGoalsForm;
+        $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddPlayerGoalsForm(Form $form) {
+    public function submittedAddForm(Form $form) {
         $values = $form->getValues();
         $this->goalsRepository->insert($values);
-        $this->redirect('addPlayerGoals', $this->fightRow);
+        $this->redirect('add', $this->fightRow);
     }
 
     public function formCancelled() {
         $this->redirect('Round:all');
     }
+
 }

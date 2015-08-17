@@ -42,7 +42,7 @@ abstract class BasePresenter extends Presenter {
 
     /** @var GalleryRepository */
     protected $galleryRepository;
-    
+
     /** @var GoalsRepository */
     protected $goalsRepository;
 

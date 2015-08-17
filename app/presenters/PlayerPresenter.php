@@ -3,10 +3,8 @@
 namespace App\Presenters;
 
 use App\FormHelper;
-use Nette\Utils\Arrays;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Utils\FileSystem;
 use Nette\Database\Table\ActiveRow;
 
 class PlayerPresenter extends BasePresenter {
@@ -26,8 +24,8 @@ class PlayerPresenter extends BasePresenter {
 
     public function renderView($id) {
         $team = $this->teamRow;
-        $this->template->players = $team->related('players')->where('goalie', 0)->order('goals ASC, lname ASC, num ASC');
-        $this->template->goalies = $team->related('players')->where('goalie', 1)->order('goals ASC, lname ASC, num ASC');
+        $this->template->players = $team->related('players')->where('goalie', 0);
+        $this->template->goalies = $team->related('players')->where('goalie', 1);
         $this->template->team = $team;
         $this->template->imgFolder = $this->imgFolder;
     }
@@ -70,18 +68,11 @@ class PlayerPresenter extends BasePresenter {
 
     protected function createComponentAddPlayerForm() {
         $form = new Form;
-
-        $form->addText('lname', 'Meno a priezvisko:')
-                ->setRequired("Meno a priezvisko je povinné pole.");
-
-        $form->addText('num', 'Číslo:');
-
+        $form->addText('lname', 'Meno a priezvisko:');
         $form->addText('born', 'Dátum narodenia:')
-                ->setAttribute('placeholder', 'DD.MM.RRRR')
-                ->setRequired("Dátum narodenia je povinné pole.");
-        
+                ->setAttribute('placeholder', 'DD.MM.RRRR');
+        $form->addText('num', 'Číslo:');
         $form->addCheckbox('goalie', ' Brankár');
-
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddPlayerForm;
@@ -91,19 +82,12 @@ class PlayerPresenter extends BasePresenter {
 
     protected function createComponentEditPlayerForm() {
         $form = new Form;
-        $form->addText('lname', 'Meno a priezvisko:')
-                ->setRequired("Meno a priezvisko je povinné pole.");
-
-        $form->addText('num', 'Číslo:');
-
-        $form->addText('goals', 'Góly:');
-
+        $form->addText('lname', 'Meno a priezvisko:');
         $form->addText('born', 'Dátum narodenia:')
-                ->setAttribute('placeholder', 'DD.MM.RRRR')
-                ->setRequired("Dátum narodenia je povinné pole.");
-        
+                ->setAttribute('placeholder', 'DD.MM.RRRR');
+        $form->addText('num', 'Číslo:');
+        $form->addText('goals', 'Góly:');
         $form->addCheckbox('goalie', ' Brankár');
-
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedEditPlayerForm;
@@ -115,7 +99,7 @@ class PlayerPresenter extends BasePresenter {
         $values = $form->getValues(TRUE);
         $id = $this->teamRow;
         $values['team_id'] = $id;
-        $player = $this->playersRepository->insert($values);
+        $this->playersRepository->insert($values);
         $this->redirect('view', $id);
     }
 

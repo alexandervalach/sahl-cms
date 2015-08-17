@@ -85,40 +85,14 @@ class FightsPresenter extends BasePresenter {
         $this->getComponent('editThirdForm')->setDefaults($this->fightRow);
     }
 
-    public function actionAddPlayerGoals($id) {
-        $this->userIsLogged();
-        $this->fightRow = $this->fightsRepository->findById($id);
-        $this->team1 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team1_id');
-        $this->team2 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team2_id');
-    }
-
-    public function renderAddPlayerGoals($id) {
-        if (!$this->fightRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->getComponent('addPlayerGoalsForm');
-    }
-
     protected function createComponentAddFightForm() {
         $form = new Form;
-
         $teams = $this->teamsRepository->getTeams();
 
-        $form->addSelect('team1_id', 'Tím 1', $teams)
-                ->setRequired("Názov tímu 1 je povinné pole");
-
-        $form->addSelect('team2_id', 'Tím 2', $teams)
-                ->setRequired("Názov tímu 2 je povinné pole");
-
-        $form->addText('score1', 'Skóre 1')
-                ->setRequired("Počet bodov je povinné pole");
-
-        $form->addText('score2', 'Skóre 2')
-                ->setRequired("Počet bodov je povinné pole");
-
-        $form->addText('time', 'Dátum')
-                ->setAttribute('value', date('Y-m-d'));
-
+        $form->addSelect('team1_id', 'Tím 1', $teams);
+        $form->addSelect('team2_id', 'Tím 2', $teams);
+        $form->addText('score1', 'Skóre 1');
+        $form->addText('score2', 'Skóre 2');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddFightForm;
@@ -131,18 +105,10 @@ class FightsPresenter extends BasePresenter {
 
         $teams = $this->teamsRepository->getTeams();
 
-        $form->addSelect('team1_id', 'Tím 1', $teams)
-                ->setRequired("Názov tímu 1 je povinné pole");
-
-        $form->addSelect('team2_id', 'Tím 2', $teams)
-                ->setRequired("Názov tímu je povinné pole");
-
-        $form->addText('score1', 'Skóre 1')
-                ->setRequired("Počet bodov je povinné pole");
-
-        $form->addText('score2', 'Skóre 2')
-                ->setRequired("Počet bodov je povinné pole");
-
+        $form->addSelect('team1_id', 'Tím 1', $teams);
+        $form->addSelect('team2_id', 'Tím 2', $teams);
+        $form->addText('score1', 'Skóre 1');
+        $form->addText('score2', 'Skóre 2');
         $form->addText('time', 'Dátum');
 
         $form->addSubmit('save', 'Uložiť');
@@ -168,21 +134,6 @@ class FightsPresenter extends BasePresenter {
 
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedEditThirdForm;
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
-    protected function createComponentAddPlayerGoalsForm() {
-        $form = new Form;
-        $teamOnePlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team1_id');
-        //$teamTwoPlayers = $this->fightsRepository->getPlayersForTeam($this->fightRow, 'team2_id');
-
-        $form->addSelect('player_id', 'Hráči tímu ' . $this->team1->name, $teamOnePlayers);
-        //$form->addSelect('player2_id', 'Hráči tímu ' . $this->team2->name, $teamTwoPlayers);
-        $form->addText('goals', 'Počet gólov');
-        $form->addSubmit('save', 'Uložiť'); 
-
-        $form->onSuccess[] = $this->submittedAddPlayerGoalsForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -215,11 +166,7 @@ class FightsPresenter extends BasePresenter {
     public function submittedEditThirdForm(Form $form) {
         $values = $form->getValues();
 
-        foreach ($values as $value) {
-            if (empty($value)) {
-                $value = 0;
-            }
-        }
+        FormHelper::changeEmptyToZero($values);
 
         $score1 = $values['st_third_1'] + $values['nd_third_1'] + $values['th_third_1'];
         $score2 = $values['st_third_2'] + $values['nd_third_2'] + $values['th_third_2'];
@@ -236,12 +183,6 @@ class FightsPresenter extends BasePresenter {
 
         $this->fightRow->update($values);
         $this->redirect('Round:all');
-    }
-
-    public function submittedAddPlayerGoalsForm(Form $form) {
-        $values = $form->getValues();
-        $this->goalsRepository->insert($values);
-        $this->redirect('addPlayerGoals', $this->fightRow);
     }
 
     public function submittedDeleteForm() {

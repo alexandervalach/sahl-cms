@@ -50,6 +50,13 @@ class GoalPresenter extends BasePresenter {
         $values = $form->getValues();
         $values['fight_id'] = $this->fightRow;
         $this->goalsRepository->insert($values);
+
+        $player = $this->playersRepository->findById($values['player_id']);
+        $numOfGoals = $player->goals + $values['goals'];
+        $goals = array('goals' => $numOfGoals);
+        $player->update($goals);
+
+        $this->flashMessage("Záznam o hráčovi $player->lname pridaný.", 'success');
         $this->redirect('add', $this->fightRow);
     }
 

@@ -30,7 +30,7 @@
                     <time datetime={$forum->created_at|date:'d.m.Y H:i'} pubdate>
                         <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
                     </time>
-                    <a href="#" class="text-primary">
+                    <a n:href="Reply:add, $forum->id" class="text-primary">
                         <span class="glyphicon glyphicon-share-alt"></span> Odpovedať
                     </a>
                 </footer>

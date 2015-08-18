@@ -1,0 +1,17 @@
+{* Latte template *}
+
+{block content}
+
+<h1 n:block="title">{$forum->title}</h1>
+
+<p>
+    <a n:href="Forum:all" class='btn btn-default'>
+        <span class="glyphicon glyphicon-arrow-left"></span> Fórum
+    </a>
+</p>
+
+<section id="content">
+    {$forum->message|noescape}
+</section>
+
+{control addForm}

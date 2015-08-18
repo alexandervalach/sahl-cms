@@ -30,6 +30,12 @@
                     <time datetime={$forum->created_at|date:'d.m.Y H:i'} pubdate>
                         <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
                     </time>
+                    {var $count = $forum->related('reply')->count()}
+                    {if $count}
+                        <a n:href="Forum:view, $forum->id">
+                            Počet odpovedí <span class="badge">{$forum->related('reply')->count()}</span>
+                        </a>
+                    {/if}
                     <a n:href="Reply:add, $forum->id">
                         <span class="glyphicon glyphicon-share-alt"></span> Odpovedať
                     </a>

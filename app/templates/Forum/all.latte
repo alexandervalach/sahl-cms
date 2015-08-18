@@ -13,9 +13,9 @@
 
             <article class="col-xs-9 col-sm-9 col-md-10 col-log-10">
                 <header>
-                    {$forum->title}
+                    <a n:href="Forum:view, $forum->id">{$forum->title}</a>
                     <div class="pull-right" n:if="$user->loggedIn">
-                        <a n:href="delete, $forum->id" class="text-primary" title="odstrániť">
+                        <a n:href="delete, $forum->id" title="odstrániť">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </div>
@@ -30,7 +30,7 @@
                     <time datetime={$forum->created_at|date:'d.m.Y H:i'} pubdate>
                         <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
                     </time>
-                    <a n:href="Reply:add, $forum->id" class="text-primary">
+                    <a n:href="Reply:add, $forum->id">
                         <span class="glyphicon glyphicon-share-alt"></span> Odpovedať
                     </a>
                 </footer>

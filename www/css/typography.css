@@ -10,7 +10,7 @@ aside.container h3{
     color: navy;
     display: block;
     clear: both;
-    background-color: rgba(173,216,230,0.8);
+    background-color: rgba(173,216,230,0.5);
     padding: 10px;
     font-weight: bold;
     margin: 0 0 10px 0;
@@ -246,13 +246,8 @@ div.pull-left > a > span.glyphicon.glyphicon-remove{
     color: white;
 }
 
-table.table,
-table.table > tbody > tr{
-    border: 1px solid rgb(173, 216, 230);
-}
-
 table.table > tbody > tr:nth-child(even){
-    background-color: rgb(173,216,230);
+    background-color: rgba(173,216,230,0.5);
 } 
 
 table.table > tbody > tr:nth-child(odd){
@@ -263,3 +258,23 @@ table.table > tbody > tr > td > span.text-danger,
 .first{
     font-weight: bold;
 } 
+
+section#forum > div.row > article > header > a,
+section#forum > div.row > article > footer > a,
+div.pull-right > a > span.glyphicon-remove{
+    font-weight: bold;
+    font-size: 1.2em;
+    color:#000080;
+}
+
+section#forum > div.row > article > footer > a{ font-size: 1em }
+
+section#forum > div.row > article > header > a:hover,
+section#forum > div.row > article > header > a:focus,
+div.pull-right > a > span.glyphicon-remove:hover,
+div.pull-right > a > span.glyphicon-remove:focus,
+section#forum > div.row > article > footer > a:hover,
+section#forum > div.row > article > footer > a:focus{
+    color:#0066FF;
+    text-decoration: none;
+}

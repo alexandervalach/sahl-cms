@@ -32,11 +32,15 @@ class ReplyPresenter extends BasePresenter {
     }
 
     public function actionDelete($id) {
-        
+        $this->replyRow = $this->replyRepository->findById($id);
     }
 
     public function renderDelete($id) {
-        
+        if (!$this->replyRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->getComponent('deleteForm');
+        $this->template->reply = $this->replyRow;
     }
 
     protected function createComponentAddForm() {
@@ -58,9 +62,15 @@ class ReplyPresenter extends BasePresenter {
         $this->replyRepository->insert($values);
         $this->redirect('Forum:all');
     }
+    
+    public function submittedDeleteForm() {
+        $this->userIsLogged();
+        $this->replyRow->delete();
+        $this->redirect('Forum:view', $this->replyRow->forum_id);
+    }
 
     public function formCancelled() {
-        $this->redirect('Forum:all');
+        $this->redirect('Forum:view', $this->replyRow->forum_id);
     }
 
 }

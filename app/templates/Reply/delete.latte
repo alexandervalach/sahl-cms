@@ -4,10 +4,10 @@
 
 {if $reply}
     <p class="delete text-warnig">
-        Naozaj chceš odstrániť odpoveď 
+        Naozaj chceš odstrániť správu z
         <mark>{$reply->forum->title}</mark>?
     </p>
     {control deleteForm}
 {else}
-    <p class="text-danger">Nemôžem nájsť odpoveď.</p>
+    <p class="text-danger">Nemôžem nájsť správu.</p>
 {/if}

@@ -261,7 +261,8 @@ table.table > tbody > tr > td > span.text-danger,
 
 section#forum > div.row > article > header > a,
 section#forum > div.row > article > footer > a,
-div.pull-right > a > span.glyphicon-remove{
+div.pull-right > a > span.glyphicon-remove,
+section#replies > article > header{
     font-weight: bold;
     font-size: 1.2em;
     color:#000080;
@@ -277,4 +278,9 @@ section#forum > div.row > article > footer > a:hover,
 section#forum > div.row > article > footer > a:focus{
     color:#0066FF;
     text-decoration: none;
+}
+
+section#replies > article > header > div.pull-right > a > span.glyphicon-remove{
+    font-size: 1em;
+    font-weight: normal;
 }

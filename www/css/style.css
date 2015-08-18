@@ -64,13 +64,20 @@ div#page{
 }
 
 /*=========FORUM TYPOGRAPHY===========*/
-main.container > section#forum > div.row{
+main.container > section#forum > div.row,
+section#replies > article,
+section#currentIssue{
     margin-bottom: 15px;
     background: rgba(173,216,230,0.5);
     padding: 10px 0;
     border-radius: 4px;
     -webkit-border-radius: 4px;
     -moz-border-radius: 4px;
+}
+
+section#replies > article,
+section#currentIssue{
+    padding: 10px;
 }
 
 main.container > section#forum > div.row > article > footer > time{

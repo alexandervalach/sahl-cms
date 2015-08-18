@@ -12,6 +12,9 @@ class ForumPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $forumRow;
 
+    /** @var Nette\Database\Table\Selection */
+    private $reply;
+
     /** @var string */
     private $error = "Message not found!";
 
@@ -33,7 +36,21 @@ class ForumPresenter extends BasePresenter {
         if (!$this->forumRow) {
             throw new BadRequestException($this->error);
         }
+        $this->getComponent('deleteForm');
         $this->template->forum = $this->forumRow;
+    }
+
+    public function actionView($id) {
+        $this->forumRow = $this->forumRepository->findById($id);
+        $this->reply = $this->forumRow->related('reply');
+    }
+
+    public function renderView($id) {
+        if (!$this->forumRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->forum = $this->forumRow;
+        $this->template->replies = $this->reply;
     }
 
     protected function createComponentAddMessageForm() {
@@ -45,7 +62,6 @@ class ForumPresenter extends BasePresenter {
         $form->addTextArea('message', 'Príspevok:')
                 ->setAttribute('class', 'form-jqte')
                 ->setRequired("Príspevok je povinné pole.");
-
         $form->addSubmit('add', 'Pridaj');
 
         $form->onSuccess[] = $this->submittedAddMessageForm;

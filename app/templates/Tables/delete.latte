@@ -3,10 +3,10 @@
 <h1 n:block="title">Odstráň riadok</h1>
 
 {if $table}
-	<p class='text-warning delete'>
-		Naozaj chceš zmazať mužstvo <mark>{$table->team}</mark>?
-	</p>
-	{control deleteForm}
+    <p class='text-warning delete'>
+        Naozaj chceš odstrániť záznam o mužstve <mark>{$table->team}</mark>?
+    </p>
+    {control deleteForm}
 {else}
-	<p>Nemôžem nájsť záznam v tabuľkách.</p>
+    <p>Nemôžem nájsť záznam v tabuľkách.</p>
 {/if}

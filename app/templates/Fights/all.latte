@@ -18,8 +18,15 @@
         <article>
             {var $team1 = $fight->ref('teams', 'team1_id')}
             {var $team2 = $fight->ref('teams', 'team2_id')}
-            <header>               
-                {$team1->name} {$fight->score1}: {$fight->score2} {$team2->name}
+            <header>  
+                <span class="{if $fight->score1 > $fight->score2}text-success{elseif $fight->score1 < $fight->score2}text-danger{/if}">
+                    {$team1->name} {$fight->score1}
+                </span>
+                : 
+                <span class="{if $fight->score1 < $fight->score2}text-success{elseif $fight->score1 > $fight->score2}text-danger{/if}">
+                    {$fight->score2} {$team2->name}
+                </span>
+
                 <div class="pull-right" n:if="$user->loggedIn">
                     <a n:href="delete#nav, $fight->id">
                         <span class="glyphicon glyphicon-remove"></span>
@@ -27,19 +34,19 @@
                 </div>
             </header>
             <main>
-                ({$fight->st_third_1}:{$fight->st_third_2}; 
-                {$fight->nd_third_1}:{$fight->nd_third_2};
-                {$fight->th_third_1}:{$fight->th_third_2})
-                <br>
+                <div>
+                    ({$fight->st_third_1}:{$fight->st_third_2}; 
+                    {$fight->nd_third_1}:{$fight->nd_third_2};
+                    {$fight->th_third_1}:{$fight->th_third_2})
+                </div>
                 {var $goals = $fight->related('goals')}
-                {if $goals != null}
+                <div n:if="$goals->count() > 0">
                     <a n:tag-if="$user->loggedIn" n:href="Goal:view, $fight->id">Góly:</a>
                     {foreach $goals as $goal}
                         {var $player = $goal->ref('players', 'player_id')}
-                        {$player->lname} {$goal->goals} {if !$iterator->last};{/if}
+                        {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
                     {/foreach}
-                {/if}
-
+                </div>
             </main>
             <footer n:if="$user->loggedIn">
                 <a class="btn btn-success" n:href="edit#nav, $fight->id">
@@ -55,50 +62,3 @@
         </article>
     {/foreach}
 </section>
-
-{*<section id="fights">
-    <div class='table-responsive'>
-        <table class='table table-striped'>
-            <caption class="caption">
-                <span n:block="title">Zápasy</span>
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="add#nav, $round->id">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
-                </div>
-            </caption>
-            <thead>
-                <tr>
-                    <th colspan='3' class="text-center">Tím</th>
-                    <th colspan='3' class="text-center">Výsledok</th>
-                    <th n:if="$user->loggedIn" colspan="2"></th>
-                </tr>
-            </thead>
-            <tbody>
-                {foreach $fights as $fight}
-                <tr>
-                    {var $team1 = $fight->ref( 'teams', 'team1_id' );}
-                    {var $team2 = $fight->ref( 'teams', 'team2_id' );}
-                    <td class='text-right'><a n:href="Player:view#nav, $team1->id">{$team1->name}</a></td>
-                    <td class='text-center'>:</td>
-                    <td class='text-left'><a n:href="Player:view#nav, $team2->id">{$team2->name}</a></td>
-                    <td class='text-right'>{$fight->score1}</td>
-                    <td class='text-center'>:</td>
-                    <td class='text-left'>{$fight->score2}</td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="edit#nav, $fight->id" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="delete#nav, $fight->id" class="text-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </td>
-                </tr>
-                {/foreach}
-            </tbody>
-        </table>
-    </div>
-
-</section>*}

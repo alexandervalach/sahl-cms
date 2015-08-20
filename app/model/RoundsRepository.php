@@ -4,13 +4,13 @@ namespace App\Model;
 
 class RoundsRepository extends Repository{
     public function getLatestRound() {
-        return $this->findAll()->order('id DESC')->limit(1);
+        $id = $this->getTable()->max('id');
+        return $this->findById($id);
     }
     
     public function getLatestRoundFights() {
-        $rounds = $this->getLatestRound();
-        foreach( $rounds as $round ) {
-            return $round->related('fights');
-        }
+        $round = $this->getLatestRound();
+        $rounds = $round->related('fights');
+        return $rounds;
     }
 }

@@ -2,9 +2,9 @@
     <!-- Table for fights -->
     <div class='table-responsive'>
         <table class='table table-striped table-condensed'>
-            <caption class='caption'>{$round->name}</caption>
+            <caption class='caption'>{$sideRound->name}</caption>
             <tbody>
-                {foreach $fights as $fight}
+                {foreach $sideFights as $fight}
                     <tr>
                         {var $team1 = $fight->ref('teams', 'team1_id');}
                         {var $team2 = $fight->ref('teams', 'team2_id');}

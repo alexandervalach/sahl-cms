@@ -1,0 +1,28 @@
+{block content}
+
+<aside class='container col-lg-3 col-md-3 hidden-sm hidden-xs'>
+    <div class='login'>
+        <h3>Prihlásenie</h3>
+        {if !$user->loggedIn}
+            {control signInForm}
+        {else}
+            <a n:href='Sign:out' class='btn btn-large btn-primary'>
+                <span class='glyphicon glyphicon-log-out'></span> Odhlásiť
+            </a>
+        {/if}
+    </div>
+    <section id="terciary">
+        {if $sponsors != null}
+            <h3>Sponzori</h3>
+            {foreach $sponsors as $sponsor}
+                <figure>
+                    <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
+                        <img class="img img-responsive img-rounded" 
+                             src="{$basePath}{$imgFolder}{$sponsor->image}" 
+                             alt="{$sponsor->title}" />
+                    </a>
+                </figure>
+            {/foreach}
+        {/if}
+    </section>
+</aside>

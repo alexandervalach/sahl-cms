@@ -1,0 +1,55 @@
+{block content}
+
+<aside class='container col-lg-3 col-md-3 hidden-sm hidden-xs'>
+    <!-- Table for fights -->
+    <div class='table-responsive'>
+        <table class='table table-striped table-condensed'>
+            <caption class='caption'>{$round->name}</caption>
+            <tbody>
+                {foreach $fights as $fight}
+                    <tr>
+                        {var $team1 = $fight->ref('teams', 'team1_id');}
+                        {var $team2 = $fight->ref('teams', 'team2_id');}
+                        <td>{$team1->name}</td>
+                        <td>:</td>
+                        <td>{$team2->name}</td>
+                        <td>{$fight->score1}</td>
+                        <td>:</td>
+                        <td>{$fight->score2}</td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- The leaading teams -->
+    <div class='table-responsive' n:if="$playOff">
+        <table class='table table-striped table-condensed'>
+            <caption class='caption'>Play off</caption>
+            <tbody>
+                {foreach $playOff as $table}
+                    <tr>
+                        {var $team = $table->ref('teams', 'team_id')}
+                        <td>{$team->name}</td>
+                        <td>{$table->points}</td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+
+    <div class='table-responsive' n:if="$baseTable">
+        <table class='table table-striped table-condensed'>
+            <caption class='caption'>Základná časť</caption>
+            <tbody>
+                {foreach $baseTable as $table}
+                    <tr>
+                        {var $team = $table->ref('teams', 'team_id')}
+                        <td>{$team->name}</td>
+                        <td>{$table->points}</td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+</aside>

@@ -5,7 +5,7 @@
         <span class="glyphicon glyphicon-arrow-left"></span>
         Kolá
     </a>
-    <a n:href="add#nav, $round->id" class='btn btn-primary'>
+    <a n:href="add#nav, $round->id" class='btn btn-primary' n:if="$user->loggedIn">
         <span class="glyphicon glyphicon-plus"></span>
         Pridať zápas
     </a>
@@ -20,7 +20,7 @@
             {var $team2 = $fight->ref('teams', 'team2_id')}
             <header>               
                 {$team1->name} {$fight->score1}: {$fight->score2} {$team2->name}
-                <div class="pull-right">
+                <div class="pull-right" n:if="$user->loggedIn">
                     <a n:href="delete#nav, $fight->id">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
@@ -30,6 +30,16 @@
                 ({$fight->st_third_1}:{$fight->st_third_2}; 
                 {$fight->nd_third_1}:{$fight->nd_third_2};
                 {$fight->th_third_1}:{$fight->th_third_2})
+                <br>
+                {var $goals = $fight->related('goals')}
+                {if $goals != null}
+                    <a n:tag-if="$user->loggedIn" n:href="Goal:view, $fight->id">Góly:</a>
+                    {foreach $goals as $goal}
+                        {var $player = $goal->ref('players', 'player_id')}
+                        {$player->lname} {$goal->goals} {if !$iterator->last};{/if}
+                    {/foreach}
+                {/if}
+
             </main>
             <footer n:if="$user->loggedIn">
                 <a class="btn btn-success" n:href="edit#nav, $fight->id">

@@ -3,9 +3,9 @@
 <h1 n:block="title">Súpis gólov pre zápas</h1>
 
 <p>
-    <a n:href="Round:all" class='btn btn-large btn-default'>
+    <a n:href="Fights:all, $fight->round_id" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
-        Zápasy
+        {$fight->ref('rounds', 'round_id')->name}
     </a>
 </p>
 

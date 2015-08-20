@@ -28,6 +28,7 @@ class GoalPresenter extends BasePresenter {
     private $error = "Player not found!";
 
     public function actionView($id) {
+        $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
     }
 
@@ -127,7 +128,7 @@ class GoalPresenter extends BasePresenter {
         $goals = array('goals' => $numOfGoals);
         $player->update($goals);
 
-        $this->redirect('view', $this->fightRow);
+        $this->redirect('view#nav', $this->fightRow);
     }
 
     public function submittedDeleteForm() {
@@ -138,11 +139,11 @@ class GoalPresenter extends BasePresenter {
 
         $this->goalRow->delete();
         $this->flashMessage("Góly boli hráčovi odpočítané", 'success');
-        $this->redirect('view', $this->fightRow->id);
+        $this->redirect('view#nav', $this->fightRow->id);
     }
 
     public function formCancelled() {
-        $this->redirect('Round:all');
+        $this->redirect('Fights:all#nav', $this->fightRow->round_id);
     }
 
 }

@@ -1,2 +1,9 @@
 {block content}
 
+<h1 n:block="title">Odstrániť góly hráča</h1>
+
+<p class='delete text-warning'>
+    Naozaj chceš odstrániť góly hráča <mark>{$goal->ref('players', 'player_id')->lname}</mark> v tomto zápase?
+</p>
+{control deleteForm}
+

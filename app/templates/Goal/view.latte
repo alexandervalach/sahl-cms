@@ -3,7 +3,7 @@
 <h1 n:block="title">Súpis gólov pre zápas</h1>
 
 <p>
-    <a n:href="Fights:all, $fight->round_id" class='btn btn-large btn-default'>
+    <a n:href="Fights:all#nav, $fight->round_id" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         {$fight->ref('rounds', 'round_id')->name}
     </a>
@@ -16,7 +16,7 @@
             {var $team2 = $fight->ref('teams', 'team2_id')}
             {$team1->name} : {$team2->name}
             <div class="pull-right">
-                <a n:href="add, $fight->id" title="pridať hráča s gólami">
+                <a n:href="add#nav, $fight->id" title="pridať hráča s gólami">
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
             </div>
@@ -37,12 +37,12 @@
                     <td>{$player->lname}</td>
                     <td>{$goal->goals}</td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="edit, $goal->id" class="text-success">
+                        <a n:href="edit#nav, $goal->id" class="text-success">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     </td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="delete, $goal->id" class="text-danger">
+                        <a n:href="delete#nav, $goal->id" class="text-danger">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>

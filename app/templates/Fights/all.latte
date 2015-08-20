@@ -1,13 +1,52 @@
 {block content}
 
 <p>
-    <a n:href="Round:all#nav" class='btn btn-large btn-default'>
+    <a n:href="Round:all#nav" class='btn btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Kolá
     </a>
+    <a n:href="add#nav, $round->id" class='btn btn-primary'>
+        <span class="glyphicon glyphicon-plus"></span>
+        Pridať zápas
+    </a>
 </p>
 
+<h1 n:block="title">{$round->name}</h1>
+
 <section id="fights">
+    {foreach $fights as $fight}
+        <article>
+            {var $team1 = $fight->ref('teams', 'team1_id')}
+            {var $team2 = $fight->ref('teams', 'team2_id')}
+            <header>               
+                {$team1->name} {$fight->score1}: {$fight->score2} {$team2->name}
+                <div class="pull-right">
+                    <a n:href="delete#nav, $fight->id">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
+            </header>
+            <main>
+                ({$fight->st_third_1}:{$fight->st_third_2}; 
+                {$fight->nd_third_1}:{$fight->nd_third_2};
+                {$fight->th_third_1}:{$fight->th_third_2})
+            </main>
+            <footer n:if="$user->loggedIn">
+                <a class="btn btn-success" n:href="edit#nav, $fight->id">
+                    <span class="glyphicon glyphicon-pencil"></span> Upraviť zápas
+                </a>
+                <a class="btn btn-warning" n:href="editThird#nav, $fight->id">
+                    <span class="glyphicon glyphicon-pencil"></span> Upraviť tretiny
+                </a>
+                <a class="btn btn-primary" n:href="Goal:add#nav, $fight->id">
+                    <span class="glyphicon glyphicon-plus"></span> Pridať góly
+                </a>
+            </footer>
+        </article>
+    {/foreach}
+</section>
+
+{*<section id="fights">
     <div class='table-responsive'>
         <table class='table table-striped'>
             <caption class="caption">
@@ -26,12 +65,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr n:foreach="$fights as $fight">
+                {foreach $fights as $fight}
+                <tr>
                     {var $team1 = $fight->ref( 'teams', 'team1_id' );}
                     {var $team2 = $fight->ref( 'teams', 'team2_id' );}
-                    <td class='text-right'>{$team1->name}</td>
+                    <td class='text-right'><a n:href="Player:view#nav, $team1->id">{$team1->name}</a></td>
                     <td class='text-center'>:</td>
-                    <td class='text-left'>{$team2->name}</td>
+                    <td class='text-left'><a n:href="Player:view#nav, $team2->id">{$team2->name}</a></td>
                     <td class='text-right'>{$fight->score1}</td>
                     <td class='text-center'>:</td>
                     <td class='text-left'>{$fight->score2}</td>
@@ -40,14 +80,15 @@
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     </td>
-                    <td>
+                    <td n:if="$user->loggedIn">
                         <a n:href="delete#nav, $fight->id" class="text-danger">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
                 </tr>
+                {/foreach}
             </tbody>
         </table>
     </div>
 
-</section>
+</section>*}

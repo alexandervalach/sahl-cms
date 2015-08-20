@@ -48,7 +48,7 @@ class FightsPresenter extends BasePresenter {
         $this->template->round = $this->roundRow;
         $this->getComponent('addFightForm');
     }
-
+    
     public function actionEdit($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
@@ -77,8 +77,9 @@ class FightsPresenter extends BasePresenter {
     public function actionEditThird($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
-        $this->team1 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team1_id');
-        $this->team2 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team2_id');
+        $this->roundRow = $this->fightsRepository->getForFight($this->fightRow, 'round_id', 'rounds');
+        $this->team1 = $this->fightsRepository->getForFight($this->fightRow, 'team1_id');
+        $this->team2 = $this->fightsRepository->getForFight($this->fightRow, 'team2_id');
     }
 
     public function renderEditThird($id) {
@@ -86,6 +87,7 @@ class FightsPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->template->fight = $this->fightRow;
+        $this->template->round = $this->roundRow;
         $this->getComponent('editThirdForm')->setDefaults($this->fightRow);
     }
 

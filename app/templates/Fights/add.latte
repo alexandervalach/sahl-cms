@@ -1,11 +1,11 @@
 {block content}
 
-<h1 n:block="title">{$round->name}</h1>
+<h1 n:block="title">Pridať zápas do kola {$round->name}</h1>
 
 <p>
-    <a n:href="Round:all" class='btn btn-large btn-default'>
+    <a n:href="all#nav, $round->id" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
-        Zápasy
+        {$round->name}
     </a>
 </p>
 

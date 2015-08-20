@@ -149,7 +149,7 @@ abstract class BasePresenter extends Presenter {
 
         try {
             $this->getUser()->login($values->username, $values->password);
-            $this->redirect('Homepage:');
+            $this->redirect('Homepage:#nav');
         } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');
         }
@@ -158,12 +158,12 @@ abstract class BasePresenter extends Presenter {
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený.', 'success');
-        $this->redirect('Homepage:');
+        $this->redirect('Homepage:#nav');
     }
 
     protected function userIsLogged() {
         if (!$this->user->isLoggedIn()) {
-            $this->redirect('Sign:in');
+            $this->redirect('Sign:in#nav');
         }
     }
 

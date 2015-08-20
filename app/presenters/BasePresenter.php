@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Components\Backward;
 use App\Model\AlbumsRepository;
 use App\Model\EventsRepository;
 use App\Model\FightsRepository;
@@ -165,6 +166,10 @@ abstract class BasePresenter extends Presenter {
         if (!$this->user->isLoggedIn()) {
             $this->redirect('Sign:in');
         }
+    }
+    
+    protected function createComponentBackward() {
+        return new Backward();
     }
 
 }

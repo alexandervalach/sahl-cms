@@ -10,8 +10,13 @@
     </a>
 </p>
 
-<section id="content">
-    {$forum->message|noescape}
+<section id="currentIssue">
+    <article>
+        <header>
+            {$forum->author}
+        </header>
+        {$forum->message|noescape}
+    </article>
 </section>
 
 {control addForm}

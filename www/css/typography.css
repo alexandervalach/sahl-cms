@@ -262,7 +262,8 @@ table.table > tbody > tr > td > span.text-danger,
 section#forum > div.row > article > header > a,
 section#forum > div.row > article > footer > a,
 div.pull-right > a > span.glyphicon-remove,
-section#replies > article > header{
+section#replies > article > header,
+section#currentIssue > article > header{
     font-weight: bold;
     font-size: 1.2em;
     color:#000080;

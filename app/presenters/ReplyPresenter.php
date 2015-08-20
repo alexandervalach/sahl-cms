@@ -19,7 +19,6 @@ class ReplyPresenter extends BasePresenter {
     private $error = "Reply not found!";
 
     public function actionAdd($id) {
-        $this->userIsLogged();
         $this->forumRow = $this->forumRepository->findById($id);
     }
 
@@ -57,10 +56,11 @@ class ReplyPresenter extends BasePresenter {
     }
 
     public function submittedAddForm(Form $form) {
+        $id = $this->forumRow->id;
         $values = $form->getValues();
-        $values['forum_id'] = $this->forumRow->id;
+        $values['forum_id'] = $id;
         $this->replyRepository->insert($values);
-        $this->redirect('Forum:all');
+        $this->redirect('Forum:view', $id);
     }
     
     public function submittedDeleteForm() {

@@ -76,7 +76,8 @@ class PostImagePresenter extends BasePresenter {
 
     protected function createComponentSetThumbnailForm() {
         $form = new Form;
-        $form->addCheckbox('thumbnail', ' Nastaviť ako prezenčný obrázok');
+        $form->addCheckbox('thumbnail', ' Nastaviť ako prezenčný obrázok')
+                ->setValue(true);
         $form->addSubmit('save', 'Ulož');
         $form->onSuccess[] = $this->submittedSetThumbnailForm;
         FormHelper::setBootstrapFormRenderer($form);

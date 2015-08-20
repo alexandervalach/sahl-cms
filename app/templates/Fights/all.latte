@@ -1,43 +1,53 @@
 {block content}
 
-<div class='table-responsive'>
-    <table class='table table-striped'>
-        <caption class='caption' n:block="title">
-            Zápasy
-            <div class="pull-right" n:if='$user->loggedIn'>
-                <a n:href="create">
-                    <span class='glyphicon glyphicon-plus'></span>
-                </a>
-            </div>
-        </caption>
-        <thead>
-            <tr>
-                <th colspan='3' class="text-center">Tím</th>
-                <th colspan='3' class="text-center">Výsledok</th>
-                <th n:if="$user->loggedIn" colspan="2"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr n:foreach="$fights as $fight">
-                {var $team1 = $fight->ref( 'teams', 'team1_id' );}
-                {var $team2 = $fight->ref( 'teams', 'team2_id' );}
-                <td class='text-right'>{$team1->name}</td>
-                <td class='text-center'>:</td>
-                <td class='text-left'>{$team2->name}</td>
-                <td class='text-right'>{$fight->score1}</td>
-                <td class='text-center'>:</td>
-                <td class='text-left'>{$fight->score2}</td>
-                <td n:if="$user->loggedIn">
-                    <a n:href="edit, $fight->id" class="text-success">
-                        <span class="glyphicon glyphicon-pencil"></span>
+<p>
+    <a n:href="Round:all#nav" class='btn btn-large btn-default'>
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        Kolá
+    </a>
+</p>
+
+<section id="fights">
+    <div class='table-responsive'>
+        <table class='table table-striped'>
+            <caption class="caption">
+                <span n:block="title">Zápasy</span>
+                <div class="pull-right" n:if="$user->loggedIn">
+                    <a n:href="add#nav">
+                        <span class="glyphicon glyphicon-plus"></span>
                     </a>
-                </td>
-                <td>
-                    <a n:href="delete, $fight->id" class="text-danger">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                </div>
+            </caption>
+            <thead>
+                <tr>
+                    <th colspan='3' class="text-center">Tím</th>
+                    <th colspan='3' class="text-center">Výsledok</th>
+                    <th n:if="$user->loggedIn" colspan="2"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$fights as $fight">
+                    {var $team1 = $fight->ref( 'teams', 'team1_id' );}
+                    {var $team2 = $fight->ref( 'teams', 'team2_id' );}
+                    <td class='text-right'>{$team1->name}</td>
+                    <td class='text-center'>:</td>
+                    <td class='text-left'>{$team2->name}</td>
+                    <td class='text-right'>{$fight->score1}</td>
+                    <td class='text-center'>:</td>
+                    <td class='text-left'>{$fight->score2}</td>
+                    <td n:if="$user->loggedIn">
+                        <a n:href="edit#nav, $fight->id" class="text-success">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a n:href="delete#nav, $fight->id" class="text-danger">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>

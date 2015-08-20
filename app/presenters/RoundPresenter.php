@@ -83,14 +83,14 @@ class RoundPresenter extends BasePresenter {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->roundsRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedEditRoundForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->roundRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedDeleteForm() {
@@ -102,11 +102,11 @@ class RoundPresenter extends BasePresenter {
         }
         $this->roundRow->delete();
         $this->flashMessage('Kolo bolo odstránené.', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

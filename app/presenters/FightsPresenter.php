@@ -24,12 +24,15 @@ class FightsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $team2;
 
-    public function actionAll() {
-        
+    public function actionAll($id) {
+        $this->roundRow = $this->roundsRepository->findById($id);
     }
 
-    public function renderAll() {
-        $this->template->fights = $this->fightsRepository->findAll()->order('time');
+    public function renderAll($id) {
+        if (!$this->roundRow) {
+            throw new BadRequestException("Round not found.");
+        }
+        $this->template->fights = $this->roundRow->related('fights');
     }
 
     protected function actionAdd($id) {

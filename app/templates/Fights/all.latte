@@ -13,7 +13,7 @@
             <caption class="caption">
                 <span n:block="title">Zápasy</span>
                 <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="add#nav">
+                    <a n:href="add, $round->id">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </div>

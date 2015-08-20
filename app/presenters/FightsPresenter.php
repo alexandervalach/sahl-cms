@@ -33,6 +33,7 @@ class FightsPresenter extends BasePresenter {
             throw new BadRequestException("Round not found.");
         }
         $this->template->fights = $this->roundRow->related('fights');
+        $this->template->round = $this->roundRow;
     }
 
     protected function actionAdd($id) {
@@ -57,7 +58,7 @@ class FightsPresenter extends BasePresenter {
         if (!$this->fightRow) {
             throw new BadRequestException($this->error);
         }
-
+        $this->template->round = $this->fightRow->ref('rounds', 'round_id');
         $this->getComponent('editFightForm')->setDefaults($this->fightRow);
     }
 
@@ -93,8 +94,8 @@ class FightsPresenter extends BasePresenter {
         $teams = $this->teamsRepository->getTeams();
 
         $form->addSelect('team1_id', 'Tím 1', $teams);
-        $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score1', 'Skóre 1');
+        $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
         $form->addSubmit('save', 'Uložiť');
 
@@ -109,10 +110,9 @@ class FightsPresenter extends BasePresenter {
         $teams = $this->teamsRepository->getTeams();
 
         $form->addSelect('team1_id', 'Tím 1', $teams);
-        $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score1', 'Skóre 1');
+        $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
-        $form->addText('time', 'Dátum');
 
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedEditForm;
@@ -150,8 +150,8 @@ class FightsPresenter extends BasePresenter {
         }
 
         $values['round_id'] = $this->roundRow;
-        $this->fightsRepository->insert($values);
-        $this->redirect('all');
+        $fight = $this->fightsRepository->insert($values);
+        $this->redirect('all#nav', $fight->ref('rounds', 'round_id'));
     }
 
     public function submittedEditForm(Form $form) {
@@ -163,7 +163,7 @@ class FightsPresenter extends BasePresenter {
         }
 
         $this->fightRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
     }
 
     public function submittedEditThirdForm(Form $form) {
@@ -185,18 +185,19 @@ class FightsPresenter extends BasePresenter {
         }
 
         $this->fightRow->update($values);
-        $this->redirect('Round:all');
+        $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
     }
 
     public function submittedDeleteForm() {
         $this->userIsLogged();
+        $id = $this->fightRow->ref('rounds', 'round_id');
         $this->fightRow->delete();
         $this->flashMessage('Zápas odstránený.', 'success');
-        $this->redirect('Round:all');
+        $this->redirect('all#nav', $id);
     }
 
     public function formCancelled() {
-        $this->redirect('Round:all');
+        $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
     }
 
 }

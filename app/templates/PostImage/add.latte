@@ -2,4 +2,15 @@
 
 <h1 n:block="title">Pridaj obrázok</h1>
 
+<p>
+    <a n:href="view#nav, $post->id" class="btn btn-large btn-default">
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        {$post->title}
+    </a>
+</p>
+
+<div class="alert alert-info">
+    <strong>Do jedného formulára môžeš nahrať maximálne 20 obrázkov.</strong>
+</div>
+
 {control addImageForm}

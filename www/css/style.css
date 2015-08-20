@@ -203,3 +203,10 @@ section#secondary.row > figure > a > img {
 section#secondary.row > figure{
     margin-bottom: 20px;
 }
+
+section#post > article > main {
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid navy;
+    overflow-x: hidden;
+}

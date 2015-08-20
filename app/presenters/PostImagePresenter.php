@@ -6,16 +6,12 @@ use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
 use Nette\Utils\FileSystem;
 
 class PostImagePresenter extends BasePresenter {
 
     /** @var  ActiveRow */
     private $imgRow;
-
-    /** @var Selection */
-    private $imgSelection;
 
     /** @var ActiveRow */
     private $postRow;
@@ -32,7 +28,11 @@ class PostImagePresenter extends BasePresenter {
     }
 
     public function renderAdd($id) {
+        if (!$this->postRow) {
+            throw new BadRequestException("Post not found.");
+        }
         $this->getComponent('addImageForm');
+        $this->template->post = $this->postRow;
     }
 
     public function actionThumbnail($id, $id2) {

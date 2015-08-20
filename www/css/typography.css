@@ -76,10 +76,6 @@ footer.container {
     text-align: center;
     line-height: 50px;
     vertical-align: middle;
-}
-
-.center{
-    text-align: center;
 }	
 
 .glyphicon{
@@ -171,15 +167,11 @@ div#main > main.container > table{
     margin: 30px 0;
 }
 
-/* CALENDAR */
 aside.container > .table-responsive {
     margin-top: 15px;
     margin-bottom: 10px;
 }
 
-.cal-item {
-    margin: 2px auto;
-}
 /*===================ORDERED AND UNORDERED LIST======================*/
 ul {
     list-style: none;
@@ -216,13 +208,6 @@ ul {
 }
 
 /*===========================IMAGES==================================*/
-.img-gallery{
-    width: 210px;
-    height: auto;
-    float: left;
-    display: inline-block;
-    margin-top: 5px;
-}
 
 div#slider a{
     color: white;
@@ -284,4 +269,8 @@ section#forum > div.row > article > footer > a:focus{
 section#replies > article > header > div.pull-right > a > span.glyphicon-remove{
     font-size: 1em;
     font-weight: normal;
+}
+
+section#post > article > header > time{
+    font-weight: bold;
 }

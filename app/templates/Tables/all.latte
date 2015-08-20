@@ -49,7 +49,8 @@
         </tbody>
     </table>
 
-    <a n:if="$user->loggedIn" href="addToSidebar" title="pridať tabuľku do sidebaru" class="btn btn-info">
+    <a n:if="$user->loggedIn" n:href="addToSidebar, $table->id" 
+       title="pridať tabuľku do sidebaru" class="btn btn-info">
         <span class="glyphicon glyphicon-pushpin"></span> Sidebar
     </a>
 </div>
@@ -100,7 +101,7 @@
             </tr>
         </tbody>
     </table>
-    <a n:if="$user->loggedIn" n:href="addToSidebar" title="pridať tabuľku do sidebaru" class="btn btn-info">
+    <a n:if="$user->loggedIn" n:href="addToSidebar, $table->id" title="pridať tabuľku do sidebaru" class="btn btn-info">
         <span class="glyphicon glyphicon-pushpin"></span> Sidebar
     </a>
 </div>

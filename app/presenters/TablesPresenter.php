@@ -20,8 +20,8 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->basic = $this->tablesRepository->findByValue('type',0)->order('points DESC');
-        $this->template->playoff = $this->tablesRepository->findByValue('type',1)->order('points DESC');
+        $this->template->basic = $this->tablesRepository->findByValue('type', 0)->order('points DESC');
+        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->order('points DESC');
     }
 
     public function actionCreate() {
@@ -58,10 +58,33 @@ class TablesPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
+    public function actionAddToSidebar($id) {
+        $this->userIsLogged();
+        $this->tableRow = $this->tablesRepository->findById($id);
+    }
+
+    public function renderAddToSidebar($id) {
+        if (!$this->tableRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->getComponent('addToSidebarForm');
+    }
+
+    protected function createComponentAddToSidebarForm() {
+        $form = new Form;
+        $form->addCheckbox('onSidebar', ' Zobraziť na bočnom paneli.')
+                ->setValue(true);
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = $this->submittedAddToSidebarForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
     protected function createComponentAddTableRowForm() {
         $form = new Form;
         $teams = $this->teamsRepository->getTeams();
         $form->addSelect('team_id', 'Mužstvo', $teams);
+        $form->addCheckbox('type', ' Play off');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddTableRowForm;
@@ -72,20 +95,28 @@ class TablesPresenter extends BasePresenter {
     protected function createComponentEditTableRowForm() {
         $form = new Form;
 
-        $teams = $this->teamsRepository->getTeams();
-
         $form->addText('win', 'Výhry');
         $form->addText('tram', 'Remízy');
         $form->addText('lost', 'Prehry');
         $form->addText('score1', 'Skóre 1');
         $form->addText('score2', 'Skóre 2');
-        $form->addText('points', 'Body'); 
+        $form->addText('points', 'Body');
         $form->addCheckbox('type', ' Play off');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedEditTableRowForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
+    }
+
+    public function submittedAddToSidebarForm(Form $form) {
+        $values = $form->getValues();
+        $affectedRows = $this->tablesRepository->findByValue('type', $this->tableRow->type);
+        $data = array('onSidebar' => $values['onSidebar']);
+        foreach ($affectedRows as $row) {
+            $row->update($data);
+        }
+        $this->redirect('all');
     }
 
     public function submittedAddTableRowForm(Form $form) {

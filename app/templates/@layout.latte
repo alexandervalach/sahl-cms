@@ -62,11 +62,26 @@
                         </div>
 
                         <!-- The leaading teams -->
-                        <div class='table-responsive'>
+                        <div class='table-responsive' n:if="$playOff">
                             <table class='table table-striped table-condensed'>
-                                <caption class='caption'>Tabuľky</caption>
+                                <caption class='caption'>Play off</caption>
                                 <tbody>
-                                    {foreach $tables as $table}
+                                    {foreach $playOff as $table}
+                                        <tr>
+                                            {var $team = $table->ref('teams', 'team_id')}
+                                            <td>{$team->name}</td>
+                                            <td>{$table->points}</td>
+                                        </tr>
+                                    {/foreach}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class='table-responsive' n:if="$baseTable">
+                            <table class='table table-striped table-condensed'>
+                                <caption class='caption'>Základná časť</caption>
+                                <tbody>
+                                    {foreach $baseTable as $table}
                                         <tr>
                                             {var $team = $table->ref('teams', 'team_id')}
                                             <td>{$team->name}</td>

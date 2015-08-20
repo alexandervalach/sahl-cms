@@ -108,7 +108,8 @@ abstract class BasePresenter extends Presenter {
     public function beforeRender() {
         $this->template->round = $this->roundsRepository->getLatestRound();
         $this->template->fights = $this->roundsRepository->getLatestRoundFights();
-        $this->template->tables = $this->tablesRepository->getTableStats();
+        $this->template->baseTable = $this->tablesRepository->getTableStats(0);
+        $this->template->playOff = $this->tablesRepository->getTableStats(1);
         $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = $this->imgFolder;
     }

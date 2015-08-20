@@ -196,3 +196,10 @@ section#rounds > ul > li > a{
     color: #FF8C00;
     font-size: 1.2em;
 }
+section#secondary.row > figure > a > img {
+    margin: 10px 0 10px 0;
+}
+
+section#secondary.row > figure{
+    margin-bottom: 20px;
+}

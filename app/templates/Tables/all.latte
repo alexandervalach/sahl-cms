@@ -6,7 +6,7 @@
     <table class='table table-striped'>
         <caption class='caption' n:block="title">
             Základná časť
-            <div class="pull-right">
+            <div class="pull-right" n:if="$user->loggedIn">
                 <a n:href="create" class="text-default">
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
@@ -48,13 +48,17 @@
             </tr>
         </tbody>
     </table>
+
+    <a n:if="$user->loggedIn" href="addToSidebar" title="pridať tabuľku do sidebaru" class="btn btn-info">
+        <span class="glyphicon glyphicon-pushpin"></span> Sidebar
+    </a>
 </div>
 
 <div class='table-responsive'>
     <table class='table table-striped'>
         <caption class='caption'>
             Play off
-            <div class="pull-right">
+            <div class="pull-right" n:if="$user->loggedIn">
                 <a n:href="create" class="text-default">
                     <span class="glyphicon glyphicon-plus"></span>
                 </a>
@@ -96,4 +100,7 @@
             </tr>
         </tbody>
     </table>
+    <a n:if="$user->loggedIn" n:href="addToSidebar" title="pridať tabuľku do sidebaru" class="btn btn-info">
+        <span class="glyphicon glyphicon-pushpin"></span> Sidebar
+    </a>
 </div>

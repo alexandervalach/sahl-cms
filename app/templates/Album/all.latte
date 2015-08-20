@@ -14,15 +14,15 @@
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <a n:href="Gallery:view, $album->id">
                 {if $album->name}                
-                    <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-rounded" />
+                    <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-thumbnail" />
                 {else}
-                    <img src="{$basePath}{$default}" class="img-responsive img-rounded" />
+                    <img src="{$basePath}{$default}" class="img-responsive img-thumbnail" />
                 {/if}
             </a>
             <p class="text-center">
                 {$album->album}
             </p>
-            <p class="text-center">
+            <p class="text-center" n:if="$user->loggedIn">
                 <a n:href="edit, $album->id" class="btn btn-success">
                     <span class="glyphicon glyphicon-pencil"></span>
                     Upraviť

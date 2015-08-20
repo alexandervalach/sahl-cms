@@ -33,7 +33,7 @@
     <footer id="images">
         {foreach $images as $image}
             <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
-                <a href="{$basePath}{$imgFolder}{$image->name}">
+                <a href="{$basePath}{$imgFolder}{$image->name}" target="_blank">
                     <img src='{$basePath}{$imgFolder}{$image->name}' class='img-responsive img-rounded' />
                 </a>
                 <div n:if="$user->loggedIn" class="text-center">

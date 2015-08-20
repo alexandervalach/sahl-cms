@@ -3,7 +3,7 @@
 <h1 n:block="title">Kolá</h1>
 
 <p>
-    <a n:href="add" class="btn btn-large btn-primary">
+    <a n:href="add" class="btn btn-large btn-primary" n:if="$user->loggedIn">
         <span class="glyphicon glyphicon-plus"></span> Pridať kolo
     </a>
 </p>
@@ -14,7 +14,7 @@
             {var $fights = $round->related('fights')}
         <table class="table table-condensed">
             <caption class="caption">
-                <div class="pull-left">
+                <div class="pull-left" n:if="$user->loggedIn">
                     <a n:href="delete $round->id" title="odstrániť kolo">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
@@ -23,7 +23,7 @@
                     </a>
                 </div>
                 {$round->name}
-                <div class="pull-right">
+                <div class="pull-right" n:if="$user->loggedIn">
                     <a n:href="Fights:add $round->id" title="pridať zápas">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>

@@ -36,7 +36,7 @@ class FightsPresenter extends BasePresenter {
         $this->template->round = $this->roundRow;
     }
 
-    protected function actionAdd($id) {
+    public function actionAdd($id) {
         $this->userIsLogged();
         $this->roundRow = $this->roundsRepository->findById($id);
     }

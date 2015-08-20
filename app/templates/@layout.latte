@@ -42,7 +42,7 @@
 
                     {include 'leftSidebar.latte'}
 
-                    <main role='main' class='container col-xs-12 col-lg-6 col-md-6 col-sm-12'>
+                    <main role='main' class='container col-xs-12 col-sm-12 col-md-6 col-lg-6'>
                         <div n:foreach="$flashes as $flash" class="flash {$flash->type}">{$flash->message}</div>
                         {include content}
                     </main>
@@ -50,9 +50,9 @@
                     {include 'rightSidebar.latte'}
 
                 </div>
+
+                {include 'footer.latte'}
             </div>
-                    
-            {include 'footer.latte'}
 
         </div>
 

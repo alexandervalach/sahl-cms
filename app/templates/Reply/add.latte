@@ -19,4 +19,20 @@
     </article>
 </section>
 
+<section id="replies">
+    {foreach $replies as $reply}
+        <article>
+            <header>
+                {$reply->author}
+                <div class="pull-right" n:if="$user->loggedIn">
+                    <a n:href="Reply:delete, $reply->id">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
+            </header>
+            {$reply->text|noescape}
+        </article>
+    {/foreach}
+</section>
+
 {control addForm}

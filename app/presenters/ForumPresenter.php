@@ -23,7 +23,7 @@ class ForumPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->forums = $this->forumRepository->findAll();
+        $this->template->forums = $this->forumRepository->findAll()->order("id DESC");
         $this->template->default = '/images/forum.png';
     }
 
@@ -40,29 +40,17 @@ class ForumPresenter extends BasePresenter {
         $this->template->forum = $this->forumRow;
     }
 
-    public function actionView($id) {
-        $this->forumRow = $this->forumRepository->findById($id);
-        $this->reply = $this->forumRow->related('reply');
-    }
-
-    public function renderView($id) {
-        if (!$this->forumRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->forum = $this->forumRow;
-        $this->template->replies = $this->reply;
-    }
-
     protected function createComponentAddMessageForm() {
         $form = new Form;
 
+        $form->addText('title', 'Názov novej témy:')
+                ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
                 ->setRequired("Meno je povinné pole.");
-        $form->addText('title', 'Názov:');
         $form->addTextArea('message', 'Príspevok:')
                 ->setAttribute('class', 'form-jqte')
                 ->setRequired("Príspevok je povinné pole.");
-        $form->addSubmit('add', 'Pridaj');
+        $form->addSubmit('add', 'Pridaj novú tému');
 
         $form->onSuccess[] = $this->submittedAddMessageForm;
         FormHelper::setBootstrapFormRenderer($form);

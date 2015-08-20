@@ -14,12 +14,16 @@ class ReplyPresenter extends BasePresenter {
 
     /** @var ActiveRow */
     private $replyRow;
+    
+    /** @var Nette\Database\Table\Selection */
+    private $reply;
 
     /** @var string */
     private $error = "Reply not found!";
 
     public function actionAdd($id) {
         $this->forumRow = $this->forumRepository->findById($id);
+        $this->reply = $this->forumRow->related('reply');
     }
 
     public function renderAdd($id) {
@@ -27,6 +31,7 @@ class ReplyPresenter extends BasePresenter {
             throw new BadRequestException("Message not found!");
         }
         $this->template->forum = $this->forumRow;
+        $this->template->replies = $this->reply;
         $this->getComponent('addForm');
     }
 
@@ -60,17 +65,17 @@ class ReplyPresenter extends BasePresenter {
         $values = $form->getValues();
         $values['forum_id'] = $id;
         $this->replyRepository->insert($values);
-        $this->redirect('Forum:view', $id);
+        $this->redirect('add', $id);
     }
     
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->replyRow->delete();
-        $this->redirect('Forum:view', $this->replyRow->forum_id);
+        $this->redirect('add', $this->replyRow->forum_id);
     }
 
     public function formCancelled() {
-        $this->redirect('Forum:view', $this->replyRow->forum_id);
+        $this->redirect('add', $this->replyRow->forum_id);
     }
 
 }

@@ -48,7 +48,7 @@ class FightsPresenter extends BasePresenter {
         $this->template->round = $this->roundRow;
         $this->getComponent('addFightForm');
     }
-    
+
     public function actionEdit($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
@@ -145,12 +145,10 @@ class FightsPresenter extends BasePresenter {
 
     public function submittedAddFightForm(Form $form) {
         $values = $form->getValues();
-
         if ($values->team1_id == $values->team2_id) {
             $form->addError('Zvoľ dva rozdielne tímy.');
             return false;
         }
-
         $values['round_id'] = $this->roundRow;
         $fight = $this->fightsRepository->insert($values);
         $this->redirect('all#nav', $fight->ref('rounds', 'round_id'));

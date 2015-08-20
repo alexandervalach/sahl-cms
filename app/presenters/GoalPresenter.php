@@ -14,6 +14,9 @@ class GoalPresenter extends BasePresenter {
 
     /** @var ActiveRow */
     private $fightRow;
+    
+    /** @var ActiveRow */
+    private $roundRow;
 
     /** @var ActiveRow */
     private $team1;
@@ -36,14 +39,16 @@ class GoalPresenter extends BasePresenter {
     public function actionAdd($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
-        $this->team1 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team1_id');
-        $this->team2 = $this->fightsRepository->getTeamForFight($this->fightRow, 'team2_id');
+        $this->roundRow = $this->fightsRepository->getForFight($this->fightRow, 'round_id', 'rounds');
+        $this->team1 = $this->fightsRepository->getForFight($this->fightRow, 'team1_id');
+        $this->team2 = $this->fightsRepository->getForFight($this->fightRow, 'team2_id');
     }
 
     public function renderAdd($id) {
         if (!$this->fightRow) {
             throw new BadRequestException($this->error);
         }
+        $this->template->round = $this->roundRow;
         $this->getComponent('addForm');
     }
 

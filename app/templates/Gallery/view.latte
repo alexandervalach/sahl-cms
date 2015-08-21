@@ -18,7 +18,7 @@
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <a href="{$baseUrl}{$imgFolder}{$img->name}" target="_blank">
                 {if $img->name}                
-                    <img src="{$basePath}{$imgFolder}{$img->name}" class="img-responsive img-rounded" />
+                    <img src="{$basePath}{$imgFolder}{$img->name}" class="img-responsive img-rounded animate" />
                 {else}
                     <img src="{$basePath}{$default}" class="img-responsive img-rounded" />
                 {/if}
@@ -37,4 +37,10 @@
     {/foreach}
     {control visualPaginator}
 </section>
+{/block}
+    
+{block scripts}
+    <script src='{$basePath}/js/jquery.js'></script>
+    <script src='{$basePath}/js/gallery.js'></script>
+{/block}
 

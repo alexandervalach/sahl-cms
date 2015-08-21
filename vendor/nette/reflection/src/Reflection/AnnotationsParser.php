@@ -7,12 +7,14 @@
 
 namespace Nette\Reflection;
 
-use Nette;
-use Nette\Utils\Strings;
+use Nette,
+	Nette\Utils\Strings;
 
 
 /**
  * Annotations support for PHP.
+ *
+ * @author     David Grudl
  * @Annotation
  */
 class AnnotationsParser
@@ -162,7 +164,7 @@ class AnnotationsParser
 		}
 
 		$filename = $reflector->getFileName();
-		$parsed = static::getCache()->load($filename, function (& $dp) use ($filename) {
+		$parsed = static::getCache()->load($filename, function(& $dp) use ($filename) {
 			if (AnnotationsParser::$autoRefresh) {
 				$dp[Nette\Caching\Cache::FILES] = $filename;
 			}

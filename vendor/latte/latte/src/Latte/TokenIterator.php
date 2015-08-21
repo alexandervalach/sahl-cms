@@ -10,6 +10,8 @@ namespace Latte;
 
 /**
  * Traversing helper.
+ *
+ * @author     David Grudl
  * @internal
  */
 class TokenIterator extends Object

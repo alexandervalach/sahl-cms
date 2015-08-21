@@ -14,6 +14,8 @@ use Nette\Utils\DateTime;
 /**
  * HttpResponse class.
  *
+ * @author     David Grudl
+ *
  * @property   int $code
  * @property-read bool $sent
  * @property-read array $headers
@@ -51,8 +53,7 @@ class Response extends Nette\Object implements IResponse
 		}
 
 		if (PHP_VERSION_ID >= 50401) { // PHP bug #61106
-			$rm = new \ReflectionMethod('Nette\Http\Helpers::removeDuplicateCookies');
-			header_register_callback($rm->getClosure()); // requires closure due PHP bug #66375
+			header_register_callback($this->removeDuplicateCookies); // requires closure due PHP bug #66375
 		}
 	}
 
@@ -172,7 +173,7 @@ class Response extends Nette\Object implements IResponse
 
 		$time = DateTime::from($time);
 		$this->setHeader('Cache-Control', 'max-age=' . ($time->format('U') - time()));
-		$this->setHeader('Expires', Helpers::formatDate($time));
+		$this->setHeader('Expires', self::date($time));
 		return $this;
 	}
 
@@ -222,11 +223,15 @@ class Response extends Nette\Object implements IResponse
 
 
 	/**
-	 * @deprecated
+	 * Returns HTTP valid date format.
+	 * @param  string|int|DateTime
+	 * @return string
 	 */
 	public static function date($time = NULL)
 	{
-		return Helpers::formatDate($time);
+		$time = DateTime::from($time);
+		$time->setTimezone(new \DateTimeZone('GMT'));
+		return $time->format('D, d M Y H:i:s \G\M\T');
 	}
 
 
@@ -269,7 +274,7 @@ class Response extends Nette\Object implements IResponse
 			$secure === NULL ? $this->cookieSecure : (bool) $secure,
 			$httpOnly === NULL ? $this->cookieHttpOnly : (bool) $httpOnly
 		);
-		Helpers::removeDuplicateCookies();
+		$this->removeDuplicateCookies();
 		return $this;
 	}
 
@@ -289,10 +294,27 @@ class Response extends Nette\Object implements IResponse
 	}
 
 
-	/** @internal @deprecated */
+	/**
+	 * Removes duplicate cookies from response.
+	 * @return void
+	 * @internal
+	 */
 	public function removeDuplicateCookies()
 	{
-		trigger_error('Use Nette\Http\Helpers::removeDuplicateCookies()', E_USER_WARNING);
+		if (headers_sent($file, $line) || ini_get('suhosin.cookie.encrypt')) {
+			return;
+		}
+
+		$flatten = array();
+		foreach (headers_list() as $header) {
+			if (preg_match('#^Set-Cookie: .+?=#', $header, $m)) {
+				$flatten[$m[0]] = $header;
+				header_remove('Set-Cookie');
+			}
+		}
+		foreach (array_values($flatten) as $key => $header) {
+			header($header, $key === 0);
+		}
 	}
 
 

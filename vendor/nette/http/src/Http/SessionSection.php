@@ -12,6 +12,8 @@ use Nette;
 
 /**
  * Session section.
+ *
+ * @author     David Grudl
  */
 class SessionSection extends Nette\Object implements \IteratorAggregate, \ArrayAccess
 {

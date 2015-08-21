@@ -12,6 +12,8 @@ use Nette;
 
 /**
  * Basic annotation implementation.
+ *
+ * @author     David Grudl
  */
 class Annotation extends Nette\Object implements IAnnotation
 {

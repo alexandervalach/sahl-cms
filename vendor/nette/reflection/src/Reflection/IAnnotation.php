@@ -7,9 +7,13 @@
 
 namespace Nette\Reflection;
 
+use Nette;
+
 
 /**
  * Code annotation.
+ *
+ * @author     David Grudl
  */
 interface IAnnotation
 {

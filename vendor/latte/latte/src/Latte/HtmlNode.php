@@ -10,6 +10,8 @@ namespace Latte;
 
 /**
  * HTML element node.
+ *
+ * @author     David Grudl
  */
 class HtmlNode extends Object
 {
@@ -17,7 +19,7 @@ class HtmlNode extends Object
 	public $name;
 
 	/** @var bool */
-	public $isEmpty;
+	public $isEmpty = FALSE;
 
 	/** @var array */
 	public $attrs = array();

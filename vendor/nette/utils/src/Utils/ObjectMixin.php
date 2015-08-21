@@ -7,12 +7,14 @@
 
 namespace Nette\Utils;
 
-use Nette;
-use Nette\MemberAccessException;
+use Nette,
+	Nette\MemberAccessException;
 
 
 /**
  * Nette\Object behaviour mixin.
+ *
+ * @author     David Grudl
  */
 class ObjectMixin
 {
@@ -60,7 +62,7 @@ class ObjectMixin
 					Callback::invokeArgs($handler, $args);
 				}
 			} elseif ($_this->$name !== NULL) {
-				throw new Nette\UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($_this->$name) . ' given.');
+				throw new Nette\UnexpectedValueException("Property $class::$$name must be array or NULL, " . gettype($_this->$name) ." given.");
 			}
 
 		} elseif (($methods = & self::getMethods($class)) && isset($methods[$name]) && is_array($methods[$name])) { // magic @methods
@@ -139,7 +141,12 @@ class ObjectMixin
 			}
 
 		} elseif (isset($methods[$name])) { // public method as closure getter
-			$val = Callback::closure($_this, $name);
+			if (PHP_VERSION_ID >= 50400) {
+				$rm = new \ReflectionMethod($class, $name);
+				$val = $rm->getClosure($_this);
+			} else {
+				$val = Callback::closure($_this, $name);
+			}
 			return $val;
 
 		} else { // strict class
@@ -224,8 +231,7 @@ class ObjectMixin
 				if ($rp->isPublic() && !$rp->isStatic()) {
 					$prop = $name >= 'onA' && $name < 'on_' ? 'event' : TRUE;
 				}
-			} catch (\ReflectionException $e) {
-			}
+			} catch (\ReflectionException $e) {}
 		}
 		return $prop;
 	}
@@ -269,8 +275,7 @@ class ObjectMixin
 			if ($rc->hasProperty($prop) && ($rp = $rc->getProperty($prop)) && !$rp->isStatic()) {
 				$rp->setAccessible(TRUE);
 				if ($op === 'get' || $op === 'is') {
-					$type = NULL;
-					$op = 'get';
+					$type = NULL; $op = 'get';
 				} elseif (!$type && preg_match('#@var[ \t]+(\S+)' . ($op === 'add' ? '\[\]#' : '#'), $rp->getDocComment(), $m)) {
 					$type = $m[1];
 				}
@@ -361,7 +366,7 @@ class ObjectMixin
 	public static function setExtensionMethod($class, $name, $callback)
 	{
 		$name = strtolower($name);
-		self::$extMethods[$name][$class] = Callback::check($callback);
+		self::$extMethods[$name][$class] = Callback::closure($callback);
 		self::$extMethods[$name][''] = NULL;
 	}
 

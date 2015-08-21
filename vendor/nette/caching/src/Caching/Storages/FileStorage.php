@@ -65,16 +65,16 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 	public function __construct($dir, IJournal $journal = NULL)
 	{
-		if (!is_dir($dir)) {
+		$this->dir = realpath($dir);
+		if ($this->dir === FALSE) {
 			throw new Nette\DirectoryNotFoundException("Directory '$dir' not found.");
 		}
 
-		$this->dir = $dir;
 		$this->useDirs = (bool) static::$useDirectories;
 		$this->journal = $journal;
 
 		if (mt_rand() / mt_getrandmax() < static::$gcProbability) {
-			$this->clean([]);
+			$this->clean(array());
 		}
 	}
 
@@ -164,9 +164,9 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	 */
 	public function write($key, $data, array $dp)
 	{
-		$meta = [
+		$meta = array(
 			self::META_TIME => microtime(),
-		];
+		);
 
 		if (isset($dp[Cache::EXPIRATION])) {
 			if (empty($dp[Cache::SLIDING])) {

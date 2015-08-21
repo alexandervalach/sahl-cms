@@ -7,12 +7,14 @@
 
 namespace Nette\Reflection;
 
-use Nette;
-use Nette\Utils\ObjectMixin;
+use Nette,
+	Nette\Utils\ObjectMixin;
 
 
 /**
  * Reports information about a extension.
+ *
+ * @author     David Grudl
  */
 class Extension extends \ReflectionExtension
 {

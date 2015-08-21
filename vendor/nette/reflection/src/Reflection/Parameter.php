@@ -7,12 +7,14 @@
 
 namespace Nette\Reflection;
 
-use Nette;
-use Nette\Utils\ObjectMixin;
+use Nette,
+	Nette\Utils\ObjectMixin;
 
 
 /**
  * Reports information about a method's parameter.
+ *
+ * @author     David Grudl
  * @property-read ClassType $class
  * @property-read string $className
  * @property-read ClassType $declaringClass

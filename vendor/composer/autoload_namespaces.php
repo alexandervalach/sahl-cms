@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'IPub\\VisualPaginator\\' => array($vendorDir . '/ipub/visual-paginator/src'),
+    'MultipleFileUpload' => array($vendorDir . '/jkuchar/multiplefileupload'),
 );

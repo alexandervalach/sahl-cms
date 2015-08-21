@@ -13,6 +13,8 @@ use Nette;
 /**
  * Default implementation of IIdentity.
  *
+ * @author     David Grudl
+ *
  * @property   mixed $id
  * @property   array $roles
  * @property-read array $data

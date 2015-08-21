@@ -7,12 +7,14 @@
 
 namespace Nette\Reflection;
 
-use Nette;
-use Nette\Utils\ObjectMixin;
+use Nette,
+	Nette\Utils\ObjectMixin;
 
 
 /**
  * Reports information about a method.
+ *
+ * @author     David Grudl
  * @property-read array $defaultParameters
  * @property-read ClassType $declaringClass
  * @property-read Method $prototype
@@ -52,7 +54,7 @@ class Method extends \ReflectionMethod
 	/**
 	 * @param  string|object
 	 * @param  string
-	 * @return self
+	 * @return Method
 	 */
 	public static function from($class, $method)
 	{
@@ -101,7 +103,7 @@ class Method extends \ReflectionMethod
 	public function getPrototype()
 	{
 		$prototype = parent::getPrototype();
-		return new self($prototype->getDeclaringClass()->getName(), $prototype->getName());
+		return new Method($prototype->getDeclaringClass()->getName(), $prototype->getName());
 	}
 
 

@@ -7,12 +7,14 @@
 
 namespace Nette\Reflection;
 
-use Nette;
-use Nette\Utils\ObjectMixin;
+use Nette,
+	Nette\Utils\ObjectMixin;
 
 
 /**
  * Reports information about a class.
+ *
+ * @author     David Grudl
  * @property-read Method $constructor
  * @property-read Extension $extension
  * @property-read ClassType[] $interfaces
@@ -48,7 +50,7 @@ class ClassType extends \ReflectionClass
 
 	/**
 	 * @param  string|object
-	 * @return self
+	 * @return ClassType
 	 */
 	public static function from($class)
 	{
@@ -94,7 +96,7 @@ class ClassType extends \ReflectionClass
 
 
 	/**
-	 * @return self[]
+	 * @return ClassType[]
 	 */
 	public function getInterfaces()
 	{
@@ -128,7 +130,7 @@ class ClassType extends \ReflectionClass
 
 
 	/**
-	 * @return self|NULL
+	 * @return ClassType|NULL
 	 */
 	public function getParentClass()
 	{

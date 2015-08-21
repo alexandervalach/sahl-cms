@@ -10,6 +10,8 @@ namespace Latte;
 
 /**
  * Template.
+ *
+ * @author     David Grudl
  * @internal
  */
 class Template extends Object
@@ -17,7 +19,7 @@ class Template extends Object
 	/** @var Engine */
 	private $engine;
 
-	/** @var string */
+	/** @var Engine */
 	private $name;
 
 	/** @var array */

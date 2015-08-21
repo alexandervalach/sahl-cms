@@ -7,12 +7,14 @@
 
 namespace Nette\DI\Config\Adapters;
 
-use Nette;
-use Nette\DI\Config\Helpers;
+use Nette,
+	Nette\DI\Config\Helpers;
 
 
 /**
  * Reading and generating INI files.
+ *
+ * @author     David Grudl
  */
 class IniAdapter extends Nette\Object implements Nette\DI\Config\IAdapter
 {

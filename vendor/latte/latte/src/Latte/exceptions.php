@@ -10,6 +10,8 @@ namespace Latte;
 
 /**
  * The exception occured during Latte compilation.
+ *
+ * @author     David Grudl
  */
 class CompileException extends \Exception
 {

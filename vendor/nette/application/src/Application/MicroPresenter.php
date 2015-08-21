@@ -17,6 +17,8 @@ use Latte;
 /**
  * Micro presenter.
  *
+ * @author     David Grudl
+ *
  * @property-read Nette\Application\IRequest $request
  */
 class MicroPresenter extends Nette\Object implements Application\IPresenter
@@ -44,7 +46,7 @@ class MicroPresenter extends Nette\Object implements Application\IPresenter
 
 	/**
 	 * Gets the context.
-	 * @return Nette\DI\Container
+	 * @return \SystemContainer|Nette\DI\Container
 	 */
 	public function getContext()
 	{

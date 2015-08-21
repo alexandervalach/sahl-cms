@@ -21,6 +21,8 @@ use Nette\Utils\Strings;
  * - {link destination ...} control link
  * - {plink destination ...} presenter link
  * - {snippet ?} ... {/snippet ?} control snippet
+ *
+ * @author     David Grudl
  */
 class UIMacros extends Latte\Macros\MacroSet
 {
@@ -48,7 +50,7 @@ class UIMacros extends Latte\Macros\MacroSet
 		$prolog = '
 // snippets support
 if (empty($_l->extends) && !empty($_control->snippetMode)) {
-	return Nette\Bridges\ApplicationLatte\UIRuntime::renderSnippets($_control, $_b, get_defined_vars());
+	return Nette\Bridges\ApplicationLatte\UIMacros::renderSnippets($_control, $_b, get_defined_vars());
 }';
 		return array($prolog, '');
 	}
@@ -105,10 +107,47 @@ if (empty($_l->extends) && !empty($_control->snippetMode)) {
 	}
 
 
-	/** @deprecated */
+	/********************* run-time helpers ****************d*g**/
+
+
 	public static function renderSnippets(Nette\Application\UI\Control $control, \stdClass $local, array $params)
 	{
-		UIRuntime::renderSnippets($control, $local, $params);
+		$control->snippetMode = FALSE;
+		$payload = $control->getPresenter()->getPayload();
+		if (isset($local->blocks)) {
+			foreach ($local->blocks as $name => $function) {
+				if ($name[0] !== '_' || !$control->isControlInvalid((string) substr($name, 1))) {
+					continue;
+				}
+				ob_start();
+				$function = reset($function);
+				$snippets = $function($local, $params + array('_snippetMode' => TRUE));
+				$payload->snippets[$id = $control->getSnippetId((string) substr($name, 1))] = ob_get_clean();
+				if ($snippets !== NULL) { // pass FALSE from snippetArea
+					if ($snippets) {
+						$payload->snippets += $snippets;
+					}
+					unset($payload->snippets[$id]);
+				}
+			}
+		}
+		$control->snippetMode = TRUE;
+		if ($control instanceof Nette\Application\UI\IRenderable) {
+			$queue = array($control);
+			do {
+				foreach (array_shift($queue)->getComponents() as $child) {
+					if ($child instanceof Nette\Application\UI\IRenderable) {
+						if ($child->isControlInvalid()) {
+							$child->snippetMode = TRUE;
+							$child->render();
+							$child->snippetMode = FALSE;
+						}
+					} elseif ($child instanceof Nette\ComponentModel\IContainer) {
+						$queue[] = $child;
+					}
+				}
+			} while ($queue);
+		}
 	}
 
 }

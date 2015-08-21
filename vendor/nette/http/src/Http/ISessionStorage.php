@@ -7,11 +7,14 @@
 
 namespace Nette\Http;
 
+use Nette;
+
 
 /**
  * User session storage for PHP < 5.4. @see http://php.net/session_set_save_handler
  *
  * @deprecated since PHP 5.4, use \SessionHandlerInterface
+ * @author     David Grudl
  */
 interface ISessionStorage
 {

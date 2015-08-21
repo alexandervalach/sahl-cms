@@ -13,6 +13,8 @@ use Nette;
 /**
  * Provides access to session sections as well as session settings and management methods.
  *
+ * @author     David Grudl
+ *
  * @property-read bool $started
  * @property-read string $id
  * @property   string $name
@@ -93,14 +95,14 @@ class Session extends Nette\Object
 		}
 
 		try {
-			// session_start returns FALSE on failure only sometimes
+		// session_start returns FALSE on failure only sometimes
 			Nette\Utils\Callback::invokeSafe('session_start', array(), function ($message) use (& $e) {
 				$e = new Nette\InvalidStateException($message);
 			});
 		} catch (\Exception $e) {
 		}
 
-		Helpers::removeDuplicateCookies();
+		$this->response->removeDuplicateCookies();
 		if ($e) {
 			@session_write_close(); // this is needed
 			throw $e;
@@ -232,7 +234,7 @@ class Session extends Nette\Object
 			$backup = $_SESSION;
 			session_start();
 			$_SESSION = $backup;
-			Helpers::removeDuplicateCookies();
+			$this->response->removeDuplicateCookies();
 		}
 		$this->regenerated = TRUE;
 	}

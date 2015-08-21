@@ -13,11 +13,11 @@ use Nette;
 /**
  * DI container generator.
  *
- * @deprecated
+ * @author     David Grudl
  */
 class ContainerFactory extends Nette\Object
 {
-	/** @var callable[]  function (ContainerFactory $factory, Compiler $compiler, $config); Occurs after the compiler is created */
+	/** @var callable[]  function(ContainerFactory $factory, Compiler $compiler, $config); Occurs after the compiler is created */
 	public $onCompile;
 
 	/** @var bool */
@@ -44,7 +44,6 @@ class ContainerFactory extends Nette\Object
 
 	public function __construct($tempDirectory)
 	{
-		trigger_error(__CLASS__ . ' is deprecated; use ContainerLoader.', E_USER_DEPRECATED);
 		$this->tempDirectory = $tempDirectory;
 	}
 

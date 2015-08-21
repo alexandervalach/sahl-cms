@@ -12,6 +12,8 @@ use Latte;
 
 /**
  * Template loader.
+ *
+ * @author     David Grudl
  */
 class FileLoader extends Latte\Object implements Latte\ILoader
 {

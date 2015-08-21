@@ -10,6 +10,8 @@ namespace Nette\Application\UI;
 
 /**
  * Component with ability to save and load its state.
+ *
+ * @author     David Grudl
  */
 interface IStatePersistent
 {

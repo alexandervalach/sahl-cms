@@ -1,0 +1,28 @@
+{
+	"name": "jkuchar/multiplefileupload",
+	"description": "Multiple upload form control for Nette framework.",
+	"license": "New BSD",
+	"authors": [
+		{
+			"name":     "Jan Kuchař",
+			"email":    "honza@mujserver.net",
+			"homepage": "http://www.jankuchar.cz",
+			"role":     "developer"
+		},
+		{
+			"name":     "Ciki",
+			"email":    "matula.m@gmail.com",
+			"homepage": "https://github.com/Ciki",
+			"role":     "developer"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"MultipleFileUpload": ""
+		}
+	},
+	"require": {
+		"php": ">= 5.3.0",
+		"nette/nette": ">= 2.0"
+	}
+}

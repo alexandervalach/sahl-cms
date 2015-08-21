@@ -20,6 +20,8 @@ use Nette;
  * $image->send();
  * </code>
  *
+ * @author     David Grudl
+ *
  * @method void alphaBlending(bool $on)
  * @method void antialias(bool $on)
  * @method void arc($x, $y, $w, $h, $start, $end, $color)
@@ -98,7 +100,7 @@ class Image extends Nette\Object
 	/** {@link resize()} fills given area exactly */
 	const EXACT = 8;
 
-	/** image types */
+	/** @int image types {@link send()} */
 	const JPEG = IMAGETYPE_JPEG,
 		PNG = IMAGETYPE_PNG,
 		GIF = IMAGETYPE_GIF;
@@ -137,7 +139,7 @@ class Image extends Nette\Object
 	 * @param  mixed  detected image format
 	 * @throws Nette\NotSupportedException if gd extension is not loaded
 	 * @throws UnknownImageFileException if file not found or file type is not known
-	 * @return self
+	 * @return Image
 	 */
 	public static function fromFile($file, & $format = NULL)
 	{
@@ -145,29 +147,31 @@ class Image extends Nette\Object
 			throw new Nette\NotSupportedException('PHP extension GD is not loaded.');
 		}
 
-		static $funcs = array(
-			self::JPEG => 'imagecreatefromjpeg',
-			self::PNG => 'imagecreatefrompng',
-			self::GIF => 'imagecreatefromgif',
-		);
 		$info = @getimagesize($file); // @ - files smaller than 12 bytes causes read error
-		$format = $info[2];
 
-		if (!isset($funcs[$format])) {
-			throw new UnknownImageFileException(is_file($file) ? "Unknown type of file '$file'." : "File '$file' not found.");
+		switch ($format = $info[2]) {
+			case self::JPEG:
+				return new static(imagecreatefromjpeg($file));
+
+			case self::PNG:
+				return new static(imagecreatefrompng($file));
+
+			case self::GIF:
+				return new static(imagecreatefromgif($file));
+
+			default:
+				throw new UnknownImageFileException(is_file($file) ? "Unknown type of file '$file'." : "File '$file' not found.");
 		}
-		return new static(Callback::invokeSafe($funcs[$format], array($file), function ($message) {
-			throw new ImageException($message);
-		}));
 	}
 
 
 	/**
-	 * @deprecated
+	 * Get format from the image stream in the string.
+	 * @param  string
+	 * @return mixed  detected image format
 	 */
 	public static function getFormatFromString($s)
 	{
-		trigger_error(__METHOD__ . '() is deprecated; use finfo_buffer() instead.', E_USER_DEPRECATED);
 		$types = array('image/jpeg' => self::JPEG, 'image/gif' => self::GIF, 'image/png' => self::PNG);
 		$type = finfo_buffer(finfo_open(FILEINFO_MIME_TYPE), $s);
 		return isset($types[$type]) ? $types[$type] : NULL;
@@ -178,7 +182,7 @@ class Image extends Nette\Object
 	 * Create a new image from the image stream in the string.
 	 * @param  string
 	 * @param  mixed  detected image format
-	 * @return self
+	 * @return Image
 	 * @throws ImageException
 	 */
 	public static function fromString($s, & $format = NULL)
@@ -187,13 +191,9 @@ class Image extends Nette\Object
 			throw new Nette\NotSupportedException('PHP extension GD is not loaded.');
 		}
 
-		if (func_num_args() > 1) {
-			$format = @static::getFormatFromString($s); // @ suppress trigger_error
-		}
+		$format = static::getFormatFromString($s);
 
-		return new static(Callback::invokeSafe('imagecreatefromstring', array($s), function ($message) {
-			throw new ImageException($message);
-		}));
+		return new static(imagecreatefromstring($s));
 	}
 
 
@@ -202,7 +202,7 @@ class Image extends Nette\Object
 	 * @param  int
 	 * @param  int
 	 * @param  array
-	 * @return self
+	 * @return Image
 	 */
 	public static function fromBlank($width, $height, $color = NULL)
 	{
@@ -431,12 +431,10 @@ class Image extends Nette\Object
 			$top = round(($srcHeight - $newHeight) / 100 * $top);
 		}
 		if ($left < 0) {
-			$newWidth += $left;
-			$left = 0;
+			$newWidth += $left; $left = 0;
 		}
 		if ($top < 0) {
-			$newHeight += $top;
-			$top = 0;
+			$newHeight += $top; $top = 0;
 		}
 		$newWidth = min((int) $newWidth, $srcWidth - $left);
 		$newHeight = min((int) $newHeight, $srcHeight - $top);
@@ -451,9 +449,9 @@ class Image extends Nette\Object
 	public function sharpen()
 	{
 		imageconvolution($this->image, array( // my magic numbers ;)
-			array(-1, -1, -1),
-			array(-1, 24, -1),
-			array(-1, -1, -1),
+			array( -1, -1, -1 ),
+			array( -1, 24, -1 ),
+			array( -1, -1, -1 ),
 		), 16, 0);
 		return $this;
 	}
@@ -485,7 +483,7 @@ class Image extends Nette\Object
 				$left, $top, 0, 0, $image->getWidth(), $image->getHeight()
 			);
 
-		} elseif ($opacity != 0) {
+		} elseif ($opacity <> 0) {
 			$cutting = imagecreatetruecolor($image->getWidth(), $image->getHeight());
 			imagecopy(
 				$cutting, $this->image,
@@ -542,7 +540,7 @@ class Image extends Nette\Object
 				return imagegif($this->image, $file);
 
 			default:
-				throw new Nette\InvalidArgumentException('Unsupported image type \'$type\'.');
+				throw new Nette\InvalidArgumentException('Unsupported image type.');
 		}
 	}
 
@@ -587,7 +585,7 @@ class Image extends Nette\Object
 	public function send($type = self::JPEG, $quality = NULL)
 	{
 		if ($type !== self::GIF && $type !== self::PNG && $type !== self::JPEG) {
-			throw new Nette\InvalidArgumentException('Unsupported image type \'$type\'.');
+			throw new Nette\InvalidArgumentException('Unsupported image type.');
 		}
 		header('Content-Type: ' . image_type_to_mime_type($type));
 		return $this->save(NULL, $quality, $type);
@@ -634,4 +632,12 @@ class Image extends Nette\Object
 		$this->setImageResource(imagecreatefromstring(ob_get_clean()));
 	}
 
+}
+
+
+/**
+ * The exception that indicates invalid image file.
+ */
+class UnknownImageFileException extends \Exception
+{
 }

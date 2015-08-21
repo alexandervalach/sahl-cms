@@ -134,9 +134,9 @@ class MemcachedStorage extends Nette\Object implements Nette\Caching\IStorage
 		}
 
 		$key = urlencode($this->prefix . $key);
-		$meta = [
+		$meta = array(
 			self::META_DATA => $data,
-		];
+		);
 
 		$expire = 0;
 		if (isset($dp[Cache::EXPIRATION])) {

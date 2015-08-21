@@ -10,6 +10,8 @@ namespace Latte;
 
 /**
  * Macro element node.
+ *
+ * @author     David Grudl
  */
 class MacroNode extends Object
 {

@@ -7,12 +7,14 @@
 
 namespace Nette\Iterators;
 
-use Nette;
-use Nette\Utils\ObjectMixin;
+use Nette,
+	Nette\Utils\ObjectMixin;
 
 
 /**
  * Smarter caching iterator.
+ *
+ * @author     David Grudl
  *
  * @property-read bool $first
  * @property-read bool $last

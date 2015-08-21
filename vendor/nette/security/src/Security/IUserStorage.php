@@ -7,9 +7,13 @@
 
 namespace Nette\Security;
 
+use Nette;
+
 
 /**
  * Interface for persistent storage for user object data.
+ *
+ * @author David Grudl, Jan Tichý
  */
 interface IUserStorage
 {
@@ -42,7 +46,7 @@ interface IUserStorage
 
 	/**
 	 * Returns current user identity, if any.
-	 * @return IIdentity|NULL
+	 * @return Nette\Security\IIdentity|NULL
 	 */
 	function getIdentity();
 

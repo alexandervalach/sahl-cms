@@ -7,6 +7,8 @@
 
 namespace Latte\Runtime;
 
+use Latte;
+
 
 interface IHtmlString
 {

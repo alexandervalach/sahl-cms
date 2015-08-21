@@ -10,6 +10,8 @@ namespace Latte;
 
 /**
  * Latte parser token.
+ *
+ * @author     David Grudl
  */
 class Token extends Object
 {

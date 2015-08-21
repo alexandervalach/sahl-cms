@@ -12,6 +12,8 @@ use Nette;
 
 /**
  * PHP callable tools.
+ *
+ * @author     David Grudl
  */
 class Callback
 {
@@ -25,31 +27,14 @@ class Callback
 	{
 		if ($m !== NULL) {
 			$callable = array($callable, $m);
-
-		} elseif (is_string($callable) && count($tmp = explode('::', $callable)) === 2) {
-			$callable = $tmp;
-
 		} elseif ($callable instanceof \Closure) {
 			return $callable;
-
-		} elseif (is_object($callable)) {
-			$callable = array($callable, '__invoke');
 		}
 
-		if (PHP_VERSION_ID >= 50400) {
-			if (is_string($callable) && function_exists($callable)) {
-				$r = new \ReflectionFunction($callable);
-				return $r->getClosure();
-
-			} elseif (is_array($callable) && method_exists($callable[0], $callable[1])) {
-				$r = new \ReflectionMethod($callable[0], $callable[1]);
-				return $r->getClosure($callable[0]);
-			}
-		}
-
-		self::check($callable);
+		self::check($callable, TRUE);
 		$_callable_ = $callable;
-		return function () use ($_callable_) {
+		return function() use ($_callable_) {
+			Callback::check($_callable_);
 			return call_user_func_array($_callable_, func_get_args());
 		};
 	}
@@ -79,16 +64,13 @@ class Callback
 
 	/**
 	 * Invokes internal PHP function with own error handler.
-	 * @param  string
 	 * @return mixed
+	 * @internal
 	 */
 	public static function invokeSafe($function, array $args, $onError)
 	{
-		$prev = set_error_handler(function ($severity, $message, $file, $line, $context = NULL, $stack = NULL) use ($onError, & $prev, $function) {
-			if ($file === '' && defined('HHVM_VERSION')) { // https://github.com/facebook/hhvm/issues/4625
-				$file = $stack[1]['file'];
-			}
-			if ($file === __FILE__ && $onError(str_replace("$function(): ", '', $message), $severity) !== FALSE) {
+		$prev = set_error_handler(function($severity, $message, $file) use ($onError, & $prev) {
+			if ($file === __FILE__ && $onError($message, $severity) !== FALSE) {
 				return;
 			} elseif ($prev) {
 				return call_user_func_array($prev, func_get_args());
@@ -129,8 +111,10 @@ class Callback
 	public static function toString($callable)
 	{
 		if ($callable instanceof \Closure) {
-			$inner = self::unwrap($callable);
-			return '{closure' . ($inner instanceof \Closure ? '}' : ' ' . self::toString($inner) . '}');
+			if ($inner = self::unwrap($callable)) {
+				return '{closure ' . self::toString($inner) . '}';
+			}
+			return '{closure}';
 		} elseif (is_string($callable) && $callable[0] === "\0") {
 			return '{lambda}';
 		} else {
@@ -145,8 +129,8 @@ class Callback
 	 */
 	public static function toReflection($callable)
 	{
-		if ($callable instanceof \Closure) {
-			$callable = self::unwrap($callable);
+		if ($callable instanceof \Closure && $inner = self::unwrap($callable)) {
+			$callable = $inner;
 		} elseif ($callable instanceof Nette\Callback) {
 			$callable = $callable->getNative();
 		}
@@ -175,26 +159,15 @@ class Callback
 
 
 	/**
-	 * Unwraps closure created by self::closure()
+	 * Unwraps closure created by self::closure(), used i.e. by ObjectMixin in PHP < 5.4
 	 * @internal
 	 * @return callable
 	 */
 	public static function unwrap(\Closure $closure)
 	{
-		$r = new \ReflectionFunction($closure);
-		if (substr($r->getName(), -1) === '}') {
-			$vars = $r->getStaticVariables();
-			return isset($vars['_callable_']) ? $vars['_callable_'] : $closure;
-
-		} elseif ($obj = $r->getClosureThis()) {
-			return array($obj, $r->getName());
-
-		} elseif ($class = $r->getClosureScopeClass()) {
-			return array($class->getName(), $r->getName());
-
-		} else {
-			return $r->getName();
-		}
+		$rm = new \ReflectionFunction($closure);
+		$vars = $rm->getStaticVariables();
+		return isset($vars['_callable_']) ? $vars['_callable_'] : NULL;
 	}
 
 }

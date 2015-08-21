@@ -12,6 +12,8 @@ use Nette;
 
 /**
  * String tools library.
+ *
+ * @author     David Grudl
  */
 class Strings
 {
@@ -32,6 +34,9 @@ class Strings
 	 */
 	public static function checkEncoding($s)
 	{
+		if (func_num_args() > 1 && strcasecmp(func_get_arg(1), 'UTF-8')) {
+			trigger_error(__METHOD__ . ' supports only UTF-8 encoding.', E_USER_DEPRECATED);
+		}
 		return $s === self::fixEncoding($s);
 	}
 
@@ -43,9 +48,12 @@ class Strings
 	 */
 	public static function fixEncoding($s)
 	{
+		if (func_num_args() > 1 && strcasecmp(func_get_arg(1), 'UTF-8')) {
+			trigger_error(__METHOD__ . ' supports only UTF-8 encoding.', E_USER_DEPRECATED);
+		}
 		// removes xD800-xDFFF, x110000 and higher
 		if (PHP_VERSION_ID < 50400) {
-			return @iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', $s)); // @ - ignore encoding errors
+			return @iconv('UTF-16', 'UTF-8//IGNORE', iconv('UTF-8', 'UTF-16//IGNORE', $s)); // intentionally @
 		} else {
 			return htmlspecialchars_decode(htmlspecialchars($s, ENT_NOQUOTES | ENT_IGNORE, 'UTF-8'), ENT_NOQUOTES);
 		}
@@ -54,14 +62,13 @@ class Strings
 
 	/**
 	 * Returns a specific character in UTF-8.
-	 * @param  int     code point (0x0 to 0xD7FF or 0xE000 to 0x10FFFF)
+	 * @param  int     codepoint
 	 * @return string
-	 * @throws Nette\InvalidArgumentException if code point is not in valid range
 	 */
 	public static function chr($code)
 	{
-		if ($code < 0 || ($code >= 0xD800 && $code <= 0xDFFF) || $code > 0x10FFFF) {
-			throw new Nette\InvalidArgumentException('Code point must be in range 0x0 to 0xD7FF or 0xE000 to 0x10FFFF.');
+		if (func_num_args() > 1 && strcasecmp(func_get_arg(1), 'UTF-8')) {
+			trigger_error(__METHOD__ . ' supports only UTF-8 encoding.', E_USER_DEPRECATED);
 		}
 		return iconv('UTF-32BE', 'UTF-8//IGNORE', pack('N', $code));
 	}
@@ -128,7 +135,7 @@ class Strings
 
 	/**
 	 * Removes special controls characters and normalizes line endings and spaces.
-	 * @param  string  UTF-8 encoding
+	 * @param  string  UTF-8 encoding or 8-bit
 	 * @return string
 	 */
 	public static function normalize($s)
@@ -136,7 +143,7 @@ class Strings
 		$s = self::normalizeNewLines($s);
 
 		// remove control characters; leave \t + \n
-		$s = preg_replace('#[\x00-\x08\x0B-\x1F\x7F-\x9F]+#u', '', $s);
+		$s = preg_replace('#[\x00-\x08\x0B-\x1F\x7F]+#', '', $s);
 
 		// right trim
 		$s = preg_replace('#[\t ]+$#m', '', $s);
@@ -172,9 +179,6 @@ class Strings
 			array("\xE2\x80\x9E", "\xE2\x80\x9C", "\xE2\x80\x9D", "\xE2\x80\x9A", "\xE2\x80\x98", "\xE2\x80\x99", "\xC2\xB0"),
 			array("\x03", "\x03", "\x03", "\x02", "\x02", "\x02", "\x04"), $s
 		);
-		if (class_exists('Transliterator') && $transliterator = \Transliterator::create('Any-Latin; Latin-ASCII')) {
-			$s = $transliterator->transliterate($s);
-		}
 		if (ICONV_IMPL === 'glibc') {
 			$s = str_replace(
 				array("\xC2\xBB", "\xC2\xAB", "\xE2\x80\xA6", "\xE2\x84\xA2", "\xC2\xA9", "\xC2\xAE"),
@@ -186,7 +190,7 @@ class Strings
 				. "\xd4\xd5\xd6\xd7\xd8\xd9\xda\xdb\xdc\xdd\xde\xdf\xe0\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8"
 				. "\xe9\xea\xeb\xec\xed\xee\xef\xf0\xf1\xf2\xf3\xf4\xf5\xf6\xf8\xf9\xfa\xfb\xfc\xfd\xfe"
 				. "\x96\xa0\x8b\x97\x9b\xa6\xad\xb7",
-				'ALLSSSSTZZZallssstzzzRAAAALCCCEEEEIIDDNNOOOOxRUUUUYTsraaaalccceeeeiiddnnooooruuuuyt- <->|-.');
+				"ALLSSSSTZZZallssstzzzRAAAALCCCEEEEIIDDNNOOOOxRUUUUYTsraaaalccceeeeiiddnnooooruuuuyt- <->|-.");
 			$s = preg_replace('#[^\x00-\x7F]++#', '', $s);
 		} else {
 			$s = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s); // intentionally @
@@ -268,17 +272,6 @@ class Strings
 
 
 	/**
-	 * Convert first character to lower case.
-	 * @param  string  UTF-8 encoding
-	 * @return string
-	 */
-	public static function firstLower($s)
-	{
-		return self::lower(self::substring($s, 0, 1)) . self::substring($s, 1);
-	}
-
-
-	/**
 	 * Convert to upper case.
 	 * @param  string  UTF-8 encoding
 	 * @return string
@@ -345,7 +338,7 @@ class Strings
 		for ($i = 0; $i < strlen($first); $i++) {
 			foreach ($strings as $s) {
 				if (!isset($s[$i]) || $first[$i] !== $s[$i]) {
-					while ($i && $first[$i - 1] >= "\x80" && $first[$i] >= "\x80" && $first[$i] < "\xC0") {
+					while ($i && $first[$i-1] >= "\x80" && $first[$i] >= "\x80" && $first[$i] < "\xC0") {
 						$i--;
 					}
 					return substr($first, 0, $i);
@@ -433,68 +426,6 @@ class Strings
 
 
 	/**
-	 * Returns part of $haystack before $nth occurence of $needle.
-	 * @param  string
-	 * @param  string
-	 * @param  int  negative value means searching from the end
-	 * @return string|FALSE  returns FALSE if the needle was not found
-	 */
-	public static function before($haystack, $needle, $nth = 1)
-	{
-		$pos = self::pos($haystack, $needle, $nth);
-		return $pos === FALSE
-			? FALSE
-			: substr($haystack, 0, $pos);
-	}
-
-
-	/**
-	 * Returns part of $haystack after $nth occurence of $needle.
-	 * @param  string
-	 * @param  string
-	 * @param  int  negative value means searching from the end
-	 * @return string|FALSE  returns FALSE if the needle was not found
-	 */
-	public static function after($haystack, $needle, $nth = 1)
-	{
-		$pos = self::pos($haystack, $needle, $nth);
-		return $pos === FALSE
-			? FALSE
-			: (string) substr($haystack, $pos + strlen($needle));
-	}
-
-
-	/**
-	 * Returns position of $nth occurence of $needle in $haystack.
-	 * @return int|FALSE  offset in bytes or FALSE if the needle was not found
-	 */
-	private static function pos($haystack, $needle, $nth = 1)
-	{
-		if (!$nth) {
-			return FALSE;
-		} elseif ($nth > 0) {
-			if (strlen($needle) === 0) {
-				return 0;
-			}
-			$pos = 0;
-			while (FALSE !== ($pos = strpos($haystack, $needle, $pos)) && --$nth) {
-				$pos++;
-			}
-		} else {
-			$len = strlen($haystack);
-			if (strlen($needle) === 0) {
-				return $len;
-			}
-			$pos = $len - 1;
-			while (FALSE !== ($pos = strrpos($haystack, $needle, $pos - $len)) && ++$nth) {
-				$pos--;
-			}
-		}
-		return $pos;
-	}
-
-
-	/**
 	 * Splits string by a regular expression.
 	 * @param  string
 	 * @param  string
@@ -542,7 +473,7 @@ class Strings
 		self::pcre('preg_match_all', array(
 			$pattern, $subject, & $m,
 			($flags & PREG_PATTERN_ORDER) ? $flags : ($flags | PREG_SET_ORDER),
-			$offset,
+			$offset
 		));
 		return $m;
 	}
@@ -580,14 +511,7 @@ class Strings
 	/** @internal */
 	public static function pcre($func, $args)
 	{
-		static $messages = array(
-			PREG_INTERNAL_ERROR => 'Internal error',
-			PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit was exhausted',
-			PREG_RECURSION_LIMIT_ERROR => 'Recursion limit was exhausted',
-			PREG_BAD_UTF8_ERROR => 'Malformed UTF-8 data',
-			5 => 'Offset didn\'t correspond to the begin of a valid UTF-8 code point', // PREG_BAD_UTF8_OFFSET_ERROR
-		);
-		$res = Callback::invokeSafe($func, $args, function ($message) use ($args) {
+		$res = Callback::invokeSafe($func, $args, function($message) use ($args) {
 			// compile-time error, not detectable by preg_last_error
 			throw new RegexpException($message . ' in pattern: ' . implode(' or ', (array) $args[0]));
 		});
@@ -595,10 +519,33 @@ class Strings
 		if (($code = preg_last_error()) // run-time error, but preg_last_error & return code are liars
 			&& ($res === NULL || !in_array($func, array('preg_filter', 'preg_replace_callback', 'preg_replace')))
 		) {
-			throw new RegexpException((isset($messages[$code]) ? $messages[$code] : 'Unknown error')
-				. ' (pattern: ' . implode(' or ', (array) $args[0]) . ')', $code);
+			throw new RegexpException(NULL, $code, implode(' or ', (array) $args[0]));
 		}
 		return $res;
+	}
+
+}
+
+
+/**
+ * The exception that indicates error of the last Regexp execution.
+ */
+class RegexpException extends \Exception
+{
+	static public $messages = array(
+		PREG_INTERNAL_ERROR => 'Internal error',
+		PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit was exhausted',
+		PREG_RECURSION_LIMIT_ERROR => 'Recursion limit was exhausted',
+		PREG_BAD_UTF8_ERROR => 'Malformed UTF-8 data',
+		5 => 'Offset didn\'t correspond to the begin of a valid UTF-8 code point', // PREG_BAD_UTF8_OFFSET_ERROR
+	);
+
+	public function __construct($message, $code = NULL, $pattern = NULL)
+	{
+		if (!$message) {
+			$message = (isset(self::$messages[$code]) ? self::$messages[$code] : 'Unknown error') . ($pattern ? " (pattern: $pattern)" : '');
+		}
+		parent::__construct($message, $code);
 	}
 
 }

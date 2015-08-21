@@ -16,6 +16,7 @@ use Nette;
  * This solution is mostly based on Zend_Acl (c) Zend Technologies USA Inc. (http://www.zend.com), new BSD license
  *
  * @copyright  Copyright (c) 2005, 2007 Zend Technologies USA Inc.
+ * @author     David Grudl
  *
  * @property-read array $roles
  * @property-read array $resources
@@ -83,7 +84,7 @@ class Permission extends Nette\Object implements IAuthorizator
 		}
 
 		$this->roles[$role] = array(
-			'parents' => $roleParents,
+			'parents'  => $roleParents,
 			'children' => array(),
 		);
 
@@ -263,8 +264,8 @@ class Permission extends Nette\Object implements IAuthorizator
 		}
 
 		$this->resources[$resource] = array(
-			'parent' => $parent,
-			'children' => array(),
+			'parent'   => $parent,
+			'children' => array()
 		);
 
 		return $this;
@@ -551,10 +552,10 @@ class Permission extends Nette\Object implements IAuthorizator
 								$rules = array(
 									'allPrivileges' => array(
 										'type' => self::DENY,
-										'assert' => NULL,
+										'assert' => NULL
 										),
-									'byPrivilege' => array(),
-								);
+									'byPrivilege' => array()
+									);
 							}
 							continue;
 						}

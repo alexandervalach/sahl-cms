@@ -7,9 +7,13 @@
 
 namespace Nette\Security;
 
+use Nette;
+
 
 /**
  * Represents resource, an object to which access is controlled.
+ *
+ * @author     David Grudl
  */
 interface IResource
 {

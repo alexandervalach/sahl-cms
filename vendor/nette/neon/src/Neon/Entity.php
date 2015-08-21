@@ -7,6 +7,8 @@
 
 namespace Nette\Neon;
 
+use Nette;
+
 
 /**
  * Representation of 'foo(bar=1)' literal

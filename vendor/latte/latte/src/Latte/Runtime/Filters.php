@@ -12,14 +12,16 @@ use Latte;
 
 /**
  * Template filters.
+ *
+ * @author     David Grudl
  * @internal
  */
 class Filters
 {
-	/** @deprecated */
+	/** @var string default date format */
 	public static $dateFormat = '%x';
 
-	/** @internal @var bool  use XHTML syntax? */
+	/** @var bool  use XHTML syntax? */
 	public static $xhtml = FALSE;
 
 

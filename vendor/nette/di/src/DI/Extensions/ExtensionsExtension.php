@@ -12,6 +12,8 @@ use Nette;
 
 /**
  * Enables registration of other extensions in $config file
+ *
+ * @author  Vojtech Dobes
  */
 class ExtensionsExtension extends Nette\DI\CompilerExtension
 {
@@ -19,9 +21,9 @@ class ExtensionsExtension extends Nette\DI\CompilerExtension
 	public function loadConfiguration()
 	{
 		foreach ($this->getConfig() as $name => $class) {
-			if ($class instanceof Nette\DI\Statement) {
-				$rc = new \ReflectionClass($class->getEntity());
-				$this->compiler->addExtension($name, $rc->newInstanceArgs($class->arguments));
+			if ($class instanceof \stdClass) {
+				$rc = Nette\Reflection\ClassType::from($class->value);
+				$this->compiler->addExtension($name, $rc->newInstanceArgs($class->attributes));
 			} else {
 				$this->compiler->addExtension($name, new $class);
 			}

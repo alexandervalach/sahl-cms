@@ -13,6 +13,8 @@ use Nette;
 /**
  * String output response.
  *
+ * @author     David Grudl
+ *
  * @property-read mixed $source
  */
 class TextResponse extends Nette\Object implements Nette\Application\IResponse
@@ -45,7 +47,7 @@ class TextResponse extends Nette\Object implements Nette\Application\IResponse
 	 */
 	public function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse)
 	{
-		if ($this->source instanceof Nette\Application\UI\ITemplate) {
+		if ($this->source instanceof Nette\Application\UI\ITemplate || $this->source instanceof Nette\Templating\ITemplate) {
 			$this->source->render();
 
 		} else {

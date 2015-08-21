@@ -12,6 +12,8 @@ use Latte;
 
 /**
  * HTML literal.
+ *
+ * @author     David Grudl
  */
 class Html extends Latte\Object implements IHtmlString
 {

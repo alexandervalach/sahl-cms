@@ -43,6 +43,7 @@ class PostImagePresenter extends BasePresenter {
 
     public function renderThumbnail($id, $id2) {
         $this->getComponent('setThumbnailForm');
+        $this->template->post = $this->postRow;
     }
 
     public function actionDelete($id, $id2) {

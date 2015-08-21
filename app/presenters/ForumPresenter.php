@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use IPub\VisualPaginator\Components as VisualPaginator;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Application\BadRequestException;
@@ -12,9 +13,6 @@ class ForumPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $forumRow;
 
-    /** @var Nette\Database\Table\Selection */
-    private $reply;
-
     /** @var string */
     private $error = "Message not found!";
 
@@ -23,7 +21,15 @@ class ForumPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->forums = $this->forumRepository->findAll()->order("id DESC");
+        $forumSelection = $this->forumRepository->findAll()->order("id DESC");
+        
+        $visualPaginator = $this->getComponent('visualPaginator');
+        $paginator = $visualPaginator->getPaginator();
+        $paginator->itemsPerPage = 10;
+        $paginator->itemCount = $forumSelection->count();
+        $forumSelection->limit($paginator->itemsPerPage, $paginator->offset);
+        
+        $this->template->forums = $forumSelection;
         $this->template->default = '/images/forum.png';
     }
 
@@ -55,6 +61,13 @@ class ForumPresenter extends BasePresenter {
         $form->onSuccess[] = $this->submittedAddMessageForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
+    }
+    
+    protected function createComponentVisualPaginator() {
+        $control = new VisualPaginator\Control;
+        $control->setTemplateFile('bootstrap.latte');
+        $control->disableAjax();
+        return $control;
     }
 
     public function submittedDeleteForm() {

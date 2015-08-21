@@ -6,6 +6,7 @@ use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use IPub\VisualPaginator\Components as VisualPaginator;
 
 class EventsPresenter extends BasePresenter {
 
@@ -20,12 +21,20 @@ class EventsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->events = $this->eventsRepository->findAll();
+        /** Nette\Database\Table\Selection */
+        $eventSelection = $this->eventsRepository->findAll();
+        
+        $visualPaginator = $this->getComponent('visualPaginator');
+        $paginator = $visualPaginator->getPaginator();
+        $paginator->itemsPerPage = 5;
+        $paginator->itemCount = $eventSelection->count();
+        $eventSelection->limit($paginator->itemsPerPage, $paginator->offset);
+        
+        $this->template->events = $eventSelection;
     }
 
     public function actionEdit($id) {
         $this->userIsLogged();
-
         $this->eventRow = $this->eventsRepository->findById($id);
     }
 
@@ -33,7 +42,6 @@ class EventsPresenter extends BasePresenter {
         if (!$this->eventRow) {
             throw new BadRequestException($this->error);
         }
-
         $this->getComponent('editEventForm')->setDefaults($this->eventRow);
     }
 
@@ -86,6 +94,18 @@ class EventsPresenter extends BasePresenter {
 
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
+    }
+
+    /**
+     * Create items paginator
+     *
+     * @return VisualPaginator\Control
+     */
+    protected function createComponentVisualPaginator() {
+        $control = new VisualPaginator\Control;
+        $control->setTemplateFile('bootstrap.latte');
+        $control->disableAjax();
+        return $control;
     }
 
     public function submittedAddEventForm(Form $form) {

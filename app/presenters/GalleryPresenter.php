@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use IPub\VisualPaginator\Components as VisualPaginator;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -28,8 +29,16 @@ class GalleryPresenter extends BasePresenter {
 
     public function renderView($id) {
         $this->albumRow = $this->albumsRepository->findById($id);
+        $gallerySelection = $this->albumRow->related('gallery');
+
+        $visualPaginator = $this->getComponent('visualPaginator');
+        $paginator = $visualPaginator->getPaginator();
+        $paginator->itemsPerPage = 12;
+        $paginator->itemCount = $gallerySelection->count();
+        $gallerySelection->limit($paginator->itemsPerPage, $paginator->offset);
+
         $this->template->album = $this->albumRow;
-        $this->template->galleryImgs = $this->albumRow->related('gallery');
+        $this->template->galleryImgs = $gallerySelection;
         $this->template->imgFolder = $this->imgFolder;
     }
 
@@ -114,6 +123,18 @@ class GalleryPresenter extends BasePresenter {
         $form->onSuccess[] = $this->submittedAddImagesForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
+    }
+
+    /**
+     * Create items paginator
+     *
+     * @return VisualPaginator\Control
+     */
+    protected function createComponentVisualPaginator() {
+        $control = new VisualPaginator\Control;
+        $control->setTemplateFile('bootstrap.latte');
+        $control->disableAjax();
+        return $control;
     }
 
     public function submittedDeleteForm() {

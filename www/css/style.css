@@ -203,7 +203,8 @@ section#secondary.row > figure > a > img {
     margin: 10px 0 10px 0;
 }
 
-section#secondary.row > figure{
+section#secondary.row > figure,
+section#portrait.row > figure{
     margin-bottom: 20px;
 }
 

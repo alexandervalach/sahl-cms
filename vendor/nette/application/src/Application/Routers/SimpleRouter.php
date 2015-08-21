@@ -14,8 +14,6 @@ use Nette\Application;
 /**
  * The bidirectional route for trivial routing via query parameters.
  *
- * @author     David Grudl
- *
  * @property-read array $defaults
  * @property-read int $flags
  */
@@ -105,7 +103,7 @@ class SimpleRouter extends Nette\Object implements Application\IRouter
 
 		// presenter name
 		$presenter = $appRequest->getPresenterName();
-		if (strncasecmp($presenter, $this->module, strlen($this->module)) === 0) {
+		if (strncmp($presenter, $this->module, strlen($this->module)) === 0) {
 			$params[self::PRESENTER_KEY] = substr($presenter, strlen($this->module));
 		} else {
 			return NULL;

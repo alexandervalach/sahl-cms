@@ -7,13 +7,9 @@
 
 namespace Nette\Http;
 
-use Nette;
-
 
 /**
  * IHttpRequest provides access scheme for request sent via HTTP.
- *
- * @author     David Grudl
  */
 interface IRequest
 {
@@ -53,7 +49,7 @@ interface IRequest
 
 	/**
 	 * Returns uploaded file.
-	 * @param  string key (or more keys)
+	 * @param  string key
 	 * @return FileUpload|NULL
 	 */
 	function getFile($key);

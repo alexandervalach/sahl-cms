@@ -7,13 +7,9 @@
 
 namespace Nette\Http;
 
-use Nette;
-
 
 /**
  * IHttpResponse interface.
- *
- * @author     David Grudl
  */
 interface IResponse
 {
@@ -125,6 +121,14 @@ interface IResponse
 	 * @return bool
 	 */
 	function isSent();
+
+	/**
+	 * Returns value of an HTTP header.
+	 * @param  string
+	 * @param  mixed
+	 * @return mixed
+	 */
+	function getHeader($header, $default = NULL);
 
 	/**
 	 * Returns a list of headers to sent.

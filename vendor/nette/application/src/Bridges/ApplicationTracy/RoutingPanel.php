@@ -11,12 +11,11 @@ use Nette;
 use Nette\Application\Routers;
 use Nette\Application\UI\Presenter;
 use Tracy;
+use Tracy\Dumper;
 
 
 /**
  * Routing debugger for Debug Bar.
- *
- * @author     David Grudl
  */
 class RoutingPanel extends Nette\Object implements Tracy\IBarPanel
 {
@@ -44,8 +43,8 @@ class RoutingPanel extends Nette\Object implements Tracy\IBarPanel
 		Tracy\Debugger::getBlueScreen()->addPanel(function ($e) use ($application) {
 			return $e ? NULL : array(
 				'tab' => 'Nette Application',
-				'panel' => '<h3>Requests</h3>' . Tracy\Dumper::toHtml($application->getRequests())
-					. '<h3>Presenter</h3>' . Tracy\Dumper::toHtml($application->getPresenter()),
+				'panel' => '<h3>Requests</h3>' . Dumper::toHtml($application->getRequests(), array(Dumper::LIVE => TRUE))
+					. '<h3>Presenter</h3>' . Dumper::toHtml($application->getPresenter(), array(Dumper::LIVE => TRUE)),
 			);
 		});
 	}
@@ -135,7 +134,7 @@ class RoutingPanel extends Nette\Object implements Tracy\IBarPanel
 		} catch (Nette\Application\InvalidPresenterException $e) {
 			return;
 		}
-		$rc = Nette\Reflection\ClassType::from($class);
+		$rc = new \ReflectionClass($class);
 
 		if ($rc->isSubclassOf('Nette\Application\UI\Presenter')) {
 			if (isset($request->parameters[Presenter::SIGNAL_KEY])) {

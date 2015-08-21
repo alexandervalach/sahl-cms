@@ -10,8 +10,6 @@ namespace Latte;
 
 /**
  * PHP code generator helpers.
- *
- * @author     David Grudl
  */
 class PhpWriter extends Object
 {
@@ -356,7 +354,7 @@ class PhpWriter extends Object
 						}
 						$tokens->prepend('Latte\Runtime\Filters::escapeHtml(')->append($context[0] === Compiler::CONTEXT_SINGLE_QUOTED_ATTR ? ', ENT_QUOTES)' : ', ENT_COMPAT)');
 						if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
-							$tokens->prepend("'\"' . ")->append(" . '\"'");
+							$tokens->prepend("'\"', ")->append(", '\"'");
 						}
 						return $tokens;
 					case Compiler::CONTEXT_COMMENT:
@@ -376,7 +374,7 @@ class PhpWriter extends Object
 					default:
 						$tokens->prepend('Latte\Runtime\Filters::escapeXml(')->append(')');
 						if ($context[0] === Compiler::CONTEXT_UNQUOTED_ATTR) {
-							$tokens->prepend("'\"' . ")->append(" . '\"'");
+							$tokens->prepend("'\"', ")->append(", '\"'");
 						}
 						return $tokens;
 				}

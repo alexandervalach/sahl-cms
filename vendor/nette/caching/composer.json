@@ -14,13 +14,14 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.1",
+		"php": ">=5.4.4",
 		"nette/finder": "~2.2",
 		"nette/utils": "~2.2"
 	},
 	"require-dev": {
 		"nette/tester": "~1.0",
-		"latte/latte": "~2.3"
+		"nette/di": "~2.3",
+		"latte/latte": "~2.4"
 	},
 	"conflict": {
 		"nette/nette": "<2.2"
@@ -28,5 +29,10 @@
 	"autoload": {
 		"classmap": ["src/"]
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "dev",
+	"extra": {
+		"branch-alias": {
+			"dev-master": "2.4-dev"
+		}
+	}
 }

@@ -17,8 +17,6 @@ use Nette;
  * other child components, and interact with user. Components have properties
  * for storing their status, and responds to user command.
  *
- * @author     David Grudl
- *
  * @property-read Presenter $presenter
  * @property-read string $uniqueId
  */
@@ -184,11 +182,7 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public function getParameter($name, $default = NULL)
 	{
-		if (func_num_args() === 0) {
-			trigger_error('Calling ' . __METHOD__ . ' with no arguments to get all parameters is deprecated, use getParameters() instead.', E_USER_DEPRECATED);
-			return $this->params;
-
-		} elseif (isset($this->params[$name])) {
+		if (isset($this->params[$name])) {
 			return $this->params[$name];
 
 		} else {
@@ -234,10 +228,10 @@ abstract class PresenterComponent extends Nette\ComponentModel\Container impleme
 	 */
 	public static function getPersistentParams()
 	{
-		$rc = new Nette\Reflection\ClassType(get_called_class());
+		$rc = new \ReflectionClass(get_called_class());
 		$params = array();
 		foreach ($rc->getProperties(\ReflectionProperty::IS_PUBLIC) as $rp) {
-			if (!$rp->isStatic() && $rp->hasAnnotation('persistent')) {
+			if (!$rp->isStatic() && PresenterComponentReflection::parseAnnotation($rp, 'persistent')) {
 				$params[] = $rp->getName();
 			}
 		}

@@ -13,8 +13,6 @@ use Nette;
 /**
  * HTTP-specific tasks.
  *
- * @author     David Grudl
- *
  * @property-read bool $modified
  * @property-read IRequest $request
  * @property-read IResponse $response
@@ -44,7 +42,7 @@ class Context extends Nette\Object
 	public function isModified($lastModified = NULL, $etag = NULL)
 	{
 		if ($lastModified) {
-			$this->response->setHeader('Last-Modified', $this->response->date($lastModified));
+			$this->response->setHeader('Last-Modified', Helpers::formatDate($lastModified));
 		}
 		if ($etag) {
 			$this->response->setHeader('ETag', '"' . addslashes($etag) . '"');

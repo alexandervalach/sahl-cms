@@ -5,12 +5,18 @@ namespace App\Model;
 class RoundsRepository extends Repository{
     public function getLatestRound() {
         $id = $this->getTable()->max('id');
-        return $this->findById($id);
+        if($id) {
+          return $this->findById($id);
+        }
+        return null;
     }
     
     public function getLatestRoundFights() {
         $round = $this->getLatestRound();
-        $rounds = $round->related('fights');
-        return $rounds;
+        if($round) {
+            $rounds = $round->related('fights');
+            return $rounds;
+        }
+        return null;
     }
 }

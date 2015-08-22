@@ -15,7 +15,7 @@
                     <a n:href="Homepage:#nav" role='link'>Domov</a>
                 </li>
 
-                <li n:if="$user->loggedIn" class="dropdown col-lg-1 col-md-1 col-sm-1">
+                <li n:if="$user->loggedIn" class="dropdown col-lg-1 col-md-1 col-sm-1 hidden-xs">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pridaj <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li>
@@ -68,13 +68,22 @@
                     </a>
                 </li>
 
-                <li class='col-lg-1 col-md-1 col-sm-1 dropdown'>
+                <li class='col-lg-1 col-md-1 col-sm-1 dropdown hidden-xs'>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role='link'>Pravidlá <span class="caret"></span></a>          
                     <ul class="dropdown-menu">
                         <li><a n:href="Rules:all#nav"  role='link'>Zoznam</a></li>
                         <li><a n:href="Punishments:all#nav"  role='link'>Tresty hráčov</a></li>
                     </ul>
                 </li>
+
+                <li class="visible-xs col-lg-1 col-md-1 col-sm-1">
+                    <a n:href="Rules:all#nav" role='link'>Pravidlá</a>
+                </li>
+
+                <li class="visible-xs col-lg-1 col-md-1 col-sm-1 ">
+                    <a n:href="Punishments:all#nav" role='link'>Tresty hráčov</a>
+                </li>
+
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
                     <a n:href="Album:all#nav" role='link'>

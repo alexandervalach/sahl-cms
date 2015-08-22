@@ -205,7 +205,9 @@ section#secondary.row > figure > a > img {
 }
 
 section#secondary.row > figure,
-section#portrait.row > figure{
+section#portrait.row > figure,
+section#sponsors > figure,
+section#sponsors{
     margin-bottom: 20px;
 }
 

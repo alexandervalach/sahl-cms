@@ -15,4 +15,14 @@ class TablesRepository extends Repository {
         }
         return $result;
     }
+
+    public function incrementTableValueByOne($teamId, $type, $columnName) {
+        $tableSelection = $this->findAll()->where('team_id', $teamId)->where('type', $type);
+        foreach ($tableSelection as $row) {
+            $value = $row[$columnName] + 1;
+            $data = array( $columnName => $value );
+            return $row->update($data);
+        }
+    }
+
 }

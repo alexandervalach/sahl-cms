@@ -151,6 +151,7 @@ class FightsPresenter extends BasePresenter {
         }
         $values['round_id'] = $this->roundRow;
         $fight = $this->fightsRepository->insert($values);
+        $this->updateTableRows($values, 0);
         $this->redirect('all#nav', $fight->ref('rounds', 'round_id'));
     }
 
@@ -161,7 +162,6 @@ class FightsPresenter extends BasePresenter {
             $form->addError('Zvoľ dva rozdielne tímy.');
             return false;
         }
-
         $this->fightRow->update($values);
         $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
     }
@@ -198,6 +198,19 @@ class FightsPresenter extends BasePresenter {
 
     public function formCancelled() {
         $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
+    }
+
+    private function updateTableRows($values, $type) {
+        if ($values['score1'] > $values['score2']) {
+            $this->tablesRepository->incrementTableValueByOne($values['team1_id'], $type, 'win');
+            $this->tablesRepository->incrementTableValueByOne($values['team2_id'], $type, 'lost');
+        } elseif ($values['score1'] < $values['score2']) {
+            $this->tablesRepository->incrementTableValueByOne($values['team2_id'], $type, 'win');
+            $this->tablesRepository->incrementTableValueByOne($values['team1_id'], $type, 'lost');
+        } else {
+            $this->tablesRepository->incrementTableValueByOne($values['team2_id'], $type, 'tram');
+            $this->tablesRepository->incrementTableValueByOne($values['team1_id'], $type, 'tram');
+        }
     }
 
 }

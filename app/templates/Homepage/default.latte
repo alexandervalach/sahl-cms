@@ -9,10 +9,10 @@
 <div id="slider" class='row'>
     {foreach $latests as $latest}
         {if $iterator->last}
-            <img src='{$basePath}{$imgFolder}{$latest->thumbnail}' class='img-responsive' />
+            <img src='{$basePath}{$imgFolder}{$latest->thumbnail}' class='img-responsive' alt="{$latest->thumbnail}" />
         {/if}
 
-        <p data-src="{$basePath}{$imgFolder}{$latest->thumbnail}">
+        <p data-src="{$basePath}{$imgFolder}{$latest->thumbnail}" title="{$latest->title}">
             <a n:href="Post:show#nav $latest->id">
                 {$latest->title|truncate:35}
             </a>

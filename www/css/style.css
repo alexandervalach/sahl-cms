@@ -115,19 +115,20 @@ div#slider p{
     text-align: center;
     position: relative;
     height: 60px;
+    word-wrap: break-word;
     top: 313px;
-    background: #9ACD32;
+    overflow: hidden;
 }
 
 div#slider p:nth-child(1){ background: #3071a9; color: #ffffff }
 div#slider p:nth-child(2){ background: #FF8C00 }
-div#slider p:nth-child(3){ background: #9ACD32 }
-div#slider p:nth-child(4){ background: #ADD8E6; color: #000000 }
+div#slider p:nth-child(3){ background: #ADD8E6; color: #000000 }
+div#slider p:nth-child(n+4){ background: #9ACD32 }
 
 div#slider p:nth-child(1):focus, div#slider p:nth-child(1):hover { background: #ADD8E6; color: #000000 }
 div#slider p:nth-child(2):focus, div#slider p:nth-child(2):hover { background: #9ACD32 }
-div#slider p:nth-child(3):focus, div#slider p:nth-child(3):hover { background: #FF8C00 }
-div#slider p:nth-child(4):focus, div#slider p:nth-child(4):hover { background: #3071a9; color: #ffffff }
+div#slider p:nth-child(3):focus, div#slider p:nth-child(3):hover { background: #3071a9; color: #ffffff }
+div#slider p:nth-child(n+4):focus, div#slider p:nth-child(n+4):hover { background: #FF8C00 }
 
 /* ===============ASIDE WIDGETS LAYOUT=================*/
 div#page > div#main > div#primary.row > aside.container > div.panel.panel-primary{

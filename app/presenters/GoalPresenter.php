@@ -116,7 +116,7 @@ class GoalPresenter extends BasePresenter {
         $player->update($goals);
 
         $this->flashMessage("Záznam o hráčovi $player->lname pridaný.", 'success');
-        $this->redirect('add', $this->fightRow);
+        $this->redirect('add#nav', $this->fightRow);
     }
 
     public function submittedEditForm(Form $form) {

@@ -94,7 +94,7 @@ class GalleryPresenter extends BasePresenter {
             $data['name'] = $this->galleryRow->name;
             $this->albumRow->update($data);
         }
-        $this->redirect('Album:all');
+        $this->redirect('Album:all#nav');
     }
 
     public function submittedAddImagesForm(Form $form) {
@@ -112,7 +112,7 @@ class GalleryPresenter extends BasePresenter {
             $imgData['album_id'] = $this->albumRow;
             $this->galleryRepository->insert($imgData);
         }
-        $this->redirect('view', $this->albumRow);
+        $this->redirect('view#nav', $this->albumRow);
     }
 
     protected function createComponentAddImagesForm() {
@@ -144,11 +144,11 @@ class GalleryPresenter extends BasePresenter {
         $img->delete($this->storage . $gallery->name);
         $gallery->delete();
         $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('view', $gallery->album_id);
+        $this->redirect('view#nav', $gallery->album_id);
     }
 
     public function formCancelled() {
-        $this->redirect('view', $this->galleryRow->album_id);
+        $this->redirect('view#nav', $this->galleryRow->album_id);
     }
 
 }

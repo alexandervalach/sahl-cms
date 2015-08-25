@@ -85,25 +85,25 @@ class RulesPresenter extends BasePresenter {
         $this->userIsLogged();
         $this->ruleRow->delete();
         $this->flashMessage('Pravidlo zmazané.', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedAddRuleForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->rulesRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedEditRuleForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->ruleRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

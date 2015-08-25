@@ -65,17 +65,17 @@ class ReplyPresenter extends BasePresenter {
         $values = $form->getValues();
         $values['forum_id'] = $id;
         $this->replyRepository->insert($values);
-        $this->redirect('add', $id);
+        $this->redirect('add#nav', $id);
     }
     
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->replyRow->delete();
-        $this->redirect('add', $this->replyRow->forum_id);
+        $this->redirect('add#nav', $this->replyRow->forum_id);
     }
 
     public function formCancelled() {
-        $this->redirect('add', $this->replyRow->forum_id);
+        $this->redirect('add#nav', $this->replyRow->forum_id);
     }
 
 }

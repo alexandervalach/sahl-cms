@@ -45,7 +45,7 @@ class ContactPresenter extends BasePresenter {
         $mailer->send($mail);
 
         $this->flashMessage('Ďakujeme, e-mail bol úspešne odoslaný.', 'success');
-        $this->redirect('this');
+        $this->redirect('this#nav');
     }
 
 }

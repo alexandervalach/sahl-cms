@@ -107,7 +107,7 @@ class PostPresenter extends BasePresenter {
         $post = $this->postsRepository;
         $values = $form->getValues();
         $id = $post->insert($values);
-        $this->redirect('show', $id);
+        $this->redirect('show#nav', $id);
     }
 
     public function submittedEditPostForm(Form $form) {
@@ -115,7 +115,7 @@ class PostPresenter extends BasePresenter {
         $post = $this->postRow;
         $values = $form->getValues();
         $post->update($values);
-        $this->redirect('show', $post->id);
+        $this->redirect('show#nav', $post->id);
     }
 
     public function submittedDeleteForm() {
@@ -130,11 +130,11 @@ class PostPresenter extends BasePresenter {
 
         $this->postRow->delete();
         $this->flashMessage('Príspevok odstránený aj so všetkými obrázkami.', 'success');
-        $this->redirect('Homepage:');
+        $this->redirect('Homepage:#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('Homepage:');
+        $this->redirect('Homepage:#nav');
     }
 
 }

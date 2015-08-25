@@ -35,7 +35,7 @@ class SignPresenter extends BasePresenter {
 
         try {
             $this->getUser()->login($values->username, $values->password);
-            $this->redirect('Homepage:');
+            $this->redirect('Homepage:#nav');
         } catch (Nette\Security\AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');
         }
@@ -44,7 +44,7 @@ class SignPresenter extends BasePresenter {
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený.', 'success');
-        $this->redirect('Homepage:');
+        $this->redirect('Homepage:#nav');
     }
 
 }

@@ -98,7 +98,7 @@ class PostImagePresenter extends BasePresenter {
         $image->delete($this->storage . $img->name);
         $img->delete();
         $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('Post:show', $img->posts_id);
+        $this->redirect('Post:show#nav', $img->posts_id);
     }
 
     public function submittedSetThumbnailForm(Form $form) {
@@ -107,7 +107,7 @@ class PostImagePresenter extends BasePresenter {
             $values['thumbnail'] = $this->imgRow->name;
             $this->postRow->update($values);
         }
-        $this->redirect('Post:show', $this->postRow->id);
+        $this->redirect('Post:show#nav', $this->postRow->id);
     }
 
     public function submittedImageForm(Form $form) {
@@ -124,12 +124,12 @@ class PostImagePresenter extends BasePresenter {
             $imgData['posts_id'] = $this->postRow;
             $this->postImageRepository->insert($imgData);
         }
-        $this->redirect('Post:show', $this->postRow);
+        $this->redirect('Post:show#nav', $this->postRow);
     }
 
     public function formCancelled() {
         $id = $this->imgRow->id;
-        $this->redirect('Post:show', $id);
+        $this->redirect('Post:show#nav', $id);
     }
 
 }

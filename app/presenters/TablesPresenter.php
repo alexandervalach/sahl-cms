@@ -116,32 +116,32 @@ class TablesPresenter extends BasePresenter {
         foreach ($affectedRows as $row) {
             $row->update($data);
         }
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedAddTableRowForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->tablesRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedEditTableRowForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->tableRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->tableRow->delete();
         $this->flashMessage('Záznam zmazaný!', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

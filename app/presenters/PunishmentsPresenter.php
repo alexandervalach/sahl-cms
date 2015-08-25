@@ -73,25 +73,25 @@ class PunishmentsPresenter extends BasePresenter {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->punishmentRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedAddPunishmentForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->punishmentsRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->punishmentRow->delete();
         $this->flashMessage('Trest bol odstránený', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

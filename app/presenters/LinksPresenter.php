@@ -100,7 +100,7 @@ class LinksPresenter extends BasePresenter {
         }
 
         $link->delete();
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedAddLinkForm(Form $form) {
@@ -114,17 +114,17 @@ class LinksPresenter extends BasePresenter {
         }
 
         $this->linksRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedEditLinkForm(Form $form) {
         $values = $form->getValues();
         $this->linkRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

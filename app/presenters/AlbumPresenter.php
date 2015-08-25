@@ -86,13 +86,13 @@ class AlbumPresenter extends BasePresenter {
         $values = $form->getValues();
         $values['created_at'] = date('Y.m.d H:i:s');
         $this->albumsRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedEditAlbumForm(Form $form) {
         $values = $form->getValues();
         $this->albumRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedDeleteForm() {
@@ -107,11 +107,11 @@ class AlbumPresenter extends BasePresenter {
 
         $this->albumRow->delete();
         $this->flashMessage('Album odstránený aj so všetkými obrázkami.', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

@@ -111,24 +111,24 @@ class EventsPresenter extends BasePresenter {
     public function submittedAddEventForm(Form $form) {
         $values = $form->getValues();
         $this->eventsRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedEditEventForm(Form $form) {
         $values = $form->getValues();
         $this->eventRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->eventRow->delete();
         $this->flashMessage('Rozpis odstránený!', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

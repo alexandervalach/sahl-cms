@@ -100,25 +100,25 @@ class PlayerPresenter extends BasePresenter {
         $id = $this->teamRow;
         $values['team_id'] = $id;
         $this->playersRepository->insert($values);
-        $this->redirect('view', $id);
+        $this->redirect('view#nav', $id);
     }
 
     public function submittedEditPlayerForm($form) {
         $values = $form->getValues();
         $player = $this->playerRow;
         $player->update($values);
-        $this->redirect('view', $player->team_id);
+        $this->redirect('view#nav', $player->team_id);
     }
 
     public function submittedDeleteForm() {
         $player = $this->playerRow;
         $player->delete();
         $this->flashMessage('Hráč odstránený.', 'success');
-        $this->redirect('view', $player->team_id);
+        $this->redirect('view#nav', $player->team_id);
     }
 
     public function formCancelled() {
-        $this->redirect('view', $this->playerRow->team_id);
+        $this->redirect('view#nav', $this->playerRow->team_id);
     }
 
 }

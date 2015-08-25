@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-
 class StatsPresenter extends BasePresenter {
 
     /** @var Nette\Databasq\Table\Selection */

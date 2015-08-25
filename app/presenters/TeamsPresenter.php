@@ -116,7 +116,7 @@ class TeamsPresenter extends BasePresenter {
             $data = array('image' => $name);
             $this->teamRow->update($data);
         }
-        $this->redirect('Player:view', $this->teamRow);
+        $this->redirect('Player:view#nav', $this->teamRow);
     }
 
     public function submittedDeleteForm() {
@@ -131,25 +131,25 @@ class TeamsPresenter extends BasePresenter {
         $img->delete( $this->storage . $team->image );
         $team->delete();
         $this->flashMessage('Tím bol odstránený aj so všetkými hráčmi.', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedAddTeamForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->teamsRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedEditTeamForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->teamRow->update($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

@@ -74,18 +74,18 @@ class ForumPresenter extends BasePresenter {
         $this->userIsLogged();
         $this->forumRow->delete();
         $this->flashMessage('Príspevok zmazaný.', 'success');
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function submittedAddMessageForm(Form $form) {
         $values = $form->getValues();
         $values['created_at'] = date('Y-m-d H:i:s');
         $this->forumRepository->insert($values);
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('all');
+        $this->redirect('all#nav');
     }
 
 }

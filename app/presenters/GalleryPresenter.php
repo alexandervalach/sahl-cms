@@ -117,8 +117,7 @@ class GalleryPresenter extends BasePresenter {
 
     protected function createComponentAddImagesForm() {
         $form = new Form;
-        $form->addUpload('images', "Nahrať obrátok")
-                ->setAttribute("multiple", "multiple");
+        $form->addMultiUpload('images', "Nahrať obrátok");
         $form->addSubmit('upload', 'Uložiť');
         $form->onSuccess[] = $this->submittedAddImagesForm;
         FormHelper::setBootstrapFormRenderer($form);

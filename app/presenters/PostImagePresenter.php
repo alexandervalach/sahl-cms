@@ -63,8 +63,7 @@ class PostImagePresenter extends BasePresenter {
     protected function createComponentAddImageForm() {
         $form = new Form;
 
-        $form->addUpload('images', 'Obrázok:')
-                ->setAttribute('multiple', 'multiple');
+        $form->addMultiUpload('images', 'Obrázok:');
 
         $form->addSubmit('upload', 'Nahrať');
 

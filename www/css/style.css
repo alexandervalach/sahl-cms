@@ -110,14 +110,14 @@ div#slider img{
 
 div#slider p{
     float: left;
-    width: calc(100%/4);
+    width: 25%;
     display: inline-block;
     text-align: center;
     position: relative;
+    overflow: hidden; 
     height: 60px;
     word-wrap: break-word;
     top: 313px;
-    overflow: hidden;
 }
 
 div#slider p:nth-child(1){ background: #3071a9; color: #ffffff }

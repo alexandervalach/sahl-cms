@@ -85,7 +85,7 @@ abstract class BasePresenter extends Presenter {
 
     public function __construct(
     AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
-
+        parent::__construct();
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
         $this->fightsRepository = $fightsRepository;

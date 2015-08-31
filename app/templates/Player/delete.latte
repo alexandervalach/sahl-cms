@@ -3,11 +3,11 @@
 <h1 n:block="title">Vymaž hráča</h1>
 
 {if $player}
-	<p class='delete text-warning'>
-		Naozaj chceš zmazať hráča s menom <mark>{$player->fname} {$player->lname}, {$player->num}</mark>?
-	</p>
-	{control deleteForm}
+    <p class='delete text-warning'>
+        Naozaj chceš odstrániť hráča <mark>{$player->lname}</mark>?
+    </p>
+    {control deleteForm}
 
 {else}
-	<p>Nemôžem nájsť hráča.</p>
+    <p>Nemôžem nájsť hráča.</p>
 {/if}

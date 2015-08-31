@@ -3,7 +3,7 @@
 <h1 n:block="title">Súpiska tímu</h1>
 
 <p>
-    <a n:href="Teams:all" class='btn btn-large btn-default'>
+    <a n:href="Teams:all#nav" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Tímy
     </a>
@@ -64,12 +64,12 @@
                     </td>
                     <td>Brankár, {$goalie->num}</td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="edit, $goalie->id" class="text-success">
+                        <a n:href="edit#nav, $goalie->id" class="text-success">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     </td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="delete, $goalie->id" class="text-danger">
+                        <a n:href="delete#nav, $goalie->id" class="text-danger">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>    

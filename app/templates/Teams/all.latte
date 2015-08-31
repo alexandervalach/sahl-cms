@@ -24,20 +24,20 @@
                         {$iterator->counter}.
                     </td>
                     <td>
-                        <a n:href='Player:view, $team->id'>{$team->name}</a>
+                        <a n:href='Player:view#nav, $team->id'>{$team->name}</a>
                     </td>
                     <td n:if='$user->loggedIn' class="text-center">
-                        <a n:href='edit, $team->id' class="text-success">
+                        <a n:href='edit#nav, $team->id' class="text-success">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     </td>
                     <td  n:if='$user->loggedIn' class="text-center">
-                        <a n:href='delete, $team->id' class="text-danger">
+                        <a n:href='delete#nav, $team->id' class="text-danger">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
                     <td  n:if='$user->loggedIn' class="text-center">
-                        <a n:href='upload, $team->id' class="text-info">
+                        <a n:href='upload#nav, $team->id' class="text-info">
                             <span class="glyphicon glyphicon-picture"></span>
                         </a>
                     </td>

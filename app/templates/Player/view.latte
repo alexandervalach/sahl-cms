@@ -39,16 +39,16 @@
                 <td>{$iterator->counter}.</td>
                 <td>{$player->lname}</td>
                 <td>
-                    <time datetime='{$player->born|date:'d.m.Y'}' pubdate>{$player->born|date:'d.m.Y'}</time>
+                    <time datetime="{$player->born}" pubdate>{$player->born}</time>
                 </td>
                 <td>{$player->num}</td>
                 <td n:if="$user->loggedIn" class="text-center">
-                    <a n:href="edit, $player->id" class="text-success">
+                    <a n:href="edit#nav, $player->id" class="text-success">
                         <span class='glyphicon glyphicon-pencil'></span>
                     </a>
                 </td>
                 <td n:if="$user->loggedIn" class="text-center">
-                    <a n:href="delete, $player->id" class="text-danger">
+                    <a n:href="delete#nav, $player->id" class="text-danger">
                         <span class='glyphicon glyphicon-remove'></span>
                     </a>
                 </td>
@@ -60,7 +60,7 @@
                     <td>{$i}.</td>
                     <td>{$goalie->lname}</td>
                     <td>
-                        <time datetime="{$goalie->born|date:'d.m.Y'}" pubdate>{$goalie->born|date:'d.m.Y'}</time>
+                        <time datetime="{$player->born}" pubdate>{$player->born}</time>
                     </td>
                     <td>Brankár, {$goalie->num}</td>
                     <td n:if="$user->loggedIn">

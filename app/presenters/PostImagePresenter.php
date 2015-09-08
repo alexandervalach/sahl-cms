@@ -88,6 +88,7 @@ class PostImagePresenter extends BasePresenter {
         $this->userIsLogged();
         $img = $this->imgRow;
         $post = $this->postRow;
+        $id = $img->posts_id;
 
         if ($post->thumbnail == $img->name) {
             $post->update(array('thumbnail' => 'sahl.jpg'));
@@ -97,7 +98,7 @@ class PostImagePresenter extends BasePresenter {
         $image->delete($this->storage . $img->name);
         $img->delete();
         $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('Post:show#nav', $img->posts_id);
+        $this->redirect('Post:show#nav', $id);
     }
 
     public function submittedSetThumbnailForm(Form $form) {

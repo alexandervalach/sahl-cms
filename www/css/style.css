@@ -163,7 +163,6 @@ section#fights > article{
 section#punishments > article *,
 section#rules > article *,
 section#fights > article *{
-    font-weight: bold;
     text-decoration: none;
 } 
 

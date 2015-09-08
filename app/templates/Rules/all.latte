@@ -11,7 +11,7 @@
 <section id="rules">
     <article n:foreach="$rules as $rule">
         <main>
-            {$rule->rule}
+            {$rule->rule|noescape}
         </main>
         <footer n:if="$user->loggedIn">
             <a n:href="edit, $rule->id" class="text-success">

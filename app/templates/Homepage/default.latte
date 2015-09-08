@@ -35,7 +35,7 @@
 
             <main>
                 <time datetime='{$post->created_at|date:'d.m.Y'}' pubdate>{$post->created_at|date:'d.m.Y'}</time>
-                <div>{$post->content|noescape|truncate:100}</div>
+                <div>{$post->content|noescape|truncate:205}</div>
             </main>
 
             <footer n:if="$user->loggedIn">

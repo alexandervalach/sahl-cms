@@ -274,3 +274,16 @@ section#replies > article > header > div.pull-right > a > span.glyphicon-remove{
 section#post > article > header > time{
     font-weight: bold;
 }
+
+section#punishments > table.table {
+    border: none;
+    background-color: rgb(255,255,255);
+} 
+
+section#punishments > table.table > tbody > tr:nth-child(even){
+    background-color: rgba(255,255,255,0.1);
+} 
+
+section#punishments > table.table > tbody > tr:nth-child(odd){
+    background-color: rgba(255,255,255,0.1);
+} 

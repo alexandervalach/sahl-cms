@@ -1,5 +1,1 @@
-$(function(){
-    $('.form-jqte').jqte();
-})
-
-
+CKEDITOR.replace('ckeditor');

@@ -9,7 +9,7 @@
     </a>
 </p>
 
-<section>
+<section id="links">
     <figure n:foreach="$txtLinks as $link">
         <a href='{$link->anchor}' class="text-primary" target="_blank">{$link->title}</a>
         <footer n:if="$user->loggedIn">
@@ -43,7 +43,8 @@
         </footer>
     </figure>
 
-    <section id="sponsors" class="visible-xs">
+    {if !$sponsors != null}
+    <section id="sponsors">
         <h2>Sponzori</h2>
         {foreach $sponsors as $sponsor}
             <figure>
@@ -66,14 +67,6 @@
             </figure>
         {/foreach}
     </section>
+    {/if}
+    
 </section>
-
-{/block}
-
-{block scripts}
-<script src="{$basePath}/js/jquery-2.1.3.js"></script>
-<script src="{$basePath}/js/jquery.js"></script>
-<script src="{$basePath}/js/netteForms.js"></script>
-<script src="{$basePath}/bootstrap/js/bootstrap.min.js"></script>
-<script src="{$basePath}/js/textEditor/jquery-te-1.4.0.min.js"></script>
-{/block}

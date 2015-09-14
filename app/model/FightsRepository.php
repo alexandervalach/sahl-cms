@@ -29,12 +29,12 @@ class FightsRepository extends Repository {
 
         foreach ($teamOnePlayers as $player) {
             $teamOneIdList[] = $player->id;
-            $teamOneNameList[] = $player->lname;
+            $teamOneNameList[] = $player->lname . " - " . $player->num;
         }
 
         foreach ($teamTwoPlayers as $player) {
             $teamTwoIdList[] = $player->id;
-            $teamTwoNameList[] = $player->lname;
+            $teamTwoNameList[] = $player->lname . " - " . $player->num;
         }
 
         $idList = array_merge($teamOneIdList, $teamTwoIdList);

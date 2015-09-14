@@ -120,14 +120,12 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function submittedAddTableRowForm(Form $form) {
-        $this->userIsLogged();
         $values = $form->getValues();
         $this->tablesRepository->insert($values);
         $this->redirect('all#nav');
     }
 
     public function submittedEditTableRowForm(Form $form) {
-        $this->userIsLogged();
         $values = $form->getValues();
         $this->tableRow->update($values);
         $this->redirect('all#nav');

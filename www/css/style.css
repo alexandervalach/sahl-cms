@@ -199,7 +199,8 @@ section#rounds > ul > li > a{
     color: #FF8C00;
     font-size: 1.2em;
 }
-section#secondary.row > figure > a > img {
+section#secondary.row > figure > a > img,
+section#links figure{
     margin: 10px 0 10px 0;
 }
 

@@ -37,12 +37,12 @@
                     <td>{$diff = $table->score1 - $table->score2}</td>
                     <td><span class="text-danger">{$table->points}</span></td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="edit, $table->id" class="text-success">
+                        <a n:href="edit#nav, $table->id" class="text-success">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     </td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="delete, $table->id" class="text-danger">
+                        <a n:href="delete#nav, $table->id" class="text-danger">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
@@ -92,19 +92,19 @@
                     <td>{$diff = $table->score1 - $table->score2}</td>
                     <td><span class="text-danger">{$table->points}</span></td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="edit, $table->id" class="text-success">
+                        <a n:href="edit#nav, $table->id" class="text-success">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     </td>
                     <td n:if="$user->loggedIn">
-                        <a n:href="delete, $table->id" class="text-danger">
+                        <a n:href="delete#nav, $table->id" class="text-danger">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <a n:if="$user->loggedIn" n:href="addToSidebar, $table->id" title="pridať tabuľku do sidebaru" class="btn btn-info">
+        <a n:if="$user->loggedIn" n:href="addToSidebar#nav, $table->id" title="pridať tabuľku do sidebaru" class="btn btn-info">
             <span class="glyphicon glyphicon-pushpin"></span> Sidebar
         </a>
     </div>

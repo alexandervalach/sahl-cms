@@ -2,10 +2,16 @@
 
 namespace App\Model;
 
-class LinksRepository extends Repository{
+class LinksRepository extends Repository {
+
     public function getSponsors() {
-        return $this->findByValue('sponsor',1);
+        $sponsors = $this->findByValue('sponsor', 1);
+        if ($sponsors != null) {
+            return $sponsors;
+        }
+        return null;
     }
+
 }
 
 ?>

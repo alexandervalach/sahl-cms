@@ -153,6 +153,7 @@ class FightsPresenter extends BasePresenter {
         $fight = $this->fightsRepository->insert($values);
         $this->updateTableRows($values, 0);
         $this->updateTablePoints($values, 0);
+        $this->updateTableGoals($values, 0);
         $this->redirect('all#nav', $fight->ref('rounds', 'round_id'));
     }
 
@@ -201,7 +202,7 @@ class FightsPresenter extends BasePresenter {
         $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
     }
 
-    private function updateTableRows($values, $type, $value = 1) {
+    public function updateTableRows($values, $type, $value = 1) {
         if ($values['score1'] > $values['score2']) {
             $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'win', $value);
             $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'lost', $value);
@@ -214,7 +215,7 @@ class FightsPresenter extends BasePresenter {
         }
     }
 
-    private function updateTablePoints($values, $type, $column = 'points') {
+    public function updateTablePoints($values, $type, $column = 'points') {
         if ($values['score1'] > $values['score2']) {
             $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 2);
             $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 0);
@@ -225,6 +226,13 @@ class FightsPresenter extends BasePresenter {
             $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 1);
             $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 1);
         }
+    }
+
+    public function updateTableGoals($values, $type) {
+        $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'score1', $values['score1']);
+        $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'score2', $values['score2']);
+        $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'score1', $values['score2']);
+        $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'score2', $values['score1']);
     }
 
 }

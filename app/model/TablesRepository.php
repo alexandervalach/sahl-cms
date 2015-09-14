@@ -18,11 +18,9 @@ class TablesRepository extends Repository {
 
     public function incrementTableValue($teamId, $type, $columnName, $value) {
         $tableRow = $this->findAll()->where('team_id', $teamId)->where('type', $type)->fetch();
-        //foreach ($tableSelection as $row) {
         $value = $tableRow[$columnName] + $value;
         $data = array($columnName => $value);
         return $tableRow->update($data);
-        //}
     }
 
 }

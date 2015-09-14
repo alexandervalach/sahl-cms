@@ -152,6 +152,7 @@ class FightsPresenter extends BasePresenter {
         $values['round_id'] = $this->roundRow;
         $fight = $this->fightsRepository->insert($values);
         $this->updateTableRows($values, 0);
+        $this->updateTablePoints($values, 0);
         $this->redirect('all#nav', $fight->ref('rounds', 'round_id'));
     }
 
@@ -200,16 +201,29 @@ class FightsPresenter extends BasePresenter {
         $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
     }
 
-    private function updateTableRows($values, $type) {
+    private function updateTableRows($values, $type, $value = 1) {
         if ($values['score1'] > $values['score2']) {
-            $this->tablesRepository->incrementTableValueByOne($values['team1_id'], $type, 'win');
-            $this->tablesRepository->incrementTableValueByOne($values['team2_id'], $type, 'lost');
+            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'win', $value);
+            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'lost', $value);
         } elseif ($values['score1'] < $values['score2']) {
-            $this->tablesRepository->incrementTableValueByOne($values['team2_id'], $type, 'win');
-            $this->tablesRepository->incrementTableValueByOne($values['team1_id'], $type, 'lost');
+            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'win', $value);
+            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'lost', $value);
         } else {
-            $this->tablesRepository->incrementTableValueByOne($values['team2_id'], $type, 'tram');
-            $this->tablesRepository->incrementTableValueByOne($values['team1_id'], $type, 'tram');
+            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'tram', $value);
+            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'tram', $value);
+        }
+    }
+
+    private function updateTablePoints($values, $type, $column = 'points') {
+        if ($values['score1'] > $values['score2']) {
+            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 2);
+            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 0);
+        } elseif ($values['score1'] < $values['score2']) {
+            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 2);
+            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 0);
+        } else {
+            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 1);
+            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 1);
         }
     }
 

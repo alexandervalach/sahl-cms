@@ -34,7 +34,7 @@
                     <td>{$table->tram}</td>
                     <td>{$table->lost}</td>
                     <td>{$table->score1}:{$table->score2}</td>
-                    <td>{$table->diff}</td>
+                    <td>{$diff = $table->score1 - $table->score2}</td>
                     <td><span class="text-danger">{$table->points}</span></td>
                     <td n:if="$user->loggedIn">
                         <a n:href="edit, $table->id" class="text-success">
@@ -89,7 +89,7 @@
                     <td>{$table->tram}</td>
                     <td>{$table->lost}</td>
                     <td>{$table->score1}:{$table->score2}</td>
-                    <td>{$table->diff}</td>
+                    <td>{$diff = $table->score1 - $table->score2}</td>
                     <td><span class="text-danger">{$table->points}</span></td>
                     <td n:if="$user->loggedIn">
                         <a n:href="edit, $table->id" class="text-success">

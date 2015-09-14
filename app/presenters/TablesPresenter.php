@@ -20,8 +20,8 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->basic = $this->tablesRepository->findByValue('type', 0)->order('points DESC');
-        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->order('points DESC');
+        $this->template->basic = $this->tablesRepository->findByValue('type', 0)->order('points DESC')->order('score1 - score2 DESC');
+        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->order('points DESC')->order('score1 - score2 DESC');
     }
 
     public function actionCreate() {

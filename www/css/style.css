@@ -217,3 +217,8 @@ section#post > article > main {
     border-bottom: 1px solid navy;
     overflow-x: hidden;
 }
+
+section#facebook > figure {
+    width: 50%;
+    margin: 0 auto;
+}

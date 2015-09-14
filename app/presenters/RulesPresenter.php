@@ -60,7 +60,7 @@ class RulesPresenter extends BasePresenter {
         $form = new Form;
 
         $form->addTextArea('rule', 'Text:')
-                ->setAttribute('class', 'form-jqte')
+                ->setAttribute('id', 'ckeditor')
                 ->setRequired("Text je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
@@ -73,7 +73,7 @@ class RulesPresenter extends BasePresenter {
     protected function createComponentEditRuleForm() {
         $form = new Form;
         $form->addTextArea('rule', 'Text:')
-                ->setAttribute('class', 'form-jqte')
+                ->setAttribute('id', 'ckeditor')
                 ->setRequired("Text je povinné pole.");
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedEditRuleForm;

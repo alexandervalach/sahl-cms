@@ -23,13 +23,13 @@ class EventsPresenter extends BasePresenter {
     public function renderAll() {
         /** Nette\Database\Table\Selection */
         $eventSelection = $this->eventsRepository->findAll();
-        
+
         $visualPaginator = $this->getComponent('visualPaginator');
         $paginator = $visualPaginator->getPaginator();
         $paginator->itemsPerPage = 5;
         $paginator->itemCount = $eventSelection->count();
         $eventSelection->limit($paginator->itemsPerPage, $paginator->offset);
-        
+
         $this->template->events = $eventSelection;
     }
 
@@ -70,7 +70,7 @@ class EventsPresenter extends BasePresenter {
         $form = new Form;
 
         $form->addTextArea('event', 'Rozpis zápasov')
-                ->setAttribute('class', 'form-jqte')
+                ->setAttribute('id', 'ckeditor')
                 ->setRequired("Rozpis zápasov je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
@@ -85,7 +85,7 @@ class EventsPresenter extends BasePresenter {
         $form = new Form;
 
         $form->addTextArea('event', 'Rozpis zápasov')
-                ->setAttribute('class', 'form-jqte')
+                ->setAttribute('id', 'ckeditor')
                 ->setRequired('Rozpis zápasov je povinné pole.');
 
         $form->addSubmit('save', 'Uložiť');

@@ -75,7 +75,7 @@ class PostPresenter extends BasePresenter {
                 ->setRequired("Názov je povinné pole.");
 
         $form->addTextArea('content', 'Obsah:')
-                ->setAttribute('class', 'form-jqte')
+                ->setAttribute('id', 'ckeditor')
                 ->setRequired("Obsah príspevku je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');
@@ -92,7 +92,7 @@ class PostPresenter extends BasePresenter {
                 ->setRequired("Názov je povinné pole.");
 
         $form->addTextArea('content', 'Obsah:')
-                ->setAttribute('class', 'form-jqte')
+                ->setAttribute('id', 'ckeditor')
                 ->setRequired("Obsah príspevku je povinné pole.");
 
         $form->addSubmit('save', 'Uložiť');

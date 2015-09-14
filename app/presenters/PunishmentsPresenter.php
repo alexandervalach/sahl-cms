@@ -49,8 +49,9 @@ class PunishmentsPresenter extends BasePresenter {
 
     protected function createComponentEditPunishmentForm() {
         $form = new Form;
-        $form->addText('text', 'Trest');
+        $form->addText('text', 'Dôvod');
         $form->addText('round', 'Kolá');
+        $form->addCheckbox('condition', ' Podmienka');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedEditPunishmentForm;
         FormHelper::setBootstrapFormRenderer($form);
@@ -60,9 +61,11 @@ class PunishmentsPresenter extends BasePresenter {
     protected function createComponentAddPunishmentForm() {
         $players = $this->playersRepository->getPlayers();
         $form = new Form;
-        $form->addSelect('player_id', 'Hráč', $players);
-        $form->addText('text', 'Trest');
+        $form->addSelect('player_id', 'Hráč', $players)
+                ->setRequired();
+        $form->addText('text', 'Dôvod');
         $form->addText('round', 'Kolá');
+        $form->addCheckbox('condition', ' Podmienka');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedAddPunishmentForm;
         FormHelper::setBootstrapFormRenderer($form);

@@ -39,14 +39,25 @@
                     {$fight->nd_third_1}:{$fight->nd_third_2};
                     {$fight->th_third_1}:{$fight->th_third_2})
                 </div>
-                {var $goals = $fight->related('goals')}
-                <div n:if="$goals->count() > 0">
+                {var $homeGoals = $fight->related('goals')->where('home', 1)}
+                {var $guestGoals = $fight->related('goals')->where('home', 0)}
+                <ul n:if="$homeGoals->count() > 0 OR $guestGoals->count() > 0">
                     <a n:tag-if="$user->loggedIn" n:href="Goal:view#nav, $fight->id">Góly:</a>
-                    {foreach $goals as $goal}
-                        {var $player = $goal->ref('players', 'player_id')}
-                        {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
-                    {/foreach}
-                </div>
+                    <li>
+                        Domáci:
+                        {foreach $homeGoals as $goal}
+                            {var $player = $goal->ref('players', 'player_id')}
+                            {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
+                        {/foreach}
+                    </li>
+                    <li>
+                        Hostia:
+                        {foreach $guestGoals as $goal}
+                            {var $player = $goal->ref('players', 'player_id')}
+                            {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
+                        {/foreach}
+                    </li>
+                </ul>
             </main>
             <footer n:if="$user->loggedIn">
                 <a class="btn btn-success" n:href="edit#nav, $fight->id">

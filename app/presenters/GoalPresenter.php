@@ -34,7 +34,7 @@ class GoalPresenter extends BasePresenter {
 
     public function renderView($id) {
         $this->template->fight = $this->fightRow;
-        $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow->id);
+        $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow->id)->order('home DESC');
     }
 
     public function actionAdd($id) {
@@ -88,6 +88,7 @@ class GoalPresenter extends BasePresenter {
         $form->addText('goals', 'Počet gólov')
                 ->setDefaultValue(1)
                 ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+        $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddForm;
@@ -101,6 +102,7 @@ class GoalPresenter extends BasePresenter {
         $form->addSelect('player_id', 'Hráči', $players);
         $form->addText('goals', 'Počet gólov')
                 ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+        $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedEditForm;

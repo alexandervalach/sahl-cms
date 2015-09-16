@@ -8,12 +8,12 @@
                     <tr>
                         {var $team1 = $fight->ref('teams', 'team1_id');}
                         {var $team2 = $fight->ref('teams', 'team2_id');}
-                        <td>{$team1->name}</td>
-                        <td>-</td>
-                        <td>{$team2->name}</td>
-                        <td>{$fight->score1}</td>
-                        <td>:</td>
-                        <td>{$fight->score2}</td>
+                        <td class="col-sm-4 col-md-4 col-lg-4">{$team1->name}</td>
+                        <td class="col-sm-1 col-md-1 col-lg-1">-</td>
+                        <td class="col-sm-4 col-md-4 col-lg-4">{$team2->name}</td>
+                        <td class="col-sm-1 col-md-1 col-lg-1">{$fight->score1}</td>
+                        <td class="col-sm-1 col-md-1 col-lg-1">:</td>
+                        <td class="col-sm-1 col-md-1 col-lg-1">{$fight->score2}</td>
                     </tr>
                 {/foreach}
             </tbody>

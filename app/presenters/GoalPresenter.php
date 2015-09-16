@@ -126,10 +126,10 @@ class GoalPresenter extends BasePresenter {
 
     public function submittedEditForm(Form $form) {
         $values = $form->getValues();
+        $numOfGoals =  $values['goals'] - $this->goalRow->goals;
         $this->goalRow->update($values);
 
         $player = $this->playersRepository->findById($this->goalRow->player_id);
-        $numOfGoals = $player->goals + $values['goals'];
         $goals = array('goals' => $numOfGoals);
         $player->update($goals);
 

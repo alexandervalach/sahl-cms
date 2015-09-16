@@ -14,7 +14,7 @@ class GoalPresenter extends BasePresenter {
 
     /** @var ActiveRow */
     private $fightRow;
-    
+
     /** @var ActiveRow */
     private $roundRow;
 
@@ -56,7 +56,7 @@ class GoalPresenter extends BasePresenter {
     public function actionEdit($id) {
         $this->userIsLogged();
         $this->goalRow = $this->goalsRepository->findById($id);
-        $this->fightRow = $this->fightsRepository->ref('fights', 'fight_id');
+        $this->fightRow = $this->goalRow->ref('fight_id');
     }
 
     public function renderEdit($id) {
@@ -85,7 +85,9 @@ class GoalPresenter extends BasePresenter {
         $form = new Form;
         $players = $this->fightsRepository->getPlayersForSelect($this->fightRow, 'team1_id', 'team2_id');
         $form->addSelect('player_id', 'Hráči', $players);
-        $form->addText('goals', 'Počet gólov');
+        $form->addText('goals', 'Počet gólov')
+                ->setDefaultValue(1)
+                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddForm;
@@ -97,7 +99,8 @@ class GoalPresenter extends BasePresenter {
         $form = new Form;
         $players = $this->fightsRepository->getPlayersForSelect($this->fightRow, 'team1_id', 'team2_id');
         $form->addSelect('player_id', 'Hráči', $players);
-        $form->addText('goals', 'Počet gólov');
+        $form->addText('goals', 'Počet gólov')
+                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedEditForm;
@@ -123,7 +126,7 @@ class GoalPresenter extends BasePresenter {
         $values = $form->getValues();
         $this->goalRow->update($values);
 
-        $player = $this->playersRepository->findById($this->goalRow->id);
+        $player = $this->playersRepository->findById($this->goalRow->player_id);
         $numOfGoals = $player->goals + $values['goals'];
         $goals = array('goals' => $numOfGoals);
         $player->update($goals);

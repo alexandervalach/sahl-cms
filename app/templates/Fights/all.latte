@@ -41,7 +41,7 @@
                 </div>
                 {var $goals = $fight->related('goals')}
                 <div n:if="$goals->count() > 0">
-                    <a n:tag-if="$user->loggedIn" n:href="Goal:view, $fight->id">Góly:</a>
+                    <a n:tag-if="$user->loggedIn" n:href="Goal:view#nav, $fight->id">Góly:</a>
                     {foreach $goals as $goal}
                         {var $player = $goal->ref('players', 'player_id')}
                         {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}

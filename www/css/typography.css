@@ -240,7 +240,15 @@ table.table > tbody > tr:nth-child(odd){
 } 
 
 table.table > tbody > tr > td > span.text-danger,
-.first{
+.first,
+aside > div > table#playOff > tbody > tr > td:nth-child(2),
+aside > div > table#baseTable > tbody > tr > td:nth-child(2),
+aside > div > table#playOff > tbody > tr:nth-child(1),
+aside > div > table#baseTable > tbody > tr:nth-child(1),
+section#post > article > header > time,
+aside > div > table#briefFights > tbody > tr > td:nth-child(6),
+aside > div > table#briefFights > tbody > tr > td:nth-child(5),
+aside > div > table#briefFights > tbody > tr > td:nth-child(4){
     font-weight: bold;
 } 
 
@@ -271,19 +279,20 @@ section#replies > article > header > div.pull-right > a > span.glyphicon-remove{
     font-weight: normal;
 }
 
-section#post > article > header > time{
-    font-weight: bold;
-}
-
 section#punishments > table.table {
     border: none;
     background-color: rgb(255,255,255);
 } 
 
-section#punishments > table.table > tbody > tr:nth-child(even){
+section#punishments > table.table > tbody > tr{
     background-color: rgba(255,255,255,0.1);
 } 
 
-section#punishments > table.table > tbody > tr:nth-child(odd){
-    background-color: rgba(255,255,255,0.1);
-} 
+section#fights > article > main > ul > li > span{
+    font-style: italic;
+}
+
+aside > div > table#playOff > tbody > tr > td:nth-child(2),
+aside > div > table#baseTable > tbody > tr > td:nth-child(2){
+    color: #a94442;
+}

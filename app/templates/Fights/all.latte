@@ -42,20 +42,24 @@
                 {var $homeGoals = $fight->related('goals')->where('home', 1)}
                 {var $guestGoals = $fight->related('goals')->where('home', 0)}
                 <ul n:if="$homeGoals->count() > 0 OR $guestGoals->count() > 0">
-                    <a n:tag-if="$user->loggedIn" n:href="Goal:view#nav, $fight->id">Góly:</a>
+                    <a n:if="$user->loggedIn" n:href="Goal:view#nav, $fight->id">Góly:</a>
                     <li>
                         Domáci:
+                        <span>
                         {foreach $homeGoals as $goal}
                             {var $player = $goal->ref('players', 'player_id')}
                             {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
                         {/foreach}
+                        </span>
                     </li>
                     <li>
                         Hostia:
+                        <span>
                         {foreach $guestGoals as $goal}
                             {var $player = $goal->ref('players', 'player_id')}
                             {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
                         {/foreach}
+                        </span>
                     </li>
                 </ul>
             </main>

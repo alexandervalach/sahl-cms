@@ -1,0 +1,16 @@
+{block content}
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <header>
+        <h1 n:block="title">{if $option->option == "baseTable"}Základá časť{else}Play Off{/if}</h1>
+    </header>
+    <main>
+        <p>
+            <a n:href="Tables:all#nav" class="btn btn-large btn-default">
+                <span class="glyphicon glyphicon-arrow-left"></span>
+                Tabuľky
+            </a>
+        </p>
+        {control addToSidebarForm}
+    </main>
+</div>

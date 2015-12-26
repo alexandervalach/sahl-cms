@@ -8,7 +8,7 @@
             <caption class='caption' n:block="title">
                 Základná časť
                 <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="create" class="text-default">
+                    <a n:href="create#nav" class="text-default">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </div>
@@ -50,9 +50,9 @@
             </tbody>
         </table>
 
-        <a n:if="$user->loggedIn" n:href="addToSidebar, $table->id" 
-           title="pridať tabuľku do sidebaru" class="btn btn-info">
-            <span class="glyphicon glyphicon-pushpin"></span> Sidebar
+        <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $table->type" 
+           title="pridať tabuľku do bočného panelu" class="btn btn-info">
+            <span class="glyphicon glyphicon-pushpin"></span> Bočný panel
         </a>
     </div>
 {/if}
@@ -63,7 +63,7 @@
             <caption class='caption'>
                 Play off
                 <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="create" class="text-default">
+                    <a n:href="create#nav" class="text-default">
                         <span class="glyphicon glyphicon-plus"></span>
                     </a>
                 </div>
@@ -104,8 +104,9 @@
                 </tr>
             </tbody>
         </table>
-        <a n:if="$user->loggedIn" n:href="addToSidebar#nav, $table->id" title="pridať tabuľku do sidebaru" class="btn btn-info">
-            <span class="glyphicon glyphicon-pushpin"></span> Sidebar
+        <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $table->type" 
+           title="pridať tabuľku do bočného panelu" class="btn btn-info">
+            <span class="glyphicon glyphicon-pushpin"></span> Bočný panel
         </a>
     </div>
 {/if}

@@ -22,5 +22,10 @@ class TablesRepository extends Repository {
         $data = array($columnName => $newValue);
         return $tableRow->update($data);
     }
+    
+    public static $TABLES = array(
+        2 => 'Základná časť',
+        1 => 'Play Off'
+    );
 
 }

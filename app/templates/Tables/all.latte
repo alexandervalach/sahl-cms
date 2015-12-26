@@ -1,11 +1,13 @@
 {block content}
 
+{var $playOff = "playOff"}
+{var $baseTable = "baseTable"}
+
 <h3>Tabuľky</h3>
-{var $type = "playOff"}
 
 {foreach $options as $option}
-    {if $playOff != null}
-        {if $option->option == $type}
+    {if $option->option == $playOff}
+        {if $playOff != null}
             <div class='table-responsive'>
                 <table class='table table-striped'>
                     <caption class='caption'>
@@ -55,9 +57,9 @@
             </div>
         {/if}
     {/if}
-    {if $basic->count() != null}
-        {var $type = "baseTable"}
-        {if $option->option == $type}
+
+    {if $option->option == $baseTable}
+        {if $basic->count() != null}
             <div class='table-responsive'>
                 <table class='table table-striped'>
                     <caption class='caption' n:block="title">
@@ -110,13 +112,11 @@
 {/foreach}
 
 <footer>
-    {var $type = "baseTable"}
-    <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $type" 
+    <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $baseTable" 
        title="pridať tabuľku Základná časť do bočného panelu" class="btn btn-info">
         <span class="glyphicon glyphicon-pushpin"></span> Základná časť
     </a>
-    {var $type = "playOff"}
-    <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $type" 
+    <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $playOff" 
        title="pridať tabuľku Playy Off do bočného panelu" class="btn btn-info">
         <span class="glyphicon glyphicon-pushpin"></span> Play Off
     </a>

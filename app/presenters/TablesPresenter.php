@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\TablesRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -75,7 +76,7 @@ class TablesPresenter extends BasePresenter {
         $form = new Form;
         $teams = $this->teamsRepository->getTeams();
         $form->addSelect('team_id', 'Mužstvo', $teams);
-        $form->addCheckbox('type', ' Play off');
+        $form->addSelect('type', 'Tabuľka', TablesRepository::$TABLES);
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddTableRowForm;
@@ -92,7 +93,7 @@ class TablesPresenter extends BasePresenter {
         $form->addText('score1', 'Skóre 1');
         $form->addText('score2', 'Skóre 2');
         $form->addText('points', 'Body');
-        $form->addCheckbox('type', ' Play off');
+        $form->addSelect('type', 'Tabuľka', TablesRepository::$TABLES);
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedEditTableRowForm;

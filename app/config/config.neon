@@ -45,6 +45,7 @@ services:
 	- App\Model\PunishmentsRepository
 	- App\Model\GoalsRepository
 	- App\Model\ReplyRepository
+	- App\Model\OptionsRepository
 
 extensions:
 	visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension

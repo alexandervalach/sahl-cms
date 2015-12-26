@@ -49,6 +49,9 @@ abstract class BasePresenter extends Presenter {
 
     /** @var LinksRepository */
     protected $linksRepository;
+    
+    /** @var OptionsRepository */
+    protected $optionsRepository;
 
     /** @var PlayersRepository */
     protected $playersRepository;
@@ -84,7 +87,7 @@ abstract class BasePresenter extends Presenter {
     protected $imgFolder = "/images/";
 
     public function __construct(
-    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
+    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, OptionsRepository $optionsRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
         parent::__construct();
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
@@ -93,6 +96,7 @@ abstract class BasePresenter extends Presenter {
         $this->galleryRepository = $galleryRepository;
         $this->goalsRepository = $goalsRepository;
         $this->linksRepository = $linksRepository;
+        $this->optionsRepository = $optionsRepository;
         $this->playersRepository = $playersRepository;
         $this->postImageRepository = $postImageRepository;
         $this->postsRepository = $postsRepository;

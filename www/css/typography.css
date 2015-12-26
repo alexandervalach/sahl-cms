@@ -241,10 +241,6 @@ table.table > tbody > tr:nth-child(odd){
 
 table.table > tbody > tr > td > span.text-danger,
 .first,
-aside > div > table#playOff > tbody > tr > td:nth-child(2),
-aside > div > table#baseTable > tbody > tr > td:nth-child(2),
-aside > div > table#playOff > tbody > tr:nth-child(1),
-aside > div > table#baseTable > tbody > tr:nth-child(1),
 section#post > article > header > time,
 aside > div > table#briefFights > tbody > tr > td:nth-child(6),
 aside > div > table#briefFights > tbody > tr > td:nth-child(5),

@@ -28,7 +28,7 @@
                 {foreach $playOff as $table}
                     <tr>
                         {var $team = $table->ref('teams', 'team_id')}
-                        <td>{$iterator->counter}</td>
+                        <td>{$iterator->counter}.</td>
                         <td>{$team->name}</td>
                         <td>{$table->points}</td>
                     </tr>
@@ -44,7 +44,7 @@
                 {foreach $baseTable as $table}
                     <tr>
                         {var $team = $table->ref('teams', 'team_id')}
-                        <td>{$iterator->counter}</td>
+                        <td>{$iterator->counter}.</td>
                         <td>{$team->name}</td>
                         <td>{$table->points}</td>
                     </tr>

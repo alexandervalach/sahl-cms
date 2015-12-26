@@ -292,11 +292,16 @@ section#fights > article > main > ul > li > span{
     font-style: italic;
 }
 
-aside > div > table#playOff > tbody > tr > td:nth-child(2),
-aside > div > table#baseTable > tbody > tr > td:nth-child(2){
-    color: #a94442;
-}
-
 aside > div > table > tbody > tr:nth-child(8) {
     border-bottom: 5px solid #a94442;
+}
+
+aside > div > table#playOff > tbody > tr:nth-child(1),
+aside > div > table#playOff > tbody > tr:nth-child(2),
+aside > div > table#playOff > tbody > tr:nth-child(3),
+aside > div > table#baseTable > tbody > tr:nth-child(1),
+aside > div > table#baseTable > tbody > tr:nth-child(2),
+aside > div > table#baseTable > tbody > tr:nth-child(3){
+    font-weight: bold;
+    color: #a94442;
 }

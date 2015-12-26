@@ -1,112 +1,123 @@
 {block content}
 
 <h3>Tabuľky</h3>
+{var $type = "playOff"}
 
-{if $basic->count() != null}
-    <div class='table-responsive'>
-        <table class='table table-striped'>
-            <caption class='caption' n:block="title">
-                Základná časť
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="create#nav" class="text-default">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
-                </div>
-            </caption>
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Mužstvo</th>
-                    <th>Výhry</th>
-                    <th>Remízy</th>
-                    <th>Prehry</th>
-                    <th>Skóre</th>
-                    <th>Rozdiel</th>
-                    <th>Body</th>
-                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr n:foreach="$basic as $table" class="{$iterator->first ? 'first'}">
-                    <td>{$iterator->counter}</td>
-                    <td>{$table->ref('teams','team_id')->name}</td>
-                    <td>{$table->win}</td>
-                    <td>{$table->tram}</td>
-                    <td>{$table->lost}</td>
-                    <td>{$table->score1}:{$table->score2}</td>
-                    <td>{$diff = $table->score1 - $table->score2}</td>
-                    <td><span class="text-danger">{$table->points}</span></td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="edit#nav, $table->id" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="delete#nav, $table->id" class="text-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+{foreach $options as $option}
+    {if $playOff != null}
+        {if $option->option == $type}
+            <div class='table-responsive'>
+                <table class='table table-striped'>
+                    <caption class='caption'>
+                        Play off
+                        <div class="pull-right" n:if="$user->loggedIn">
+                            <a n:href="create#nav" class="text-default">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+                        </div>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Mužstvo</th>
+                            <th>Výhry</th>
+                            <th>Remízy</th>
+                            <th>Prehry</th>
+                            <th>Skóre</th>
+                            <th>Rozdiel</th>
+                            <th>Body</th>
+                            <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr n:foreach="$playoff as $table" class="{$iterator->first ? 'first'}">
+                            <td>{$iterator->counter}</td>
+                            <td>{$table->ref('teams','team_id')->name}</td>
+                            <td>{$table->win}</td>
+                            <td>{$table->tram}</td>
+                            <td>{$table->lost}</td>
+                            <td>{$table->score1}:{$table->score2}</td>
+                            <td>{$diff = $table->score1 - $table->score2}</td>
+                            <td><span class="text-danger">{$table->points}</span></td>
+                            <td n:if="$user->loggedIn">
+                                <a n:href="edit#nav, $table->id" class="text-success">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                            </td>
+                            <td n:if="$user->loggedIn">
+                                <a n:href="delete#nav, $table->id" class="text-danger">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {/if}
+    {/if}
+    {if $basic->count() != null}
+        {var $type = "baseTable"}
+        {if $option->option == $type}
+            <div class='table-responsive'>
+                <table class='table table-striped'>
+                    <caption class='caption' n:block="title">
+                        Základná časť
+                        <div class="pull-right" n:if="$user->loggedIn">
+                            <a n:href="create#nav" class="text-default">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </a>
+                        </div>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            <th>Mužstvo</th>
+                            <th>Výhry</th>
+                            <th>Remízy</th>
+                            <th>Prehry</th>
+                            <th>Skóre</th>
+                            <th>Rozdiel</th>
+                            <th>Body</th>
+                            <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr n:foreach="$basic as $table" class="{$iterator->first ? 'first'}">
+                            <td>{$iterator->counter}</td>
+                            <td>{$table->ref('teams','team_id')->name}</td>
+                            <td>{$table->win}</td>
+                            <td>{$table->tram}</td>
+                            <td>{$table->lost}</td>
+                            <td>{$table->score1}:{$table->score2}</td>
+                            <td>{$diff = $table->score1 - $table->score2}</td>
+                            <td><span class="text-danger">{$table->points}</span></td>
+                            <td n:if="$user->loggedIn">
+                                <a n:href="edit#nav, $table->id" class="text-success">
+                                    <span class="glyphicon glyphicon-pencil"></span>
+                                </a>
+                            </td>
+                            <td n:if="$user->loggedIn">
+                                <a n:href="delete#nav, $table->id" class="text-danger">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {/if}
+    {/if}
+{/foreach}
 
-        <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $table->type" 
-           title="pridať tabuľku do bočného panelu" class="btn btn-info">
-            <span class="glyphicon glyphicon-pushpin"></span> Bočný panel
-        </a>
-    </div>
-{/if}
-
-{if $playOff != null}
-    <div class='table-responsive'>
-        <table class='table table-striped'>
-            <caption class='caption'>
-                Play off
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="create#nav" class="text-default">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
-                </div>
-            </caption>
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Mužstvo</th>
-                    <th>Výhry</th>
-                    <th>Remízy</th>
-                    <th>Prehry</th>
-                    <th>Skóre</th>
-                    <th>Rozdiel</th>
-                    <th>Body</th>
-                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr n:foreach="$playoff as $table" class="{$iterator->first ? 'first'}">
-                    <td>{$iterator->counter}</td>
-                    <td>{$table->ref('teams','team_id')->name}</td>
-                    <td>{$table->win}</td>
-                    <td>{$table->tram}</td>
-                    <td>{$table->lost}</td>
-                    <td>{$table->score1}:{$table->score2}</td>
-                    <td>{$diff = $table->score1 - $table->score2}</td>
-                    <td><span class="text-danger">{$table->points}</span></td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="edit#nav, $table->id" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="delete#nav, $table->id" class="text-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $table->type" 
-           title="pridať tabuľku do bočného panelu" class="btn btn-info">
-            <span class="glyphicon glyphicon-pushpin"></span> Bočný panel
-        </a>
-    </div>
-{/if}
+<footer>
+    {var $type = "baseTable"}
+    <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $type" 
+       title="pridať tabuľku Základná časť do bočného panelu" class="btn btn-info">
+        <span class="glyphicon glyphicon-pushpin"></span> Základná časť
+    </a>
+    {var $type = "playOff"}
+    <a n:if="$user->loggedIn" n:href="Options:addToSidebar#nav, $type" 
+       title="pridať tabuľku Playy Off do bočného panelu" class="btn btn-info">
+        <span class="glyphicon glyphicon-pushpin"></span> Play Off
+    </a>
+</footer>

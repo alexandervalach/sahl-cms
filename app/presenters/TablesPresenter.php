@@ -22,6 +22,7 @@ class TablesPresenter extends BasePresenter {
     public function renderAll() {
         $this->template->basic = $this->tablesRepository->findByValue('type', 2)->order('points DESC')->order('score1 - score2 DESC');
         $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->order('points DESC')->order('score1 - score2 DESC');
+        $this->template->options = $this->optionsRepository->findByValue('visible', 1);
     }
 
     public function actionCreate() {

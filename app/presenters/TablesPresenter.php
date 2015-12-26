@@ -20,7 +20,7 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->basic = $this->tablesRepository->findByValue('type', 0)->order('points DESC')->order('score1 - score2 DESC');
+        $this->template->basic = $this->tablesRepository->findByValue('type', 2)->order('points DESC')->order('score1 - score2 DESC');
         $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->order('points DESC')->order('score1 - score2 DESC');
     }
 
@@ -70,16 +70,6 @@ class TablesPresenter extends BasePresenter {
         $this->getComponent('addToSidebarForm');
     }
 
-    protected function createComponentAddToSidebarForm() {
-        $form = new Form;
-        $form->addCheckbox('onSidebar', ' Zobraziť na bočnom paneli.')
-                ->setValue(true);
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedAddToSidebarForm;
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
     protected function createComponentAddTableRowForm() {
         $form = new Form;
         $teams = $this->teamsRepository->getTeams();
@@ -107,16 +97,6 @@ class TablesPresenter extends BasePresenter {
         $form->onSuccess[] = $this->submittedEditTableRowForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
-    }
-
-    public function submittedAddToSidebarForm(Form $form) {
-        $values = $form->getValues();
-        $affectedRows = $this->tablesRepository->findByValue('type', $this->tableRow->type);
-        $data = array('onSidebar' => $values['onSidebar']);
-        foreach ($affectedRows as $row) {
-            $row->update($data);
-        }
-        $this->redirect('all#nav');
     }
 
     public function submittedAddTableRowForm(Form $form) {

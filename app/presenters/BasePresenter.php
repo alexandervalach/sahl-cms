@@ -10,6 +10,7 @@ use App\Model\ForumRepository;
 use App\Model\GalleryRepository;
 use App\Model\GoalsRepository;
 use App\Model\LinksRepository;
+use App\Model\OptionsRepository;
 use App\Model\PlayersRepository;
 use App\Model\PostImageRepository;
 use App\Model\PostsRepository;

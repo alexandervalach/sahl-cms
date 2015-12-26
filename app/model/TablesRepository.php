@@ -5,8 +5,7 @@ namespace App\Model;
 class TablesRepository extends Repository {
 
     public function getTableStats($type) {
-        $rows = $this->findByValue('onSidebar', 1)->where('type', $type)->order('points DESC')->order('score1 - score2 DESC');
-        ;
+        $rows = $this->findByValue('type', $type)->order('points DESC')->order('score1 - score2 DESC');
         if (!$rows) {
             return null;
         }

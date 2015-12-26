@@ -115,7 +115,7 @@ abstract class BasePresenter extends Presenter {
         $this->template->sideFights = $this->roundsRepository->getLatestRoundFights();
         $this->template->baseTable = $this->tablesRepository->getTableStats(1);
         $this->template->playOff = $this->tablesRepository->getTableStats(2);
-        $this->template->options = $this->optionsRepository->findAll();
+        $this->template->options = $this->optionsRepository->findByValue('visible', 1);
         $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = $this->imgFolder;
     }

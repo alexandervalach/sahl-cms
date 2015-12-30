@@ -24,10 +24,16 @@ class FightsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $team2;
 
+    /**
+     * Metóda nájde kolo, podľa vstupného parametra
+     */
     public function actionAll($id) {
         $this->roundRow = $this->roundsRepository->findById($id);
     }
 
+    /**
+     * 
+     */
     public function renderAll($id) {
         if (!$this->roundRow) {
             throw new BadRequestException("Round not found.");
@@ -99,6 +105,7 @@ class FightsPresenter extends BasePresenter {
         $form->addText('score1', 'Skóre 1');
         $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
+        $form->addCheckbox('type', ' Play Off');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddFightForm;
@@ -144,16 +151,24 @@ class FightsPresenter extends BasePresenter {
     }
 
     public function submittedAddFightForm(Form $form) {
-        $values = $form->getValues();
-        if ($values->team1_id == $values->team2_id) {
+        $values = $form->getValues(TRUE);
+        if ($values['team1_id'] == $values['team2_id']) {
             $form->addError('Zvoľ dva rozdielne tímy.');
             return false;
         }
         $values['round_id'] = $this->roundRow;
+
+        if ($values['type']) {
+            $type = 1;
+        } else {
+            $type = 2;
+        }
+        unset($values['type']);
+
         $fight = $this->fightsRepository->insert($values);
-        $this->updateTableRows($values, 0);
-        $this->updateTablePoints($values, 0);
-        $this->updateTableGoals($values, 0);
+        $this->updateTableRows($values, $type);
+        $this->updateTablePoints($values, $type);
+        $this->updateTableGoals($values, $type);
         $this->redirect('all#nav', $fight->ref('rounds', 'round_id'));
     }
 
@@ -164,6 +179,7 @@ class FightsPresenter extends BasePresenter {
             $form->addError('Zvoľ dva rozdielne tímy.');
             return false;
         }
+
         $this->fightRow->update($values);
         $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
     }

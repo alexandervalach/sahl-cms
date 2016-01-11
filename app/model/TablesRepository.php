@@ -27,8 +27,8 @@ class TablesRepository extends Repository {
     }
 
     public static $TABLES = array(
-        2 => 'Základná časť',
-        1 => 'Play Off'
+        'baseTable' => 'Základná časť',
+        'playOff' => 'Play Off'
     );
 
 }

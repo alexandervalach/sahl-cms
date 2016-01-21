@@ -24,8 +24,8 @@ class PlayerPresenter extends BasePresenter {
 
     public function renderView($id) {
         $team = $this->teamRow;
-        $this->template->players = $team->related('players')->where('goalie', 0);
-        $this->template->goalies = $team->related('players')->where('goalie', 1);
+        $this->template->players = $team->related('players')->where('NOT type_id', 2);
+        $this->template->goalies = $team->related('players')->where('type_id', 2);
         $this->template->team = $team;
         $this->template->imgFolder = $this->imgFolder;
     }

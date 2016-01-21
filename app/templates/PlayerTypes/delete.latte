@@ -1,3 +1,15 @@
-{* Latte template *}
-
 {block content}
+
+<div class="row">
+    <header>
+        <h1 n:block="title">Odstráň typ hráča</h1>
+    </header>
+
+    <main>
+        <p class='delete text-warning'>
+            Naozaj chceš odstrániť typ hráča <mark>{$type->type}</mark>?
+        </p>
+        {control removeForm}
+    </main>
+
+</div>

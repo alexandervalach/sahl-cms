@@ -19,7 +19,7 @@ class PlayerTypesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->types = $this->playerTypesRepository->findAll();
+        $this->template->types = $this->playerTypesRepository->findByValue('NOT id', 1);
     }
 
     public function actionEdit($id) {
@@ -109,6 +109,14 @@ class PlayerTypesPresenter extends BasePresenter {
 
     public function submittedRemoveForm() {
         $this->userIsLogged();
+        $players = $this->playerTypeRow->related('player');
+        
+        $data = array('type_id' => 1);
+        
+        foreach($players as $player) {
+            $player->update($data);
+        }
+        
         $this->playerTypeRow->delete();
         $this->redirect('all#nav');
     }

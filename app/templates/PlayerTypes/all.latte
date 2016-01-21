@@ -4,23 +4,41 @@
     <main class="table-responsive col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <table class="table table-striped">
             <caption class="caption" n:block="title">Typy hráčov</caption>
-            {foreach $types as $type}
+            <thead>
                 <tr>
-                    <td>
-                        {$type->type}
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="edit#nav, $type->id" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="delete#nav, $type->id" class="text-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </td>
+                    <th>
+                        Názov
+                    </th>
+                    <th>
+                        Skratka
+                    </th>
+                    <th n:if="$user->loggedIn" colspan="2">
+                        &nbsp;
+                    </th>
                 </tr>
-            {/foreach}
+            </thead>
+            <tbody>
+                {foreach $types as $type}
+                    <tr>
+                        <td>
+                            {$type->type}
+                        </td>
+                        <td>
+                            {$type->abbr}
+                        </td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="edit#nav, $type->id" class="text-success">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="delete#nav, $type->id" class="text-danger">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+            </tbody>
         </table>
     </main>
 </div>

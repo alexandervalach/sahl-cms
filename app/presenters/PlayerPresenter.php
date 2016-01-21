@@ -68,10 +68,12 @@ class PlayerPresenter extends BasePresenter {
 
     protected function createComponentAddPlayerForm() {
         $form = new Form;
+        $types = $this->playerTypesRepository->getTypes();
         $form->addText('lname', 'Meno a priezvisko:');
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'DD.MM.RRRR');
         $form->addText('num', 'Číslo:');
+        $form->addSelect('type_id', 'Typ hráča', $types);
         $form->addCheckbox('goalie', ' Brankár');
         $form->addSubmit('save', 'Uložiť');
 

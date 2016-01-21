@@ -42,12 +42,12 @@ class PlayerTypesPresenter extends BasePresenter {
     public function renderAdd() {
         $this->getComponent('addForm');
     }
-    
+
     public function actionDelete($id) {
         $this->userIsLogged();
         $this->playerTypeRow = $this->playerTypesRepository->findById($id);
     }
-    
+
     public function renderDelete($id) {
         if (!$this->playerTypeRow) {
             throw new BadRequestException($this->error);
@@ -61,6 +61,8 @@ class PlayerTypesPresenter extends BasePresenter {
         $form->addText('type', 'Typ hráča')
                 ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
                 ->setRequired();
+        $form->addText('abbr', 'Skratka')
+                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 20 znakov.', 20);
         $form->addSubmit('save', 'Uložiť');
 
         FormHelper::setBootstrapFormRenderer($form);
@@ -73,20 +75,22 @@ class PlayerTypesPresenter extends BasePresenter {
         $form->addText('type', 'Typ hráča')
                 ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
                 ->setRequired();
+        $form->addText('abbr', 'Skratka')
+                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 20 znakov.', 20);
         $form->addSubmit('save', 'Uložiť');
 
         FormHelper::setBootstrapFormRenderer($form);
         $form->onSuccess[] = $this->submittedEditForm;
         return $form;
     }
-    
+
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('save', 'Zmaž')
-                ->setAttribute('class', 'btn btn-danger')
+                        ->setAttribute('class', 'btn btn-danger')
                 ->onClick[] = $this->submittedRemoveForm;
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', 'btn btn-warning')
+                        ->setAttribute('class', 'btn btn-warning')
                 ->onClick[] = $this->formCancelled;
         return $form;
     }
@@ -102,13 +106,13 @@ class PlayerTypesPresenter extends BasePresenter {
         $this->playerTypeRow->update($values);
         $this->redirect('all#nav');
     }
-    
+
     public function submittedRemoveForm() {
         $this->userIsLogged();
         $this->playerTypeRow->delete();
         $this->redirect('all#nav');
     }
-    
+
     public function formCancelled() {
         $this->redirect('all#primary');
     }

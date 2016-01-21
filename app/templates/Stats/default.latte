@@ -21,12 +21,12 @@
                 <td>{$stat->ref('team_id')->name}</td>
                 <td>{$stat->goals}</td>
                 <td n:if="$user->loggedIn">
-                    <a n:href="Player:edit, $stat->id" class="text-success">
+                    <a n:href="Player:edit#nav, $stat->id" class="text-success">
                         <span class='glyphicon glyphicon-pencil'></span>
                     </a>
                 </td>
                 <td n:if="$user->loggedIn">
-                    <a n:href="Player:delete, $stat->id" class="text-danger">
+                    <a n:href="Player:delete#nav, $stat->id" class="text-danger">
                         <span class='glyphicon glyphicon-remove'></span>
                     </a>
                 </td>

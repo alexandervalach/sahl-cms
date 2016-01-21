@@ -5,7 +5,7 @@
 <h1 n:block="title">{$forum->title}</h1>
 
 <p>
-    <a n:href="Forum:all" class='btn btn-default'>
+    <a n:href="Forum:all#nav" class='btn btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span> Fórum
     </a>
 </p>
@@ -25,7 +25,7 @@
             <header>
                 {$reply->author}
                 <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="Reply:delete, $reply->id">
+                    <a n:href="Reply:delete#nav, $reply->id">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </div>

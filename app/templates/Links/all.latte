@@ -3,7 +3,7 @@
 <h1 n:block="title">Linky</h1>
 
 <p n:if="$user->loggedIn">
-    <a n:href="create" class='btn btn-large btn-primary'>
+    <a n:href="create#nav" class='btn btn-large btn-primary'>
         <span class="glyphicon glyphicon-plus"></span>
         Pridať
     </a>
@@ -13,11 +13,11 @@
     <figure n:foreach="$txtLinks as $link">
         <a href='{$link->anchor}' class="text-primary" target="_blank">{$link->title}</a>
         <footer n:if="$user->loggedIn">
-            <a n:href="edit, $link->id" class="text-success">
+            <a n:href="edit#nav, $link->id" class="text-success">
                 <span class="glyphicon glyphicon-pencil"></span>
                 Upraviť
             </a>
-            <a n:href="delete, $link->id" class="text-danger">
+            <a n:href="delete#nav, $link->id" class="text-danger">
                 <span class="glyphicon glyphicon-remove"></span>
                 Odstrániť
             </a>
@@ -32,11 +32,11 @@
             </a>
         </div>
         <footer n:if="$user->loggedIn">
-            <a n:href="edit, $link->id" class="text-success">
+            <a n:href="edit#nav, $link->id" class="text-success">
                 <span class="glyphicon glyphicon-pencil"></span>
                 Upraviť
             </a>
-            <a n:href="delete, $link->id" class="text-danger">
+            <a n:href="delete#nav, $link->id" class="text-danger">
                 <span class="glyphicon glyphicon-remove"></span>
                 Odstrániť
             </a>
@@ -55,11 +55,11 @@
                     </a>
                 </div>
                 <footer n:if="$user->loggedIn">
-                    <a n:href="edit, $sponsor->id" class="text-success">
+                    <a n:href="edit#nav, $sponsor->id" class="text-success">
                         <span class="glyphicon glyphicon-pencil"></span>
                         Upraviť
                     </a>
-                    <a n:href="delete, $sponsor->id" class="text-danger">
+                    <a n:href="delete#nav, $sponsor->id" class="text-danger">
                         <span class="glyphicon glyphicon-remove"></span>
                         Odstrániť
                     </a>

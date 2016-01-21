@@ -15,68 +15,89 @@
     </figure>
 {/if}
 
-<div class='table-responsive'>
-    <table class='table table-striped table-condensed'>
-        <caption class='caption'>
-            {$team->name}
-            <div class="pull-right" n:if="$user->loggedIn">
-                <a n:href="create, $team->id" title="pridať hráča">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </a>
-            </div>
-        </caption>
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Meno a priezvisko</th>
-                <th>Dátum narodenia</th>
-                <th>Číslo dresu</th>
-                <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr n:foreach="$players as $player">
-                <td>{$iterator->counter}.</td>
-                <td>{$player->lname}</td>
-                <td>
-                    <time datetime="{$player->born}" pubdate>{$player->born}</time>
-                </td>
-                <td>{$player->num}</td>
-                <td n:if="$user->loggedIn" class="text-center">
-                    <a n:href="edit#nav, $player->id" class="text-success">
-                        <span class='glyphicon glyphicon-pencil'></span>
+{if $team->name}
+    <div class='table-responsive'>
+        <table class='table table-striped table-condensed'>
+            <caption class='caption'>
+                {$team->name}
+                <div class="pull-right" n:if="$user->loggedIn">
+                    <a n:href="create, $team->id" title="pridať hráča">
+                        <span class="glyphicon glyphicon-plus"></span>
                     </a>
-                </td>
-                <td n:if="$user->loggedIn" class="text-center">
-                    <a n:href="delete#nav, $player->id" class="text-danger">
-                        <span class='glyphicon glyphicon-remove'></span>
-                    </a>
-                </td>
-                {var $i = $iterator->counter}
-            </tr>
-            {foreach $goalies as $goalie}
-                {var $i = $i + 1}
+                </div>
+            </caption>
+            <thead>
                 <tr>
-                    <td>{$i}.</td>
-                    <td>{$goalie->lname}</td>
-                    <td>
-                        <time datetime="{$goalie->born}" pubdate>{$goalie->born}</time>
-                    </td>
-                    <td>Brankár, {$goalie->num}</td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="edit#nav, $goalie->id" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="delete#nav, $goalie->id" class="text-danger">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </td>    
+                    <th>&nbsp;</th>
+                    <th>Meno a priezvisko</th>
+                    <th>Dátum narodenia</th>
+                    <th>Číslo dresu</th>
+                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
                 </tr>
-            {/foreach}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {foreach $players as $player}
+                    <tr>
+                        {if $player->lname}
+                            <td>{$iterator->counter}.</td>
+                            <td>{$player->lname}</td>
+                            <td>
+                                <time datetime="{$player->born}" pubdate>{$player->born}</time>
+                            </td>
+                            <td>{$player->num}</td>
+                            <td n:if="$user->loggedIn" class="text-center">
+                                <a n:href="edit#nav, $player->id" class="text-success">
+                                    <span class='glyphicon glyphicon-pencil'></span>
+                                </a>
+                            </td>
+                            <td n:if="$user->loggedIn" class="text-center">
+                                <a n:href="delete#nav, $player->id" class="text-danger">
+                                    <span class='glyphicon glyphicon-remove'></span>
+                                </a>
+                            </td>
+                        {else}
+                            {for $j = 0; $j < 4; $j++}
+                                <td>&nbsp;</td>
+                            {/for}
+                            <td n:if="$user->loggedIn" class="text-center">
+                                <a n:href="edit#nav, $player->id" class="text-success">
+                                    <span class='glyphicon glyphicon-pencil'></span>
+                                </a>
+                            </td>
+                            <td n:if="$user->loggedIn" class="text-center">
+                                <a n:href="delete#nav, $player->id" class="text-danger">
+                                    <span class='glyphicon glyphicon-remove'></span>
+                                </a>
+                            </td>
+                        {/if}
+                    </tr>
+                    {var $i = $iterator->counter}
+                {/foreach}
+
+                {foreach $goalies as $goalie}
+                    {var $i = $i + 1}
+                    <tr>
+                        <td>{$i}.</td>
+                        <td>{$goalie->lname}</td>
+                        <td>
+                            <time datetime="{$goalie->born}" pubdate>{$goalie->born}</time>
+                        </td>
+                        <td>Brankár, {$goalie->num}</td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="edit#nav, $goalie->id" class="text-success">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="delete#nav, $goalie->id" class="text-danger">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </td>    
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+{/if}
 
 {/block}

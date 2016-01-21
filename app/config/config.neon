@@ -46,6 +46,7 @@ services:
 	- App\Model\GoalsRepository
 	- App\Model\ReplyRepository
 	- App\Model\OptionsRepository
+	- App\Model\PlayerTypesRepository
 
 extensions:
 	visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension

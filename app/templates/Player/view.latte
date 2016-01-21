@@ -38,10 +38,10 @@
             <tbody>
                 {foreach $players as $player}
                     <tr>
-                        {var $type = $player->ref('playerTypes', 'type_id')->abbr}
+                        {var $type = $player->ref('playerTypes', 'type_id')}
                         {if $player->lname}
                             <td>{$iterator->counter}.</td>
-                            <td>{$player->lname}{if $type} - {$type}{/if}</td>
+                            <td>{$player->lname}{if $type->abbr} - {$type->abbr}{/if}</td>
                             <td>
                                 <time datetime="{$player->born}" pubdate>{$player->born}</time>
                             </td>

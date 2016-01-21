@@ -4,8 +4,16 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use Nette\Application\UI\Form;
+use Nette\Application\BadRequestException;
 
 class PlayerTypesPresenter extends BasePresenter {
+    
+    /** @var ActiveRow */
+    private $playerTypeRow;
+    
+    /** @var string */
+    private $error = "Player type not found";
+    
     public function actionAll() {
         $this->userIsLogged();
     }

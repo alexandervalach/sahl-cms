@@ -68,13 +68,14 @@ class PlayerPresenter extends BasePresenter {
 
     protected function createComponentAddPlayerForm() {
         $form = new Form;
+        
         $types = $this->playerTypesRepository->getTypes();
+        
         $form->addText('lname', 'Meno a priezvisko:');
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'DD.MM.RRRR');
         $form->addText('num', 'Číslo:');
         $form->addSelect('type_id', 'Typ hráča', $types);
-        $form->addCheckbox('goalie', ' Brankár');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddPlayerForm;
@@ -84,12 +85,15 @@ class PlayerPresenter extends BasePresenter {
 
     protected function createComponentEditPlayerForm() {
         $form = new Form;
+        
+        $types = $this->playerTypesRepository->getTypes();
+        
         $form->addText('lname', 'Meno a priezvisko:');
         $form->addText('born', 'Dátum narodenia:')
                 ->setAttribute('placeholder', 'DD.MM.RRRR');
         $form->addText('num', 'Číslo:');
         $form->addText('goals', 'Góly:');
-        $form->addCheckbox('goalie', ' Brankár');
+        $form->addSelect('type_id', 'Typ hráča', $types);
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedEditPlayerForm;

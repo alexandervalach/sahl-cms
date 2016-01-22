@@ -244,7 +244,6 @@ table.table > tbody > tr:nth-child(odd){
 } 
 
 table.table > tbody > tr > td > span.text-danger,
-.first,
 section#post > article > header > time,
 aside > div > table#briefFights > tbody > tr > td:nth-child(6),
 aside > div > table#briefFights > tbody > tr > td:nth-child(5),
@@ -312,4 +311,18 @@ aside > div > table#baseTable > tbody > tr:nth-child(3){
 
 .borrowedPlayer{
     border: 5px solid #A94442;
+}
+
+div.table-responsive > table > tbody > tr:nth-child(1),
+div.table-responsive > table > tbody > tr:nth-child(2),
+div.table-responsive > table > tbody > tr:nth-child(3){
+    font-weight: bold;
+}
+
+main > div.table-responsive > table > tbody > tr:nth-child(1){
+    color: #A94442;
+}
+
+main > div > div.table-responsive > table > tbody > tr:nth-child(8){
+    border-bottom: 5px solid #A94442;
 }

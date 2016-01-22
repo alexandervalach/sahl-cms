@@ -109,6 +109,7 @@ class TablesPresenter extends BasePresenter {
 
     public function submittedEditTableRowForm(Form $form) {
         $values = $form->getValues();
+        $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
         $this->tableRow->update($values);
         $this->redirect('all#nav');
     }

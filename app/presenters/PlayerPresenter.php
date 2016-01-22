@@ -76,6 +76,7 @@ class PlayerPresenter extends BasePresenter {
                 ->setAttribute('placeholder', 'DD.MM.RRRR');
         $form->addText('num', 'Číslo:');
         $form->addSelect('type_id', 'Typ hráča', $types);
+        $form->addCheckbox('trans', ' Prestupový hráč');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddPlayerForm;
@@ -93,6 +94,7 @@ class PlayerPresenter extends BasePresenter {
                 ->setAttribute('placeholder', 'DD.MM.RRRR');
         $form->addText('num', 'Číslo:');
         $form->addText('goals', 'Góly:');
+        $form->addCheckbox('trans', ' Prestupový hráč');
         $form->addSelect('type_id', 'Typ hráča', $types);
         $form->addSubmit('save', 'Uložiť');
 

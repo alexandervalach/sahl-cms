@@ -38,7 +38,7 @@
             <tbody>
                 {foreach $players as $player}
                     {var $type = $player->ref('playerTypes', 'type_id')}
-                    <tr {if $type->abbr == "pres. hr."}class="borrowedPlayer"{/if}>
+                    <tr {if $player->trans}class="borrowedPlayer"{/if}>
                         {if $player->lname}
                             <td>{$iterator->counter}.</td>
                             <td>

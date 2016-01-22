@@ -1,6 +1,10 @@
 /* CSS document - Typography and text editing */
 
 /*================HEADINGS===========================*/
+main.container{
+    margin-bottom: 10px;
+}
+
 #main main.container h1, 
 #main main.container h3,
 aside.container h3{
@@ -304,4 +308,8 @@ aside > div > table#baseTable > tbody > tr:nth-child(1),
 aside > div > table#baseTable > tbody > tr:nth-child(2),
 aside > div > table#baseTable > tbody > tr:nth-child(3){
     font-weight: bold; 
+}
+
+.borrowedPlayer{
+    border: 5px solid #A94442;
 }

@@ -222,3 +222,515 @@ section#facebook > figure {
     width: 50%;
     margin: 0 auto;
 }
+
+/* Large devices (large desktops, 1200px and up) */
+@media screen and (min-width: 1200px) {
+    #nav {
+        height : 50px;
+        width : 1170px;
+    }
+
+    #header {
+        width: 100%;
+        height: 343px;
+    }
+
+    #header .container {
+        background: url('layout/banner-lg-1.png') no-repeat top left;
+    } 
+
+    #main {
+        width : 100%;
+        height : auto;
+    }
+
+    #main .container{
+        padding: 15px;
+    }
+
+    #footer {
+        width: 1170px;
+        height: 50px;
+        margin: 0 auto;
+    }
+
+    #primary{
+        width: 1170px;
+        height: 100%;
+        margin: 0 auto;
+    }
+
+    div#page{
+        width: 1170px;
+        margin: 0 auto;
+        height: auto;
+    }
+
+    /*=====================NAVIGATION BAR=======-==========*/
+    nav.navbar.container {
+        width: 1170px;
+    }
+
+    div#example-navbar-collapse.collapse.navbar-collapse {
+        width: 1170px;
+        margin: 0;
+        padding: 0;
+    }
+
+    ul.navbar-nav.nav {
+        width: 1170px;
+    }
+
+    /*======================GALLERY========================*/
+    .gallery{
+        float: left;
+        display: inline-block;
+        margin: 5px;
+    }
+
+    div.images > div.gallery{
+        width: 200px;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media screen and (min-width: 992px) and (max-width: 1199px){
+    #nav {
+        height : 50px;
+        width : 970px;
+    }
+
+    #header {
+        width: 100%;
+        height: 292px;
+    }
+
+    #header .container {
+        background: url('layout/banner-md-1.png') no-repeat top left;
+    } 
+
+    body > div#main {
+        width : 100%;
+        height : auto;
+    }
+
+    #main .container{
+        padding: 15px;
+    }
+
+    #footer {
+        width : 970px;
+        height : 50px;
+        margin: 0 auto;
+    }
+
+    #primary{
+        width: 970px;
+        height: 100%;
+        margin: 0 auto;
+    }
+
+    .container {
+        width: 970px;
+        margin: 0 auto;
+    }
+
+    div#page{
+        width: 970px;
+        margin: 0 auto;
+        height: auto;
+    }
+
+    /*=====================NAVIGATION BAR=======-==========*/
+    
+    nav.navbar.container {
+        width: 970px;
+    }
+
+    div#example-navbar-collapse.collapse.navbar-collapse {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    ul.navbar-nav.nav {
+        width: 970px;
+    }
+
+    /*======================GALLERY========================*/
+    .gallery{
+        float: left;
+        display: inline-block;
+        margin: 5px;
+    }
+
+    div.images > div.gallery{
+        width: 200px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 991px){
+    #nav {
+        height : 50px;
+        width : 100%;
+    }
+
+    #header {
+        width: 100%;
+        height: 195px;
+    }
+
+    #header .container {
+        background: url('layout/banner-sm-1.png') no-repeat top left;
+    } 
+
+    #main {
+        width : 100%;
+        height : auto;
+    }
+
+    #main .container{
+        padding: 15px;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    #footer {
+        width : 100%;
+        height : 50px;
+    }
+
+    #primary{
+        width: 100%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    div#page{
+        width: 100%;
+        height: auto;
+    }
+
+    /*======================GALLERY========================*/
+    .gallery{
+        float: left;
+        display: inline-block;
+        margin: 5px;
+    }
+
+    div.images > div.gallery{
+        width: 200px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #nav {
+        height : 50px;
+        width : 100%;
+    }
+
+    #main {
+        width : 100%;
+        height : 100%;
+    }
+
+    div#page > div#main > div#primary.row > main.container > h3,
+    div#page > div#main > div#primary.row > main.container > h2,
+    div#page > div#main > div#primary.row > main.container > h1 {
+        margin-top: 10px;
+    }
+
+    #footer {
+        width : 100%;
+        height : 50px;
+    }
+
+    .container {
+        width : inherit;
+        height: inherit;
+        margin: 0 auto;
+    }
+
+    body > div#main > main.container > div#switcher{
+        width: 100%;
+        height: 511px;
+        margin: 0;
+    }
+
+    div#main > main.container > div#switcher > img {
+        width: 100%;
+        height: 511px;
+    }
+
+    #primary{
+        width: 100%;
+        height: 100%;
+        margin: 0 auto;
+    }
+
+    div#page{
+        width: 100%;
+    }
+
+    /*=====================NAVIGATION BAR=======-==========*/
+    div#nav .navbar.container * {
+        font-weight: bold;
+    }
+
+    div#nav .navbar.container .navbar-nav > li > a {
+        color: black;
+        background: #FF9900;
+        height: 40px;
+        text-align: center;
+        vertical-align: middle;
+        z-index: 1001;
+    }	
+
+    div#nav .navbar.container .navbar-nav > li > a:focus, 
+    div#nav .navbar.container .navbar-nav > li > a:hover
+    {
+        color: white;
+        background: green;
+    }
+
+    #nav ul.dropdown-menu > li > a {
+        background: rgb(68, 157, 68);
+        color: white;
+        padding:0;
+        margin:0;
+        width: 100%;
+        line-height: 35px;
+        height: 35px;
+        text-align: center;
+        z-index: 1001;
+    }	
+
+    #nav ul.dropdown-menu > li > a:hover,
+    #nav ul.dropdown-menu > li > a:focus {
+        background: #FFD700;
+        color: black;
+    }
+
+    ul.dropdown-menu {
+        z-index: 1001;
+    }
+
+    button.navbar-toggle.btn {
+        color: black;
+        border: none; 
+    }
+
+    button.navbar-toggle.btn:hover,
+    button.navbar-toggle.btn:focus{
+        color: white;
+        background: gold;
+        border: none;
+    }
+
+    .dropdown-menu {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        margin: 2px 0 0;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid #ccc;
+        border: 1px solid rgba(0,0,0,.15);
+        border-radius: 4px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    }
+    
+    .navbar-nav .open .dropdown-menu {
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        -webkit-box-shadow: none;
+        box-shadow: none;
+    }
+
+
+    /*======================GALLERY========================*/
+    .gallery{
+        float: left;
+        display: inline-block;
+        margin: 5px;
+    }
+
+    div.gallery > img.img-gallery {
+        width: 100%;
+    }
+
+    section.gallery {
+        display: block;
+        margin: 5px;
+        clear: both;
+    }
+
+    .navbar-toggle {
+        width: 39px;
+    }
+
+    .table caption.caption{
+        width: 100%;
+    }
+
+    .table td.col-xs-8, .table th.col-xs-8{
+        width: 100%;
+    }
+
+    ul li.col-xs-12{
+        width: 100%;
+    }
+
+    p.delete{
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    .img{
+        width: 100%;
+    }
+
+    /*================TYPOGRAPHY=============*/
+    div#main > main.container > p.delete.text-warning{
+        padding: 10px;
+    }
+
+    div#main > main.container > h1{
+        border-top-color: blue; 
+        -moz-border-top-color: blue; 
+        -webkit-border-top-color: blue;
+        border-bottom-color: blue;
+        -moz-border-bottom-color: blue;
+        -webkit-border-bottom-color: blue;
+        color: blue;
+    }
+
+    .navbar-header > a {
+        padding: 0 20px;
+        line-height: 50px;
+        font-weight: bold;
+        font-size: 21px;
+    }
+}
+
+/*===============TABLES===============*/
+
+/**	Responsive mobile view design for image slider on front page
+  *	Image shrinks when display changes, 
+  * Every 100px I change the height of element to look it much better
+  *	THE SMALLEST SCREEN, especially James Bond has even smaller, but I don't care now.
+  */
+
+@media screen and (min-width: 262px) and (max-width: 362px) {
+
+    body > div#main > main.container > div#switcher{
+        width: 100%;
+        height: 241px;
+        margin: 0;
+    }
+
+    div#main .container {
+        width: 100%;
+        height: auto;
+        padding: 0;
+        margin: 0;
+    }
+
+    div#main > main.container > div#switcher > img {
+        width: 100%;
+        height: 241px;
+        margin: 0;
+        padding: 0;
+    }
+
+}
+
+/*===============Screen between 363 and 462 pixels============*/
+@media screen and (min-width: 363px) and (max-width: 462px) {
+
+    body > div#main > main.container > div#switcher{
+        width: 100%;
+        height: 308px;
+        margin: 0;
+    }
+
+    div#main .container {
+        width: 100%;
+        height: auto;
+        padding: 0;
+    }
+
+    div#main > main.container > div#switcher > img {
+        width: 100%;
+        height: 308px;
+    }
+
+}
+
+/*============Screen between 463 and 562 px===============*/
+@media screen and (min-width: 463px) and (max-width: 562px) {
+
+    body > div#main > main.container > div#switcher{
+        width: 100%;
+        height: 375px;
+        margin: 0;
+    }
+
+    div#main .container {
+        width: 100%;
+        height: auto;
+    }
+
+    div#main > main.container > div#switcher > img {
+        width: 100%;
+        height: 375px;
+    }
+
+}
+
+@media screen and (min-width: 463px) and (max-width: 562px) {
+
+    body > div#main > main.container > div#switcher{
+        width: 100%;
+        height: 375px;
+        margin: 0;
+    }
+
+    div#main .container {
+        width: 100%;
+        height: auto;
+    }
+
+    div#main > main.container > div#switcher > img {
+        width: 100%;
+        height: 375px;
+    }
+
+}
+
+/* Bigger screen is included in the @media query above at the beginning of the document */
+@media screen and (min-width: 563px) and (max-width: 662px) {
+
+    body > div#main > main.container > div#switcher{
+        width: 100%;
+        height: 441px;
+        margin: 0;
+    }
+
+    div#main .container {
+        width: 100%;
+        height: auto;
+    }
+
+    div#main > main.container > div#switcher > img {
+        width: 100%;
+        height: 441px;
+    }
+
+}

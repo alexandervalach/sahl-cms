@@ -19,7 +19,7 @@ class PlayerTypesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->types = $this->playerTypesRepository->findByValue('NOT id', 1);
+        $this->template->types = $this->playerTypesRepository->findByValue('NOT id', array(1, 2));
     }
 
     public function actionEdit($id) {

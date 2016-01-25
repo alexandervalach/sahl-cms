@@ -11,7 +11,7 @@ class TeamsRepository extends Repository{
 	 * @return array
 	 */
 	public function getTeams() {
-		$teamSelection = $this->findAll();
+		$teamSelection = $this->findAll()->order('name ASC');
 		$teams = array();
 		foreach( $teamSelection as $team ){
 			$teams[$team->id] = $team->name;

@@ -243,14 +243,6 @@ table.table > tbody > tr:nth-child(odd){
     background-color: rgb(255,255,255);
 } 
 
-table.table > tbody > tr > td > span.text-danger,
-section#post > article > header > time,
-aside > div > table#briefFights > tbody > tr > td:nth-child(6),
-aside > div > table#briefFights > tbody > tr > td:nth-child(5),
-aside > div > table#briefFights > tbody > tr > td:nth-child(4){
-    font-weight: bold;
-} 
-
 section#forum > div.row > article > header > a,
 section#forum > div.row > article > footer > a,
 div.pull-right > a > span.glyphicon-remove,
@@ -291,38 +283,42 @@ section#fights > article > main > ul > li > span{
     font-style: italic;
 }
 
-aside > div > table#playOff > tbody > tr:nth-child(1),
-aside > div > table#baseTable > tbody > tr:nth-child(1){
-    color: #a94442;
+.borrowedPlayer{
+    border: 5px solid #A94442;
 }
 
-aside > div > table > tbody > tr:nth-child(8) {
-    border-bottom: 5px solid #a94442;
-}
-
+div#playOff > table > tbody > tr:nth-child(1),
+div#playOff > table > tbody > tr:nth-child(2),
+div#playOff > table > tbody > tr:nth-child(3),
+div#baseTable > table > tbody > tr:nth-child(1),
+div#baseTable > table > tbody > tr:nth-child(2),
+div#baseTable > table > tbody > tr:nth-child(3),
+div#stats > table > tbody > tr:nth-child(1),
+div#stats > table > tbody > tr:nth-child(2),
+div#stats > table > tbody > tr:nth-child(3),
 aside > div > table#playOff > tbody > tr:nth-child(1),
 aside > div > table#playOff > tbody > tr:nth-child(2),
 aside > div > table#playOff > tbody > tr:nth-child(3),
 aside > div > table#baseTable > tbody > tr:nth-child(1),
 aside > div > table#baseTable > tbody > tr:nth-child(2),
-aside > div > table#baseTable > tbody > tr:nth-child(3){
-    font-weight: bold; 
-}
-
-.borrowedPlayer{
-    border: 5px solid #A94442;
-}
-
-div.table-responsive > table > tbody > tr:nth-child(1),
-div.table-responsive > table > tbody > tr:nth-child(2),
-div.table-responsive > table > tbody > tr:nth-child(3){
+aside > div > table#baseTable > tbody > tr:nth-child(3),
+table.table > tbody > tr > td > span.text-danger,
+section#post > article > header > time,
+aside > div > table#briefFights > tbody > tr > td:nth-child(6),
+aside > div > table#briefFights > tbody > tr > td:nth-child(5),
+aside > div > table#briefFights > tbody > tr > td:nth-child(4){
     font-weight: bold;
 }
 
-main > div.table-responsive > table > tbody > tr:nth-child(1){
+main div#baseTable > table > tbody > tr:nth-child(1),
+main div#playOff > table > tbody > tr:nth-child(1),
+main div#stats > table > tbody > tr:nth-child(1),
+aside > div > table#playOff > tbody > tr:nth-child(1),
+aside > div > table#baseTable > tbody > tr:nth-child(1){
     color: #A94442;
 }
 
-main > div > div.table-responsive > table > tbody > tr:nth-child(8){
+main > div > div.table-responsive > table > tbody > tr:nth-child(8),
+aside > div > table > tbody > tr:nth-child(8){
     border-bottom: 5px solid #A94442;
 }

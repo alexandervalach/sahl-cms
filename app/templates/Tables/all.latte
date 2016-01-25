@@ -9,7 +9,7 @@
     {foreach $options as $option}
         {if $option->option == $playOff}
             {if $playOff != null}
-                <div class='table-responsive'>
+                <div class='table-responsive' id="playOff">
                     <table class='table table-striped'>
                         <caption class='caption'>
                             Play off
@@ -61,7 +61,7 @@
 
         {if $option->option == $baseTable}
             {if $basic->count() != null}
-                <div class='table-responsive'>
+                <div class='table-responsive' id="baseTable">
                     <table class='table table-striped'>
                         <caption class='caption' n:block="title">
                             Základná časť

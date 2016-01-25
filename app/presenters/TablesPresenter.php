@@ -26,11 +26,11 @@ class TablesPresenter extends BasePresenter {
         $this->template->options = $this->optionsRepository->findByValue('visible', 1);
     }
 
-    public function actionCreate() {
+    public function actionAdd() {
         $this->userIsLogged();
     }
 
-    public function renderCreate() {
+    public function renderAdd() {
         $this->getComponent('addTableRowForm');
     }
 

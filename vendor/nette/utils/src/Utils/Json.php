@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Utils;
@@ -50,7 +50,7 @@ class Json
 		$flags = PHP_VERSION_ID >= 50400 ? (JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | ($options & self::PRETTY ? JSON_PRETTY_PRINT : 0)) : 0;
 
 		if (PHP_VERSION_ID < 50500) {
-			$json = Callback::invokeSafe('json_encode', array($value, $flags), function($message) { // needed to receive 'recursion detected' error
+			$json = Callback::invokeSafe('json_encode', array($value, $flags), function ($message) { // needed to receive 'recursion detected' error
 				throw new JsonException($message);
 			});
 		} else {

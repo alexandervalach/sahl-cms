@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Forms;
@@ -15,17 +15,8 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property   mixed $action
- * @property   string $method
- * @property-read array $groups
- * @property   Nette\Localization\ITranslator|NULL $translator
- * @property-read bool $anchored
- * @property-read ISubmitterControl|FALSE $submitted
- * @property-read bool $success
- * @property-read array $httpData
  * @property-read array $errors
  * @property-read Nette\Utils\Html $elementPrototype
- * @property   IFormRenderer $renderer
  */
 class Form extends Container implements Nette\Utils\IHtmlString
 {
@@ -83,13 +74,13 @@ class Form extends Container implements Nette\Utils\IHtmlString
 	/** @internal protection token ID */
 	const PROTECTOR_ID = '_token_';
 
-	/** @var callable[]  function(Form $sender); Occurs when the form is submitted and successfully validated */
+	/** @var callable[]  function (Form $sender); Occurs when the form is submitted and successfully validated */
 	public $onSuccess;
 
-	/** @var callable[]  function(Form $sender); Occurs when the form is submitted and is not valid */
+	/** @var callable[]  function (Form $sender); Occurs when the form is submitted and is not valid */
 	public $onError;
 
-	/** @var callable[]  function(Form $sender); Occurs when the form is submitted */
+	/** @var callable[]  function (Form $sender); Occurs when the form is submitted */
 	public $onSubmit;
 
 	/** @var mixed or NULL meaning: not detected yet */
@@ -609,7 +600,10 @@ class Form extends Container implements Nette\Utils\IHtmlString
 		try {
 			return $this->getRenderer()->render($this);
 
+		} catch (\Throwable $e) {
 		} catch (\Exception $e) {
+		}
+		if (isset($e)) {
 			if (func_num_args()) {
 				throw $e;
 			}

@@ -1,17 +1,17 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Forms\Controls;
 
-use Nette,
-	Nette\Forms\IControl,
-	Nette\Utils\Html,
-	Nette\Utils\Validators,
-	Nette\Forms\Form;
+use Nette;
+use Nette\Forms\IControl;
+use Nette\Utils\Html;
+use Nette\Utils\Validators;
+use Nette\Forms\Form;
 
 
 /**
@@ -142,7 +142,7 @@ abstract class BaseControl extends Nette\ComponentModel\Component implements ICo
 	}
 
 
-	/********************* interface IFormControl ****************d*g**/
+	/********************* interface IControl ****************d*g**/
 
 
 	/**

@@ -1,14 +1,14 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Iterators;
 
-use Nette,
-	Nette\Utils\ObjectMixin;
+use Nette;
+use Nette\Utils\ObjectMixin;
 
 
 /**
@@ -24,9 +24,6 @@ use Nette,
  * @property-read int $counter
  * @property-read mixed $nextKey
  * @property-read mixed $nextValue
- * @property-read $innerIterator
- * @property   $flags
- * @property-read $cache
  */
 class CachingIterator extends \CachingIterator implements \Countable
 {

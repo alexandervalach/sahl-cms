@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Mail;
@@ -42,7 +42,7 @@ class SendmailMailer extends Nette\Object implements IMailer
 		if ($this->commandArgs) {
 			$args[] = (string) $this->commandArgs;
 		}
-		$res = Nette\Utils\Callback::invokeSafe('mail', $args, function($message) use (& $info) {
+		$res = Nette\Utils\Callback::invokeSafe('mail', $args, function ($message) use (& $info) {
 			$info = ": $message";
 		});
 		if ($res === FALSE) {

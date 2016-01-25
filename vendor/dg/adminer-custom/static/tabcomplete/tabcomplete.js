@@ -1,7 +1,7 @@
 /*!
  * tabcomplete
  * http://github.com/erming/tabcomplete
- * v1.3.1
+ * v1.5.0-fix
  */
 (function($) {
 	var keys = {
@@ -71,9 +71,7 @@
 			var word = input.split(/ |\n/).pop();
 
 			// Reset iteration.
-			i = -1;
-			last = "";
-			words = [];
+			reset();
 
 			// Check for matches if the current word is the last word.
 			if (self[0].selectionStart == input.length
@@ -111,9 +109,6 @@
 			if (key == keys.tab
 				|| (options.arrowKeys && (key == keys.up || key == keys.down))) {
 
-				// Don't lose focus on tab click.
-				e.preventDefault();
-
 				// Iterate the matches with tab and the up and down keys by incrementing
 				// or decrementing the 'i' variable.
 				if (key != keys.up) {
@@ -130,11 +125,24 @@
 
 				// Get next match.
 				var word = words[i % words.length];
+				var value = self.val();
 				if (!word) {
+					if (key == keys.tab) {
+						// Don't lose focus on tab click.
+						e.preventDefault();
+
+						var pos = self[0].selectionStart;
+						if (pos === self[0].selectionEnd) {
+							self.val(value.substr(0, pos) + "\t" + value.substr(pos));
+							self[0].selectionStart = self[0].selectionEnd = pos + 1;
+							hint.call(self, "");
+						}
+					}
 					return;
 				}
 
-				var value = self.val();
+				e.preventDefault();
+
 				last = last || value.split(/ |\n/).pop();
 
 				// Return if the 'minLength' requirement isn't met.
@@ -171,12 +179,28 @@
 				// Reset iteration.
 				i = -1;
 				last = "";
+			} else if (options.hint) {
+				reset();
+				hint.call(self, "");
 			}
 		});
 
 		if (options.hint) {
 			// If enabled, turn on hinting.
 			hint.call(this, "");
+		}
+
+		this.on("mousedown.tabcomplete", function() {
+			reset();
+			if (options.hint) {
+				hint.call(self, "");
+			}
+		});
+
+		function reset() {
+			i = -1;
+			last = "";
+			words = [];
 		}
 
 		return this;
@@ -214,7 +238,11 @@
 		if (!clone.length) {
 			if (input.options.wrapInput) {
 				input.wrap(
-					$("<div>").css({position: "relative", height: input.css("height"), display: input.css("display")})
+					$("<div>").css({
+						position: "relative",
+						height: input.css("height"),
+						display: input.css("display") === "block" ? "block" : "inline-block"
+					})
 				);
 			}
 			clone = input
@@ -225,6 +253,16 @@
 				.insertBefore(input);
 			clone.css({
 				position: "absolute",
+				borderColor: "transparent"
+			});
+			input.on("scroll.tabcomplete", function() {
+				clone.scrollTop(input.scrollTop()).scrollLeft(input.scrollLeft());
+			});
+			input.on("mousemove.tabcomplete mouseup.tabcomplete", function() {
+				clone.css({width: input.css("width"), height: input.css("height")});
+				if (input.options.wrapInput) {
+					clone.parent().css({height: input.css("height")});
+				}
 			});
 		}
 
@@ -234,7 +272,7 @@
 			hint = value + word.substr(value.split(/ |\n/).pop().length);
 		}
 
-		clone.val(hint);
+		clone.val(hint).scrollTop(input.scrollTop()).scrollLeft(input.scrollLeft());
 	}
 
 	// Hint by selecting part of the suggested word.

@@ -7,16 +7,25 @@
  */
 class AdminerAutocomplete
 {
+	var $keywords = array(
+		'DELETE FROM', 'DISTINCT', 'EXPLAIN', 'FROM', 'GROUP BY', 'HAVING', 'INSERT INTO', 'INNER JOIN', 'IGNORE',
+		'LIMIT', 'LEFT JOIN', 'NULL', 'ORDER BY', 'ON DUPLICATE KEY UPDATE', 'SELECT', 'UPDATE', 'WHERE',
+	);
+
 	function head()
 	{
 		if (!isset($_GET['sql'])) {
 			return;
 		}
 
-		$suggests = $tables = array_keys(tables_list());
-		foreach ($tables as $table) {
+		$suggests = array();
+		foreach ($this->keywords as $keyword) {
+				$suggests[] = "$keyword ";
+		}
+		foreach (array_keys(tables_list()) as $table) {
+			$suggests[] = $table;
 			foreach (fields($table) as $field => $foo) {
-				$suggests[] = "$table.$field";
+				$suggests[] = "$table.$field ";
 			}
 		}
 		?>
@@ -25,7 +34,7 @@ class AdminerAutocomplete
 <style>.hint { color: #bdc3c7; }</style>
 <script type="text/javascript">
 $(function(){
-	$('.sqlarea').tabcomplete(['<?php echo implode("', '", str_replace("'\\", '', $suggests)) ?>']);
+	$('.sqlarea').tabcomplete(<?php echo json_encode($suggests) ?>);
 });
 </script>
 <?php

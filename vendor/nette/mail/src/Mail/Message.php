@@ -1,14 +1,14 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Mail;
 
-use Nette,
-	Nette\Utils\Strings;
+use Nette;
+use Nette\Utils\Strings;
 
 
 /**
@@ -16,10 +16,7 @@ use Nette,
  *
  * @author     David Grudl
  *
- * @property   array $from
  * @property   string $subject
- * @property   string $returnPath
- * @property   int $priority
  * @property   mixed $htmlBody
  */
 class Message extends MimePart
@@ -333,7 +330,7 @@ class Message extends MimePart
 
 	/**
 	 * Builds email. Does not modify itself, but returns a new object.
-	 * @return Message
+	 * @return self
 	 */
 	protected function build()
 	{
@@ -387,7 +384,7 @@ class Message extends MimePart
 	{
 		$text = Strings::replace($html, array(
 			'#<(style|script|head).*</\\1>#Uis' => '',
-			'#<t[dh][ >]#i' => " $0",
+			'#<t[dh][ >]#i' => ' $0',
 			'#[\r\n]+#' => ' ',
 			'#<(/?p|/?h\d|li|br|/tr)[ >/]#i' => "\n$0",
 		));

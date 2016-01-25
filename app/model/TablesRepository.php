@@ -25,6 +25,16 @@ class TablesRepository extends Repository {
         $data = array($columnName => $newValue);
         return $tableRow->update($data);
     }
+    
+    public function updateFights($teamId, $type) {
+        $tableRow = $this->findAll()->where('team_id', $teamId)->where('type', $type)->fetch();
+        if ($tableRow == null) {
+            return null;
+        }
+        $newValue = $tableRow->win + $tableRow->lost + $tableRow->tram;
+        $data = array('counter' => $newValue);
+        return $tableRow->update($data);
+    }
 
     public static $TABLES = array(
         'baseTable' => 'Základná časť',

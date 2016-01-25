@@ -229,6 +229,8 @@ class FightsPresenter extends BasePresenter {
             $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'tram', $value);
             $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'tram', $value);
         }
+        $this->tablesRepository->updateFights($values['team1_id'], $type);
+        $this->tablesRepository->updateFights($values['team2_id'], $type);
     }
 
     public function updateTablePoints($values, $type, $column = 'points') {

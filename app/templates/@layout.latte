@@ -15,10 +15,6 @@
         <link rel="stylesheet" media="print" href="{$basePath}/css/print.css">
         -->
         <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style.css" type="text/css">
-        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style-xs.css" type="text/css">
-        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style-sm.css" type="text/css">
-        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style-md.css" type="text/css">
-        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style-lg.css" type="text/css">
         <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/typography.css" type="text/css">
         <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/bootstrap/css/bootstrap.min.css" type="text/css">
         <link rel="shortcut icon" href="{$basePath}/favicon.ico">
@@ -63,7 +59,9 @@
         <script src="{$basePath}/js/netteForms.js"></script>
         <script src="{$basePath}/bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-        <script src="{$basePath}/js/jqte.js"></script>
+        <script type="text/javascript">
+            CKEDITOR.replace('ckeditor');
+        </script>
         {/block}
 
     </body>

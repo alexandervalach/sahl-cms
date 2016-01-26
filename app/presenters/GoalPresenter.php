@@ -40,9 +40,7 @@ class GoalPresenter extends BasePresenter {
     public function actionAdd($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
-        $this->roundRow = $this->fightsRepository->getForFight($this->fightRow, 'round_id', 'rounds');
-        $this->team1 = $this->fightsRepository->getForFight($this->fightRow, 'team1_id');
-        $this->team2 = $this->fightsRepository->getForFight($this->fightRow, 'team2_id');
+        $this->roundRow = $this->roundsRepository->findById($this->fightRow->round_id);
     }
 
     public function renderAdd($id) {
@@ -64,6 +62,7 @@ class GoalPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->template->goal = $this->goalRow;
+        $this->template->player = $this->goalRow->ref('players', 'player_id');
         $this->getComponent('editForm')->setDefaults($this->goalRow);
     }
 
@@ -83,8 +82,11 @@ class GoalPresenter extends BasePresenter {
 
     protected function createComponentAddForm() {
         $form = new Form;
-        $players = $this->fightsRepository->getPlayersForSelect($this->fightRow, 'team1_id', 'team2_id');
-        $form->addSelect('player_id', 'Hráči', $players);
+
+        $players = $this->teamPlayersHelper($this->fightRow);
+
+        $form->addSelect('player_id', 'Hráči', $players)
+                ->setRequired();
         $form->addText('goals', 'Počet gólov')
                 ->setDefaultValue(1)
                 ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
@@ -98,8 +100,6 @@ class GoalPresenter extends BasePresenter {
 
     protected function createComponentEditForm() {
         $form = new Form;
-        $players = $this->fightsRepository->getPlayersForSelect($this->fightRow, 'team1_id', 'team2_id');
-        $form->addSelect('player_id', 'Hráči', $players);
         $form->addText('goals', 'Počet gólov')
                 ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
@@ -113,6 +113,7 @@ class GoalPresenter extends BasePresenter {
     public function submittedAddForm(Form $form) {
         $values = $form->getValues();
         $values['fight_id'] = $this->fightRow;
+        $values['player_id'] = $values['player_id'];
         $this->goalsRepository->insert($values);
 
         $player = $this->playersRepository->findById($values['player_id']);
@@ -126,7 +127,7 @@ class GoalPresenter extends BasePresenter {
 
     public function submittedEditForm(Form $form) {
         $values = $form->getValues();
-        $goalDifference =  $values['goals'] - $this->goalRow->goals;
+        $goalDifference = $values['goals'] - $this->goalRow->goals;
         $this->goalRow->update($values);
 
         $player = $this->playersRepository->findById($this->goalRow->player_id);
@@ -149,7 +150,16 @@ class GoalPresenter extends BasePresenter {
     }
 
     public function formCancelled() {
-        $this->redirect('Fights:all#nav', $this->fightRow->round_id);
+        $this->redirect('Goal:view#nav', $this->goalRow->fight_id);
+    }
+
+    protected function teamPlayersHelper(ActiveRow $row) {
+        $team1 = $this->teamsRepository->findById($row->team1_id);
+        $team2 = $this->teamsRepository->findById($row->team2_id);
+        $players1 = $this->playersRepository->getPlayersByValue('team_id', $team1->id);
+        $players2 = $this->playersRepository->getPlayersByValue('team_id', $team2->id);
+        $players = array_replace($players1, $players2);
+        return $players;
     }
 
 }

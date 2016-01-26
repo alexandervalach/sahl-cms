@@ -8,7 +8,7 @@ class StatsPresenter extends BasePresenter {
     private $playerSelection;
 
     public function actionAll() {
-        $this->playerSelection = $this->playersRepository->findAll()->order('goals DESC, lname DESC');
+        $this->playerSelection = $this->playersRepository->findAll()->where('lname != ?', ' ')->order('goals DESC, lname DESC');
     }
 
     public function renderAll() {

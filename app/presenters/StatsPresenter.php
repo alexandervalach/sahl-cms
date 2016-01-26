@@ -4,15 +4,12 @@ namespace App\Presenters;
 
 class StatsPresenter extends BasePresenter {
 
-    /** @var Nette\Databasq\Table\Selection */
-    private $playerSelection;
-
     public function actionAll() {
-        $this->playerSelection = $this->playersRepository->findAll()->where('lname != ?', ' ')->order('goals DESC, lname DESC');
+        
     }
 
     public function renderAll() {
-        $this->template->stats = $this->playerSelection;
+        $this->template->stats = $this->playersRepository->findAll()->where('lname != ?', ' ')->order('goals DESC, lname DESC');
     }
 
 }

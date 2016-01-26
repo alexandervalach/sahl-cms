@@ -42,7 +42,6 @@
                 {var $homeGoals = $fight->related('goals')->where('home', 1)}
                 {var $guestGoals = $fight->related('goals')->where('home', 0)}
                 <ul n:if="$homeGoals->count() > 0 OR $guestGoals->count() > 0">
-                    <a n:if="$user->loggedIn" n:href="Goal:view#nav, $fight->id">Góly:</a>
                     <li>
                         Domáci:
                         <span>
@@ -65,13 +64,16 @@
             </main>
             <footer n:if="$user->loggedIn">
                 <a class="btn btn-success" n:href="edit#nav, $fight->id">
-                    <span class="glyphicon glyphicon-pencil"></span> Upraviť zápas
+                    <span class="glyphicon glyphicon-pencil"></span> Zápas
                 </a>
                 <a class="btn btn-warning" n:href="editThird#nav, $fight->id">
-                    <span class="glyphicon glyphicon-pencil"></span> Upraviť tretiny
+                    <span class="glyphicon glyphicon-pencil"></span> Tretiny
                 </a>
                 <a class="btn btn-primary" n:href="Goal:add#nav, $fight->id">
-                    <span class="glyphicon glyphicon-plus"></span> Pridať góly
+                    <span class="glyphicon glyphicon-plus"></span> Góly
+                </a>
+                <a class="btn btn-danger" n:href="Goal:view#nav, $fight->id">
+                    <span class="glyphicon glyphicon-eye-open"></span> Góly
                 </a>
             </footer>
         </article>

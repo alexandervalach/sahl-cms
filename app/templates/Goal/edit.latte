@@ -1,12 +1,14 @@
 {block content}
 
-<h1 n:block="title">Pridať góly hráčom v zápase</h1>
+<h1 n:block="title">{$player->lname}</h1>
 
 <p>
-    <a n:href="Round:all#nav" class='btn btn-large btn-default'>
+    <a n:href="Goal:view#nav, $goal->fight_id" class='btn btn-large btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Zápasy
     </a>
 </p>
 
-{control editForm}
+<section>
+    {control editForm}
+</section>

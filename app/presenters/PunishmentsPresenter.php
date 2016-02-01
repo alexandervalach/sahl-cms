@@ -59,7 +59,7 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     protected function createComponentAddPunishmentForm() {
-        $players = $this->playersRepository->getPlayers();
+        $players = $this->playersRepository->getPlayersByValue('num !=', 0);
         $form = new Form;
         $form->addSelect('player_id', 'Hráč', $players)
                 ->setRequired();

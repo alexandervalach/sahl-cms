@@ -223,6 +223,11 @@ section#facebook > figure {
     margin: 0 auto;
 }
 
+.form-group > label[for=frm-addMessageForm-url],
+.form-group > input#frm-addMessageForm-url {
+    display: none;
+}
+
 /* Large devices (large desktops, 1200px and up) */
 @media screen and (min-width: 1200px) {
     #nav {

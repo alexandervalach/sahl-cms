@@ -22,13 +22,13 @@ class ForumPresenter extends BasePresenter {
 
     public function renderAll() {
         $forumSelection = $this->forumRepository->findAll()->order("id DESC");
-        
+
         $visualPaginator = $this->getComponent('visualPaginator');
         $paginator = $visualPaginator->getPaginator();
         $paginator->itemsPerPage = 10;
         $paginator->itemCount = $forumSelection->count();
         $forumSelection->limit($paginator->itemsPerPage, $paginator->offset);
-        
+
         $this->template->forums = $forumSelection;
         $this->template->default = '/images/forum.png';
     }
@@ -48,14 +48,14 @@ class ForumPresenter extends BasePresenter {
 
     protected function createComponentAddMessageForm() {
         $form = new Form;
-        
+
         $form->addText('title', 'Názov novej témy:')
                 ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
                 ->setRequired("Meno je povinné pole.");
-        $form->addText('secretCode', "Napíšte \"sahl + 8 + 3\"")
-                ->setOmitted()
-                ->addRule(Form::EQUAL, 'Vypočítajte kontrolný príklad, prosím.', 'sahl11');
+        $form->addText('url', 'Nevypĺňať, protispamová ochrana')
+                ->setAttribute('class', 'antispam')
+                ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
                 ->setAttribute('id', 'ckeditor');
         $form->addSubmit('add', 'Pridaj novú tému');
@@ -64,7 +64,7 @@ class ForumPresenter extends BasePresenter {
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
-    
+
     protected function createComponentVisualPaginator() {
         $control = new VisualPaginator\Control;
         $control->setTemplateFile('bootstrap.latte');
@@ -80,10 +80,13 @@ class ForumPresenter extends BasePresenter {
     }
 
     public function submittedAddMessageForm(Form $form) {
-        $values = $form->getValues();
-        $values['created_at'] = date('Y-m-d H:i:s');
-        $this->forumRepository->insert($values);
-        $this->redirect('all#nav');
+        if (isset($_POST['url']) && $_POST['url'] == '') {
+            $values = $form->getValues();
+            $values['created_at'] = date('Y-m-d H:i:s');
+            $this->forumRepository->insert($values);
+            $this->redirect('all#nav');
+        }
+        return false;
     }
 
     public function formCancelled() {

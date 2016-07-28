@@ -12,7 +12,7 @@
 <section id="secondary" class="row">
     {foreach $albums as $album}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a n:href="Gallery:view, $album->id">
+            <a n:href="Gallery:view#nav, $album->id">
                 {if $album->name}                
                     <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-thumbnail" />
                 {else}

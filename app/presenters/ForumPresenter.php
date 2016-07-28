@@ -48,14 +48,16 @@ class ForumPresenter extends BasePresenter {
 
     protected function createComponentAddMessageForm() {
         $form = new Form;
-
+        
         $form->addText('title', 'Názov novej témy:')
                 ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
                 ->setRequired("Meno je povinné pole.");
+        $form->addText('secretCode', "Napíšte \"sahl + 8 + 3\"")
+                ->setOmitted()
+                ->addRule(Form::EQUAL, 'Vypočítajte kontrolný príklad, prosím.', 'sahl11');
         $form->addTextArea('message', 'Príspevok:')
-                ->setAttribute('id', 'ckeditor')
-                ->setRequired("Príspevok je povinné pole.");
+                ->setAttribute('id', 'ckeditor');
         $form->addSubmit('add', 'Pridaj novú tému');
 
         $form->onSuccess[] = $this->submittedAddMessageForm;

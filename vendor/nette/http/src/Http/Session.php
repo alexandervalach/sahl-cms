@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Http;
@@ -14,14 +14,6 @@ use Nette;
  * Provides access to session sections as well as session settings and management methods.
  *
  * @author     David Grudl
- *
- * @property-read bool $started
- * @property-read string $id
- * @property   string $name
- * @property-read \ArrayIterator $iterator
- * @property   array $options
- * @property-write $savePath
- * @property-write ISessionStorage $storage
  */
 class Session extends Nette\Object
 {

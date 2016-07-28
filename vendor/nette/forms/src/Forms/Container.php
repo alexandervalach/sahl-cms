@@ -9,7 +9,6 @@ namespace Nette\Forms;
 
 use Nette;
 
-
 /**
  * Container for form controls.
  *

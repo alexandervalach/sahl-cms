@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Http;
@@ -15,10 +15,6 @@ use Nette\Utils\DateTime;
  * HttpResponse class.
  *
  * @author     David Grudl
- *
- * @property   int $code
- * @property-read bool $sent
- * @property-read array $headers
  */
 class Response extends Nette\Object implements IResponse
 {

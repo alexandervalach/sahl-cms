@@ -1,0 +1,18 @@
+{block content}
+
+<section id="rounds">
+    <div class="table-responsive">
+        <table class="table table-condensed">
+            <caption class="caption">
+                <span n:block="title">Kolá</span>
+            </caption>
+            <tbody>
+                {foreach $rounds as $round}
+                    <tr>
+                        <td><a n:href="Fights:all#nav, $round->id">{$round->name}</a></td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+</section>

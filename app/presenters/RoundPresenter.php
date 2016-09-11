@@ -20,7 +20,7 @@ class RoundPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->rounds = $this->roundsRepository->findAll();
+        $this->template->rounds = $this->roundsRepository->findByValue('archive_id', null);
     }
 
     public function actionAdd() {
@@ -55,6 +55,14 @@ class RoundPresenter extends BasePresenter {
         }
         $this->template->round = $this->roundRow;
         $this->getComponent('deleteForm');
+    }
+
+    public function actionArchive($id) {
+
+    }
+
+    public function renderArchive($id) {
+        $this->template->rounds = $this->roundsRepository->findByValue('archive_id', $id);
     }
 
     protected function createComponentAddRoundForm() {

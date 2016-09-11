@@ -21,8 +21,8 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->basic = $this->tablesRepository->findByValue('type', 2)->order('points DESC')->order('score1 - score2 DESC');
-        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->order('points DESC')->order('score1 - score2 DESC');
+        $this->template->basic = $this->tablesRepository->findByValue('type', 2)->where('archive_id', null)->order('points DESC')->order('score1 - score2 DESC');
+        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->where('archive_id', null)->order('points DESC')->order('score1 - score2 DESC');
         $this->template->options = $this->optionsRepository->findByValue('visible', 1);
     }
 
@@ -70,6 +70,17 @@ class TablesPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->getComponent('addToSidebarForm');
+    }
+
+    public function actionArchive($id) {
+
+    }
+
+    public function renderArchive($id) {
+        $this->template->basic = $this->tablesRepository->findByValue('type', 2)->where('archive_id', $id)->order('points DESC')->order('score1 - score2 DESC');
+        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->where('archive_id', $id)->order('points DESC')->order('score1 - score2 DESC');
+        $this->template->options = $this->optionsRepository->findByValue('visible', 1);
+        $this->template->archive = $this->archiveRepository->findById($id);
     }
 
     protected function createComponentAddTableRowForm() {

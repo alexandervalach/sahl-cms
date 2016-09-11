@@ -5,7 +5,7 @@ namespace App\Model;
 class TablesRepository extends Repository {
 
     public function getTableStats($type) {
-        $rows = $this->findByValue('type', $type)->order('points DESC')->order('score1 - score2 DESC');
+        $rows = $this->findByValue('type', $type)->where('archive_id', null)->order('points DESC')->order('score1 - score2 DESC');
         if (!$rows) {
             return null;
         }
@@ -17,7 +17,7 @@ class TablesRepository extends Repository {
     }
 
     public function incrementTableValue($teamId, $type, $columnName, $value) {
-        $tableRow = $this->findAll()->where('team_id', $teamId)->where('type', $type)->fetch();
+        $tableRow = $this->findAll()->where('team_id', $teamId)->where('archive_id', null)->where('type', $type)->fetch();
         if ($tableRow == null) {
             return null;
         }
@@ -27,7 +27,7 @@ class TablesRepository extends Repository {
     }
     
     public function updateFights($teamId, $type) {
-        $tableRow = $this->findAll()->where('team_id', $teamId)->where('type', $type)->fetch();
+        $tableRow = $this->findAll()->where('team_id', $teamId)->where('archive_id', null)->where('type', $type)->fetch();
         if ($tableRow == null) {
             return null;
         }

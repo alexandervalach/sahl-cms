@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "49ced1d6ba2eff6801af997e57bc5d03",
-    "content-hash": "b0d4426a40c441ee79a77c4085dde1ef",
+    "hash": "4883df1b10764f47d214ad663980d5ca",
+    "content-hash": "9d78ce3157b30cb786333fe812acfa6b",
     "packages": [
         {
             "name": "dg/adminer-custom",
@@ -1173,6 +1173,44 @@
             "time": "2015-12-03 01:32:27"
         },
         {
+            "name": "olicek/dropzone-uploader",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Olicek/DropzoneUploader.git",
+                "reference": "9af21bd8942d2af22d52f78f107ad8428b0852e1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Olicek/DropzoneUploader/zipball/9af21bd8942d2af22d52f78f107ad8428b0852e1",
+                "reference": "9af21bd8942d2af22d52f78f107ad8428b0852e1",
+                "shasum": ""
+            },
+            "require": {
+                "nette/nette": ">2.1.0",
+                "php": ">= 5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Petr Olišar",
+                    "homepage": "http://olisar.eu"
+                }
+            ],
+            "description": "Uploader for Nette framework",
+            "homepage": "https://github.com/Olicek/DropzoneUploader",
+            "time": "2016-01-18 08:39:34"
+        },
+        {
             "name": "tracy/tracy",
             "version": "v2.2.9",
             "source": {
@@ -1227,10 +1265,69 @@
             "time": "2015-12-03 00:19:21"
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+        {
+            "name": "nette/tester",
+            "version": "v1.7.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nette/tester.git",
+                "reference": "d97534578e8cf66eabe081e7d5eaa4dd527ab0c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nette/tester/zipball/d97534578e8cf66eabe081e7d5eaa4dd527ab0c8",
+                "reference": "d97534578e8cf66eabe081e7d5eaa4dd527ab0c8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "bin": [
+                "src/tester"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.7-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause",
+                "GPL-2.0",
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "David Grudl",
+                    "homepage": "https://davidgrudl.com"
+                },
+                {
+                    "name": "Nette Community",
+                    "homepage": "https://nette.org/contributors"
+                }
+            ],
+            "description": "An easy-to-use PHP unit testing framework.",
+            "homepage": "https://tester.nette.org",
+            "keywords": [
+                "nette",
+                "testing",
+                "unit"
+            ],
+            "time": "2016-03-19 14:34:02"
+        }
+    ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "olicek/dropzone-uploader": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

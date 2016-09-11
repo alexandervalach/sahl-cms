@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Model\AlbumsRepository;
+use App\Model\ArchiveRepository;
 use App\Model\EventsRepository;
 use App\Model\FightsRepository;
 use App\Model\ForumRepository;
@@ -33,6 +34,9 @@ abstract class BasePresenter extends Presenter {
 
     /** @var AlbumsRepository */
     protected $albumsRepository;
+
+    /** @var ArchiveRepository */
+    protected $archiveRepository;
 
     /** @var EventsRepository */
     protected $eventsRepository;
@@ -92,8 +96,9 @@ abstract class BasePresenter extends Presenter {
     protected $imgFolder = "/images/";
 
     public function __construct(
-    AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, OptionsRepository $optionsRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
+    ArchiveRepository $archiveRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, OptionsRepository $optionsRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
         parent::__construct();
+        $this->archiveRepository = $archiveRepository;
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
         $this->fightsRepository = $fightsRepository;

@@ -28,6 +28,7 @@ nette:
 services:
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
+	- App\Model\ArchiveRepository
 	- App\Model\PostsRepository
 	- App\Model\PlayersRepository
 	- App\Model\TeamsRepository

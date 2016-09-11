@@ -66,6 +66,20 @@ class PlayerPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
+    public function actionArchive($id) {
+        $this->teamRow = $this->teamsRepository->findById($id);
+    }
+
+    public function renderArchive($id) {
+        if (!$this->teamRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->players = $this->playersRepository->findByValue('team_id', $id)->where('NOT type_id', 2);
+        $this->template->goalies = $players = $this->playersRepository->findByValue('team_id', $id)->where('type_id', 2);
+        $this->template->imgFolder = $this->imgFolder;
+        $this->template->team = $this->teamRow;
+    }
+
     protected function createComponentAddPlayerForm() {
         $form = new Form;
         

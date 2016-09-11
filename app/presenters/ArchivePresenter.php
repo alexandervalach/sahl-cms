@@ -40,11 +40,14 @@ class ArchivePresenter extends BasePresenter {
 	}
 
 	public function actionView($id) {
-	
+		$this->archiveRow = $this->archiveRepository->findById($id);
 	}
 
 	public function renderView($id) {
-
+		if(!$this->archiveRow) {
+			throw new BadRequestException($this->error);
+		}
+		$this->template->archive = $this->archiveRow;
 	}
 
 	protected function createComponentAddForm() {

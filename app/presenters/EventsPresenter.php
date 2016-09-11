@@ -24,6 +24,7 @@ class EventsPresenter extends BasePresenter {
         /** Nette\Database\Table\Selection */
         $eventSelection = $this->eventsRepository->findByValue('archive_id', null);
 
+
         $visualPaginator = $this->getComponent('visualPaginator');
         $paginator = $visualPaginator->getPaginator();
         $paginator->itemsPerPage = 5;
@@ -72,7 +73,6 @@ class EventsPresenter extends BasePresenter {
 
     public function renderArchive($id) {
         $this->template->events = $this->eventsRepository->findByValue('archive_id', $id);
-        $this->template->archive = $this->archiveRepository->findById($id);
     }
 
     protected function createComponentAddEventForm() {

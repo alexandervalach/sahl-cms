@@ -1,0 +1,30 @@
+{block content}
+
+<div class="row">
+    <h1>{$archive->title}</h1>
+
+    <div class='table-responsive'>
+        <table class='table table-striped table-condensed'>
+            <caption class='caption' n:block="title">Tímy</caption>
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Názov</th>
+                </tr>
+            </thead>
+            {foreach $teams as $team}
+                <tbody>
+                    <tr>
+                        <td>
+                            {$iterator->counter}.
+                        </td>
+                        <td>
+                            <a n:href='Player:archive#nav, $team->id'>{$team->name}</a>
+                        </td>
+                    </tr>
+                </tbody>
+            {/foreach}
+        </table>
+    </div>
+</div>
+{/block}

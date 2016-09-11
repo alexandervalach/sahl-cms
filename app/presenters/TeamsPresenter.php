@@ -54,9 +54,7 @@ class TeamsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        /** $team is instance of Nette\Database\Table\Selection */
-        $team = $this->teamsRepository->findAll()->order("name ASC");
-        $this->template->teams = $team;
+        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC");
     }
 
     public function actionUpload($id) {
@@ -67,6 +65,14 @@ class TeamsPresenter extends BasePresenter {
     public function renderUpload($id) {
         $this->template->team = $this->teamRow;
         $this->getComponent('uploadForm');
+    }
+
+    public function actionArchive($id) {
+    }
+
+    public function renderArchive($id) {
+        $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
+        $this->template->archive = $this->archiveRepository->findById($id);
     }
 
     protected function createComponentUploadForm() {

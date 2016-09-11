@@ -1,0 +1,13 @@
+{block content}
+
+<h1 n:block="title">{$archive->title} - Rozpis zápasov</h1>
+
+<section id="events">
+    {foreach $events as $event}
+        <article>
+            <main>
+                {$event->event|noescape}
+            </main>
+        </article>
+    {/foreach}
+</section>

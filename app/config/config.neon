@@ -28,26 +28,26 @@ nette:
 services:
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
-	- App\Model\ArchiveRepository
-	- App\Model\PostsRepository
-	- App\Model\PlayersRepository
-	- App\Model\TeamsRepository
-	- App\Model\EventsRepository
-	- App\Model\UsersRepository
-	- App\Model\FightsRepository
-	- App\Model\ForumRepository
-	- App\Model\LinksRepository
-	- App\Model\PostImageRepository
-	- App\Model\RulesRepository
-	- App\Model\TablesRepository
-	- App\Model\GalleryRepository
 	- App\Model\AlbumsRepository
-	- App\Model\RoundsRepository
-	- App\Model\PunishmentsRepository
+	- App\Model\ArchiveRepository
+	- App\Model\EventsRepository
+	- App\Model\ForumRepository
+	- App\Model\FightsRepository
+	- App\Model\GalleryRepository
 	- App\Model\GoalsRepository
-	- App\Model\ReplyRepository
+	- App\Model\LinksRepository
 	- App\Model\OptionsRepository
 	- App\Model\PlayerTypesRepository
+	- App\Model\PlayersRepository
+	- App\Model\PostImageRepository
+	- App\Model\PostsRepository
+	- App\Model\PunishmentsRepository
+	- App\Model\ReplyRepository
+	- App\Model\RoundsRepository
+	- App\Model\RulesRepository
+	- App\Model\TablesRepository
+	- App\Model\TeamsRepository
+	- App\Model\UsersRepository
 
 extensions:
 	visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension

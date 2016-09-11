@@ -156,18 +156,19 @@ div#page > div#main > div#primary.row > aside.container > div.panel.panel-primar
 section#punishments > article,
 section#rules > article,
 section#events > article,
-section#fights > article{
+section#fights > article {
     margin: 15px auto;
 }
 
 section#punishments > article *,
 section#rules > article *,
-section#fights > article *{
+section#fights > article *,
+section#archive table a {
     text-decoration: none;
 } 
 
 section#events > article,
-section#fights > article{
+section#fights > article {
     background: rgba(173,216,230,0.5);
     padding: 10px;
     border-radius: 4px;

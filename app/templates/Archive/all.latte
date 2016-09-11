@@ -1,0 +1,34 @@
+{block content}
+
+<h1 n:block="title">Archív</h1>
+
+<section id="archive">
+	<p n:if="$user->loggedIn">
+	    <a n:href="create#nav" class='btn btn-large btn-primary'>
+	        <span class="glyphicon glyphicon-plus"></span>
+	        Pridať
+	    </a>
+	</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <caption class="caption">Minulé sezóny</caption>
+            <tbody>
+                {foreach $archive as $arch}
+                    <tr>
+                        <td>
+                            <a n:href="view#nav, $arch->id" class="text-primary" title="Prejsť na položku">
+                            	{$arch->title}
+                            </a>
+                        </td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="edit#nav, $arch->id" class="text-success text-center" title="Upraviť">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+</section>

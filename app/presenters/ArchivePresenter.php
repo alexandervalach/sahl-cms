@@ -5,10 +5,11 @@ namespace App\Presenters;
 use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
 
 class ArchivePresenter extends BasePresenter {
 
-	/** @var ArchivePresenter */
+	/** @var ActiveRow */
 	private $archiveRow;
 
 	/** @var string */
@@ -48,6 +49,14 @@ class ArchivePresenter extends BasePresenter {
 			throw new BadRequestException($this->error);
 		}
 		$this->template->archive = $this->archiveRow;
+	}
+
+	public function actionDetauls($id) {
+
+	}
+
+	public function renderDetails($id) {
+
 	}
 
 	protected function createComponentAddForm() {

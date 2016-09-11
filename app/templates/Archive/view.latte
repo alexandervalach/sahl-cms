@@ -1,0 +1,47 @@
+{block content}
+
+<h1 n:block="title">{$archive->title}</h1>
+
+<section id="archive">
+	<p>
+        <a n:href="all#nav" class='btn btn-default'>
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            Archív
+        </a>
+	</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <caption class="caption">Záznamy</caption>
+            <tbody>
+                <tr>
+                    <td>
+                        <a n:href="Tables:archive#nav, $archive->id">Tabuľky</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Výsledky</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a n:href="Teams:archive#nav, $archive->id">Tímy</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Štatistiky</td>
+                </tr>
+                <tr>
+                    <td>
+                        <a n:href="Events:archive#nav, $archive->id">Zápasy</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pravidlá a smernice</td>
+                </tr>
+                <tr>
+                    <td>Tresty hráčov</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>

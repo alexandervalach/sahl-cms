@@ -20,7 +20,7 @@ class RulesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->rules = $this->rulesRepository->findAll();
+        $this->template->rules = $this->rulesRepository->findByValue('archive_id', null);
     }
 
     public function actionAdd() {
@@ -54,6 +54,15 @@ class RulesPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->getComponent('editRuleForm')->setDefaults($this->ruleRow);
+    }
+
+    public function actionArchive($id) {
+
+    }
+
+    public function renderArchive($id) {
+        $this->template->rules = $this->rulesRepository->findByValue('archive_id', $id);
+        $this->template->archive = $this->archiveRepository->findById($id);
     }
 
     protected function createComponentAddRuleForm() {

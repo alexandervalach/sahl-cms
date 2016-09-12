@@ -1,0 +1,17 @@
+{block content}
+
+<h3 n:block="title">Pravidlá a smernice</h3>
+
+<p n:if="$user->loggedIn">
+    <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
+        <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
+    </a>
+</p>
+
+<section id="rules">
+    <article n:foreach="$rules as $rule">
+        <main>
+            {$rule->rule|noescape}
+        </main>
+    </article>
+</section>

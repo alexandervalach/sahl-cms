@@ -3,6 +3,11 @@
 <h1 n:block="title">Rozpis zápasov</h1>
 
 <section id="events">
+	 <p>
+        <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
+            <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
+        </a>
+    </p>
     {foreach $events as $event}
         <article>
             <main>

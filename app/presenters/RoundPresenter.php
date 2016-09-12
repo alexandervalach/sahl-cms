@@ -63,6 +63,7 @@ class RoundPresenter extends BasePresenter {
 
     public function renderArchive($id) {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', $id);
+        $this->template->archive = $this->archiveRepository->findById($id);
     }
 
     protected function createComponentAddRoundForm() {

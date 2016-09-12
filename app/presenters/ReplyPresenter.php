@@ -50,10 +50,11 @@ class ReplyPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('author', 'Meno')
-                ->setRequired("Meno je povinné pole")
-                ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
+             ->setRequired("Meno je povinné pole")
+             ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
         $form->addTextArea('text', 'Text')
-                ->setAttribute('id', 'ckeditor');
+             ->setAttribute('class', 'form-control')
+             ->setAttribute('rows', '8');
         $form->addSubmit('add', 'Pridaj');
         $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);

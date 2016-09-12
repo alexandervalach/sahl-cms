@@ -50,14 +50,15 @@ class ForumPresenter extends BasePresenter {
         $form = new Form;
 
         $form->addText('title', 'Názov novej témy:')
-                ->addRule(Form::FILLED, 'Názov je povinné pole.');
+             ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
-                ->setRequired("Meno je povinné pole.");
+             ->setRequired("Meno je povinné pole.");
         $form->addText('url', 'Nevypĺňať, protispamová ochrana')
-                ->setAttribute('class', 'antispam')
-                ->setOmitted();
+             ->setAttribute('class', 'antispam')
+             ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
-                ->setAttribute('id', 'ckeditor');
+             ->setAttribute('class', 'form-control')
+             ->setAttribute('rows', '8');
         $form->addSubmit('add', 'Pridaj novú tému');
 
         $form->onSuccess[] = $this->submittedAddMessageForm;

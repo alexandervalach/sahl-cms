@@ -16,7 +16,7 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->punishments = $this->punishmentsRepository->findAll();
+        $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', null);
     }
 
     public function actionAdd() {
@@ -45,6 +45,15 @@ class PunishmentsPresenter extends BasePresenter {
     public function renderDelete($id) {
         $this->template->punishment = $this->punishmentRow;
         $this->getComponent('deleteForm');
+    }
+
+    public function actionArchive($id) {
+
+    }
+
+    public function renderArchive($id) {
+        $this->template->archive = $this->archiveRepository->findById($id);
+        $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', $id);
     }
 
     protected function createComponentEditPunishmentForm() {

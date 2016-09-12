@@ -1,6 +1,6 @@
 {block content}
 
-<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+<section id="stats" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <h1 n:block="title">Štatistiky</h1>
     <p>
         <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
@@ -32,3 +32,15 @@
         </table>
     </div>
 </section>
+
+{/block}
+
+{block scripts}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/data-tables/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#stats .table').DataTable();
+        } );
+    </script>
+{/block}

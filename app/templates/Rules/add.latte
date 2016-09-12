@@ -1,15 +1,23 @@
 {block content}
 
-<h3 n:block="title">Pridaj pravidlo</h3>
+<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<h3 n:block="title">Pridaj pravidlo</h3>
+	<p>
+	    <a n:href="all" class="btn btn-large btn-default">
+	        <span class="glyphicon glyphicon-arrow-left"></span> Pravidlá
+	    </a>
+	</p>
+	<div class="alert alert-info">
+	    <strong>Pri kopírovaní textu z inej stránky, použi skratku Ctrl+Shift+V na prilepenie.</strong>
+	</div>
+	{control addRuleForm}
+</section>
 
-<p>
-    <a n:href="all" class="btn btn-large btn-default">
-        <span class="glyphicon glyphicon-arrow-left"></span> Pravidlá
-    </a>
-</p>
+{/block}
 
-<div class="alert alert-info">
-    <strong>Pri kopírovaní textu z inej stránky, použi skratku Ctrl+Shift+V na prilepenie.</strong>
-</div>
-
-{control addRuleForm}
+{block scripts}
+	<script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript">
+        CKEDITOR.replace('ckeditor');
+    </script>
+{/block}

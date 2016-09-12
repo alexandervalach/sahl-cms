@@ -1,8 +1,10 @@
 {block content}
 
+
+<h1 n:block="title">Štatistiky</h1>
+
 <div class='table-responsive' id="stats">
     <table class='table table-striped'>
-        <caption class='caption' n:block="title">Štatistiky</caption>
         <thead>
             <tr>
                 <th>&nbsp;</th>
@@ -36,4 +38,14 @@
         </tbody>
     </table>
 </div>
+{/block}
+
+{block scripts}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/data-tables/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#stats .table').DataTable();
+        } );
+    </script>
 {/block}

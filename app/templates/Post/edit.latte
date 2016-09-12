@@ -1,11 +1,21 @@
 {block content}
 
-<h1>Upraviť príspevok</h1>
-<p>
-    <a n:href="Post:show#nav, $post" class='btn btn-large btn-default'>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        Príspevok
-    </a>
-</p>
+<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+	<h1>Upraviť príspevok</h1>
+	<p>
+	    <a n:href="Post:show#nav, $post" class='btn btn-large btn-default'>
+	        <span class="glyphicon glyphicon-arrow-left"></span>
+	        Príspevok
+	    </a>
+	</p>
+	{control editPostForm}
+</section>
 
-{control editPostForm}
+{/block}
+
+{block scripts}
+	<script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+	<script type="text/javascript">
+        CKEDITOR.replace('ckeditor');
+    </script>
+{/block}

@@ -8,20 +8,25 @@
 html, body {
     width: 100%;
     height: 100%;
-    font-family: Comfortaa, sans-serif;
+    font-family: 'Helvetica neue', sans-serif;
     position: relative;
     background: url('layout/ice-lg.jpg');
 }
 
-#nav {
-    background : url('layout/navd.gif');
-    color : white;
-    margin: 0 auto;
+#page #nav ul.nav.navbar-nav > li > a {
+    background : #FF8C00;
+    color : #000000;
+}
+
+#page #nav ul.nav.navbar-nav > li > a:hover,
+#page #nav ul.nav.navbar-nav > li > a:focus {
+    background : #9ACD32;
+    color : #000000;
 }
 
 #main {
     position: relative;
-    background-color: rgba(255,255,255,0.7);
+    background-color: rgba(255,255,255,0.8);
 }
 
 #header {
@@ -45,8 +50,9 @@ html, body {
 }
 
 #footer {
-    background : black;
-    color : white;
+    background : #FF8C00;
+    color : #000000;
+    font-weight: bold;
 }
 
 .container {
@@ -133,6 +139,13 @@ div#slider p:nth-child(n+4):focus, div#slider p:nth-child(n+4):hover { backgroun
 /* ===============ASIDE WIDGETS LAYOUT=================*/
 div#page > div#main > div#primary.row > aside.container > div.panel.panel-primary{
     margin-top: 15px;
+}
+
+
+#nav ul.dropdown-menu > li > a:hover,
+#nav ul.dropdown-menu > li > a:focus{
+    background: rgba(108, 144, 35, 0.9);
+    color: #000000;
 }
 /*===================FILE UPLOAD BUTTON=================*/
 
@@ -227,93 +240,6 @@ section#facebook > figure {
 .form-group > label[for=frm-addMessageForm-url],
 .form-group > input#frm-addMessageForm-url {
     display: none;
-}
-
-/************* Drag and drop uploadings *************/
-/*
-.box__input {
-    font-weight: bold;
-}
-
-.box__file{
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-}
-
-.box__file + label {
-    text-align: center;
-    font-size: 1.25em;
-    font-weight: 700;
-    color: #357ebd;
-    display: inline-block;
-}
-
-.box__file:focus + label,
-.box__file + label:hover {
-    color: #3071a9;
-}
-
-.box__file + label {
-    cursor: pointer;
-}
-
-.box__file + label * {
-    pointer-events: none;
-}
-
-.box__file:focus + label {
-    outline: 1px dotted #3071a9;
-    outline: -webkit-focus-ring-color auto 5px;
-}
-
-.box__uploading,
-.box__dragndrop,
-.box__success,
-.box__error {
-    display: none;
-}
-
-.box.has-advanced-upload {
-    background-color: #fff;
-    outline: 2px dashed #357ebd;
-    outline-offset: -10px;
-    min-height: 300px;
-    text-align: center;
-}
-
-.box.has-advanced-upload .box__dragndrop {
-    display: inline;
-}
-
-.box.is-dragover {
-    background-color: rgba(173,216,230,0.5);
-}
-
-.box.is-uploading .box__input{
-    visibility: none;
-}
-
-.box.is-uploading .box__uploading {
-    display: block;
-}
-*/
-.dropzone{
-    width: 100%;
-    height: 300px;
-    border: 2px dashed #357ebd;
-    color: #357ebd;
-    line-height: 300px;
-    text-align: center;
-}
-
-.dropzone.dragover {
-    background: rgba(173,216,230,0.5);
-    border-color: #3071a9;
-    color: #3071a9;
 }
 
 /* Large devices (large desktops, 1200px and up) */
@@ -565,6 +491,10 @@ section#facebook > figure {
         width: 100%;
     }
 
+    #page nav > div.navbar-header {
+        background : #FF8C00;
+    }
+
     /*=====================NAVIGATION BAR=======-==========*/
     div#nav .navbar.container * {
         font-weight: bold;
@@ -577,18 +507,11 @@ section#facebook > figure {
         text-align: center;
         vertical-align: middle;
         z-index: 1001;
-    }	
-
-    div#nav .navbar.container .navbar-nav > li > a:focus, 
-    div#nav .navbar.container .navbar-nav > li > a:hover
-    {
-        color: white;
-        background: green;
     }
 
-    #nav ul.dropdown-menu > li > a {
-        background: rgb(68, 157, 68);
-        color: white;
+    #page #nav ul.dropdown-menu > li > a {
+        background: rgba(154, 205, 50, 0.9);
+        color: #000000;
         padding:0;
         margin:0;
         width: 100%;
@@ -598,26 +521,17 @@ section#facebook > figure {
         z-index: 1001;
     }	
 
-    #nav ul.dropdown-menu > li > a:hover,
-    #nav ul.dropdown-menu > li > a:focus {
-        background: #FFD700;
-        color: black;
-    }
-
     ul.dropdown-menu {
         z-index: 1001;
     }
 
     button.navbar-toggle.btn {
-        color: black;
-        border: none; 
+        border: 1px solid rgb(205, 112, 0); 
     }
 
     button.navbar-toggle.btn:hover,
     button.navbar-toggle.btn:focus{
-        color: white;
-        background: gold;
-        border: none;
+        background: rgb(230, 126, 0);
     }
 
     .dropdown-menu {
@@ -938,15 +852,6 @@ footer.container {
         margin: 0;
     }
 
-    #nav .navbar-nav > li > a:hover, 
-    #nav .navbar-nav > li >a:focus {
-        color: white;
-        background: url('layout/nav-hover-b.gif') repeat-x top left;
-        box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
-        -webkit-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
-        -moz-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
-    }
-
     #nav ul.nav.navbar-nav > li > a {
         height: 50px;
         padding: 0;
@@ -962,29 +867,21 @@ footer.container {
         margin: 0;
     }
 
-    #nav ul.dropdown-menu{
-        margin-top: -6px;
-        background: none;
+    #nav ul.dropdown-menu {
+        margin-top: 0;
         border: 0;
+        background: rgba(154, 205, 50, 0.9);
     }
 
     #nav ul.dropdown-menu > li > a{
-        background: rgb(68, 157, 68);
-        color: white;
+        background: rgba(154, 205, 50, 0.8);
+        color: #000000;
         padding:0;
         margin:0;
         width: 200px;
         line-height: 40px;
         height: 40px;
         text-align: center;
-    }
-
-    #nav ul.dropdown-menu > li > a:hover{
-        background: #FFD700;
-        color: black;
-        box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
-        -webkit-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
-        -moz-box-shadow: inset 0 20px 20px -20px rgba(0,0,0,0.8);
     }
 }
 

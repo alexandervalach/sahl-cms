@@ -1,0 +1,34 @@
+{block content}
+
+<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <h1 n:block="title">Štatistiky</h1>
+    <p>
+        <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
+            <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
+        </a>
+    </p>
+    <div class='table-responsive'>
+        <table class='table table-striped'>
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Meno a priezvisko</th>
+                    <th>Číslo</th>
+                    <th>Tím</th>
+                    <th>Góly</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $stats as $stat}
+                    <tr>
+                        <td>{$iterator->counter}.</td>
+                        <td>{$stat->lname}</td>
+                        <td>{$stat->num}</td>
+                        <td>{$stat->ref('team_id')->name}</td>
+                        <td>{$stat->goals}</td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+</section>

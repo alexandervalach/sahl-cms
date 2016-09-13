@@ -232,8 +232,8 @@ section#post > article > main {
     overflow-x: hidden;
 }
 
-section#facebook > figure {
-    width: 50%;
+section#facebook > div {
+    width: 100%;
     margin: 0 auto;
 }
 

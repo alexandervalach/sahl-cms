@@ -121,26 +121,25 @@ abstract class BasePresenter extends Presenter {
     }
 
     public function beforeRender() {
+        $sponsors = $this->linksRepository->getSponsors();
         $this->template->sideRound = $this->roundsRepository->getLatestRound();
         $this->template->sideFights = $this->roundsRepository->getLatestRoundFights();
         $this->template->baseTable = $this->tablesRepository->getTableStats(2);
         $this->template->playOff = $this->tablesRepository->getTableStats(1);
         $this->template->options = $this->optionsRepository->findByValue('visible', 1);
-        $this->template->sponsors = $this->linksRepository->getSponsors();
+        $this->template->sponsorsCount = $sponsors->count();
+        $this->template->sponsors = $sponsors;
         $this->template->imgFolder = $this->imgFolder;
     }
 
     protected function createComponentDeleteForm() {
         $form = new Form;
-
         $form->addSubmit('cancel', 'Zruš')
-                        ->setAttribute('class', 'btn btn-warning btn-large')
-                ->onClick[] = $this->formCancelled;
-
+             ->setAttribute('class', 'btn btn-warning btn-large')
+             ->onClick[] = $this->formCancelled;
         $form->addSubmit('delete', 'Zmaž')
-                        ->setAttribute('class', 'btn btn-danger btn-large')
-                ->onClick[] = $this->submittedDeleteForm;
-
+             ->setAttribute('class', 'btn btn-danger btn-large')
+             ->onClick[] = $this->submittedDeleteForm;
         $form->addProtection();
         return $form;
     }
@@ -148,13 +147,10 @@ abstract class BasePresenter extends Presenter {
     protected function createComponentSignInForm() {
         $form = new Form;
         $form->addText('username', 'Užívateľské meno:')
-                ->setRequired('Zadaj, prosím, užívateľské meno.');
-
+             ->setRequired('Zadaj, prosím, užívateľské meno.');
         $form->addPassword('password', 'Heslo:')
-                ->setRequired('Zadaj, prosím, heslo.');
-
+             ->setRequired('Zadaj, prosím, heslo.');
         $form->addSubmit('send', 'Prihlásiť');
-
         $form->onSuccess[] = $this->submittedSignInForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -165,7 +161,7 @@ abstract class BasePresenter extends Presenter {
 
         try {
             $this->getUser()->login($values->username, $values->password);
-            $this->redirect('Homepage:#nav');
+            $this->redirect('Homepage:default#nav');
         } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');
         }

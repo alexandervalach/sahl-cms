@@ -69,7 +69,7 @@ class LinksPresenter extends BasePresenter {
         $form->addText('anchor', 'URL adresa:')
                 ->setRequired("URL adresa je povinné pole.");
         $form->addUpload('image', 'Obrázok:');
-        $form->addCheckbox('sponsor', 'Sponzor');
+        $form->addCheckbox('sponsor', ' Sponzor');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddLinkForm;

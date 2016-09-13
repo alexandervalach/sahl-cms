@@ -57,8 +57,7 @@ class ForumPresenter extends BasePresenter {
              ->setAttribute('class', 'antispam')
              ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
-             ->setAttribute('class', 'form-control')
-             ->setAttribute('rows', '8');
+             ->setAttribute('id', 'ckeditor');
         $form->addSubmit('add', 'Pridaj novú tému');
 
         $form->onSuccess[] = $this->submittedAddMessageForm;

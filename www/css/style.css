@@ -3,12 +3,12 @@
     box-sizing : border-box;
     margin: 0;
     padding: 0;
+    font-family: 'Helvetica neue', sans-serif;
 }
 
 html, body {
     width: 100%;
     height: 100%;
-    font-family: 'Helvetica neue', sans-serif;
     position: relative;
     background: url('layout/ice-lg.jpg');
 }
@@ -203,8 +203,8 @@ section#terciary > figure{
 }
 
 .table-responsive > table.table {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 section#rounds > ul > li > a{
@@ -754,15 +754,15 @@ main.container{
 aside.container h3{
     text-align: left;
     font-size: 1.7em;
-    font-family: "Times New Roman", Georgia, Serif;
     color: navy;
     display: block;
     clear: both;
     background-color: rgba(173,216,230,0.5);
-    padding: 10px;
+    padding: 13px;
     font-weight: bold;
     margin: 0 0 10px 0;
     text-align: center;
+    margin-top: 15px;
 }
 
 #main main.container > h1{
@@ -777,7 +777,6 @@ aside.container h3{
 #main main.container h2{
     text-align: left;
     font-size: 1.5em;
-    font-family: Verdana, sans-serif;
     color: #FF8C00;
     display: block;
     clear: both;
@@ -892,15 +891,11 @@ footer.container {
     font-size:1.2em;
     line-height:2em;
     font-weight: bold;
+    text-align: center;
 }
 
 div#main > main.container > table{
     margin: 30px 0;
-}
-
-aside.container > .table-responsive {
-    margin-top: 15px;
-    margin-bottom: 10px;
 }
 
 /*===================ORDERED AND UNORDERED LIST======================*/
@@ -1048,4 +1043,13 @@ aside > div > table#baseTable > tbody > tr:nth-child(1){
 main > div > div.table-responsive > table > tbody > tr:nth-child(8),
 aside > div > table > tbody > tr:nth-child(8){
     border-bottom: 5px solid #A94442;
+}
+
+article.post > main > div {
+    margin-bottom: 25px;
+}
+
+ul.pagination {
+    clear: both;
+    float: left;
 }

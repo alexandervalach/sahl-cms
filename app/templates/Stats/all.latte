@@ -21,9 +21,14 @@
                 </tr>
             </thead>
             <tbody>
+                {var $i = 0}
+                {var $j = 0}
+                {var $previous = i}
+                {var current = i}
                 {foreach $stats as $stat}
+                    {var $current = $stat->goals}
                     <tr>
-                        <td>{$iterator->counter}.</td>
+                        <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
                         <td>{$stat->lname}</td>
                         <td>{$stat->num}</td>
                         <td>{$stat->ref('team_id')->name}</td>
@@ -39,6 +44,7 @@
                             </a>
                         </td>
                     </tr>
+                    {var $previous = $stat->goals}
                 {/foreach}
             </tbody>
         </table>

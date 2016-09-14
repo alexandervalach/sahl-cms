@@ -2,11 +2,7 @@
 
 <h1 n:block="title">Odstráň tím</h1>
 
-{if $team}
-    <p class='delete text-warning'>
-        Naozaj chceš zmazať tím <mark>{$team->name}</mark>?
-    </p>
-    {control deleteForm}
-{else}
-    <p class='error text-danger'>Záznam nebol nájdený.</p>
-{/if}
+<p class='delete text-warning'>
+    Naozaj chceš odstrániť tím <span class="text-uppercase">{$team->name}</span>?
+</p>
+{control deleteForm}

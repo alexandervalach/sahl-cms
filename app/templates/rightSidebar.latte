@@ -1,9 +1,10 @@
 <aside class='container col-lg-3 col-md-3 hidden-sm hidden-xs'>
     <div class='login'>
-        <h3>Prihlásenie</h3>
         {if !$user->loggedIn}
+            <h3>Prihlásenie</h3>
             {control signInForm}
         {else}
+            <h3>Odhlásenie</h3>
             <a n:href='Sign:out' class='btn btn-large btn-primary'>
                 <span class='glyphicon glyphicon-log-out'></span> Odhlásiť
             </a>

@@ -11,7 +11,7 @@ use Nette\Utils\Strings;
  */
 abstract class Repository extends Nette\Object {
     /** @var Nette\Database\Context */
-    private $database;
+    protected $database;
 
     /** @var string */
     protected $tableName;

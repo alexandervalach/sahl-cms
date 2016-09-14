@@ -19,5 +19,4 @@ class PlayersRepository extends Repository {
         }
         return $list;
     }
-
 }

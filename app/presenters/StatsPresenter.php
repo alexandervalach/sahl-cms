@@ -15,11 +15,11 @@ class StatsPresenter extends BasePresenter {
         $this->template->stats = $this->playersRepository->findByValue('archive_id', null)->where('lname != ?', ' ')->order('goals DESC, lname DESC');
     }
 
-    public function actionArchive($id) {
+    public function actionArchView($id) {
 
     }
 
-    public function renderArchive($id) {
+    public function renderArchView($id) {
     	$this->template->stats = $this->playersRepository->findByValue('archive_id', $id)->where('lname != ?', ' ')->order('goals DESC, lname DESC');
     	$this->template->archive = $this->archiveRepository->findById($id);
     }

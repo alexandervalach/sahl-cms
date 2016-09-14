@@ -72,11 +72,11 @@ class TablesPresenter extends BasePresenter {
         $this->getComponent('addToSidebarForm');
     }
 
-    public function actionArchive($id) {
+    public function actionArchView($id) {
 
     }
 
-    public function renderArchive($id) {
+    public function renderArchView($id) {
         $this->template->basic = $this->tablesRepository->findByValue('type', 2)->where('archive_id', $id)->order('points DESC')->order('score1 - score2 DESC');
         $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->where('archive_id', $id)->order('points DESC')->order('score1 - score2 DESC');
         $this->template->options = $this->optionsRepository->findByValue('visible', 1);

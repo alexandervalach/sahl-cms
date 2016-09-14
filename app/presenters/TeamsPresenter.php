@@ -67,10 +67,10 @@ class TeamsPresenter extends BasePresenter {
         $this->getComponent('uploadForm');
     }
 
-    public function actionArchive($id) {
+    public function actionArchView($id) {
     }
 
-    public function renderArchive($id) {
+    public function renderArchView($id) {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archiveRepository->findById($id);
     }

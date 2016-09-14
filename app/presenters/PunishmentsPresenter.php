@@ -47,11 +47,11 @@ class PunishmentsPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
-    public function actionArchive($id) {
+    public function actionArchView($id) {
 
     }
 
-    public function renderArchive($id) {
+    public function renderArchView($id) {
         $this->template->archive = $this->archiveRepository->findById($id);
         $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', $id);
     }

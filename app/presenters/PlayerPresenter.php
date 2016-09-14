@@ -66,11 +66,11 @@ class PlayerPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
-    public function actionArchive($id) {
+    public function actionArchView($id) {
         $this->teamRow = $this->teamsRepository->findById($id);
     }
 
-    public function renderArchive($id) {
+    public function renderArchView($id) {
         if (!$this->teamRow) {
             throw new BadRequestException($this->error);
         }

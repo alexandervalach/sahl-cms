@@ -67,11 +67,11 @@ class EventsPresenter extends BasePresenter {
         $this->getComponent('addEventForm');
     }
 
-    public function actionArchive($id) {
+    public function actionArchView($id) {
         
     }
 
-    public function renderArchive($id) {
+    public function renderArchView($id) {
         $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
         $this->template->archive = $this->archiveRepository->findById($id);
     }

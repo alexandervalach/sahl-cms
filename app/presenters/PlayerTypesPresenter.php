@@ -86,12 +86,12 @@ class PlayerTypesPresenter extends BasePresenter {
 
     protected function createComponentRemoveForm() {
         $form = new Form;
-        $form->addSubmit('save', 'Zmaž')
-                        ->setAttribute('class', 'btn btn-danger')
-                ->onClick[] = $this->submittedRemoveForm;
+        $form->addSubmit('save', 'Odstrániť')
+             ->setAttribute('class', 'btn btn-danger')
+             ->onClick[] = $this->submittedRemoveForm;
         $form->addSubmit('cancel', 'Zrušiť')
-                        ->setAttribute('class', 'btn btn-warning')
-                ->onClick[] = $this->formCancelled;
+             ->setAttribute('class', 'btn btn-warning')
+             ->onClick[] = $this->formCancelled;
         return $form;
     }
 

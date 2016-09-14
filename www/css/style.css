@@ -626,9 +626,8 @@ section#facebook > div {
     }
 }
 
-/*===============TABLES===============*/
-
-/**	Responsive mobile view design for image slider on front page
+/**	
+  * Responsive mobile view design for image slider on front page
   *	Image shrinks when display changes, 
   * Every 100px I change the height of element to look it much better
   *	THE SMALLEST SCREEN, especially James Bond has even smaller, but I don't care now.
@@ -929,7 +928,7 @@ ul {
 
 .delete {
     background: #FFE4B2;
-    border: 1px solid #D58512;
+    border-radius: 5px;
     padding: 15px;
 }
 

@@ -2,11 +2,7 @@
 
 <h1 n:block="title">Zmaž príspevok</h1>
 
-{if $post}
-    <p class='delete text-warning'>
-        Naozaj chceš zmazať príspevok <mark>{$post->title}</mark>?
-    </p>
-    {control deleteForm}
-{else}
-    <p class='text-danger'>Nemôžem nájsť príspevok.</p>
-{/if}
+<p class='delete text-warning'>
+    Naozaj chceš zmazať príspevok <span class="text-uppercase">{$post->title}</span>?
+</p>
+{control deleteForm}

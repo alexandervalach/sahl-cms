@@ -1,13 +1,9 @@
 {block content}
 
 <p>
-    <a n:href="Round:all#nav" class='btn btn-default'>
+    <a n:href="Round:archView#nav, $archive->id" class='btn btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Kolá
-    </a>
-    <a n:href="add#nav, $round->id" class='btn btn-primary' n:if="$user->loggedIn">
-        <span class="glyphicon glyphicon-plus"></span>
-        Pridať zápas
     </a>
 </p>
 

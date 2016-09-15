@@ -6,7 +6,6 @@
             <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
         </a>
     </p>
-
     <div class="table-responsive">
         <table class="table table-condensed">
             <caption class="caption">
@@ -15,7 +14,9 @@
             <tbody>
                 {foreach $rounds as $round}
                     <tr>
-                        <td><a n:href="Fights:archView#nav, $round->id">{$round->name}</a></td>
+                        <td>
+                            <a n:href="Fights:archView#nav, $archive->id, $round->id">{$round->name}</a>
+                        </td>
                     </tr>
                 {/foreach}
             </tbody>

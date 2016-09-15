@@ -24,16 +24,10 @@ class FightsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $team2;
 
-    /**
-     * Metóda nájde kolo, podľa vstupného parametra
-     */
     public function actionAll($id) {
         $this->roundRow = $this->roundsRepository->findById($id);
     }
 
-    /**
-     * 
-     */
     public function renderAll($id) {
         if (!$this->roundRow) {
             throw new BadRequestException("Round not found.");
@@ -78,6 +72,19 @@ class FightsPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->template->fight = $this->fightRow;
+    }
+
+    public function actionArchView($id, $param) {
+        $this->roundRow = $this->roundsRepository->findById($param);
+    }
+
+    public function renderArchView($id, $param) {
+        if (!$this->roundRow) {
+            throw new BadRequestException($this->error);
+        }
+        $this->template->fights = $this->fightsRepository->findByValue('round_id', $param)->where('archive_id', $id);
+        $this->template->round = $this->roundRow;
+        $this->template->archive = $this->roundRow->ref('archive', 'archive_id');
     }
 
     public function actionEditThird($id) {

@@ -1,8 +1,8 @@
 {block content}
 
-<h1 n:block="title">Tresty hráčov</h1>
-
 <section id="punishments">
+    <h1 n:block="title">Tresty hráčov</h1>
+    
     <p>
         <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
             <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
@@ -10,36 +10,31 @@
     </p>
 
     {foreach $punishments as $punishment}
-        {var $player = $punishment->ref('players', 'player_id')}
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                        <span class="text-muted">Meno a priezvisko</span>
-                    </td>
-                    <td class="col-xs-7 col-sm-8 col-md-7 col-lg-7">{$player->lname}</td>
-                </tr>
-                <tr>
-                    <td><span class="text-muted">Číslo</span></td>
-                    <td>{$player->num}</td>
-                </tr>
-                <tr>
-                    <td><span class="text-muted">Tím</span></td>
-                    <td>{$player->ref('teams', 'team_id')->name}</td>
-                </tr>
-                <tr>
-                    <td><span class="text-muted">Stop na</span></td>
-                    <td><span class="text-info">{$punishment->round}</span></td>
-                </tr>
-                <tr>
-                    <td><span class="text-muted">Poznámka</span></td>
-                    <td><span class="text-warning">{$punishment->text}</span></td>
-                </tr>
-                <tr>
-                    <td><span class="text-muted">Podmienka</span></td>
-                    <td>{if $punishment->condition == 1}ÁNO{else}NIE{/if}</td>
-                </tr>
-            </tbody>
-        </table>
+    {var $player = $punishment->ref('players', 'player_id')}
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">{$player->lname}, {$player->num}</div>
+        <div class="panel-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td><span class="text-muted">Tím</span></td>
+                        <td>{$player->ref('teams', 'team_id')->name}</td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-muted">Stop na</span></td>
+                        <td><span class="text-info">{$punishment->round}</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-muted">Poznámka</span></td>
+                        <td><span class="text-warning">{$punishment->text}</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="text-muted">Podmienka</span></td>
+                        <td>{if $punishment->condition == 1}ÁNO{else}NIE{/if}</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
     {/foreach}
 </section>

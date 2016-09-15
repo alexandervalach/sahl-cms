@@ -1,6 +1,7 @@
 {block content}
 
 <section id="rounds">
+    <h1 n:block="title">Kolá</h1>
     <p>
         <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
             <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
@@ -8,9 +9,6 @@
     </p>
     <div class="table-responsive">
         <table class="table table-condensed">
-            <caption class="caption">
-                <span n:block="title">Kolá</span>
-            </caption>
             <tbody>
                 {foreach $rounds as $round}
                     <tr>

@@ -23,10 +23,9 @@ class PlayerPresenter extends BasePresenter {
     }
 
     public function renderView($id) {
-        $team = $this->teamRow;
-        $this->template->players = $team->related('players')->where('NOT type_id', 2);
-        $this->template->goalies = $team->related('players')->where('type_id', 2);
-        $this->template->team = $team;
+        $this->template->players = $this->playersRepository->findByValue('team_id', $id)->where('NOT type_id', 2)->where('archive_id', null);
+        $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)->where('type_id', 2)->where('archive_id', null);
+        $this->template->team = $this->teamRow;
         $this->template->imgFolder = $this->imgFolder;
     }
 
@@ -66,18 +65,19 @@ class PlayerPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
-    public function actionArchView($id) {
-        $this->teamRow = $this->teamsRepository->findById($id);
+    public function actionArchView($id, $param) {
+        $this->teamRow = $this->teamsRepository->findById($param);
     }
 
-    public function renderArchView($id) {
+    public function renderArchView($id, $param) {
         if (!$this->teamRow) {
             throw new BadRequestException($this->error);
         }
-        $this->template->players = $this->playersRepository->findByValue('team_id', $id)->where('NOT type_id', 2);
-        $this->template->goalies = $players = $this->playersRepository->findByValue('team_id', $id)->where('type_id', 2);
+        $this->template->players = $this->playersRepository->findByValue('team_id', $param)->where('archive_id', $id)->where('NOT type_id', 2);
+        $this->template->goalies = $players = $this->playersRepository->findByValue('team_id', $param)->where('archive_id', $id)->where('type_id', 2);
         $this->template->imgFolder = $this->imgFolder;
         $this->template->team = $this->teamRow;
+        $this->template->archive = $this->teamRow->ref('archive', 'archive_id');
     }
 
     protected function createComponentAddPlayerForm() {

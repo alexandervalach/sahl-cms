@@ -242,6 +242,10 @@ section#facebook > div {
     display: none;
 }
 
+div.panel.panel-footer a {
+    margin: 0 10px;
+}
+
 /* Large devices (large desktops, 1200px and up) */
 @media screen and (min-width: 1200px) {
     #nav {

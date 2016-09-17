@@ -21,9 +21,7 @@ class EventsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        /** Nette\Database\Table\Selection */
         $eventSelection = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
-
 
         $visualPaginator = $this->getComponent('visualPaginator');
         $paginator = $visualPaginator->getPaginator();
@@ -72,8 +70,16 @@ class EventsPresenter extends BasePresenter {
     }
 
     public function renderArchView($id) {
-        $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
         $this->template->archive = $this->archiveRepository->findById($id);
+        $events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
+
+        $visualPaginator = $this->getComponent('visualPaginator');
+        $paginator = $visualPaginator->getPaginator();
+        $paginator->itemsPerPage = 5;
+        $paginator->itemCount = $events->count();
+        $events->limit($paginator->itemsPerPage, $paginator->offset);
+
+        $this->template->events = $events;
     }
 
     protected function createComponentAddEventForm() {

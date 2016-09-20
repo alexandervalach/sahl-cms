@@ -36,7 +36,7 @@ class FightsPresenter extends BasePresenter {
         $this->template->round = $this->roundRow;
         $this->template->fights = $fights;
         foreach ($fights as $fight) {
-            $goals[] = $fight->realted('goals')->order('goals DESC');
+            $goals[] = $fight->related('goals')->order('goals DESC');
         }
         $this->template->goals = $goals;
     }

@@ -5,7 +5,7 @@ namespace App\Model;
 class PlayersRepository extends Repository {
 
     public function getPlayersByValue($key, $value) {
-        $players = $this->findByValue($key, $value)->order('lname ASC');
+        $players = $this->findByValue($key, $value)->where('archive_id', null)->order('lname ASC');
         if ($players == null) {
             return null;
         }

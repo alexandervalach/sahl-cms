@@ -32,8 +32,13 @@ class FightsPresenter extends BasePresenter {
         if (!$this->roundRow) {
             throw new BadRequestException("Round not found.");
         }
-        $this->template->fights = $this->roundRow->related('fights');
+        $fights = $this->roundRow->related('fights');
         $this->template->round = $this->roundRow;
+        $this->template->fights = $fights;
+        foreach ($fights as $fight) {
+            $goals[] = $fight->realted('goals')->order('goals DESC');
+        }
+        $this->template->goals = $goals;
     }
 
     public function actionAdd($id) {

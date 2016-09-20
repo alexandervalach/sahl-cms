@@ -34,7 +34,7 @@ class GoalPresenter extends BasePresenter {
 
     public function renderView($id) {
         $this->template->fight = $this->fightRow;
-        $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow->id)->order('home DESC');
+        $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow->id)->order('home DESC')->order('goals DESC');
     }
 
     public function actionAdd($id) {

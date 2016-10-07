@@ -9,3 +9,13 @@
 </p>
 
 {control editEventForm}
+
+{/block}
+
+{block scripts}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('ckeditor');
+    </script>
+{/block}

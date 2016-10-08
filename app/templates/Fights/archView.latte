@@ -1,13 +1,13 @@
 {block content}
 
+<h1 n:block="title">{$round->name}</h1>
+
 <p>
     <a n:href="Round:archView#nav, $archive->id" class='btn btn-default'>
         <span class="glyphicon glyphicon-arrow-left"></span>
         Kolá
     </a>
 </p>
-
-<h1 n:block="title">{$round->name}</h1>
 
 <section id="fights">
     {foreach $fights as $fight}
@@ -22,12 +22,6 @@
                 <span class="{if $fight->score1 < $fight->score2}text-success{elseif $fight->score1 > $fight->score2}text-danger{/if}">
                     {$fight->score2} {$team2->name}
                 </span>
-
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="delete#nav, $fight->id">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </div>
             </header>
             <main>
                 <div>
@@ -58,20 +52,6 @@
                     </li>
                 </ul>
             </main>
-            <footer n:if="$user->loggedIn">
-                <a class="btn btn-success" n:href="edit#nav, $fight->id">
-                    <span class="glyphicon glyphicon-pencil"></span> Zápas
-                </a>
-                <a class="btn btn-warning" n:href="editThird#nav, $fight->id">
-                    <span class="glyphicon glyphicon-pencil"></span> Tretiny
-                </a>
-                <a class="btn btn-primary" n:href="Goal:add#nav, $fight->id">
-                    <span class="glyphicon glyphicon-plus"></span> Góly
-                </a>
-                <a class="btn btn-danger" n:href="Goal:view#nav, $fight->id">
-                    <span class="glyphicon glyphicon-eye-open"></span> Góly
-                </a>
-            </footer>
         </article>
     {/foreach}
 </section>

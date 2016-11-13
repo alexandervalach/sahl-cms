@@ -52,6 +52,9 @@ class ReplyPresenter extends BasePresenter {
         $form->addText('author', 'Meno')
              ->setRequired("Meno je povinné pole")
              ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
+        $form->addText('url', 'Nevypĺňať, protispamová ochrana')
+             ->setAttribute('class', 'antispam')
+             ->setOmitted();
         $form->addTextArea('text', 'Text')
              ->setAttribute('id', 'ckeditor');
         $form->addSubmit('add', 'Pridaj');
@@ -61,11 +64,14 @@ class ReplyPresenter extends BasePresenter {
     }
 
     public function submittedAddForm(Form $form) {
-        $id = $this->forumRow->id;
-        $values = $form->getValues();
-        $values['forum_id'] = $id;
-        $this->replyRepository->insert($values);
-        $this->redirect('add#nav', $id);
+        if (isset($_POST['url']) && $_POST['url'] == '') {
+            $id = $this->forumRow->id;
+            $values = $form->getValues();
+            $values['forum_id'] = $id;
+            $this->replyRepository->insert($values);
+            $this->redirect('add#nav', $id);
+        }
+        return false;
     }
     
     public function submittedDeleteForm() {

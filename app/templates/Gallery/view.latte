@@ -16,7 +16,7 @@
 <section id="secondary" class="row">
     {foreach $galleryImgs as $img}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a href="{$baseUrl}{$imgFolder}{$img->name}" target="_blank">
+            <a href="{$baseUrl}{$imgFolder}{$img->name}" class="lightbox-trigger" target="_blank">
                 {if $img->name}                
                     <img src="{$basePath}{$imgFolder}{$img->name}" class="img-responsive img-rounded animate" />
                 {else}
@@ -44,6 +44,7 @@
 
 {block scripts}
 <script src='{$basePath}/js/jquery.js'></script>
+<script src='{$basePath}/bootstrap/js/.bootstrap.min.js'></script>
 <script src='{$basePath}/js/gallery.js'></script>
 {/block}
 

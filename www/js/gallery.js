@@ -1,3 +1,4 @@
+/*
 $(function () {
     var options = {
         class: '.animate',
@@ -45,3 +46,29 @@ $(function () {
         });
     }
 })
+*/
+$(document).ready(function() {
+    $('.lightbox-trigger').on('click', function(e) {
+        e.preventDefault();
+        var image_href = $(this).attr("href");
+        var len = $('#lightbox').length;
+
+        if (len > 0) {
+            $('#picture').html('<img src="' + image_href + '"/>');
+            $('#lightbox').show();
+        } else {
+            var lightbox = 
+                '<div id="lightbox">' + 
+                    '<p>Zavri</p>' +
+                    '<div id="picture">'
+                        '<img src="' + image_href + '"/>' +
+                    '</div>' + 
+                '</div>';
+            $('body').append(lightbox);
+        }
+
+        $('#lightbox').on('click', function() {
+            $('#lightbox').hide();
+        });
+    });    
+});

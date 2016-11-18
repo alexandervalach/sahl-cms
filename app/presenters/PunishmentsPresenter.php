@@ -16,7 +16,7 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', null);
+        $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', null)->order('id DESC');
     }
 
     public function actionAdd() {

@@ -13,7 +13,7 @@
     </a>
 </p>
 
-<section id="secondary" class="row">
+<section id="secondary" class="row photos">
     {foreach $galleryImgs as $img}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <a href="{$baseUrl}{$imgFolder}{$img->name}" class="lightbox-trigger" target="_blank">
@@ -39,7 +39,6 @@
 <section id='portrait' class='row'>
     <!-- -->
 </section>
-{control visualPaginator}
 {/block}
 
 {block scripts}

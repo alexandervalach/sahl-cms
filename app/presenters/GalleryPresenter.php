@@ -30,13 +30,6 @@ class GalleryPresenter extends BasePresenter {
     public function renderView($id) {
         $this->albumRow = $this->albumsRepository->findById($id);
         $gallerySelection = $this->albumRow->related('gallery');
-
-        $visualPaginator = $this->getComponent('visualPaginator');
-        $paginator = $visualPaginator->getPaginator();
-        $paginator->itemsPerPage = 12;
-        $paginator->itemCount = $gallerySelection->count();
-        $gallerySelection->limit($paginator->itemsPerPage, $paginator->offset);
-
         $this->template->album = $this->albumRow;
         $this->template->galleryImgs = $gallerySelection;
         $this->template->imgFolder = $this->imgFolder;

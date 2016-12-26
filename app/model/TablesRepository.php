@@ -17,23 +17,16 @@ class TablesRepository extends Repository {
     }
 
     public function incrementTableValue($teamId, $type, $columnName, $value) {
-        $tableRow = $this->findAll()->where('team_id', $teamId)->where('archive_id', null)->where('type', $type)->fetch();
-        if ($tableRow == null) {
-            return null;
-        }
-        $newValue = $tableRow[$columnName] + $value;
-        $data = array($columnName => $newValue);
-        return $tableRow->update($data);
+        $conn = $this->getConnection();
+        $tableRow = $conn->query("UPDATE `tables` SET `$columnName` = `$columnName` + ?
+            WHERE (`team_id` = ?) AND (`archive_id` IS NULL) AND (`type` = ?)", $value, $teamId, $type);
+        return $tableRow;
     }
     
     public function updateFights($teamId, $type) {
-        $tableRow = $this->findAll()->where('team_id', $teamId)->where('archive_id', null)->where('type', $type)->fetch();
-        if ($tableRow == null) {
-            return null;
-        }
-        $newValue = $tableRow->win + $tableRow->lost + $tableRow->tram;
-        $data = array('counter' => $newValue);
-        return $tableRow->update($data);
+        $conn = $this->getConnection();
+        $tableRow = $conn->query("UPDATE `tables` SET `counter` = `win` + `tram` + `lost` WHERE (`team_id` = ?) AND (`archive_id` IS NULL) AND (`type` = ?)", $teamId, $type);
+        return $tableRow;
     }
 
     public static $TABLES = array(

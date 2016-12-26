@@ -232,16 +232,18 @@ class FightsPresenter extends BasePresenter {
     }
 
     public function updateTableRows($values, $type, $value = 1) {
+        $state1 = 'tram';
+        $state2 = 'tram';
+
         if ($values['score1'] > $values['score2']) {
-            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'win', $value);
-            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'lost', $value);
+            $state1 = 'win';
+            $state2 = 'lost';
         } elseif ($values['score1'] < $values['score2']) {
-            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'win', $value);
-            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'lost', $value);
-        } else {
-            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'tram', $value);
-            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'tram', $value);
-        }
+            $state1 = 'lost';
+            $state2 = 'win';
+        } 
+        $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $state1, $value);
+        $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $state2, $value);
         $this->tablesRepository->updateFights($values['team1_id'], $type);
         $this->tablesRepository->updateFights($values['team2_id'], $type);
     }

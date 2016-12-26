@@ -16,7 +16,7 @@ class TablesRepository extends Repository {
         return $result;
     }
 
-    public function incrementTableValue($teamId, $type, $columnName, $value) {
+    public function incTabVal($teamId, $type, $columnName, $value) {
         $conn = $this->getConnection();
         $tableRow = $conn->query("UPDATE `tables` SET `$columnName` = `$columnName` + ?
             WHERE (`team_id` = ?) AND (`archive_id` IS NULL) AND (`type` = ?)", $value, $teamId, $type);

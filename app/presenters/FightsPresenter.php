@@ -242,30 +242,30 @@ class FightsPresenter extends BasePresenter {
             $state1 = 'lost';
             $state2 = 'win';
         } 
-        $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $state1, $value);
-        $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $state2, $value);
+        $this->tablesRepository->incTabVal($values['team1_id'], $type, $state1, $value);
+        $this->tablesRepository->incTabVal($values['team2_id'], $type, $state2, $value);
         $this->tablesRepository->updateFights($values['team1_id'], $type);
         $this->tablesRepository->updateFights($values['team2_id'], $type);
     }
 
     public function updateTablePoints($values, $type, $column = 'points') {
         if ($values['score1'] > $values['score2']) {
-            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 2);
-            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 0);
+            $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 2);
+            $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 0);
         } elseif ($values['score1'] < $values['score2']) {
-            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 2);
-            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 0);
+            $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 2);
+            $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 0);
         } else {
-            $this->tablesRepository->incrementTableValue($values['team2_id'], $type, $column, 1);
-            $this->tablesRepository->incrementTableValue($values['team1_id'], $type, $column, 1);
+            $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 1);
+            $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 1);
         }
     }
 
     public function updateTableGoals($values, $type) {
-        $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'score1', $values['score1']);
-        $this->tablesRepository->incrementTableValue($values['team1_id'], $type, 'score2', $values['score2']);
-        $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'score1', $values['score2']);
-        $this->tablesRepository->incrementTableValue($values['team2_id'], $type, 'score2', $values['score1']);
+        $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score1', $values['score1']);
+        $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score2', $values['score2']);
+        $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);
+        $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score2', $values['score1']);
     }
 
 }

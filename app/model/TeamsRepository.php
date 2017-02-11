@@ -3,7 +3,6 @@
 namespace App\Model;
 
 class TeamsRepository extends Repository {
-
     /**
      * Loop trought all teams and store them in array. 
      * Accessible index $team->id. 

@@ -13,7 +13,7 @@ class PlayersRepository extends Repository {
         $list = array();
 
         foreach ($players as $player) {
-            if ($player->num != 0) {
+            if ($player->num > 0) {
                 $list[$player->id] = $player->lname . ' - ' . $player->num;
             }
         }

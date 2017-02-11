@@ -52,8 +52,8 @@ class ReplyPresenter extends BasePresenter {
         $form->addText('author', 'Meno')
              ->setRequired("Meno je povinné pole")
              ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
-        $form->addText('url', 'Nevypĺňať, protispamová ochrana')
-             ->setAttribute('class', 'antispam')
+        $form->addText('email', 'Nevypĺňať')
+             ->setAttribute('class', 'sender-email-address')
              ->setOmitted();
         $form->addTextArea('text', 'Text')
              ->setAttribute('id', 'ckeditor');

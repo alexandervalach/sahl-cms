@@ -53,8 +53,8 @@ class ForumPresenter extends BasePresenter {
              ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
              ->setRequired("Meno je povinné pole.");
-        $form->addText('url', 'Nevypĺňať, protispamová ochrana')
-             ->setAttribute('class', 'antispam')
+        $form->addText('email', 'Nevypĺňať')
+             ->setAttribute('class', 'sender-email-address')
              ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
              ->setAttribute('id', 'ckeditor');

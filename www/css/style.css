@@ -237,10 +237,12 @@ section#facebook > div {
     margin: 0 auto;
 }
 
+/*
 .form-group > label[for=frm-addMessageForm-url],
 .form-group > input#frm-addMessageForm-url {
     display: none;
 }
+*/
 
 div.panel.panel-footer a {
     margin: 0 10px;
@@ -298,6 +300,10 @@ div.panel.panel-footer a {
     -webkit-box-shadow:0 0 25px #111;
     -moz-box-shadow:0 0 25px #111;
     max-width: 100%;
+}
+
+.sender-email-address {
+    display: none;
 }
 
 /* Large devices (large desktops, 1200px and up) */

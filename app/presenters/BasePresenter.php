@@ -151,6 +151,7 @@ abstract class BasePresenter extends Presenter {
         $form->addPassword('password', 'Heslo:')
              ->setRequired('Zadaj, prosím, heslo.');
         $form->addSubmit('send', 'Prihlásiť');
+        $form->addProtection();
         $form->onSuccess[] = $this->submittedSignInForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

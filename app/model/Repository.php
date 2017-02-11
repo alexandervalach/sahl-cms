@@ -84,5 +84,20 @@ abstract class Repository extends Nette\Object {
 
     public function remove( $id ) {
     	$this->getTable()->get( $id )->delete();
+    }
+
+    public function getAsArray( $arch_id = null ) {
+        $rows = $this->findAll()->where( 'archive_id', $arch_id );
+        $data = array();
+        if (!$rows) {
+            return null;
+        } else {
+            $i = 0;
+            foreach($rows as $row) {
+                $data[$i] = $row;
+                $i++;
+            }
+        } 
+        return $data;
     } 
 }

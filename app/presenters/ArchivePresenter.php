@@ -76,11 +76,19 @@ class ArchivePresenter extends BasePresenter {
 		$form->addText('title', 'Názov')
 		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
 		$form->addSubmit('save', 'Uložiť');
-
 		$form->onSuccess[] = $this->submittedEditForm;
-
 		FormHelper::setBootstrapFormRenderer($form);
 		return $form;
+	}
+
+	protected function createComponentArchiveForm() {
+        $form = new Form;
+        $archives = $this->archiveRepository->getArchives();
+        $form->addSelect('archive_id', 'Vyber archív: ', $archives);
+        $form->addSubmit('save', 'Archivovať');
+        $form->onSuccess[] = $this->submittedArchiveForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
 	}
 
 	public function submittedAddForm(Form $form) {
@@ -95,4 +103,77 @@ class ArchivePresenter extends BasePresenter {
 		$this->redirect('all#nav');
 	}
 
+	public function submittedArchiveForm(Form $form) {
+		$values = $form->getValues();
+		$rounds = $this->roundsRepository->getAsArray();
+		$teams = $this->teamsRepository->getAsArray();
+		$events = $this->eventsRepository->getAsArray();
+		$rules = $this->rulesRepository->getAsArray();
+		$players = $this->playersRepository->getAsArray();
+		$tables = $this->tablesRepository->getAsArray();
+		$punishments = $this->punishmentsRepository->getAsArray(); 
+		$data = array();
+
+		foreach ($rounds as $round) {
+			$data['name'] = $round->name;
+			$data['archive_id'] = $values['archive_id'];
+			$this->roundsRepository->insert($data);
+		}
+
+		foreach ($teams as $team) {
+			$data['name'] = $team->name;
+			$data['image'] = $team->image;
+			$data['archive_id'] = $values['archive_id'];
+			$this->teamsRepository->insert($data);
+		}
+
+		$data = array();
+
+		foreach ($events as $event) {
+			$data['event'] = $event->event;
+			$data['archive_id'] = $values['archive_id'];
+			$this->eventsRepository->insert($data);
+		}
+
+		$data = array();
+
+		foreach ($rules as $rule) {
+			$data['rule'] = $rule->rule;
+			$data['archive_id'] = $values['archive_id'];
+			$this->rulesRepository->insert($data);
+		}
+		/*
+		foreach ($players as $player) {
+
+		}
+		*/
+		/*
+		foreach ($tables as $table) {
+			$data['team_id'] = $table->team_id;
+			$data['counter'] = $table->counter;
+			$data['win'] = $table->win;
+			$data['tram'] = $table->tram;
+			$data['lost'] = $table->lost;
+			$data['score1'] = $table->score1;
+			$data['score2'] = $table->score2;
+			$data['points'] = $table->points;
+			$data['type'] = $table->type;
+			$data['archive_id'] = $values['archive_id'];
+			$this->tablesRepository->insert($data);
+		}
+		*/
+		/*
+		foreach ($punishments as $pun) {
+			$data['player_id'] = $pun->;
+			$data['archive_id'] = $value['archive_id'];
+			$this->punishmentsRepository->insert();
+		}
+		*/
+
+		$this->redirect('all#nav');
+	}
+
+	public function formCancelled() {
+		$this->redirect('all#nav');
+	}
 }

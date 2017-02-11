@@ -2,11 +2,7 @@
 
 <h1 n:block="title">Odstráň obrázok</h1>
 
-{if $img}
-    <p class='delete text-warning'>
-        Naozaj chceš zmazať obrázok <mark>{$img->name}</mark>?
-    </p>
-    {control deleteForm}
-{else}
-    <p>Záznam nebol nájdený.</p>
-{/if}
+<p class='delete text-warning'>
+    Naozaj chceš zmazať obrázok <mark>{$img->name}</mark>?
+</p>
+{control deleteForm}

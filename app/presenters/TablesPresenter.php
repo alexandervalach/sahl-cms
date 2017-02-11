@@ -110,38 +110,6 @@ class TablesPresenter extends BasePresenter {
         return $form;
     }
 
-    protected function createComponentArchiveForm() {
-        $form = new Form;
-        $archives = $this->archiveRepository->getArchives();
-        $form->addSelect('archive_id', 'Vyber archív: ', $archives);
-        $form->addSubmit('save', 'Archivovať');
-        $form->onSuccess[] = $this->submittedArchiveForm;
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
-    public function submittedArchiveForm(Form $form) {
-        $rows = $this->tablesRepository->findByValue('archive_id', NULL);
-        $values = $form->getValues();
-        $data = array();
-
-        foreach ($rows as $row) {
-            $data['team_id'] = $row->team_id;
-            $data['counter'] = $row->counter;
-            $data['win'] = $row->win;
-            $data['tram'] = $row->tram;
-            $data['lost'] = $row->lost;
-            $data['score1'] = $row->score1;
-            $data['score2'] = $row->score2;
-            $data['points'] = $row->points;
-            $data['type'] = $row->type;
-            $data['archive_id'] = $values['archive_id'];
-            $this->tablesRepository->insert($data);
-        }
-
-        $this->redirect('all#nav');
-    }
-
     public function submittedAddTableRowForm(Form $form) {
         $values = $form->getValues();
         $this->tablesRepository->insert($values);

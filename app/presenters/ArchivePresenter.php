@@ -105,19 +105,17 @@ class ArchivePresenter extends BasePresenter {
 
 	public function submittedArchiveForm(Form $form) {
 		$values = $form->getValues();
-		$round_id = array();
 		$team_id = array();
 		$player_id = array();
-		$data = array();
+		$arch_id = array( 'archive_id' => $values['archive_id'] );
 
-		$rows = $this->roundsRepository->getAsArray();
+		$rows = $this->roundsRepository->findAll();
 		foreach ($rows as $round) {
-			$data['name'] = $round->name;
-			$data['archive_id'] = $values['archive_id'];
-			$id = $this->roundsRepository->insert($data);
-			$round_id[$round->id] = $id;
+			$round->update($arch_id);
 		}
 		
+		// Vytvoríme duplicitný záznam s novým archive_id
+		$data = array();
 		$rows = $this->teamsRepository->getAsArray();
 		foreach ($rows as $team) {
 			$data['name'] = $team->name;
@@ -127,22 +125,17 @@ class ArchivePresenter extends BasePresenter {
 			$team_id[$team->id] = $id;
 		}
 
-		$data = array();
-		$rows = $this->eventsRepository->getAsArray();
+		$rows = $this->eventsRepository->findAll();
 		foreach ($rows as $event) {
-			$data['event'] = $event->event;
-			$data['archive_id'] = $values['archive_id'];
-			$this->eventsRepository->insert($data);
+			$event->update($arch_id);
 		}
 
-		$data = array();
-		$rows = $this->rulesRepository->getAsArray();
+		$rows = $this->rulesRepository->findAll();
 		foreach ($rows as $rule) {
-			$data['rule'] = $rule->rule;
-			$data['archive_id'] = $values['archive_id'];
-			$this->rulesRepository->insert($data);
+			$rule->update($arch_id);
 		}
 
+		// Vytvoríme duplicitný záznam s novým archive_id
 		$data = array();
 		$rows = $this->playersRepository->getAsArray();
 		foreach ($rows as $player) {
@@ -158,46 +151,46 @@ class ArchivePresenter extends BasePresenter {
 			$player_id[$player->id] = $id;
 		}
 		
-		$data = array();
-		$rows = $this->tablesRepository->getAsArray();
+		$rows = $this->tablesRepository->findAll();
+		$data = array ( 
+			'team_id' => 0,
+			'archive_id' => $values['archive_id']
+		);
 		foreach ($rows as $table) {
 			$data['team_id'] = $team_id[$table->team_id];
-			$data['counter'] = $table->counter;
-			$data['win'] = $table->win;
-			$data['tram'] = $table->tram;
-			$data['lost'] = $table->lost;
-			$data['score1'] = $table->score1;
-			$data['score2'] = $table->score2;
-			$data['points'] = $table->points;
-			$data['type'] = $table->type;
-			$data['archive_id'] = $values['archive_id'];
-			$this->tablesRepository->insert($data);
+			$table->update($data);
 		}
 
-		$data = array();
-		$rows = $this->punishmentsRepository->getAsArray();
+		$rows = $this->punishmentsRepository->findAll();
+		$data = array (
+			'player_id' => 0,
+			'archive_id' => $values['archive_id']
+		);
 		foreach ($rows as $pun) {
 			$data['player_id'] = $player_id[$pun->player_id];
-			$data['archive_id'] = $values['archive_id'];
-			$this->punishmentsRepository->insert($data);
+			$pun->update($data);
 		}
 
-		$data = array();
-		$rows = $this->fightsRepository->getAsArray();
+		$rows = $this->fightsRepository->findAll();
+		$data = array( 
+			'team1_id' => 0,
+			'team2_id' => 1,
+			'archive_id' => $values['archive_id']
+		);
 		foreach ($rows as $fight) {
-			$data['round_id'] = $round_id[$fight->round_id];
 			$data['team1_id'] = $team_id[$fight->team1_id];
 			$data['team2_id'] = $team_id[$fight->team2_id];
-			$data['score1'] = $fight->score1;
-			$data['score2'] = $fight->score2;
-			$data['st_third_1'] = $fight->st_third_1;
-			$data['st_third_2'] = $fight->st_third_2;
-			$data['nd_third_1'] = $fight->nd_third_1;
-			$data['nd_third_2'] = $fight->nd_third_2;
-			$data['th_third_1'] = $fight->th_third_1;
-			$data['th_third_2'] = $fight->th_third_2;
-			$data['archive_id'] = $values['archive_id'];
-			$this->fightsRepository->insert($data);
+			$fight->update($data);
+		}
+
+		$rows = $this->goalsRepository->findAll();
+		$data = array(
+			'player_id' => 0,
+			'archive_id' =>  $values['archive_id']
+		);
+		foreach ($rows as $goal) {
+			$data['player_id'] = $player_id[$goal->player_id];
+			$goal->update($data);
 		}
 
 		$this->redirect('all#nav');

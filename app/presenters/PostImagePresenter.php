@@ -62,13 +62,9 @@ class PostImagePresenter extends BasePresenter {
 
     protected function createComponentAddImageForm() {
         $form = new Form;
-
         $form->addMultiUpload('images', 'Obrázok:');
-
         $form->addSubmit('upload', 'Nahrať');
-
         $form->onSuccess[] = $this->submittedImageForm;
-
         $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

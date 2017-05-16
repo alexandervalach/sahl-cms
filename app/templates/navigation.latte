@@ -54,27 +54,19 @@
                 </li>
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Round:all#nav" role='link'>
-                        Výsledky
-                    </a>
+                    <a n:href="Round:all#nav" role='link'>Výsledky</a>
                 </li>
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Teams:all#nav" role='link'>
-                        Tímy
-                    </a>
+                    <a n:href="Teams:all#nav" role='link'>Tímy</a>
                 </li>
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Stats:all#nav" role='link'>
-                        Štatistiky
-                    </a>
+                    <a n:href="Stats:all#nav" role='link'>Štatistiky</a>
                 </li>
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Events:all#nav" role='link'>
-                        Zápasy
-                    </a>
+                    <a n:href="Events:all#nav" role='link'>Zápasy</a>
                 </li>
 
                 <li class='col-lg-2 col-md-2 col-sm-2 dropdown hidden-xs'>
@@ -95,41 +87,28 @@
 
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Album:all#nav" role='link'>
-                        Galéria
-                    </a>
+                    <a n:href="Album:all#nav" role='link'>Galéria</a>
                 </li>
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Links:all#nav" role='link'>
-                        Linky
-                    </a>
+                    <a n:href="Links:all#nav" role='link'>Linky</a>
                 </li>
 
                 <li class="col-lg-1 col-md-1 col-sm-1">
-                    <a n:href="Forum:all#nav" role="link">
-                        Fórum
-                    </a>
+                    <a n:href="Forum:all#nav" role="link">Fórum</a>
                 </li>
 
                 <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Archive:all#nav" role='link'>
-                        Archív
-                    </a>
+                    <a n:href="Archive:all#nav" role='link'>Archív</a>
                 </li>
 
-                <li class='visible-xs col-sm-1'>
-                    <a n:if="!$user->loggedIn" n:href="Sign:in#nav" role='link'>
-                        Prihlásiť
-                    </a>
+                <li n:if="!$user->loggedIn" class='visible-xs col-sm-1'>
+                    <a n:href="Sign:in#nav" role='link'>Prihlásiť</a>
                 </li>
 
-                <li class='visible-xs col-sm-1'>
-                    <a n:if="$user->loggedIn" n:href="Sign:out#nav" role='link'>
-                        Odhlásiť
-                    </a>
+                <li n:if="$user->loggedIn" class='visible-xs col-sm-1'>
+                    <a n:href="Sign:out#nav" role='link'>Odhlásiť</a>
                 </li>
-
             </ul>
         </div>
     </nav>

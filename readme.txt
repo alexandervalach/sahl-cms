@@ -1,35 +1,69 @@
-Nette Sandbox
-=============
+# SAHL
 
-Sandbox is a pre-packaged and pre-configured Nette Framework application
-that you can use as the skeleton for your new applications.
+## Systémové požiadavky
+Pripravíme si čistý ubuntu server 16.04
 
-[Nette](http://nette.org) is a popular tool for PHP web development.
-It is designed to be the most usable and friendliest as possible. It focuses
-on security and performance and is definitely one of the safest PHP frameworks.
+Potrebné balíky:
 
+    sudo apt-get install apache2 php git libapache2-mod-php
 
-Installing
-----------
+Aktivujeme potrebné apache moduly:
 
-The best way to install Sandbox is using Composer. If you don't have Composer yet, download
-it following [the instructions](http://doc.nette.org/composer). Then use command:
+	sudo a2enmod rewrite ssl
+	sudo service apache2 restart
+	
+## Postup pri inštalácii kopírovaním
+Projekt nakopírujeme do `/var/www/sahl` s tým, že všetky súbory sú čitateľné pre 
+používateľa `www-data`, ideálne ak je ich vlastníkom.
+Adresáre `temp` a `log` musia byť pre užívateľa `www-data` aj zapisovateľné.
 
-		composer create-project nette/sandbox my-app
-		cd my-app
+## Postup inštalácie z git repozitára
+Ako používateľ `root` vytvoríme používateľovi `www-data` adresár pre ssh kľúče. 
 
-Make directories `temp` and `log` writable. Navigate your browser
-to the `www` directory and you will see a welcome page. PHP 5.4 allows
-you run `php -S localhost:8888 -t www` to start the web server and
-then visit `http://localhost:8888` in your browser.
+    sudo mkdir /var/www/.ssh
+    sudo chown www-data:www-data /var/www/.ssh
 
-It is CRITICAL that whole `app`, `log` and `temp` directories are NOT accessible
-directly via a web browser! See [security warning](http://nette.org/security-warning).
+Používateľovi `www-data` vygenerujeme nový RSA kľúč. Všetky parametre potvrdíme 
+bez zmeny (umiestnenie, názov, heslo).
 
+    sudo -u www-data ssh-keygen -t rsa
 
-License
--------
-- Nette: New BSD License or GPL 2.0 or 3.0 (http://nette.org/license)
-- jQuery: MIT License (https://jquery.org/license)
-- Adminer: Apache License 2.0 or GPL 2 (http://www.adminer.org)
-- Sandbox: The Unlicense (http://unlicense.org)
+Verejnú časť RSA kľúča - obsah súboru `id_rsa.pub` vložíme medzi deploy kľúče 
+v danom repozitári.
+
+Vytvoríme adresár pre aplikáciu, vlastníkom bude používateľ `www-data`.
+
+    sudo mkdir /var/www/backup-server
+    sudo chown www-data:www-data /var/www/backup-server
+
+Vyklonujeme repozitár ako používateľ `www-data`.
+
+    sudo -u www-data -H git clone -b master git@bitbucket.org:alexandervalach/sahl.git /var/www/sahl
+
+## Postup aktualizácie z git repozitára
+Stiahneme aktuálne zdrojáky a zmažeme cache.
+
+    sudo -u www-data -H git pull
+    sudo rm -r /var/www/sahl/temp/cache
+
+## Konfigurácia apache2
+Do `/etc/apache2/sites-available/000-default.conf` pridáme nasledujúci obsah.
+
+```
+#!apacheconf
+
+<VirtualHost *:80>
+        
+        DocumentRoot /var/www/sahl/www
+		ServerName sahl
+
+        <Directory "/var/www/sahl/www">
+                AllowOverride All
+        </Directory>
+
+</VirtualHost>
+```
+
+Reštartujeme apache
+
+    sudo service apache2 restart

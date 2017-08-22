@@ -33,8 +33,8 @@ v danom repozitári.
 
 Vytvoríme adresár pre aplikáciu, vlastníkom bude používateľ `www-data`.
 
-    sudo mkdir /var/www/backup-server
-    sudo chown www-data:www-data /var/www/backup-server
+    sudo mkdir /var/www/sahl
+    sudo chown www-data:www-data /var/www/sahl
 
 Vyklonujeme repozitár ako používateľ `www-data`.
 

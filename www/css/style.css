@@ -13,15 +13,15 @@ html, body {
     background: url('layout/ice-lg.jpg');
 }
 
-#page #nav ul.nav.navbar-nav > li > a {
-    background : #FF8C00;
-    color : #000000;
+#nav ul.nav.navbar-nav > li > a {
+    background : #3071a9;
+    color : #FFFFFF;
 }
 
-#page #nav ul.nav.navbar-nav > li > a:hover,
-#page #nav ul.nav.navbar-nav > li > a:focus {
-    background : #9ACD32;
-    color : #000000;
+#nav ul.nav.navbar-nav > li > a:hover,
+#nav ul.nav.navbar-nav > li > a:focus {
+    background : rgb(173,216,230);
+    color : navy;
 }
 
 #main {
@@ -50,8 +50,8 @@ html, body {
 }
 
 #footer {
-    background : #FF8C00;
-    color : #000000;
+    background : #3071a9;
+    color : #FFFFFF;
     font-weight: bold;
 }
 
@@ -89,6 +89,7 @@ section#currentIssue{
 main.container > section#forum > div.row > article > footer > time{
     display: block;
 }
+
 /*=============NEWS THUMBNAIL LAYOUT===========*/
 .thumbnail {
     width: 160px;
@@ -144,8 +145,8 @@ div#page > div#main > div#primary.row > aside.container > div.panel.panel-primar
 
 #nav ul.dropdown-menu > li > a:hover,
 #nav ul.dropdown-menu > li > a:focus{
-    background: rgba(108, 144, 35, 0.9);
-    color: #000000;
+    background: #3071a9;
+		color: #FFFFFF;
 }
 /*===================FILE UPLOAD BUTTON=================*/
 
@@ -236,13 +237,6 @@ section#facebook > div {
     width: 100%;
     margin: 0 auto;
 }
-
-/*
-.form-group > label[for=frm-addMessageForm-url],
-.form-group > input#frm-addMessageForm-url {
-    display: none;
-}
-*/
 
 div.panel.panel-footer a {
     margin: 0 10px;
@@ -534,7 +528,7 @@ div.panel.panel-footer a {
         margin: 0 auto;
     }
 
-    body > div#main > main.container > div#switcher{
+    body > div#main > main.container > div#switcher {
         width: 100%;
         height: 511px;
         margin: 0;
@@ -545,18 +539,18 @@ div.panel.panel-footer a {
         height: 511px;
     }
 
-    #primary{
+    #primary {
         width: 100%;
         height: 100%;
         margin: 0 auto;
     }
 
-    div#page{
+    div#page {
         width: 100%;
     }
 
     #page nav > div.navbar-header {
-        background : #FF8C00;
+        background : #3071a9;
     }
 
     /*=====================NAVIGATION BAR=======-==========*/
@@ -565,16 +559,16 @@ div.panel.panel-footer a {
     }
 
     div#nav .navbar.container .navbar-nav > li > a {
-        color: black;
-        background: #FF9900;
-        height: 40px;
+        background : rgb(173,216,230);
+        color : navy;
+        height: 50px;
         text-align: center;
         vertical-align: middle;
         z-index: 1001;
     }
 
     #page #nav ul.dropdown-menu > li > a {
-        background: rgba(154, 205, 50, 0.9);
+        background: navy;/* rgba(154, 205, 50, 0.9); */
         color: #000000;
         padding:0;
         margin:0;
@@ -590,12 +584,12 @@ div.panel.panel-footer a {
     }
 
     button.navbar-toggle.btn {
-        border: 1px solid rgb(205, 112, 0); 
+        border: 1px solid navy; 
     }
 
     button.navbar-toggle.btn:hover,
     button.navbar-toggle.btn:focus{
-        background: rgb(230, 126, 0);
+        background: #3071a9;
     }
 
     .dropdown-menu {
@@ -932,12 +926,11 @@ footer.container {
     #nav ul.dropdown-menu {
         margin-top: 0;
         border: 0;
-        background: rgba(154, 205, 50, 0.9);
+        background: rgba(173, 216, 230, 0.92);
     }
 
-    #nav ul.dropdown-menu > li > a{
-        background: rgba(154, 205, 50, 0.8);
-        color: #000000;
+    #nav ul.dropdown-menu > li > a {
+        color: #000080;
         padding:0;
         margin:0;
         width: 200px;

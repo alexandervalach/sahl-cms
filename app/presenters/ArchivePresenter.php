@@ -15,6 +15,9 @@ class ArchivePresenter extends BasePresenter {
 	/** @var string */
 	private $error = "Archive not found.";
 
+	/** @var string */
+	private $msg_type = 'danger'; 
+
 	public function renderAll() {
 		$this->template->archive = $this->archiveRepository->findAll();
 	}
@@ -49,14 +52,6 @@ class ArchivePresenter extends BasePresenter {
 			throw new BadRequestException($this->error);
 		}
 		$this->template->archive = $this->archiveRow;
-	}
-
-	public function actionDetauls($id) {
-
-	}
-
-	public function renderDetails($id) {
-
 	}
 
 	protected function createComponentAddForm() {
@@ -109,9 +104,9 @@ class ArchivePresenter extends BasePresenter {
 		$player_id = array();
 		$arch_id = array( 'archive_id' => $values['archive_id'] );
 
-		$rounds = $this->roundsRepository->findAll();
-		$events = $this->eventsRepository->findAll();
-		$rules = $this->rulesRepository->findAll();
+		$rounds = $this->roundsRepository->findByValue('archive_id', null);
+		$events = $this->eventsRepository->findByValue('archive_id', null);
+		$rules = $this->rulesRepository->findByValue('archive_id', null);
 
 		$this->addToArchive($rounds, $arch_id);
 		$this->addToArchive($events, $arch_id);
@@ -125,8 +120,14 @@ class ArchivePresenter extends BasePresenter {
 				'image' => $team->image,
 				'archive_id' => $values['archive_id']
 			);
+
 			$id = $this->teamsRepository->insert($data);
-			$team_id[$team->id] = $id;
+			if ($id == null) {
+				$this->flashMessage('Nastala chyba počas archivácie tímov', $this->msg_type);
+				$this->redirect('all#nav');
+			} else {
+				$team_id[$team->id] = $id;
+			}
 		}
 
 		// Vytvoríme duplicitné záznamy o hráčoch s novým archive_id
@@ -142,12 +143,15 @@ class ArchivePresenter extends BasePresenter {
 				$data['goals'] = $player->goals;
 				$data['trans'] = $player->trans;
 				$data['archive_id'] = $values['archive_id'];
-				$id = $this->playersRepository->insert($data);
+				$this->playersRepository->insert($data);
 				$player_id[$player->id] = $id;
+			} else {
+				$this->flashMessage('Nastala chyba počas archivácie hráčov', $this->msg_type);
+				break;
 			}
 		}
 		
-		$tables = $this->tablesRepository->findAll();
+		$tables = $this->tablesRepository->findByValue('archive_id', null);
 		$data = array ( 
 			'team_id' => null,
 			'archive_id' => $values['archive_id']
@@ -157,10 +161,13 @@ class ArchivePresenter extends BasePresenter {
 			if (isset($team_id[$table->team_id])) {
 				$data['team_id'] = $team_id[$table->team_id];
 				$table->update($data);
+			} else {
+				$this->flashMessage('Nastala chyba počas archivácie tabuliek', $this->msg_type);
+				break;
 			}
 		}
 
-		$puns = $this->punishmentsRepository->findAll();
+		$puns = $this->punishmentsRepository->findByValue('archive_id', null);
 		$data = array (
 			'player_id' => null,
 			'archive_id' => $values['archive_id']
@@ -170,13 +177,16 @@ class ArchivePresenter extends BasePresenter {
 			if (isset($player_id[$pun->player_id])) {
 				$data['player_id'] = $player_id[$pun->player_id];
 				$pun->update($data);
+			} else {
+				$this->flashMessage('Nastala chyba počas archivácii trestov hráčov', $this->msg_type);
+				break;
 			}
 		}
 
-		$fights = $this->fightsRepository->findAll();
+		$fights = $this->fightsRepository->findByValue('archive_id', null);
 		$data = array( 
 			'team1_id' => null,
-			'team2_id' => 1,
+			'team2_id' => null,
 			'archive_id' => $values['archive_id']
 		);
 
@@ -185,10 +195,13 @@ class ArchivePresenter extends BasePresenter {
 				$data['team1_id'] = $team_id[$fight->team1_id];
 				$data['team2_id'] = $team_id[$fight->team2_id];
 				$fight->update($data);
+			} else {
+				$this->flashMessage('Nastala chyba počas archivácie výsledkov zápasov', $this->msg_type);
+				break;
 			}
 		}
 
-		$goals = $this->goalsRepository->findAll();
+		$goals = $this->goalsRepository->findByValue('archive_id', null);
 		$data = array(
 			'player_id' => null,
 			'archive_id' =>  $values['archive_id']
@@ -197,10 +210,14 @@ class ArchivePresenter extends BasePresenter {
 		foreach ($goals as $goal) {
 			if (isset($player_id[$goal->player_id])) {
 				$data['player_id'] = $player_id[$goal->player_id];
-				$goal->update($data);
+				$id = $goal->update($data);
+			} else {
+				$this->flashMessage('Nastala chyba počas archivácie gólov', $this->msg_type);
+				break;
 			}
 		}
 
+		$this->flashMessage('Záznamy boli archivované', 'success');
 		$this->redirect('all#nav');
 	}
 

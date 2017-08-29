@@ -146,10 +146,10 @@ abstract class BasePresenter extends Presenter {
 
     protected function createComponentSignInForm() {
         $form = new Form;
-        $form->addText('username', 'Užívateľské meno:')
-             ->setRequired('Zadaj, prosím, užívateľské meno.');
-        $form->addPassword('password', 'Heslo:')
-             ->setRequired('Zadaj, prosím, heslo.');
+        $form->addText('username', 'Používateľské meno')
+             ->setRequired('Zadajte používateľské meno.');
+        $form->addPassword('password', 'Heslo')
+             ->setRequired('Zadajte heslo.');
         $form->addSubmit('send', 'Prihlásiť');
         $form->addProtection();
         $form->onSuccess[] = $this->submittedSignInForm;

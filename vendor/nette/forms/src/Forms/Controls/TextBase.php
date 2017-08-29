@@ -10,66 +10,68 @@ namespace Nette\Forms\Controls;
 use Nette;
 use Nette\Forms\Form;
 use Nette\Utils\Strings;
-use Nette\Utils\Validators;
 
 
 /**
  * Implements the basic functionality common to text input controls.
- *
- * @author     David Grudl
- *
- * @property   string $emptyValue
  */
 abstract class TextBase extends BaseControl
 {
 	/** @var string */
 	protected $emptyValue = '';
 
-	/** @var array */
-	protected $filters = array();
-
 	/** @var mixed unfiltered submitted value */
 	protected $rawValue = '';
+
+	/** @var bool */
+	private $nullable;
 
 
 	/**
 	 * Sets control's value.
-	 * @param  string
-	 * @return self
+	 * @return static
+	 * @internal
 	 */
 	public function setValue($value)
 	{
-		if ($value === NULL) {
+		if ($value === null) {
 			$value = '';
 		} elseif (!is_scalar($value) && !method_exists($value, '__toString')) {
-			throw new Nette\InvalidArgumentException(sprintf("Value must be scalar or NULL, %s given in field '%s'.", gettype($value), $this->name));
+			throw new Nette\InvalidArgumentException(sprintf("Value must be scalar or null, %s given in field '%s'.", gettype($value), $this->name));
 		}
-		$this->rawValue = $this->value = $value;
+		$this->value = $value;
+		$this->rawValue = (string) $value;
 		return $this;
 	}
 
 
 	/**
 	 * Returns control's value.
-	 * @return string
+	 * @return mixed
 	 */
 	public function getValue()
 	{
-		$value = $this->value;
-		if (!empty($this->control->maxlength)) {
-			$value = Strings::substring($value, 0, $this->control->maxlength);
-		}
-		foreach ($this->filters as $filter) {
-			$value = (string) call_user_func($filter, $value);
-		}
-		return $value === Strings::trim($this->translate($this->emptyValue)) ? '' : $value;
+		$value = $this->value === Strings::trim($this->translate($this->emptyValue)) ? '' : $this->value;
+		return $this->nullable && $value === '' ? null : $value;
+	}
+
+
+	/**
+	 * Sets whether getValue() returns null instead of empty string.
+	 * @param  bool
+	 * @return static
+	 */
+	public function setNullable($value = true)
+	{
+		$this->nullable = (bool) $value;
+		return $this;
 	}
 
 
 	/**
 	 * Sets the special value which is treated as empty string.
 	 * @param  string
-	 * @return self
+	 * @return static
 	 */
 	public function setEmptyValue($value)
 	{
@@ -91,7 +93,7 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Sets the maximum number of allowed characters.
 	 * @param  int
-	 * @return self
+	 * @return static
 	 */
 	public function setMaxLength($length)
 	{
@@ -103,12 +105,11 @@ abstract class TextBase extends BaseControl
 	/**
 	 * Appends input string filter callback.
 	 * @param  callable
-	 * @return self
-	 * @deprecated
+	 * @return static
 	 */
 	public function addFilter($filter)
 	{
-		$this->filters[] = Nette\Utils\Callback::check($filter);
+		$this->getRules()->addFilter($filter);
 		return $this;
 	}
 
@@ -126,7 +127,21 @@ abstract class TextBase extends BaseControl
 	}
 
 
-	public function addRule($validator, $message = NULL, $arg = NULL)
+	/**
+	 * @return string|null
+	 */
+	protected function getRenderedValue()
+	{
+		return $this->rawValue === ''
+			? ($this->emptyValue === '' ? null : $this->translate($this->emptyValue))
+			: $this->rawValue;
+	}
+
+
+	/**
+	 * @return static
+	 */
+	public function addRule($validator, $errorMessage = null, $arg = null)
 	{
 		if ($validator === Form::LENGTH || $validator === Form::MAX_LENGTH) {
 			$tmp = is_array($arg) ? $arg[1] : $arg;
@@ -134,103 +149,6 @@ abstract class TextBase extends BaseControl
 				$this->control->maxlength = isset($this->control->maxlength) ? min($this->control->maxlength, $tmp) : $tmp;
 			}
 		}
-		return parent::addRule($validator, $message, $arg);
+		return parent::addRule($validator, $errorMessage, $arg);
 	}
-
-
-	/********************* validators ****************d*g**/
-
-
-	/**
-	 * Is control's value valid email address?
-	 * @return bool
-	 * @internal
-	 */
-	public static function validateEmail(TextBase $control)
-	{
-		return Validators::isEmail($control->getValue());
-	}
-
-
-	/**
-	 * Is control's value valid URL?
-	 * @return bool
-	 * @internal
-	 */
-	public static function validateUrl(TextBase $control)
-	{
-		if (Validators::isUrl($value = $control->getValue())) {
-			return TRUE;
-
-		} elseif (Validators::isUrl($value = "http://$value")) {
-			$control->setValue($value);
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-
-	/** @deprecated */
-	public static function validateRegexp(TextBase $control, $regexp)
-	{
-		trigger_error('Validator REGEXP is deprecated; use PATTERN instead (which is matched against the entire value and is case sensitive).', E_USER_DEPRECATED);
-		return (bool) Strings::match($control->getValue(), $regexp);
-	}
-
-
-	/**
-	 * Matches control's value regular expression?
-	 * @return bool
-	 * @internal
-	 */
-	public static function validatePattern(TextBase $control, $pattern)
-	{
-		return (bool) Strings::match($control->getValue(), "\x01^($pattern)\\z\x01u");
-	}
-
-
-	/**
-	 * Is a control's value decimal number?
-	 * @return bool
-	 * @internal
-	 */
-	public static function validateInteger(TextBase $control)
-	{
-		if (Validators::isNumericInt($value = $control->getValue())) {
-			if (!is_float($tmp = $value * 1)) { // bigint leave as string
-				$control->setValue($tmp);
-			}
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-
-	/**
-	 * Is a control's value float number?
-	 * @return bool
-	 * @internal
-	 */
-	public static function validateFloat(TextBase $control)
-	{
-		$value = self::filterFloat($control->getValue());
-		if (Validators::isNumeric($value)) {
-			$control->setValue((float) $value);
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-
-	/**
-	 * Float string cleanup.
-	 * @param  string
-	 * @return string
-	 * @internal
-	 */
-	public static function filterFloat($s)
-	{
-		return str_replace(array(' ', ','), array('', '.'), $s);
-	}
-
 }

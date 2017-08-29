@@ -10,8 +10,6 @@ namespace Nette\Application;
 
 /**
  * Presenter converts Request to IResponse.
- *
- * @author     David Grudl
  */
 interface IPresenter
 {
@@ -20,5 +18,4 @@ interface IPresenter
 	 * @return IResponse
 	 */
 	function run(Request $request);
-
 }

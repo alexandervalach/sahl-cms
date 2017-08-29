@@ -12,22 +12,17 @@ use Nette;
 
 /**
  * Component multiplier.
- *
- * @author     David Grudl
  */
-class Multiplier extends PresenterComponent
+class Multiplier extends Component
 {
 	/** @var callable */
 	private $factory;
 
 
-	/**
-	 * @param callable
-	 */
-	public function __construct($factory)
+	public function __construct(callable $factory)
 	{
 		parent::__construct();
-		$this->factory = Nette\Utils\Callback::check($factory);
+		$this->factory = $factory;
 	}
 
 
@@ -35,5 +30,4 @@ class Multiplier extends PresenterComponent
 	{
 		return call_user_func($this->factory, $name, $this);
 	}
-
 }

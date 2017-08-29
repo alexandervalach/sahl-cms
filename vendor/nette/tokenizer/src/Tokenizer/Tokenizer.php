@@ -20,7 +20,7 @@ class Tokenizer
 	/** @var string */
 	private $re;
 
-	/** @var array|FALSE */
+	/** @var array|false */
 	private $types;
 
 
@@ -32,7 +32,7 @@ class Tokenizer
 	{
 		$this->re = '~(' . implode(')|(', $patterns) . ')~A' . $flags;
 		$keys = array_keys($patterns);
-		$this->types = $keys === range(0, count($patterns) - 1) ? FALSE : $keys;
+		$this->types = $keys === range(0, count($patterns) - 1) ? false : $keys;
 	}
 
 
@@ -48,13 +48,14 @@ class Tokenizer
 			preg_match_all($this->re, $input, $tokens, PREG_SET_ORDER);
 			$len = 0;
 			$count = count($this->types);
-			foreach ($tokens as & $match) {
-				$type = NULL;
+			foreach ($tokens as &$match) {
+				$type = null;
 				for ($i = 1; $i <= $count; $i++) {
 					if (!isset($match[$i])) {
 						break;
-					} elseif ($match[$i] != NULL) {
-						$type = $this->types[$i - 1]; break;
+					} elseif ($match[$i] != null) {
+						$type = $this->types[$i - 1];
+						break;
 					}
 				}
 				$match = array(self::VALUE => $match[0], self::OFFSET => $len, self::TYPE => $type);
@@ -92,5 +93,4 @@ class Tokenizer
 		$text = substr($text, 0, $offset);
 		return array(substr_count($text, "\n") + 1, $offset - strrpos("\n" . $text, "\n") + 1);
 	}
-
 }

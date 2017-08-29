@@ -13,11 +13,10 @@ use Tracy;
 
 /**
  * Session panel for Debugger Bar.
- *
- * @author     David Grudl
  */
-class SessionPanel extends Nette\Object implements Tracy\IBarPanel
+class SessionPanel implements Tracy\IBarPanel
 {
+	use Nette\SmartObject;
 
 	/**
 	 * Renders tab.
@@ -25,7 +24,7 @@ class SessionPanel extends Nette\Object implements Tracy\IBarPanel
 	 */
 	public function getTab()
 	{
-		ob_start();
+		ob_start(function () {});
 		require __DIR__ . '/templates/SessionPanel.tab.phtml';
 		return ob_get_clean();
 	}
@@ -37,9 +36,8 @@ class SessionPanel extends Nette\Object implements Tracy\IBarPanel
 	 */
 	public function getPanel()
 	{
-		ob_start();
+		ob_start(function () {});
 		require __DIR__ . '/templates/SessionPanel.panel.phtml';
 		return ob_get_clean();
 	}
-
 }

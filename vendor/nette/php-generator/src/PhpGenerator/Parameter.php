@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\PhpGenerator;
@@ -12,62 +12,144 @@ use Nette;
 
 /**
  * Method parameter description.
- *
- * @author     David Grudl
- *
- * @method Parameter setName(string)
- * @method string getName()
- * @method Parameter setReference(bool)
- * @method bool isReference()
- * @method Parameter setTypeHint(string)
- * @method string getTypeHint()
- * @method Parameter setOptional(bool)
- * @method bool isOptional()
- * @method Parameter setDefaultValue(mixed)
- * @method mixed getDefaultValue()
  */
-class Parameter extends Nette\Object
+class Parameter
 {
-	/** @var string */
-	private $name;
-
-	/** @var bool */
-	private $reference;
-
-	/** @var string */
-	private $typeHint;
-
-	/** @var bool */
-	private $optional;
+	use Nette\SmartObject;
+	use Traits\NameAware;
 
 	/** @var mixed */
 	public $defaultValue;
 
+	/** @var bool */
+	private $reference = false;
 
-	/** @return Parameter */
+	/** @var string|null */
+	private $typeHint;
+
+	/** @var bool */
+	private $nullable = false;
+
+	/** @var bool */
+	private $hasDefaultValue = false;
+
+
+	/**
+	 * @deprecated
+	 * @return static
+	 */
 	public static function from(\ReflectionParameter $from)
 	{
-		$param = new static;
-		$param->name = $from->getName();
-		$param->reference = $from->isPassedByReference();
-		try {
-			$param->typeHint = $from->isArray() ? 'array' : ($from->getClass() ? '\\' . $from->getClass()->getName() : '');
-		} catch (\ReflectionException $e) {
-			if (preg_match('#Class (.+) does not exist#', $e->getMessage(), $m)) {
-				$param->typeHint = '\\' . $m[1];
-			} else {
-				throw $e;
-			}
-		}
-		$param->optional = PHP_VERSION_ID < 50407 ? $from->isOptional() || ($param->typeHint && $from->allowsNull()) : $from->isDefaultValueAvailable();
-		$param->defaultValue = (PHP_VERSION_ID === 50316 ? $from->isOptional() : $from->isDefaultValueAvailable()) ? $from->getDefaultValue() : NULL;
-
-		$namespace = $from->getDeclaringClass()->getNamespaceName();
-		$namespace = $namespace ? "\\$namespace\\" : '\\';
-		if (Nette\Utils\Strings::startsWith($param->typeHint, $namespace)) {
-			$param->typeHint = substr($param->typeHint, strlen($namespace));
-		}
-		return $param;
+		trigger_error(__METHOD__ . '() is deprecated, use Nette\PhpGenerator\Factory.', E_USER_DEPRECATED);
+		return (new Factory)->fromParameterReflection($from);
 	}
 
+
+	/**
+	 * @param  bool
+	 * @return static
+	 */
+	public function setReference($state = true)
+	{
+		$this->reference = (bool) $state;
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isReference()
+	{
+		return $this->reference;
+	}
+
+
+	/**
+	 * @param  string|null
+	 * @return static
+	 */
+	public function setTypeHint($hint)
+	{
+		$this->typeHint = $hint ? (string) $hint : null;
+		return $this;
+	}
+
+
+	/**
+	 * @return string|null
+	 */
+	public function getTypeHint()
+	{
+		return $this->typeHint;
+	}
+
+
+	/**
+	 * @param  bool
+	 * @return static
+	 */
+	public function setOptional($state = true)
+	{
+		$this->hasDefaultValue = (bool) $state;
+		return $this;
+	}
+
+
+	/**
+	 * @deprecated  use hasDefaultValue()
+	 * @return bool
+	 */
+	public function isOptional()
+	{
+		return $this->hasDefaultValue;
+	}
+
+
+	/**
+	 * @param  bool
+	 * @return static
+	 */
+	public function setNullable($state = true)
+	{
+		$this->nullable = (bool) $state;
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isNullable()
+	{
+		return $this->nullable;
+	}
+
+
+	/**
+	 * @return static
+	 */
+	public function setDefaultValue($val)
+	{
+		$this->defaultValue = $val;
+		return $this;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getDefaultValue()
+	{
+		return $this->defaultValue;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function hasDefaultValue()
+	{
+		return $this->hasDefaultValue;
+	}
 }

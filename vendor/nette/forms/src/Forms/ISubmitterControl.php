@@ -10,16 +10,13 @@ namespace Nette\Forms;
 
 /**
  * Defines method that must be implemented to allow a control to submit web form.
- *
- * @author     David Grudl
  */
 interface ISubmitterControl extends IControl
 {
 
 	/**
 	 * Gets the validation scope. Clicking the button validates only the controls within the specified scope.
-	 * @return mixed
+	 * @return array|null
 	 */
 	function getValidationScope();
-
 }

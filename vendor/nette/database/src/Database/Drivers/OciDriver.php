@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Database\Drivers;
@@ -12,11 +12,11 @@ use Nette;
 
 /**
  * Supplemental Oracle database driver.
- *
- * @author     David Grudl
  */
-class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriver
+class OciDriver implements Nette\Database\ISupplementalDriver
 {
+	use Nette\SmartObject;
+
 	/** @var Nette\Database\Connection */
 	private $connection;
 
@@ -28,6 +28,24 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	{
 		$this->connection = $connection;
 		$this->fmtDateTime = isset($options['formatDateTime']) ? $options['formatDateTime'] : 'U';
+	}
+
+
+	public function convertException(\PDOException $e)
+	{
+		$code = isset($e->errorInfo[1]) ? $e->errorInfo[1] : null;
+		if (in_array($code, [1, 2299, 38911], true)) {
+			return Nette\Database\UniqueConstraintViolationException::from($e);
+
+		} elseif (in_array($code, [1400], true)) {
+			return Nette\Database\NotNullConstraintViolationException::from($e);
+
+		} elseif (in_array($code, [2266, 2291, 2292], true)) {
+			return Nette\Database\ForeignKeyConstraintViolationException::from($e);
+
+		} else {
+			return Nette\Database\DriverException::from($e);
+		}
 	}
 
 
@@ -63,6 +81,15 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 
 
 	/**
+	 * Formats date-time interval for use in a SQL statement.
+	 */
+	public function formatDateInterval(\DateInterval $value)
+	{
+		throw new Nette\NotSupportedException;
+	}
+
+
+	/**
 	 * Encodes string for use in a LIKE statement.
 	 */
 	public function formatLike($value, $pos)
@@ -74,15 +101,18 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	/**
 	 * Injects LIMIT/OFFSET to the SQL query.
 	 */
-	public function applyLimit(& $sql, $limit, $offset)
+	public function applyLimit(&$sql, $limit, $offset)
 	{
-		if ($offset > 0) {
+		if ($limit < 0 || $offset < 0) {
+			throw new Nette\InvalidArgumentException('Negative offset or limit.');
+
+		} elseif ($offset) {
 			// see http://www.oracle.com/technology/oramag/oracle/06-sep/o56asktom.html
 			$sql = 'SELECT * FROM (SELECT t.*, ROWNUM AS "__rnum" FROM (' . $sql . ') t '
-				. ($limit >= 0 ? 'WHERE ROWNUM <= ' . ((int) $offset + (int) $limit) : '')
-				. ') WHERE "__rnum" > '. (int) $offset;
+				. ($limit !== null ? 'WHERE ROWNUM <= ' . ((int) $offset + (int) $limit) : '')
+				. ') WHERE "__rnum" > ' . (int) $offset;
 
-		} elseif ($limit >= 0) {
+		} elseif ($limit !== null) {
 			$sql = 'SELECT * FROM (' . $sql . ') WHERE ROWNUM <= ' . (int) $limit;
 		}
 	}
@@ -105,13 +135,13 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getTables()
 	{
-		$tables = array();
+		$tables = [];
 		foreach ($this->connection->query('SELECT * FROM cat') as $row) {
 			if ($row[1] === 'TABLE' || $row[1] === 'VIEW') {
-				$tables[] = array(
+				$tables[] = [
 					'name' => $row[0],
 					'view' => $row[1] === 'VIEW',
-				);
+				];
 			}
 		}
 		return $tables;
@@ -150,7 +180,7 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	 */
 	public function getColumnTypes(\PDOStatement $statement)
 	{
-		return Nette\Database\Helpers::detectTypes($statement);
+		return [];
 	}
 
 
@@ -162,5 +192,4 @@ class OciDriver extends Nette\Object implements Nette\Database\ISupplementalDriv
 	{
 		return $item === self::SUPPORT_SEQUENCE || $item === self::SUPPORT_SUBSELECT;
 	}
-
 }

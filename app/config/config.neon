@@ -19,6 +19,7 @@ nette:
 
 	session:
 		expiration: 14 days
+		autoStart: yes
 
 	security:
 		users:

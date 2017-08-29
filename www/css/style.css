@@ -300,6 +300,11 @@ div.panel.panel-footer a {
     display: none;
 }
 
+footer a {
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
 /* Large devices (large desktops, 1200px and up) */
 @media screen and (min-width: 1200px) {
     #nav {

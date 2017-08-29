@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\PhpGenerator;
@@ -12,50 +12,67 @@ use Nette;
 
 /**
  * Class property description.
- *
- * @author     David Grudl
- *
- * @method Property setName(string)
- * @method string getName()
- * @method Property setValue(mixed)
- * @method mixed getValue()
- * @method Property setStatic(bool)
- * @method bool isStatic()
- * @method Property setVisibility(string)
- * @method string getVisibility()
- * @method Property setDocuments(string[])
- * @method string[] getDocuments()
- * @method Property addDocument(string)
  */
-class Property extends Nette\Object
+class Property
 {
-	/** @var string */
-	private $name;
+	use Nette\SmartObject;
+	use Traits\NameAware;
+	use Traits\VisibilityAware;
+	use Traits\CommentAware;
 
 	/** @var mixed */
 	public $value;
 
 	/** @var bool */
-	private $static;
-
-	/** @var string  public|protected|private */
-	private $visibility = 'public';
-
-	/** @var array of string */
-	private $documents = array();
+	private $static = false;
 
 
-	/** @return Property */
+	/**
+	 * @deprecated
+	 * @return static
+	 */
 	public static function from(\ReflectionProperty $from)
 	{
-		$prop = new static;
-		$prop->name = $from->getName();
-		$defaults = $from->getDeclaringClass()->getDefaultProperties();
-		$prop->value = isset($defaults[$from->name]) ? $defaults[$from->name] : NULL;
-		$prop->static = $from->isStatic();
-		$prop->visibility = $from->isPrivate() ? 'private' : ($from->isProtected() ? 'protected' : 'public');
-		$prop->documents = preg_replace('#^\s*\* ?#m', '', trim($from->getDocComment(), "/* \r\n\t"));
-		return $prop;
+		trigger_error(__METHOD__ . '() is deprecated, use Nette\PhpGenerator\Factory.', E_USER_DEPRECATED);
+		return (new Factory)->fromPropertyReflection($from);
 	}
 
+
+	/**
+	 * @return static
+	 */
+	public function setValue($val)
+	{
+		$this->value = $val;
+		return $this;
+	}
+
+
+	/**
+	 * @return mixed
+	 */
+	public function getValue()
+	{
+		return $this->value;
+	}
+
+
+	/**
+	 * @param  bool
+	 * @return static
+	 */
+	public function setStatic($state = true)
+	{
+		$this->static = (bool) $state;
+		return $this;
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public function isStatic()
+	{
+		return $this->static;
+	}
 }

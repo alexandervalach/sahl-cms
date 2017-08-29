@@ -6,6 +6,7 @@ $configurator = new Nette\Configurator;
 
 //$configurator->setDebugMode(FALSE); // enable for your remote IP
 $configurator->enableDebugger(__DIR__ . '/../log');
+error_reporting(~E_USER_DEPRECATED);
 
 $configurator->setTempDirectory(__DIR__ . '/../temp');
 

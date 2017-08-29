@@ -10,12 +10,12 @@ namespace Latte;
 
 /**
  * Templating engine Latte.
- *
- * @author     David Grudl
  */
-class Engine extends Object
+class Engine
 {
-	const VERSION = '2.2.9';
+	use Strict;
+
+	const VERSION = '2.4.5';
 
 	/** Content types */
 	const CONTENT_HTML = 'html',
@@ -23,12 +23,11 @@ class Engine extends Object
 		CONTENT_XML = 'xml',
 		CONTENT_JS = 'js',
 		CONTENT_CSS = 'css',
-		CONTENT_URL = 'url',
 		CONTENT_ICAL = 'ical',
 		CONTENT_TEXT = 'text';
 
 	/** @var callable[] */
-	public $onCompile = array();
+	public $onCompile = [];
 
 	/** @var Parser */
 	private $parser;
@@ -39,6 +38,12 @@ class Engine extends Object
 	/** @var ILoader */
 	private $loader;
 
+	/** @var Runtime\FilterExecutor */
+	private $filters;
+
+	/** @var array */
+	private $providers = [];
+
 	/** @var string */
 	private $contentType = self::CONTENT_HTML;
 
@@ -46,52 +51,23 @@ class Engine extends Object
 	private $tempDirectory;
 
 	/** @var bool */
-	private $autoRefresh = TRUE;
+	private $autoRefresh = true;
 
-	/** @var array run-time filters */
-	private $filters = array(
-		NULL => array(), // dynamic
-		'bytes' => 'Latte\Runtime\Filters::bytes',
-		'capitalize' => 'Latte\Runtime\Filters::capitalize',
-		'datastream' => 'Latte\Runtime\Filters::dataStream',
-		'date' => 'Latte\Runtime\Filters::date',
-		'escapecss' => 'Latte\Runtime\Filters::escapeCss',
-		'escapehtml' => 'Latte\Runtime\Filters::escapeHtml',
-		'escapehtmlcomment' => 'Latte\Runtime\Filters::escapeHtmlComment',
-		'escapeical' => 'Latte\Runtime\Filters::escapeICal',
-		'escapejs' => 'Latte\Runtime\Filters::escapeJs',
-		'escapeurl' => 'rawurlencode',
-		'escapexml' => 'Latte\Runtime\Filters::escapeXML',
-		'firstupper' => 'Latte\Runtime\Filters::firstUpper',
-		'implode' => 'implode',
-		'indent' => 'Latte\Runtime\Filters::indent',
-		'lower' => 'Latte\Runtime\Filters::lower',
-		'nl2br' => 'Latte\Runtime\Filters::nl2br',
-		'number' => 'number_format',
-		'repeat' => 'str_repeat',
-		'replace' => 'Latte\Runtime\Filters::replace',
-		'replacere' => 'Latte\Runtime\Filters::replaceRe',
-		'safeurl' => 'Latte\Runtime\Filters::safeUrl',
-		'strip' => 'Latte\Runtime\Filters::strip',
-		'striptags' => 'strip_tags',
-		'substr' => 'Latte\Runtime\Filters::substring',
-		'trim' => 'Latte\Runtime\Filters::trim',
-		'truncate' => 'Latte\Runtime\Filters::truncate',
-		'upper' => 'Latte\Runtime\Filters::upper',
-	);
 
-	/** @var string */
-	private $baseTemplateClass = 'Latte\Template';
+	public function __construct()
+	{
+		$this->filters = new Runtime\FilterExecutor;
+	}
 
 
 	/**
 	 * Renders template to output.
 	 * @return void
 	 */
-	public function render($name, array $params = array())
+	public function render($name, array $params = [], $block = null)
 	{
-		$template = new $this->baseTemplateClass($params, $this, $name);
-		$this->loadCacheFile($name, $template->getParameters());
+		$this->createTemplate($name, $params + ['_renderblock' => $block])
+			->render();
 	}
 
 
@@ -99,19 +75,24 @@ class Engine extends Object
 	 * Renders template to string.
 	 * @return string
 	 */
-	public function renderToString($name, array $params = array())
+	public function renderToString($name, array $params = [], $block = null)
 	{
-		ob_start();
-		try {
-			$this->render($name, $params);
-		} catch (\Throwable $e) {
-			ob_end_clean();
-			throw $e;
-		} catch (\Exception $e) {
-			ob_end_clean();
-			throw $e;
+		$template = $this->createTemplate($name, $params + ['_renderblock' => $block]);
+		return $template->capture([$template, 'render']);
+	}
+
+
+	/**
+	 * Creates template object.
+	 * @return Runtime\Template
+	 */
+	public function createTemplate($name, array $params = [])
+	{
+		$class = $this->getTemplateClass($name);
+		if (!class_exists($class, false)) {
+			$this->loadTemplate($name);
 		}
-		return ob_get_clean();
+		return new $class($this, $params, $this->filters, $this->providers, $name);
 	}
 
 
@@ -121,74 +102,112 @@ class Engine extends Object
 	 */
 	public function compile($name)
 	{
-		foreach ($this->onCompile ?: array() as $cb) {
+		foreach ($this->onCompile ?: [] as $cb) {
 			call_user_func(Helpers::checkCallback($cb), $this);
 		}
-		$this->onCompile = array();
+		$this->onCompile = [];
 
 		$source = $this->getLoader()->getContent($name);
+
 		try {
 			$tokens = $this->getParser()->setContentType($this->contentType)
 				->parse($source);
-			$code = $this->getCompiler()->setContentType($this->contentType)
-				->compile($tokens);
 
-			if (!preg_match('#\n|\?#', $name)) {
-				$code = "<?php\n// source: $name\n?>" . $code;
-			}
+			$code = $this->getCompiler()->setContentType($this->contentType)
+				->compile($tokens, $this->getTemplateClass($name));
 
 		} catch (\Exception $e) {
-			$e = $e instanceof CompileException ? $e : new CompileException("Thrown exception '{$e->getMessage()}'", NULL, $e);
-			throw $e->setSource($source, $this->getCompiler()->getLine(), $name);
+			if (!$e instanceof CompileException) {
+				$e = new CompileException("Thrown exception '{$e->getMessage()}'", 0, $e);
+			}
+			$line = isset($tokens) ? $this->getCompiler()->getLine() : $this->getParser()->getLine();
+			throw $e->setSource($source, $line, $name);
 		}
-		$code = Helpers::optimizePhp($code);
+
+		if (!preg_match('#\n|\?#', $name)) {
+			$code = "<?php\n// source: $name\n?>" . $code;
+		}
+		$code = PhpHelpers::reformatCode($code);
 		return $code;
+	}
+
+
+	/**
+	 * Compiles template to cache.
+	 * @param  string
+	 * @return void
+	 * @throws \LogicException
+	 */
+	public function warmupCache($name)
+	{
+		if (!$this->tempDirectory) {
+			throw new \LogicException('Path to temporary directory is not set.');
+		}
+
+		$class = $this->getTemplateClass($name);
+		if (!class_exists($class, false)) {
+			$this->loadTemplate($name);
+		}
 	}
 
 
 	/**
 	 * @return void
 	 */
-	private function loadCacheFile($name, $params)
+	private function loadTemplate($name)
 	{
 		if (!$this->tempDirectory) {
-			return call_user_func(function () {
-				foreach (func_get_arg(1) as $__k => $__v) {
-					$$__k = $__v;
-				}
-				unset($__k, $__v);
-				eval('?>' . func_get_arg(0));
-			}, $this->compile($name), $params);
+			$code = $this->compile($name);
+			if (@eval('?>' . $code) === false) { // @ is escalated to exception
+				throw (new CompileException('Error in template: ' . error_get_last()['message']))
+					->setSource($code, error_get_last()['line'], "$name (compiled)");
+			}
+			return;
 		}
 
 		$file = $this->getCacheFile($name);
-		$handle = fopen($file, 'c+');
-		if (!$handle) {
-			throw new \RuntimeException("Unable to open or create file '$file'.");
-		}
-		flock($handle, LOCK_SH);
-		$stat = fstat($handle);
-		if (!$stat['size'] || ($this->autoRefresh && $this->getLoader()->isExpired($name, $stat['mtime']))) {
-			ftruncate($handle, 0);
-			flock($handle, LOCK_EX);
-			$stat = fstat($handle);
-			if (!$stat['size']) {
-				$code = $this->compile($name);
-				if (fwrite($handle, $code, strlen($code)) !== strlen($code)) {
-					ftruncate($handle, 0);
-					throw new \RuntimeException("Unable to write file '$file'.");
-				}
-			}
-			flock($handle, LOCK_SH); // holds the lock
+
+		if (!$this->isExpired($file, $name) && (@include $file) !== false) { // @ - file may not exist
+			return;
 		}
 
-		call_user_func(function () {
-			foreach (func_get_arg(1) as $__k => $__v) {
-				$$__k = $__v;
+		if (!is_dir($this->tempDirectory)) {
+			@mkdir($this->tempDirectory); // @ - directory may already exist
+		}
+
+		$handle = fopen("$file.lock", 'c+');
+		if (!$handle || !flock($handle, LOCK_EX)) {
+			throw new \RuntimeException("Unable to acquire exclusive lock '$file.lock'.");
+		}
+
+		if (!is_file($file) || $this->isExpired($file, $name)) {
+			$code = $this->compile($name);
+			if (file_put_contents("$file.tmp", $code) !== strlen($code) || !rename("$file.tmp", $file)) {
+				@unlink("$file.tmp"); // @ - file may not exist
+				throw new \RuntimeException("Unable to create '$file'.");
+			} elseif (function_exists('opcache_invalidate')) {
+				@opcache_invalidate($file, true); // @ can be restricted
 			}
-			unset($__k, $__v);
-			include func_get_arg(0);
-		}, $file, $params);
+		}
+
+		if ((include $file) === false) {
+			throw new \RuntimeException("Unable to load '$file'.");
+		}
+
+		flock($handle, LOCK_UN);
+		fclose($handle);
+		@unlink("$file.lock"); // @ file may become locked on Windows
+	}
+
+
+	/**
+	 * @param  string
+	 * @param  string
+	 * @return bool
+	 */
+	private function isExpired($file, $name)
+	{
+		return $this->autoRefresh && $this->getLoader()->isExpired($name, (int) @filemtime($file)); // @ - file may not exist
 	}
 
 
@@ -197,46 +216,44 @@ class Engine extends Object
 	 */
 	public function getCacheFile($name)
 	{
-		if (!$this->tempDirectory) {
-			throw new \RuntimeException('Set path to temporary directory using setTempDirectory().');
-		} elseif (!is_dir($this->tempDirectory)) {
-			@mkdir($this->tempDirectory); // High concurrency
-			if (!is_dir($this->tempDirectory)) {
-				throw new \RuntimeException("Temporary directory cannot be created. Check access rights");
-			}
-		}
-		$file = md5($name);
-		if (preg_match('#\b\w.{10,50}$#', $name, $m)) {
-			$file = trim(preg_replace('#\W+#', '-', $m[0]), '-') . '-' . $file;
-		}
-		return $this->tempDirectory . '/' . $file . '.php';
+		$hash = substr($this->getTemplateClass($name), 8);
+		$base = preg_match('#([/\\\\][\w@.-]{3,35}){1,3}\z#', $name, $m)
+			? preg_replace('#[^\w@.-]+#', '-', substr($m[0], 1)) . '--'
+			: '';
+		return "$this->tempDirectory/$base$hash.php";
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getTemplateClass($name)
+	{
+		$key = $this->getLoader()->getUniqueId($name) . "\00" . self::VERSION;
+		return 'Template' . substr(md5($key), 0, 10);
 	}
 
 
 	/**
 	 * Registers run-time filter.
-	 * @param  string|NULL
+	 * @param  string|null
 	 * @param  callable
-	 * @return self
+	 * @return static
 	 */
 	public function addFilter($name, $callback)
 	{
-		if ($name == NULL) { // intentionally ==
-			array_unshift($this->filters[NULL], $callback);
-		} else {
-			$this->filters[strtolower($name)] = $callback;
-		}
+		$this->filters->add($name, $callback);
 		return $this;
 	}
 
 
 	/**
 	 * Returns all run-time filters.
-	 * @return callable[]
+	 * @return string[]
 	 */
 	public function getFilters()
 	{
-		return $this->filters;
+		return $this->filters->getAll();
 	}
 
 
@@ -248,27 +265,13 @@ class Engine extends Object
 	 */
 	public function invokeFilter($name, array $args)
 	{
-		$lname = strtolower($name);
-		if (!isset($this->filters[$lname])) {
-			$args2 = $args;
-			array_unshift($args2, $lname);
-			foreach ($this->filters[NULL] as $filter) {
-				$res = call_user_func_array(Helpers::checkCallback($filter), $args2);
-				if ($res !== NULL) {
-					return $res;
-				} elseif (isset($this->filters[$lname])) {
-					return call_user_func_array(Helpers::checkCallback($this->filters[$lname]), $args);
-				}
-			}
-			throw new \LogicException("Filter '$name' is not defined.");
-		}
-		return call_user_func_array(Helpers::checkCallback($this->filters[$lname]), $args);
+		return call_user_func_array($this->filters->$name, $args);
 	}
 
 
 	/**
 	 * Adds new macro.
-	 * @return self
+	 * @return static
 	 */
 	public function addMacro($name, IMacro $macro)
 	{
@@ -278,7 +281,28 @@ class Engine extends Object
 
 
 	/**
-	 * @return self
+	 * Adds new provider.
+	 * @return static
+	 */
+	public function addProvider($name, $value)
+	{
+		$this->providers[$name] = $value;
+		return $this;
+	}
+
+
+	/**
+	 * Returns all providers.
+	 * @return array
+	 */
+	public function getProviders()
+	{
+		return $this->providers;
+	}
+
+
+	/**
+	 * @return static
 	 */
 	public function setContentType($type)
 	{
@@ -289,7 +313,7 @@ class Engine extends Object
 
 	/**
 	 * Sets path to temporary directory.
-	 * @return self
+	 * @return static
 	 */
 	public function setTempDirectory($path)
 	{
@@ -300,9 +324,9 @@ class Engine extends Object
 
 	/**
 	 * Sets auto-refresh mode.
-	 * @return self
+	 * @return static
 	 */
-	public function setAutoRefresh($on = TRUE)
+	public function setAutoRefresh($on = true)
 	{
 		$this->autoRefresh = (bool) $on;
 		return $this;
@@ -336,7 +360,7 @@ class Engine extends Object
 
 
 	/**
-	 * @return self
+	 * @return static
 	 */
 	public function setLoader(ILoader $loader)
 	{
@@ -355,5 +379,4 @@ class Engine extends Object
 		}
 		return $this->loader;
 	}
-
 }

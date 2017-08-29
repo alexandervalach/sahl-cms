@@ -12,11 +12,11 @@ use Latte;
 
 /**
  * HTML literal.
- *
- * @author     David Grudl
  */
-class Html extends Latte\Object implements IHtmlString
+class Html implements IHtmlString
 {
+	use Latte\Strict;
+
 	/** @var string */
 	private $value;
 
@@ -34,5 +34,4 @@ class Html extends Latte\Object implements IHtmlString
 	{
 		return $this->value;
 	}
-
 }

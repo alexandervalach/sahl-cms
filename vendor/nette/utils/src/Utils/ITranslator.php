@@ -7,13 +7,9 @@
 
 namespace Nette\Localization;
 
-use Nette;
-
 
 /**
  * Translator adapter.
- *
- * @author     David Grudl
  */
 interface ITranslator
 {
@@ -24,6 +20,5 @@ interface ITranslator
 	 * @param  int      plural count
 	 * @return string
 	 */
-	function translate($message, $count = NULL);
-
+	function translate($message, $count = null);
 }

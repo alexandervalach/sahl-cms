@@ -10,8 +10,6 @@ namespace Nette\Application;
 
 /**
  * Responsible for creating a new instance of given presenter.
- *
- * @author Jan Tichý <tichy@medio.cz>
  */
 interface IPresenterFactory
 {
@@ -22,7 +20,7 @@ interface IPresenterFactory
 	 * @return string  class name
 	 * @throws InvalidPresenterException
 	 */
-	function getPresenterClass(& $name);
+	function getPresenterClass(&$name);
 
 	/**
 	 * Creates new presenter instance.
@@ -30,5 +28,4 @@ interface IPresenterFactory
 	 * @return IPresenter
 	 */
 	function createPresenter($name);
-
 }

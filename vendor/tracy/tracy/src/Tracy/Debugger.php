@@ -7,103 +7,66 @@
 
 namespace Tracy;
 
-use Tracy;
 use ErrorException;
+use Tracy;
 
 
 /**
  * Debugger: displays and logs errors.
- *
- * Behavior is determined by two factors: mode & output
- * - modes: production / development
- * - output: HTML / AJAX / CLI / other (e.g. XML)
- *
- * @author     David Grudl
  */
 class Debugger
 {
-	const VERSION = '2.2.9';
+	const VERSION = '2.4.9';
 
-	/** @deprecated */
-	public static $version = self::VERSION;
+	/** server modes for Debugger::enable() */
+	const
+		DEVELOPMENT = false,
+		PRODUCTION = true,
+		DETECT = null;
+
+	const COOKIE_SECRET = 'tracy-debug';
 
 	/** @var bool in production mode is suppressed any debugging output */
 	public static $productionMode = self::DETECT;
 
-	/** @var int timestamp with microseconds of the start of the request */
-	public static $time;
+	/** @var bool whether to display debug bar in development mode */
+	public static $showBar = true;
 
-	/** @var string  requested URI or command line */
-	public static $source;
+	/** @var bool */
+	private static $enabled = false;
 
-	/** @var string URI pattern mask to open editor */
-	public static $editor = 'editor://open/?file=%file&line=%line';
+	/** @var string reserved memory; also prevents double rendering */
+	private static $reserved;
 
-	/** @var string command to open browser (use 'start ""' in Windows) */
-	public static $browser;
-
-	/********************* Debugger::dump() ****************d*g**/
-
-	/** @var int  how many nested levels of array/object properties display {@link Debugger::dump()} */
-	public static $maxDepth = 3;
-
-	/** @var int  how long strings display {@link Debugger::dump()} */
-	public static $maxLen = 150;
-
-	/** @var bool display location? {@link Debugger::dump()} */
-	public static $showLocation = FALSE;
+	/** @var int initial output buffer level */
+	private static $obLevel;
 
 	/********************* errors and exceptions reporting ****************d*g**/
 
-	/** server modes {@link Debugger::enable()} */
-	const DEVELOPMENT = FALSE,
-		PRODUCTION = TRUE,
-		DETECT = NULL;
-
-	/** @var BlueScreen */
-	private static $blueScreen;
-
-	/** @var bool|int determines whether any error will cause immediate death; if integer that it's matched against error severity */
-	public static $strictMode = FALSE; // $immediateDeath
+	/** @var bool|int determines whether any error will cause immediate death in development mode; if integer that it's matched against error severity */
+	public static $strictMode = false;
 
 	/** @var bool disables the @ (shut-up) operator so that notices and warnings are no longer hidden */
-	public static $scream = FALSE;
+	public static $scream = false;
 
 	/** @var array of callables specifies the functions that are automatically called after fatal error */
-	public static $onFatalError = array();
+	public static $onFatalError = [];
 
-	/** @var bool {@link Debugger::enable()} */
-	private static $enabled = FALSE;
+	/********************* Debugger::dump() ****************d*g**/
 
-	/** @var bool prevent double rendering */
-	private static $done;
+	/** @var int  how many nested levels of array/object properties display by dump() */
+	public static $maxDepth = 3;
 
-	/** @internal */
-	public static $errorTypes = array(
-		E_ERROR => 'Fatal Error',
-		E_USER_ERROR => 'User Error',
-		E_RECOVERABLE_ERROR => 'Recoverable Error',
-		E_CORE_ERROR => 'Core Error',
-		E_COMPILE_ERROR => 'Compile Error',
-		E_PARSE => 'Parse Error',
-		E_WARNING => 'Warning',
-		E_CORE_WARNING => 'Core Warning',
-		E_COMPILE_WARNING => 'Compile Warning',
-		E_USER_WARNING => 'User Warning',
-		E_NOTICE => 'Notice',
-		E_USER_NOTICE => 'User Notice',
-		E_STRICT => 'Strict standards',
-		E_DEPRECATED => 'Deprecated',
-		E_USER_DEPRECATED => 'User Deprecated',
-	);
+	/** @var int  how long strings display by dump() */
+	public static $maxLength = 150;
+
+	/** @var bool display location by dump()? */
+	public static $showLocation = false;
+
+	/** @deprecated */
+	public static $maxLen = 150;
 
 	/********************* logging ****************d*g**/
-
-	/** @var Logger */
-	private static $logger;
-
-	/** @var FireLogger */
-	private static $fireLogger;
 
 	/** @var string name of the directory where errors should be logged */
 	public static $logDirectory;
@@ -114,24 +77,48 @@ class Debugger
 	/** @var string|array email(s) to which send error notifications */
 	public static $email;
 
-	/** @deprecated */
-	public static $mailer = array('Tracy\Logger', 'defaultMailer');
+	/** for Debugger::log() and Debugger::fireLog() */
+	const
+		DEBUG = ILogger::DEBUG,
+		INFO = ILogger::INFO,
+		WARNING = ILogger::WARNING,
+		ERROR = ILogger::ERROR,
+		EXCEPTION = ILogger::EXCEPTION,
+		CRITICAL = ILogger::CRITICAL;
 
-	/** @deprecated */
-	public static $emailSnooze = 172800;
+	/********************* misc ****************d*g**/
 
-	/** {@link Debugger::log()} and {@link Debugger::fireLog()} */
-	const DEBUG = 'debug',
-		INFO = 'info',
-		WARNING = 'warning',
-		ERROR = 'error',
-		EXCEPTION = 'exception',
-		CRITICAL = 'critical';
+	/** @var int timestamp with microseconds of the start of the request */
+	public static $time;
 
-	/********************* debug bar ****************d*g**/
+	/** @var string URI pattern mask to open editor */
+	public static $editor = 'editor://open/?file=%file&line=%line';
+
+	/** @var array replacements in path */
+	public static $editorMapping = [];
+
+	/** @var string command to open browser (use 'start ""' in Windows) */
+	public static $browser;
+
+	/** @var string custom static error template */
+	public static $errorTemplate;
+
+	/** @var array */
+	private static $cpuUsage;
+
+	/********************* services ****************d*g**/
+
+	/** @var BlueScreen */
+	private static $blueScreen;
 
 	/** @var Bar */
 	private static $bar;
+
+	/** @var ILogger */
+	private static $logger;
+
+	/** @var ILogger */
+	private static $fireLogger;
 
 
 	/**
@@ -145,74 +132,313 @@ class Debugger
 
 	/**
 	 * Enables displaying or logging errors and exceptions.
-	 * @param  mixed         production, development mode, autodetection or IP address(es) whitelist.
-	 * @param  string        error log directory; enables logging in production mode, FALSE means that logging is disabled
-	 * @param  string        administrator email; enables email sending in production mode
+	 * @param  mixed   production, development mode, autodetection or IP address(es) whitelist.
+	 * @param  string  error log directory
+	 * @param  string  administrator email; enables email sending in production mode
 	 * @return void
 	 */
-	public static function enable($mode = NULL, $logDirectory = NULL, $email = NULL)
+	public static function enable($mode = null, $logDirectory = null, $email = null)
 	{
-		self::$time = isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : microtime(TRUE);
-		if (isset($_SERVER['REQUEST_URI'])) {
-			self::$source = (!empty($_SERVER['HTTPS']) && strcasecmp($_SERVER['HTTPS'], 'off') ? 'https://' : 'http://')
-				. (isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : '')
-				. $_SERVER['REQUEST_URI'];
-		} else {
-			self::$source = empty($_SERVER['argv']) ? 'CLI' : 'CLI: ' . implode(' ', $_SERVER['argv']);
+		if ($mode !== null || self::$productionMode === null) {
+			self::$productionMode = is_bool($mode) ? $mode : !self::detectDebugMode($mode);
 		}
-		error_reporting(E_ALL | E_STRICT);
 
-		// production/development mode detection
-		if (is_bool($mode)) {
-			self::$productionMode = $mode;
-
-		} elseif ($mode !== self::DETECT || self::$productionMode === NULL) { // IP addresses or computer names whitelist detection
-			$list = is_string($mode) ? preg_split('#[,\s]+#', $mode) : (array) $mode;
-			if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-				$list[] = '127.0.0.1';
-				$list[] = '::1';
-			}
-			self::$productionMode = !in_array(isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : php_uname('n'), $list, TRUE);
-		}
+		self::$maxLen = &self::$maxLength;
+		self::$reserved = str_repeat('t', 30000);
+		self::$time = isset($_SERVER['REQUEST_TIME_FLOAT']) ? $_SERVER['REQUEST_TIME_FLOAT'] : microtime(true);
+		self::$obLevel = ob_get_level();
+		self::$cpuUsage = !self::$productionMode && function_exists('getrusage') ? getrusage() : null;
 
 		// logging configuration
-		if ($email !== NULL) {
+		if ($email !== null) {
 			self::$email = $email;
 		}
-		if (is_string($logDirectory)) {
-			self::$logDirectory = realpath($logDirectory);
-			if (self::$logDirectory === FALSE) {
-				self::_exceptionHandler(new \RuntimeException("Log directory is not found or is not directory."));
+		if ($logDirectory !== null) {
+			self::$logDirectory = $logDirectory;
+		}
+		if (self::$logDirectory) {
+			if (!is_dir(self::$logDirectory) || !preg_match('#([a-z]+:)?[/\\\\]#Ai', self::$logDirectory)) {
+				self::$logDirectory = null;
+				self::exceptionHandler(new \RuntimeException('Logging directory not found or is not absolute path.'));
 			}
-		} elseif ($logDirectory === FALSE) {
-			self::$logDirectory = NULL;
 		}
 
 		// php configuration
 		if (function_exists('ini_set')) {
-			ini_set('display_errors', !self::$productionMode); // or 'stderr'
-			ini_set('html_errors', FALSE);
-			ini_set('log_errors', FALSE);
+			ini_set('display_errors', self::$productionMode ? '0' : '1'); // or 'stderr'
+			ini_set('html_errors', '0');
+			ini_set('log_errors', '0');
 
 		} elseif (ini_get('display_errors') != !self::$productionMode // intentionally ==
 			&& ini_get('display_errors') !== (self::$productionMode ? 'stderr' : 'stdout')
 		) {
-			self::_exceptionHandler(new \RuntimeException("Unable to set 'display_errors' because function ini_set() is disabled."));
+			self::exceptionHandler(new \RuntimeException("Unable to set 'display_errors' because function ini_set() is disabled."));
+		}
+		error_reporting(E_ALL);
+
+		if (self::$enabled) {
+			return;
 		}
 
-		if (!self::$enabled) {
-			register_shutdown_function(array(__CLASS__, '_shutdownHandler'));
-			set_exception_handler(array(__CLASS__, '_exceptionHandler'));
-			set_error_handler(array(__CLASS__, '_errorHandler'));
+		register_shutdown_function([__CLASS__, 'shutdownHandler']);
+		set_exception_handler([__CLASS__, 'exceptionHandler']);
+		set_error_handler([__CLASS__, 'errorHandler']);
 
-			foreach (array('Tracy\Bar', 'Tracy\BlueScreen', 'Tracy\DefaultBarPanel', 'Tracy\Dumper',
-				'Tracy\FireLogger', 'Tracy\Helpers', 'Tracy\Logger') as $class) {
-				class_exists($class);
-			}
+		array_map('class_exists', ['Tracy\Bar', 'Tracy\BlueScreen', 'Tracy\DefaultBarPanel', 'Tracy\Dumper',
+			'Tracy\FireLogger', 'Tracy\Helpers', 'Tracy\Logger', ]);
 
-			self::$enabled = TRUE;
+		self::dispatch();
+		self::$enabled = true;
+	}
+
+
+	/**
+	 * @return void
+	 */
+	public static function dispatch()
+	{
+		if (self::$productionMode) {
+			return;
+
+		} elseif (headers_sent($file, $line) || ob_get_length()) {
+			throw new \LogicException(
+				__METHOD__ . '() called after some output has been sent. '
+				. ($file ? "Output started at $file:$line." : 'Try Tracy\OutputDebugger to find where output started.')
+			);
+
+		} elseif (self::$enabled && session_status() !== PHP_SESSION_ACTIVE) {
+			ini_set('session.use_cookies', '1');
+			ini_set('session.use_only_cookies', '1');
+			ini_set('session.use_trans_sid', '0');
+			ini_set('session.cookie_path', '/');
+			ini_set('session.cookie_httponly', '1');
+			session_start();
+		}
+
+		if (self::getBar()->dispatchAssets()) {
+			exit;
 		}
 	}
+
+
+	/**
+	 * Renders loading <script>
+	 * @return void
+	 */
+	public static function renderLoader()
+	{
+		if (!self::$productionMode) {
+			self::getBar()->renderLoader();
+		}
+	}
+
+
+	/**
+	 * @return bool
+	 */
+	public static function isEnabled()
+	{
+		return self::$enabled;
+	}
+
+
+	/**
+	 * Shutdown handler to catch fatal errors and execute of the planned activities.
+	 * @return void
+	 * @internal
+	 */
+	public static function shutdownHandler()
+	{
+		if (!self::$reserved) {
+			return;
+		}
+		self::$reserved = null;
+
+		$error = error_get_last();
+		if (in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE, E_RECOVERABLE_ERROR, E_USER_ERROR], true)) {
+			self::exceptionHandler(
+				Helpers::fixStack(new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'])),
+				false
+			);
+
+		} elseif (self::$showBar && !self::$productionMode) {
+			self::removeOutputBuffers(false);
+			self::getBar()->render();
+		}
+	}
+
+
+	/**
+	 * Handler to catch uncaught exception.
+	 * @param  \Exception|\Throwable
+	 * @return void
+	 * @internal
+	 */
+	public static function exceptionHandler($exception, $exit = true)
+	{
+		if (!self::$reserved && $exit) {
+			return;
+		}
+		self::$reserved = null;
+
+		if (!headers_sent()) {
+			http_response_code(isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== false ? 503 : 500);
+			if (Helpers::isHtmlMode()) {
+				header('Content-Type: text/html; charset=UTF-8');
+			}
+		}
+
+		Helpers::improveException($exception);
+		self::removeOutputBuffers(true);
+
+		if (self::$productionMode) {
+			try {
+				self::log($exception, self::EXCEPTION);
+			} catch (\Exception $e) {
+			} catch (\Throwable $e) {
+			}
+
+			if (Helpers::isHtmlMode()) {
+				$logged = empty($e);
+				require self::$errorTemplate ?: __DIR__ . '/assets/Debugger/error.500.phtml';
+			} elseif (PHP_SAPI === 'cli') {
+				fwrite(STDERR, 'ERROR: application encountered an error and can not continue. '
+					. (isset($e) ? "Unable to log error.\n" : "Error was logged.\n"));
+			}
+
+		} elseif (!connection_aborted() && (Helpers::isHtmlMode() || Helpers::isAjax())) {
+			self::getBlueScreen()->render($exception);
+			if (self::$showBar) {
+				self::getBar()->render();
+			}
+
+		} else {
+			self::fireLog($exception);
+			$s = get_class($exception) . ($exception->getMessage() === '' ? '' : ': ' . $exception->getMessage())
+				. ' in ' . $exception->getFile() . ':' . $exception->getLine()
+				. "\nStack trace:\n" . $exception->getTraceAsString();
+			try {
+				$file = self::log($exception, self::EXCEPTION);
+				if ($file && !headers_sent()) {
+					header("X-Tracy-Error-Log: $file");
+				}
+				echo "$s\n" . ($file ? "(stored in $file)\n" : '');
+				if ($file && self::$browser) {
+					exec(self::$browser . ' ' . escapeshellarg($file));
+				}
+			} catch (\Exception $e) {
+				echo "$s\nUnable to log error: {$e->getMessage()}\n";
+			} catch (\Throwable $e) {
+				echo "$s\nUnable to log error: {$e->getMessage()}\n";
+			}
+		}
+
+		try {
+			$e = null;
+			foreach (self::$onFatalError as $handler) {
+				call_user_func($handler, $exception);
+			}
+		} catch (\Exception $e) {
+		} catch (\Throwable $e) {
+		}
+		if ($e) {
+			try {
+				self::log($e, self::EXCEPTION);
+			} catch (\Exception $e) {
+			} catch (\Throwable $e) {
+			}
+		}
+
+		if ($exit) {
+			exit(255);
+		}
+	}
+
+
+	/**
+	 * Handler to catch warnings and notices.
+	 * @return bool   false to call normal error handler, null otherwise
+	 * @throws ErrorException
+	 * @internal
+	 */
+	public static function errorHandler($severity, $message, $file, $line, $context)
+	{
+		if (self::$scream) {
+			error_reporting(E_ALL);
+		}
+
+		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
+			if (Helpers::findTrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), '*::__toString')) {
+				$previous = isset($context['e']) && ($context['e'] instanceof \Exception || $context['e'] instanceof \Throwable) ? $context['e'] : null;
+				$e = new ErrorException($message, 0, $severity, $file, $line, $previous);
+				$e->context = $context;
+				self::exceptionHandler($e);
+			}
+
+			$e = new ErrorException($message, 0, $severity, $file, $line);
+			$e->context = $context;
+			throw $e;
+
+		} elseif (($severity & error_reporting()) !== $severity) {
+			return false; // calls normal error handler to fill-in error_get_last()
+
+		} elseif (self::$productionMode && ($severity & self::$logSeverity) === $severity) {
+			$e = new ErrorException($message, 0, $severity, $file, $line);
+			$e->context = $context;
+			Helpers::improveException($e);
+			try {
+				self::log($e, self::ERROR);
+			} catch (\Exception $foo) {
+			} catch (\Throwable $foo) {
+			}
+			return null;
+
+		} elseif (!self::$productionMode && !isset($_GET['_tracy_skip_error'])
+			&& (is_bool(self::$strictMode) ? self::$strictMode : ((self::$strictMode & $severity) === $severity))
+		) {
+			$e = new ErrorException($message, 0, $severity, $file, $line);
+			$e->context = $context;
+			$e->skippable = true;
+			self::exceptionHandler($e);
+		}
+
+		$message = 'PHP ' . Helpers::errorTypeToString($severity) . ": $message";
+		$count = &self::getBar()->getPanel('Tracy:errors')->data["$file|$line|$message"];
+
+		if ($count++) { // repeated error
+			return null;
+
+		} elseif (self::$productionMode) {
+			try {
+				self::log("$message in $file:$line", self::ERROR);
+			} catch (\Exception $foo) {
+			} catch (\Throwable $foo) {
+			}
+			return null;
+
+		} else {
+			self::fireLog(new ErrorException($message, 0, $severity, $file, $line));
+			return Helpers::isHtmlMode() || Helpers::isAjax() ? null : false; // false calls normal error handler
+		}
+	}
+
+
+	private static function removeOutputBuffers($errorOccurred)
+	{
+		while (ob_get_level() > self::$obLevel) {
+			$status = ob_get_status();
+			if (in_array($status['name'], ['ob_gzhandler', 'zlib output compression'], true)) {
+				break;
+			}
+			$fnc = $status['chunk_size'] || !$errorOccurred ? 'ob_end_flush' : 'ob_end_clean';
+			if (!@$fnc()) { // @ may be not removable
+				break;
+			}
+		}
+	}
+
+
+	/********************* services ****************d*g**/
 
 
 	/**
@@ -222,11 +448,11 @@ class Debugger
 	{
 		if (!self::$blueScreen) {
 			self::$blueScreen = new BlueScreen;
-			self::$blueScreen->info = array(
+			self::$blueScreen->info = [
 				'PHP ' . PHP_VERSION,
-				isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : NULL,
+				isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : null,
 				'Tracy ' . self::VERSION,
-			);
+			];
 		}
 		return self::$blueScreen;
 	}
@@ -239,15 +465,9 @@ class Debugger
 	{
 		if (!self::$bar) {
 			self::$bar = new Bar;
-			self::$bar->addPanel(new DefaultBarPanel('time'));
-			self::$bar->addPanel(new DefaultBarPanel('memory'));
-			self::$bar->addPanel(new DefaultBarPanel('errors'), __CLASS__ . ':errors'); // filled by _errorHandler()
-			self::$bar->addPanel(new DefaultBarPanel('dumps'), __CLASS__ . ':dumps'); // filled by barDump()
-			self::$bar->info = array(
-				'PHP ' . PHP_VERSION,
-				isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : NULL,
-				'Tracy ' . self::VERSION,
-			);
+			self::$bar->addPanel($info = new DefaultBarPanel('info'), 'Tracy:info');
+			$info->cpuUsage = self::$cpuUsage;
+			self::$bar->addPanel(new DefaultBarPanel('errors'), 'Tracy:errors'); // filled by errorHandler()
 		}
 		return self::$bar;
 	}
@@ -256,30 +476,28 @@ class Debugger
 	/**
 	 * @return void
 	 */
-	public static function setLogger($logger)
+	public static function setLogger(ILogger $logger)
 	{
 		self::$logger = $logger;
 	}
 
 
 	/**
-	 * @return Logger
+	 * @return ILogger
 	 */
 	public static function getLogger()
 	{
 		if (!self::$logger) {
-			self::$logger = new Logger;
-			self::$logger->directory = & self::$logDirectory;
-			self::$logger->email = & self::$email;
-			self::$logger->mailer = & self::$mailer;
-			self::$logger->emailSnooze = & self::$emailSnooze;
+			self::$logger = new Logger(self::$logDirectory, self::$email, self::getBlueScreen());
+			self::$logger->directory = &self::$logDirectory; // back compatiblity
+			self::$logger->email = &self::$email;
 		}
 		return self::$logger;
 	}
 
 
 	/**
-	 * @return FireLogger
+	 * @return ILogger
 	 */
 	public static function getFireLogger()
 	{
@@ -287,239 +505,6 @@ class Debugger
 			self::$fireLogger = new FireLogger;
 		}
 		return self::$fireLogger;
-	}
-
-
-	/**
-	 * Is Debug enabled?
-	 * @return bool
-	 */
-	public static function isEnabled()
-	{
-		return self::$enabled;
-	}
-
-
-	/**
-	 * Logs message or exception to file (if not disabled) and sends email notification (if enabled).
-	 * @param  string|Exception
-	 * @param  int  one of constant Debugger::INFO, WARNING, ERROR (sends email), EXCEPTION (sends email), CRITICAL (sends email)
-	 * @return string logged error filename
-	 */
-	public static function log($message, $priority = self::INFO)
-	{
-		if (!self::$logDirectory) {
-			return;
-		}
-
-		$exceptionFilename = NULL;
-		if ($message instanceof \Exception || $message instanceof \Throwable) {
-			$exception = $message;
-			while ($exception) {
-				$tmp[] = ($exception instanceof ErrorException
-					? 'Fatal error: ' . $exception->getMessage()
-					: Helpers::getClass($exception) . ': ' . $exception->getMessage())
-					. ' in ' . $exception->getFile() . ':' . $exception->getLine();
-				$exception = $exception->getPrevious();
-			}
-			$exception = $message;
-			$message = implode($tmp, "\ncaused by ");
-
-			$hash = md5(preg_replace('~(Resource id #)\d+~', '$1', $exception));
-			$exceptionFilename = 'exception-' . @date('Y-m-d-H-i-s') . "-$hash.html";
-			foreach (new \DirectoryIterator(self::$logDirectory) as $entry) {
-				if (strpos($entry, $hash)) {
-					$exceptionFilename = $entry;
-					$saved = TRUE;
-					break;
-				}
-			}
-		} elseif (!is_string($message)) {
-			$message = Dumper::toText($message);
-		}
-
-		if ($exceptionFilename) {
-			$exceptionFilename = self::$logDirectory . '/' . $exceptionFilename;
-			if (empty($saved) && $logHandle = @fopen($exceptionFilename, 'w')) {
-				ob_start(); // double buffer prevents sending HTTP headers in some PHP
-				ob_start(function ($buffer) use ($logHandle) { fwrite($logHandle, $buffer); }, 4096);
-				self::getBlueScreen()->render($exception);
-				ob_end_flush();
-				ob_end_clean();
-				fclose($logHandle);
-			}
-		}
-
-		self::getLogger()->log(array(
-			@date('[Y-m-d H-i-s]'),
-			trim($message),
-			self::$source ? ' @  ' . self::$source : NULL,
-			$exceptionFilename ? ' @@  ' . basename($exceptionFilename) : NULL
-		), $priority);
-
-		return $exceptionFilename ? strtr($exceptionFilename, '\\/', DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR) : NULL;
-	}
-
-
-	/**
-	 * Shutdown handler to catch fatal errors and execute of the planned activities.
-	 * @return void
-	 * @internal
-	 */
-	public static function _shutdownHandler()
-	{
-		if (self::$done) {
-			return;
-		}
-
-		$error = error_get_last();
-		if (in_array($error['type'], array(E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE), TRUE)) {
-			self::_exceptionHandler(Helpers::fixStack(new ErrorException($error['message'], 0, $error['type'], $error['file'], $error['line'])), FALSE);
-
-		} elseif (!connection_aborted() && !self::$productionMode && self::isHtmlMode()) {
-			self::getBar()->render();
-		}
-	}
-
-
-	/**
-	 * Handler to catch uncaught exception.
-	 * @param  \Exception|\Throwable
-	 * @return void
-	 * @internal
-	 */
-	public static function _exceptionHandler($exception, $exit = TRUE)
-	{
-		if (self::$done) {
-			return;
-		}
-		self::$done = TRUE;
-
-		if (!headers_sent()) {
-			$protocol = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.1';
-			$code = isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE ') !== FALSE ? 503 : 500;
-			header("$protocol $code", TRUE, $code);
-			if (self::isHtmlMode()) {
-				header('Content-Type: text/html; charset=UTF-8');
-			}
-		}
-
-		if (self::$productionMode) {
-			try {
-				self::log($exception, self::EXCEPTION);
-			} catch (\Throwable $e) {
-			} catch (\Exception $e) {
-			}
-
-			if (self::isHtmlMode()) {
-				$logged = empty($e);
-				require __DIR__ . '/templates/error.phtml';
-			} elseif (PHP_SAPI === 'cli') {
-				fwrite(STDERR, 'ERROR: application encountered an error and can not continue. '
-					. (isset($e) ? "Unable to log error.\n" : "Error was logged.\n"));
-			}
-
-		} elseif (!connection_aborted() && self::isHtmlMode()) {
-			self::getBlueScreen()->render($exception);
-			self::getBar()->render();
-
-		} elseif (connection_aborted() || !self::fireLog($exception)) {
-			try {
-				$file = self::log($exception, self::EXCEPTION);
-				if ($file && !headers_sent()) {
-					header("X-Tracy-Error-Log: $file");
-				}
-				echo "$exception\n" . ($file ? "(stored in $file)\n" : '');
-				if ($file && self::$browser) {
-					exec(self::$browser . ' ' . escapeshellarg($file));
-				}
-			} catch (\Throwable $e) {
-				echo "$s\nUnable to log error: {$e->getMessage()}\n";
-			} catch (\Exception $e) {
-				echo "$exception\nUnable to log error: {$e->getMessage()}\n";
-			}
-		}
-
-		try {
-			$e = NULL;
-			foreach (self::$onFatalError as $handler) {
-				call_user_func($handler, $exception);
-			}
-		} catch (\Throwable $e) {
-		} catch (\Exception $e) {
-		}
-		if ($e) {
-			try {
-				self::log($e, self::EXCEPTION);
-			} catch (\Throwable $e) {
-			} catch (\Exception $e) {
-			}
-		}
-
-		if ($exit) {
-			exit(254);
-		}
-	}
-
-
-	/**
-	 * Handler to catch warnings and notices.
-	 * @param  int    level of the error raised
-	 * @param  string error message
-	 * @param  string file that the error was raised in
-	 * @param  int    line number the error was raised at
-	 * @param  array  an array of variables that existed in the scope the error was triggered in
-	 * @return bool   FALSE to call normal error handler, NULL otherwise
-	 * @throws ErrorException
-	 * @internal
-	 */
-	public static function _errorHandler($severity, $message, $file, $line, $context)
-	{
-		if (self::$scream) {
-			error_reporting(E_ALL | E_STRICT);
-		}
-
-		if ($severity === E_RECOVERABLE_ERROR || $severity === E_USER_ERROR) {
-			if (Helpers::findTrace(debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : FALSE), '*::__toString')) {
-				$previous = isset($context['e']) && ($context['e'] instanceof \Exception || $context['e'] instanceof \Throwable) ? $context['e'] : NULL;
-				$e = new ErrorException($message, 0, $severity, $file, $line, $previous);
-				$e->context = $context;
-				self::_exceptionHandler($e);
-			}
-
-			$e = new ErrorException($message, 0, $severity, $file, $line);
-			$e->context = $context;
-			throw $e;
-
-		} elseif (($severity & error_reporting()) !== $severity) {
-			return FALSE; // calls normal error handler to fill-in error_get_last()
-
-		} elseif (self::$productionMode && ($severity & self::$logSeverity) === $severity) {
-			$e = new ErrorException($message, 0, $severity, $file, $line);
-			$e->context = $context;
-			self::log($e, self::ERROR);
-			return NULL;
-
-		} elseif (!self::$productionMode && (is_bool(self::$strictMode) ? self::$strictMode : ((self::$strictMode & $severity) === $severity))) {
-			$e = new ErrorException($message, 0, $severity, $file, $line);
-			$e->context = $context;
-			self::_exceptionHandler($e);
-		}
-
-		$message = 'PHP ' . (isset(self::$errorTypes[$severity]) ? self::$errorTypes[$severity] : 'Unknown error') . ": $message";
-		$count = & self::getBar()->getPanel(__CLASS__ . ':errors')->data["$file|$line|$message"];
-
-		if ($count++) { // repeated error
-			return NULL;
-
-		} elseif (self::$productionMode) {
-			self::log("$message in $file:$line", self::ERROR);
-			return NULL;
-
-		} else {
-			self::fireLog(new ErrorException($message, 0, $severity, $file, $line));
-			return self::isHtmlMode() ? NULL : FALSE; // FALSE calls normal error handler
-		}
 	}
 
 
@@ -533,22 +518,22 @@ class Debugger
 	 * @param  bool   return output instead of printing it? (bypasses $productionMode)
 	 * @return mixed  variable itself or dump
 	 */
-	public static function dump($var, $return = FALSE)
+	public static function dump($var, $return = false)
 	{
 		if ($return) {
-			ob_start();
-			Dumper::dump($var, array(
+			ob_start(function () {});
+			Dumper::dump($var, [
 				Dumper::DEPTH => self::$maxDepth,
-				Dumper::TRUNCATE => self::$maxLen,
-			));
+				Dumper::TRUNCATE => self::$maxLength,
+			]);
 			return ob_get_clean();
 
 		} elseif (!self::$productionMode) {
-			Dumper::dump($var, array(
+			Dumper::dump($var, [
 				Dumper::DEPTH => self::$maxDepth,
-				Dumper::TRUNCATE => self::$maxLen,
+				Dumper::TRUNCATE => self::$maxLength,
 				Dumper::LOCATION => self::$showLocation,
-			));
+			]);
 		}
 
 		return $var;
@@ -560,10 +545,10 @@ class Debugger
 	 * @param  string  name
 	 * @return float   elapsed seconds
 	 */
-	public static function timer($name = NULL)
+	public static function timer($name = null)
 	{
-		static $time = array();
-		$now = microtime(TRUE);
+		static $time = [];
+		$now = microtime(true);
 		$delta = isset($time[$name]) ? $now - $time[$name] : 0;
 		$time[$name] = $now;
 		return $delta;
@@ -578,16 +563,31 @@ class Debugger
 	 * @param  array  dumper options
 	 * @return mixed  variable itself
 	 */
-	public static function barDump($var, $title = NULL, array $options = NULL)
+	public static function barDump($var, $title = null, array $options = null)
 	{
 		if (!self::$productionMode) {
-			self::getBar()->getPanel(__CLASS__ . ':dumps')->data[] = array('title' => $title, 'dump' => Dumper::toHtml($var, (array) $options + array(
+			static $panel;
+			if (!$panel) {
+				self::getBar()->addPanel($panel = new DefaultBarPanel('dumps'), 'Tracy:dumps');
+			}
+			$panel->data[] = ['title' => $title, 'dump' => Dumper::toHtml($var, (array) $options + [
 				Dumper::DEPTH => self::$maxDepth,
-				Dumper::TRUNCATE => self::$maxLen,
-				Dumper::LOCATION => self::$showLocation,
-			)));
+				Dumper::TRUNCATE => self::$maxLength,
+				Dumper::LOCATION => self::$showLocation ?: Dumper::LOCATION_CLASS | Dumper::LOCATION_SOURCE,
+			])];
 		}
 		return $var;
+	}
+
+
+	/**
+	 * Logs message or exception.
+	 * @param  string|\Exception|\Throwable
+	 * @return mixed
+	 */
+	public static function log($message, $priority = ILogger::INFO)
+	{
+		return self::getLogger()->log($message, $priority);
 	}
 
 
@@ -604,11 +604,26 @@ class Debugger
 	}
 
 
-	private static function isHtmlMode()
+	/**
+	 * Detects debug mode by IP address.
+	 * @param  string|array  IP addresses or computer names whitelist detection
+	 * @return bool
+	 */
+	public static function detectDebugMode($list = null)
 	{
-		return empty($_SERVER['HTTP_X_REQUESTED_WITH'])
-			&& PHP_SAPI !== 'cli'
-			&& !preg_match('#^Content-Type: (?!text/html)#im', implode("\n", headers_list()));
+		$addr = isset($_SERVER['REMOTE_ADDR'])
+			? $_SERVER['REMOTE_ADDR']
+			: php_uname('n');
+		$secret = isset($_COOKIE[self::COOKIE_SECRET]) && is_string($_COOKIE[self::COOKIE_SECRET])
+			? $_COOKIE[self::COOKIE_SECRET]
+			: null;
+		$list = is_string($list)
+			? preg_split('#[,\s]+#', $list)
+			: (array) $list;
+		if (!isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+			$list[] = '127.0.0.1';
+			$list[] = '::1';
+		}
+		return in_array($addr, $list, true) || in_array("$secret@$addr", $list, true);
 	}
-
 }

@@ -10,8 +10,6 @@ namespace Nette\Application\UI;
 
 /**
  * Component with ability to save and load its state.
- *
- * @author     David Grudl
  */
 interface IStatePersistent
 {
@@ -26,6 +24,5 @@ interface IStatePersistent
 	 * Saves state informations for next request.
 	 * @return void
 	 */
-	function saveState(array & $params);
-
+	function saveState(array &$params);
 }

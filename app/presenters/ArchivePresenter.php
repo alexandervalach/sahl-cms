@@ -133,62 +133,72 @@ class ArchivePresenter extends BasePresenter {
 		$data = array();
 		$players = $this->playersRepository->getAsArray();
 		foreach ($players as $player) {
-			$data['team_id'] = $team_id[$player->team_id];
-			$data['type_id'] = $player->type_id;
-			$data['lname'] = $player->lname;
-			$data['num'] = $player->num;
-			$data['born'] = $player->born;
-			$data['goals'] = $player->goals;
-			$data['trans'] = $player->trans;
-			$data['archive_id'] = $values['archive_id'];
-			$id = $this->playersRepository->insert($data);
-			$player_id[$player->id] = $id;
+			if (isset($team_id[$player->team_id])) {
+				$data['team_id'] = $team_id[$player->team_id];
+				$data['type_id'] = $player->type_id;
+				$data['lname'] = $player->lname;
+				$data['num'] = $player->num;
+				$data['born'] = $player->born;
+				$data['goals'] = $player->goals;
+				$data['trans'] = $player->trans;
+				$data['archive_id'] = $values['archive_id'];
+				$id = $this->playersRepository->insert($data);
+				$player_id[$player->id] = $id;
+			}
 		}
 		
 		$tables = $this->tablesRepository->findAll();
 		$data = array ( 
-			'team_id' => 0,
+			'team_id' => null,
 			'archive_id' => $values['archive_id']
 		);
 
 		foreach ($tables as $table) {
-			$data['team_id'] = $team_id[$table->team_id];
-			$table->update($data);
+			if (isset($team_id[$table->team_id])) {
+				$data['team_id'] = $team_id[$table->team_id];
+				$table->update($data);
+			}
 		}
 
 		$puns = $this->punishmentsRepository->findAll();
 		$data = array (
-			'player_id' => 0,
+			'player_id' => null,
 			'archive_id' => $values['archive_id']
 		);
 
 		foreach ($puns as $pun) {
-			$data['player_id'] = $player_id[$pun->player_id];
-			$pun->update($data);
+			if (isset($player_id[$pun->player_id])) {
+				$data['player_id'] = $player_id[$pun->player_id];
+				$pun->update($data);
+			}
 		}
 
 		$fights = $this->fightsRepository->findAll();
 		$data = array( 
-			'team1_id' => 0,
+			'team1_id' => null,
 			'team2_id' => 1,
 			'archive_id' => $values['archive_id']
 		);
 
 		foreach ($fights as $fight) {
-			$data['team1_id'] = $team_id[$fight->team1_id];
-			$data['team2_id'] = $team_id[$fight->team2_id];
-			$fight->update($data);
+			if (isset($team_id[$fight->team1_id]) && isset($team_id[$fight->team2_id])) {
+				$data['team1_id'] = $team_id[$fight->team1_id];
+				$data['team2_id'] = $team_id[$fight->team2_id];
+				$fight->update($data);
+			}
 		}
 
 		$goals = $this->goalsRepository->findAll();
 		$data = array(
-			'player_id' => 0,
+			'player_id' => null,
 			'archive_id' =>  $values['archive_id']
 		);
 
 		foreach ($goals as $goal) {
-			$data['player_id'] = $player_id[$goal->player_id];
-			$goal->update($data);
+			if (isset($player_id[$goal->player_id])) {
+				$data['player_id'] = $player_id[$goal->player_id];
+				$goal->update($data);
+			}
 		}
 
 		$this->redirect('all#nav');
@@ -198,7 +208,7 @@ class ArchivePresenter extends BasePresenter {
 		$this->redirect('all#nav');
 	}
 
-	public function addToArchive($items, $arch_id) {
+	private function addToArchive($items, $arch_id) {
 		foreach ($items as $item) {
 			$item->update($arch_id);
 		}

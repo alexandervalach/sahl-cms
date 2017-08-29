@@ -12,8 +12,6 @@ use Nette;
 
 /**
  * Any response returned by presenter.
- *
- * @author     David Grudl
  */
 interface IResponse
 {
@@ -23,5 +21,4 @@ interface IResponse
 	 * @return void
 	 */
 	function send(Nette\Http\IRequest $httpRequest, Nette\Http\IResponse $httpResponse);
-
 }

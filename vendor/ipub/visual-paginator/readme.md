@@ -34,7 +34,7 @@ extensions:
 
 ## Usage
 
-### Implementing into Presenter or Control
+### Implementing into Presenter or Component
 
 ```php
 use IPub\VisualPaginator\Components as VisualPaginator;

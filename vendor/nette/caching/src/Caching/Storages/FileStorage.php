@@ -13,11 +13,11 @@ use Nette\Caching\Cache;
 
 /**
  * Cache file storage.
- *
- * @author     David Grudl
  */
-class FileStorage extends Nette\Object implements Nette\Caching\IStorage
+class FileStorage implements Nette\Caching\IStorage
 {
+	use Nette\SmartObject;
+
 	/**
 	 * Atomic thread safe logic:
 	 *
@@ -48,7 +48,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	public static $gcProbability = 0.001;
 
 	/** @var bool */
-	public static $useDirectories = TRUE;
+	public static $useDirectories = true;
 
 	/** @var string */
 	private $dir;
@@ -63,26 +63,26 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	private $locks;
 
 
-	public function __construct($dir, IJournal $journal = NULL)
+	public function __construct($dir, IJournal $journal = null)
 	{
-		$this->dir = realpath($dir);
-		if ($this->dir === FALSE) {
+		if (!is_dir($dir)) {
 			throw new Nette\DirectoryNotFoundException("Directory '$dir' not found.");
 		}
 
+		$this->dir = $dir;
 		$this->useDirs = (bool) static::$useDirectories;
 		$this->journal = $journal;
 
 		if (mt_rand() / mt_getrandmax() < static::$gcProbability) {
-			$this->clean(array());
+			$this->clean([]);
 		}
 	}
 
 
 	/**
 	 * Read from cache.
-	 * @param  string key
-	 * @return mixed|NULL
+	 * @param  string
+	 * @return mixed
 	 */
 	public function read($key)
 	{
@@ -91,7 +91,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			return $this->readData($meta); // calls fclose()
 
 		} else {
-			return NULL;
+			return null;
 		}
 	}
 
@@ -128,17 +128,17 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 				}
 			}
 
-			return TRUE;
-		} while (FALSE);
+			return true;
+		} while (false);
 
 		$this->delete($meta[self::FILE], $meta[self::HANDLE]); // meta[handle] & meta[file] was added by readMetaAndLock()
-		return FALSE;
+		return false;
 	}
 
 
 	/**
 	 * Prevents item reading and writing. Lock is released by write() or remove().
-	 * @param  string key
+	 * @param  string
 	 * @return void
 	 */
 	public function lock($key)
@@ -157,16 +157,15 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 	/**
 	 * Writes item into the cache.
-	 * @param  string key
-	 * @param  mixed  data
-	 * @param  array  dependencies
+	 * @param  string
+	 * @param  mixed
 	 * @return void
 	 */
 	public function write($key, $data, array $dp)
 	{
-		$meta = array(
+		$meta = [
 			self::META_TIME => microtime(),
-		);
+		];
 
 		if (isset($dp[Cache::EXPIRATION])) {
 			if (empty($dp[Cache::SLIDING])) {
@@ -180,7 +179,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			foreach ((array) $dp[Cache::ITEMS] as $item) {
 				$depFile = $this->getCacheFile($item);
 				$m = $this->readMetaAndLock($depFile, LOCK_SH);
-				$meta[self::META_ITEMS][$depFile] = $m[self::META_TIME]; // may be NULL
+				$meta[self::META_ITEMS][$depFile] = $m[self::META_TIME]; // may be null
 				unset($m);
 			}
 		}
@@ -211,32 +210,31 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 		if (!is_string($data)) {
 			$data = serialize($data);
-			$meta[self::META_SERIALIZED] = TRUE;
+			$meta[self::META_SERIALIZED] = true;
 		}
 
 		$head = serialize($meta) . '?>';
 		$head = '<?php //netteCache[01]' . str_pad((string) strlen($head), 6, '0', STR_PAD_LEFT) . $head;
 		$headLen = strlen($head);
-		$dataLen = strlen($data);
 
 		do {
-			if (fwrite($handle, str_repeat("\x00", $headLen), $headLen) !== $headLen) {
+			if (fwrite($handle, str_repeat("\x00", $headLen)) !== $headLen) {
 				break;
 			}
 
-			if (fwrite($handle, $data, $dataLen) !== $dataLen) {
+			if (fwrite($handle, $data) !== strlen($data)) {
 				break;
 			}
 
 			fseek($handle, 0);
-			if (fwrite($handle, $head, $headLen) !== $headLen) {
+			if (fwrite($handle, $head) !== $headLen) {
 				break;
 			}
 
 			flock($handle, LOCK_UN);
 			fclose($handle);
 			return;
-		} while (FALSE);
+		} while (false);
 
 		$this->delete($cacheFile, $handle);
 	}
@@ -244,7 +242,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 
 	/**
 	 * Removes item from the cache.
-	 * @param  string key
+	 * @param  string
 	 * @return void
 	 */
 	public function remove($key)
@@ -313,13 +311,13 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	 * Reads cache data from disk.
 	 * @param  string  file path
 	 * @param  int     lock mode
-	 * @return array|NULL
+	 * @return array|null
 	 */
 	protected function readMetaAndLock($file, $lock)
 	{
 		$handle = @fopen($file, 'r+b'); // @ - file may not exist
 		if (!$handle) {
-			return NULL;
+			return null;
 		}
 
 		flock($handle, $lock);
@@ -328,17 +326,15 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		if ($head && strlen($head) === self::META_HEADER_LEN) {
 			$size = (int) substr($head, -6);
 			$meta = stream_get_contents($handle, $size, self::META_HEADER_LEN);
-			$meta = @unserialize($meta); // intentionally @
-			if (is_array($meta)) {
-				$meta[self::FILE] = $file;
-				$meta[self::HANDLE] = $handle;
-				return $meta;
-			}
+			$meta = unserialize($meta);
+			$meta[self::FILE] = $file;
+			$meta[self::HANDLE] = $handle;
+			return $meta;
 		}
 
 		flock($handle, LOCK_UN);
 		fclose($handle);
-		return NULL;
+		return null;
 	}
 
 
@@ -356,7 +352,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 		if (empty($meta[self::META_SERIALIZED])) {
 			return $data;
 		} else {
-			return @unserialize($data); // intentionally @
+			return unserialize($data);
 		}
 	}
 
@@ -382,7 +378,7 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 	 * @param  resource
 	 * @return void
 	 */
-	private static function delete($file, $handle = NULL)
+	private static function delete($file, $handle = null)
 	{
 		if (@unlink($file)) { // @ - file may not already exist
 			if ($handle) {
@@ -403,5 +399,4 @@ class FileStorage extends Nette\Object implements Nette\Caching\IStorage
 			@unlink($file); // @ - file may not already exist
 		}
 	}
-
 }

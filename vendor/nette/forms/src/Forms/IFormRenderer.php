@@ -10,8 +10,6 @@ namespace Nette\Forms;
 
 /**
  * Defines method that must implement form renderer.
- *
- * @author     David Grudl
  */
 interface IFormRenderer
 {
@@ -21,5 +19,4 @@ interface IFormRenderer
 	 * @return string
 	 */
 	function render(Form $form);
-
 }

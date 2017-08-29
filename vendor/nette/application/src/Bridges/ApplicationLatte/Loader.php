@@ -7,14 +7,12 @@
 
 namespace Nette\Bridges\ApplicationLatte;
 
-use Nette;
 use Latte;
+use Nette;
 
 
 /**
  * Template loader.
- *
- * @author     David Grudl
  */
 class Loader extends Latte\Loaders\FileLoader
 {
@@ -24,7 +22,7 @@ class Loader extends Latte\Loaders\FileLoader
 
 	public function __construct(Nette\Application\UI\Presenter $presenter)
 	{
+		parent::__construct();
 		$this->presenter = $presenter;
 	}
-
 }

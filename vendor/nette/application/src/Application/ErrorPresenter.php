@@ -9,32 +9,42 @@ namespace NetteModule;
 
 use Nette;
 use Nette\Application;
-use Tracy\Debugger;
+use Tracy\ILogger;
 
 
 /**
  * Default Error Presenter.
- *
- * @author     David Grudl
  */
-class ErrorPresenter extends Nette\Object implements Application\IPresenter
+class ErrorPresenter implements Application\IPresenter
 {
+	use Nette\SmartObject;
+
+	/** @var ILogger|null */
+	private $logger;
+
+
+	public function __construct(ILogger $logger = null)
+	{
+		$this->logger = $logger;
+	}
+
 
 	/**
 	 * @return Application\IResponse
 	 */
 	public function run(Application\Request $request)
 	{
-		$e = $request->parameters['exception'];
+		$e = $request->getParameter('exception');
 		if ($e instanceof Application\BadRequestException) {
-			$code = $e->getCode();
+			$code = $e->getHttpCode();
 		} else {
 			$code = 500;
-			Debugger::log($e, Debugger::EXCEPTION);
+			if ($this->logger) {
+				$this->logger->log($e, ILogger::EXCEPTION);
+			}
 		}
-		ob_start();
-		require __DIR__ . '/templates/error.phtml';
-		return new Application\Responses\TextResponse(ob_get_clean());
+		return new Application\Responses\CallbackResponse(function () use ($code) {
+			require __DIR__ . '/templates/error.phtml';
+		});
 	}
-
 }

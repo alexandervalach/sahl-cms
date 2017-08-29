@@ -10,8 +10,6 @@ namespace Nette\Application\UI;
 
 /**
  * Component with ability to receive signal.
- *
- * @author     David Grudl
  */
 interface ISignalReceiver
 {
@@ -21,5 +19,4 @@ interface ISignalReceiver
 	 * @return void
 	 */
 	function signalReceived($signal); // handleSignal
-
 }

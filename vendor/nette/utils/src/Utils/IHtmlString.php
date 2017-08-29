@@ -7,8 +7,6 @@
 
 namespace Nette\Utils;
 
-use Nette;
-
 
 interface IHtmlString
 {
@@ -17,5 +15,4 @@ interface IHtmlString
 	 * @return string in HTML format
 	 */
 	function __toString();
-
 }

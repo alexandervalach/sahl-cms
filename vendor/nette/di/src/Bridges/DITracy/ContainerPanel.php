@@ -1,8 +1,8 @@
 <?php
 
 /**
- * This file is part of the Nette Framework (http://nette.org)
- * Copyright (c) 2004 David Grudl (http://davidgrudl.com)
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
 namespace Nette\Bridges\DITracy;
@@ -14,18 +14,25 @@ use Tracy;
 
 /**
  * Dependency injection container panel for Debugger Bar.
- *
- * @author     Patrik Votoček
  */
-class ContainerPanel extends Nette\Object implements Tracy\IBarPanel
+class ContainerPanel implements Tracy\IBarPanel
 {
+	use Nette\SmartObject;
+
+	/** @var int */
+	public static $compilationTime;
+
 	/** @var Nette\DI\Container */
 	private $container;
+
+	/** @var int|null */
+	private $elapsedTime;
 
 
 	public function __construct(Container $container)
 	{
 		$this->container = $container;
+		$this->elapsedTime = self::$compilationTime ? microtime(true) - self::$compilationTime : null;
 	}
 
 
@@ -35,7 +42,8 @@ class ContainerPanel extends Nette\Object implements Tracy\IBarPanel
 	 */
 	public function getTab()
 	{
-		ob_start();
+		ob_start(function () {});
+		$elapsedTime = $this->elapsedTime;
 		require __DIR__ . '/templates/ContainerPanel.tab.phtml';
 		return ob_get_clean();
 	}
@@ -47,17 +55,13 @@ class ContainerPanel extends Nette\Object implements Tracy\IBarPanel
 	 */
 	public function getPanel()
 	{
-		$services = array();
-		foreach (Nette\Reflection\ClassType::from($this->container)->getMethods() as $method) {
-			if (preg_match('#^createService_*(.+)\z#', $method->getName(), $m)) {
-				$services[str_replace('__', '.', strtolower(substr($m[1], 0, 1)) . substr($m[1], 1))] = $method->getAnnotation('return');
-			}
-		}
-		ksort($services);
 		$container = $this->container;
 		$registry = $this->getContainerProperty('registry');
-		$tags = array();
+		$file = (new \ReflectionClass($container))->getFileName();
+		$tags = [];
 		$meta = $this->getContainerProperty('meta');
+		$services = $meta[Container::SERVICES];
+		ksort($services);
 		if (isset($meta[Container::TAGS])) {
 			foreach ($meta[Container::TAGS] as $tag => $tmp) {
 				foreach ($tmp as $service => $val) {
@@ -66,7 +70,7 @@ class ContainerPanel extends Nette\Object implements Tracy\IBarPanel
 			}
 		}
 
-		ob_start();
+		ob_start(function () {});
 		require __DIR__ . '/templates/ContainerPanel.panel.phtml';
 		return ob_get_clean();
 	}
@@ -74,9 +78,8 @@ class ContainerPanel extends Nette\Object implements Tracy\IBarPanel
 
 	private function getContainerProperty($name)
 	{
-		$prop = Nette\Reflection\ClassType::from('Nette\DI\Container')->getProperty($name);
-		$prop->setAccessible(TRUE);
+		$prop = (new \ReflectionClass(Nette\DI\Container::class))->getProperty($name);
+		$prop->setAccessible(true);
 		return $prop->getValue($this->container);
 	}
-
 }

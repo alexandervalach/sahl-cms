@@ -10,8 +10,6 @@ namespace Nette\Application\UI;
 
 /**
  * Component with ability to repaint.
- *
- * @author     David Grudl
  */
 interface IRenderable
 {
@@ -27,5 +25,4 @@ interface IRenderable
 	 * @return bool
 	 */
 	function isControlInvalid();
-
 }

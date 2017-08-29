@@ -12,19 +12,18 @@ use Nette;
 
 /**
  * Multiline text input control.
- *
- * @author     David Grudl
  */
 class TextArea extends TextBase
 {
 
 	/**
-	 * @param  string  label
+	 * @param  string|object
 	 */
-	public function __construct($label = NULL)
+	public function __construct($label = null)
 	{
 		parent::__construct($label);
 		$this->control->setName('textarea');
+		$this->setOption('type', 'textarea');
 	}
 
 
@@ -34,12 +33,7 @@ class TextArea extends TextBase
 	 */
 	public function getControl()
 	{
-		$value = $this->getValue();
-		if ($value === '') {
-			$value = $this->translate($this->emptyValue);
-		}
 		return parent::getControl()
-			->setText($value);
+			->setText($this->getRenderedValue());
 	}
-
 }

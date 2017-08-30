@@ -134,9 +134,10 @@ class PlayerPresenter extends BasePresenter {
 
     public function submittedDeleteForm() {
         $player = $this->playerRow;
+        $team = $player->team_id;
         $player->delete();
         $this->flashMessage('Hráč odstránený.', 'success');
-        $this->redirect('view#nav', $player->team_id);
+        $this->redirect('view#nav', $team);
     }
 
     public function formCancelled() {

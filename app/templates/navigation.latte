@@ -61,9 +61,15 @@
                     <a n:href="Events:all#nav" role='link'>Zápasy</a>
                 </li>
 
-                <li class='col-lg-2 col-md-2 col-sm-2'>
-                    <a n:href="Stats:all#nav" role='link'>Štatistiky</a>
-                </li>
+                {if $user->loggedIn}
+                    <li class='col-lg-1 col-md-1 col-sm-1'>
+                        <a n:href="Stats:all#nav" role='link'>Štatistiky</a>
+                    </li>
+                {else}
+                    <li class='col-lg-2 col-md-2 col-sm-2'>
+                        <a n:href="Stats:all#nav" role='link'>Štatistiky</a>
+                    </li>
+                {/if}
 
                 <li class='col-lg-2 col-md-2 col-sm-2 dropdown hidden-xs'>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role='link'>Pravidlá a smernice <span class="caret"></span></a>          

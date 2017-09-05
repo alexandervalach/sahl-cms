@@ -24,7 +24,7 @@ nette:
 	security:
 		users:
 			alexander.valach:	WallacH789	#	users'user',	passwords'user'
-			sahl:	MatusLipcak11#	#	users'user',	passwords'user'
+			sahl:	MatusLipcak11	#	users'user',	passwords'user'
 
 services:
 	- App\RouterFactory

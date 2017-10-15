@@ -128,6 +128,7 @@ abstract class BasePresenter extends Presenter {
         $this->template->playOff = $this->tablesRepository->getTableStats(1);
         $this->template->options = $this->optionsRepository->findByValue('visible', 1);
         $this->template->sponsorsCount = $sponsors->count();
+        $this->template->links = $this->linksRepository->findByValue('sponsor', 0);
         $this->template->sponsors = $sponsors;
         $this->template->imgFolder = $this->imgFolder;
     }

@@ -1,0 +1,37 @@
+<section id="sponsors" class="col-md-2">
+    {if $sponsorsCount > 0}
+        <h3>Sponzori</h3>
+        {foreach $sponsors as $sponsor}
+            <figure>
+                <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
+                    <img class="img img-responsive img-rounded" 
+                         src="{$basePath}{$imgFolder}{$sponsor->image}" 
+                         alt="{$sponsor->title}" />
+                </a>
+            </figure>
+        {/foreach}
+    {/if}
+</section>
+
+<section id="copyright" class="col-md-2">
+    Alexander Valach 2014 &copy; 
+    powered by <a target="_blank" href="https://nette.org/">Nette</a>
+
+    <div class='login'>
+        <h3>Prihlásenie</h3>
+    </div>
+</section>
+
+<section id="links" class="col-md-2">
+    <h3>Navštívte aj tieto stránky</h3>
+    {foreach $links as $link}
+        <p>
+            <a href='{$link->anchor}' target="_blank">{$link->title}</a>
+        </p>
+    {/foreach}
+    <p>
+        <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
+            SAHL na Facebooku
+        </a>
+    </p>
+</section>

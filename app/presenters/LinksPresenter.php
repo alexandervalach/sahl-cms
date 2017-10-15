@@ -19,17 +19,6 @@ class LinksPresenter extends BasePresenter {
     /** @var string */
     private $storage = 'images/';
 
-    public function actionAll() {
-        
-    }
-
-    public function renderAll() {
-        $this->template->sponsors = $this->linksRepository->getSponsors();
-        $this->template->txtLinks = $this->linksRepository->findBy(array('image' => ' '))->where('sponsor', '0');
-        $this->template->imgLinks = $this->linksRepository->findAll()->where('image != ?', ' ')->where('sponsor', '0');
-        $this->template->imgFolder = $this->imgFolder;
-    }
-
     public function actionCreate() {
         $this->userIsLogged();
     }

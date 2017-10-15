@@ -9,29 +9,6 @@
 html, body {
     width: 100%;
     height: 100%;
-    position: relative;
-    background: url('layout/ice-lg.jpg');
-}
-
-#nav ul.nav.navbar-nav > li > a {
-    background : #3071a9;
-    color : #FFFFFF;
-}
-
-#nav ul.nav.navbar-nav > li > a:hover,
-#nav ul.nav.navbar-nav > li > a:focus {
-    background : rgb(173,216,230);
-    color : navy;
-}
-
-#main {
-    position: relative;
-    background-color: rgba(255,255,255,0.8);
-}
-
-#header {
-    width: 100%;
-    height: 300px;
 }
 
 #switcher {
@@ -47,32 +24,15 @@ html, body {
     left: 0; 
     width: 100%; 
     height: 100%;
+}  
+
+main {
+    padding: 40px 0;
 }
 
-#footer {
-    background : #3071a9;
-    color : #FFFFFF;
-    font-weight: bold;
-}
-
-.container {
-    background : inherit;
-    height : inherit;
-    margin : 0 auto;
-}
-
-div#page{
-    box-shadow: 12px 0 15px -4px #888888, -12px 0 8px -4px #888888;
-}
-
-#main div.flash.success, #main div.flash.error {
-    margin-bottom: 20px;
-}
-
-/*=========FORUM TYPOGRAPHY===========*/
 main.container > section#forum > div.row,
 section#replies > article,
-section#currentIssue{
+section#currentIssue {
     margin-bottom: 15px;
     background: rgba(173,216,230,0.5);
     padding: 10px 0;
@@ -82,15 +42,14 @@ section#currentIssue{
 }
 
 section#replies > article,
-section#currentIssue{
+section#currentIssue {
     padding: 10px;
 }
 
-main.container > section#forum > div.row > article > footer > time{
+main.container > section#forum > div.row > article > footer > time {
     display: block;
 }
 
-/*=============NEWS THUMBNAIL LAYOUT===========*/
 .thumbnail {
     width: 160px;
     float: left;
@@ -106,7 +65,7 @@ div#slider {
     margin-bottom: 20px;
 }
 
-div#slider img{
+div#slider img {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -115,7 +74,7 @@ div#slider img{
     height: 313px;
 }
 
-div#slider p{
+div#slider p {
     float: left;
     width: 25%;
     display: inline-block;
@@ -136,36 +95,6 @@ div#slider p:nth-child(1):focus, div#slider p:nth-child(1):hover { background: #
 div#slider p:nth-child(2):focus, div#slider p:nth-child(2):hover { background: #9ACD32 }
 div#slider p:nth-child(3):focus, div#slider p:nth-child(3):hover { background: #3071a9; color: #ffffff }
 div#slider p:nth-child(n+4):focus, div#slider p:nth-child(n+4):hover { background: #FF8C00 }
-
-/* ===============ASIDE WIDGETS LAYOUT=================*/
-div#page > div#main > div#primary.row > aside.container > div.panel.panel-primary{
-    margin-top: 15px;
-}
-
-
-#nav ul.dropdown-menu > li > a:hover,
-#nav ul.dropdown-menu > li > a:focus{
-    background: #3071a9;
-		color: #FFFFFF;
-}
-/*===================FILE UPLOAD BUTTON=================*/
-
-.fileUpload {
-    position: relative;
-    overflow: hidden;
-    margin: 10px;
-}
-.fileUpload input.upload {
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 20px;
-    cursor: pointer;
-    opacity: 0;
-    filter: alpha(opacity=0);
-}
 
 section#punishments > article,
 section#rules > article,
@@ -188,41 +117,28 @@ section#fights > article {
     border-radius: 4px;
 }
 
-footer#images > figure{
-    margin-bottom: 15px;
-} 
-
-section#terciary {
-    margin: 15px 0;
-}
-
-section#terciary > figure{
+section#sponsors > figure {
     margin-top: 10px;
     width: 80%;
     margin: 35px auto;
     height: auto;
 }
 
-.table-responsive > table.table {
-    margin-top: 15px;
-    margin-bottom: 15px;
-}
-
-section#rounds > ul > li > a{
+section#rounds > ul > li > a {
     text-decoration: none;
     font-weight: bold;
     color: #FF8C00;
     font-size: 1.2em;
 }
 section#secondary.row > figure > a > img,
-section#links figure{
+section#links figure {
     margin: 10px 0 10px 0;
 }
 
 section#secondary.row > figure,
 section#portrait.row > figure,
 section#sponsors > figure,
-section#sponsors{
+section#sponsors {
     margin-bottom: 20px;
 }
 
@@ -259,7 +175,7 @@ div.panel.panel-footer a {
     margin: 10px 0 30px 0;
 }
 
-#lightbox div{
+#lightbox div {
     height: 50px;
     line-height: 50px;
     text-align: center;
@@ -283,7 +199,7 @@ div.panel.panel-footer a {
     text-align: left;
 }
 
-#lightbox p{
+#lightbox p {
     text-align: right;  
     margin-right: 20px; 
     font-size: 12px; 
@@ -300,231 +216,30 @@ div.panel.panel-footer a {
     display: none;
 }
 
-footer a {
+footer a:hover,
+footer a:focus {
     text-decoration: none;
-    color: #FFFFFF;
 }
 
 /* Large devices (large desktops, 1200px and up) */
 @media screen and (min-width: 1200px) {
-    #nav {
-        height : 50px;
-        width : 1170px;
-    }
 
-    #header {
-        width: 100%;
-        height: 343px;
-    }
-
-    #header .container {
-        background: url('layout/banner-lg-1.png') no-repeat top left;
-    } 
-
-    #main {
-        width : 100%;
-        height : auto;
-    }
-
-    #main .container{
-        padding: 15px;
-    }
-
-    #footer {
-        width: 1170px;
-        height: 50px;
-        margin: 0 auto;
-    }
-
-    #primary{
-        width: 1170px;
-        height: 100%;
-        margin: 0 auto;
-    }
-
-    div#page{
-        width: 1170px;
-        margin: 0 auto;
-        height: auto;
-    }
-
-    /*=====================NAVIGATION BAR=======-==========*/
-    nav.navbar.container {
-        width: 1170px;
-    }
-
-    div#example-navbar-collapse.collapse.navbar-collapse {
-        width: 1170px;
-        margin: 0;
-        padding: 0;
-    }
-
-    ul.navbar-nav.nav {
-        width: 1170px;
-    }
-
-    /*======================GALLERY========================*/
-    .gallery{
-        float: left;
-        display: inline-block;
-        margin: 5px;
-    }
-
-    div.images > div.gallery{
-        width: 200px;
-    }
 }
 
 /* Medium devices (desktops, 992px and up) */
 @media screen and (min-width: 992px) and (max-width: 1199px){
-    #nav {
-        height : 50px;
-        width : 970px;
-    }
 
-    #header {
-        width: 100%;
-        height: 292px;
-    }
-
-    #header .container {
-        background: url('layout/banner-md-1.png') no-repeat top left;
-    } 
-
-    body > div#main {
-        width : 100%;
-        height : auto;
-    }
-
-    #main .container{
-        padding: 15px;
-    }
-
-    #footer {
-        width : 970px;
-        height : 50px;
-        margin: 0 auto;
-    }
-
-    #primary{
-        width: 970px;
-        height: 100%;
-        margin: 0 auto;
-    }
-
-    .container {
-        width: 970px;
-        margin: 0 auto;
-    }
-
-    div#page{
-        width: 970px;
-        margin: 0 auto;
-        height: auto;
-    }
-
-    /*=====================NAVIGATION BAR=======-==========*/
-    
-    nav.navbar.container {
-        width: 970px;
-    }
-
-    div#example-navbar-collapse.collapse.navbar-collapse {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-    }
-
-    ul.navbar-nav.nav {
-        width: 970px;
-    }
-
-    /*======================GALLERY========================*/
-    .gallery{
-        float: left;
-        display: inline-block;
-        margin: 5px;
-    }
-
-    div.images > div.gallery{
-        width: 200px;
-    }
 }
 
 @media screen and (min-width: 769px) and (max-width: 991px){
-    #nav {
-        height : 50px;
-        width : 100%;
-    }
 
-    #header {
-        width: 100%;
-        height: 195px;
-    }
-
-    #header .container {
-        background: url('layout/banner-sm-1.png') no-repeat top left;
-    } 
-
-    #main {
-        width : 100%;
-        height : auto;
-    }
-
-    #main .container{
-        padding: 15px;
-        width: 100%;
-        margin: 0 auto;
-    }
-
-    #footer {
-        width : 100%;
-        height : 50px;
-    }
-
-    #primary{
-        width: 100%;
-        height: auto;
-        margin: 0 auto;
-    }
-
-    div#page{
-        width: 100%;
-        height: auto;
-    }
-
-    /*======================GALLERY========================*/
-    .gallery{
-        float: left;
-        display: inline-block;
-        margin: 5px;
-    }
-
-    div.images > div.gallery{
-        width: 200px;
-    }
 }
 
 @media screen and (max-width: 767px) {
-    #nav {
-        height : 50px;
-        width : 100%;
-    }
-
-    #main {
-        width : 100%;
-        height : 100%;
-    }
-
     div#page > div#main > div#primary.row > main.container > h3,
     div#page > div#main > div#primary.row > main.container > h2,
     div#page > div#main > div#primary.row > main.container > h1 {
         margin-top: 10px;
-    }
-
-    #footer {
-        width : 100%;
-        height : 50px;
     }
 
     .container {
@@ -622,55 +337,6 @@ footer a {
         box-shadow: none;
     }
 
-
-    /*======================GALLERY========================*/
-    .gallery{
-        float: left;
-        display: inline-block;
-        margin: 5px;
-    }
-
-    div.gallery > img.img-gallery {
-        width: 100%;
-    }
-
-    section.gallery {
-        display: block;
-        margin: 5px;
-        clear: both;
-    }
-
-    .navbar-toggle {
-        width: 39px;
-    }
-
-    .table caption.caption{
-        width: 100%;
-    }
-
-    .table td.col-xs-8, .table th.col-xs-8{
-        width: 100%;
-    }
-
-    ul li.col-xs-12{
-        width: 100%;
-    }
-
-    p.delete{
-        width: 100%;
-        padding: 0;
-        margin: 0;
-    }
-
-    .img{
-        width: 100%;
-    }
-
-    /*================TYPOGRAPHY=============*/
-    div#main > main.container > p.delete.text-warning{
-        padding: 10px;
-    }
-
     div#main > main.container > h1{
         border-top-color: blue; 
         -moz-border-top-color: blue; 
@@ -688,13 +354,6 @@ footer a {
         font-size: 21px;
     }
 }
-
-/**	
-  * Responsive mobile view design for image slider on front page
-  *	Image shrinks when display changes, 
-  * Every 100px I change the height of element to look it much better
-  *	THE SMALLEST SCREEN, especially James Bond has even smaller, but I don't care now.
-  */
 
 @media screen and (min-width: 262px) and (max-width: 362px) {
 
@@ -720,100 +379,12 @@ footer a {
 
 }
 
-/*===============Screen between 363 and 462 pixels============*/
-@media screen and (min-width: 363px) and (max-width: 462px) {
-
-    body > div#main > main.container > div#switcher{
-        width: 100%;
-        height: 308px;
-        margin: 0;
-    }
-
-    div#main .container {
-        width: 100%;
-        height: auto;
-        padding: 0;
-    }
-
-    div#main > main.container > div#switcher > img {
-        width: 100%;
-        height: 308px;
-    }
-
-}
-
-/*============Screen between 463 and 562 px===============*/
-@media screen and (min-width: 463px) and (max-width: 562px) {
-
-    body > div#main > main.container > div#switcher{
-        width: 100%;
-        height: 375px;
-        margin: 0;
-    }
-
-    div#main .container {
-        width: 100%;
-        height: auto;
-    }
-
-    div#main > main.container > div#switcher > img {
-        width: 100%;
-        height: 375px;
-    }
-
-}
-
-@media screen and (min-width: 463px) and (max-width: 562px) {
-
-    body > div#main > main.container > div#switcher{
-        width: 100%;
-        height: 375px;
-        margin: 0;
-    }
-
-    div#main .container {
-        width: 100%;
-        height: auto;
-    }
-
-    div#main > main.container > div#switcher > img {
-        width: 100%;
-        height: 375px;
-    }
-
-}
-
-/* Bigger screen is included in the @media query above at the beginning of the document */
-@media screen and (min-width: 563px) and (max-width: 662px) {
-
-    body > div#main > main.container > div#switcher{
-        width: 100%;
-        height: 441px;
-        margin: 0;
-    }
-
-    div#main .container {
-        width: 100%;
-        height: auto;
-    }
-
-    div#main > main.container > div#switcher > img {
-        width: 100%;
-        height: 441px;
-    }
-
-}
-
-/* CSS document - Typography and text editing */
 
 /*================HEADINGS===========================*/
-main.container{
-    margin-bottom: 10px;
-}
 
 #main main.container h1, 
 #main main.container h3,
-aside.container h3{
+aside.container h3 {
     text-align: left;
     font-size: 1.7em;
     color: navy;
@@ -827,16 +398,16 @@ aside.container h3{
     margin-top: 15px;
 }
 
-#main main.container > h1{
+#main main.container > h1 {
     text-align: center;
 }
 
-#main main h1.idea{
+#main main h1.idea {
     font-size: 17px;
     font-style: italic;
 }
 
-#main main.container h2{
+#main main.container h2 {
     text-align: left;
     font-size: 1.5em;
     color: #FF8C00;
@@ -847,51 +418,15 @@ aside.container h3{
     font-weight: bold;
 }
 
-#main main.container h2 > a{
+#main main.container h2 > a {
     text-decoration: none;
     color: #FF8C00;
 }
 
-#main main.container h2 > a:hover{
-    text-decoration: none;
+#main main.container h2 > a:hover {
     color: #CC7000;
 }
-
-#main main.container > a, #nav > nav.container > a{
-    text-decoration: none;
-}
-
-/*=================TYPOGRAPHY=========================*/
-.error, .success {
-    font-style: italic;
-    font-weight: bold;
-    color: red;
-    padding: 15px;
-}
-
-.success {
-    color: green;
-    background: lightgreen;
-    border: 1px solid green;
-}
-
-.gallery .delete{
-    background: none;
-    border: none;
-    text-align: center;
-}
-
-footer.container {
-    text-align: center;
-    line-height: 50px;
-    vertical-align: middle;
-}   
-
-.glyphicon{
-    position: relative;
-    z-index: 0;
-}
-/*===========Documentation for NAVIGATION MENU BAR===============*/
+  
 @media screen and (min-width: 768px){
 
     #nav .navbar.container {
@@ -945,21 +480,6 @@ footer.container {
     }
 }
 
-/*========================TABLES==================================*/
-.caption {
-    background:#3071a9;
-    color:white;
-    font-size:1.2em;
-    line-height:2em;
-    font-weight: bold;
-    text-align: center;
-}
-
-div#main > main.container > table{
-    margin: 30px 0;
-}
-
-/*===================ORDERED AND UNORDERED LIST======================*/
 ul {
     list-style: none;
 }
@@ -970,31 +490,18 @@ ul {
     text-decoration: none;
 }
 
-.content ul li a:hover{
+.content ul li a:hover {
     color: #934A15;
 }
 
-.content ul li a.danger{
+.content ul li a.danger {
     color: #C9302C;
 }
 
-.content ul li a.danger:hover{
+.content ul li a.danger:hover {
     color: #AC2925;;
 }
 
-
-/*===================BUTTONS AND FORMS============================*/
-.btn {
-    margin: 5px;
-}
-
-.delete {
-    background: #FFE4B2;
-    border-radius: 5px;
-    padding: 15px;
-}
-
-/*===========================IMAGES==================================*/
 
 div#slider a{
     color: white;
@@ -1014,15 +521,15 @@ div.pull-left{
 
 div.pull-right > a > span.glyphicon.glyphicon-plus,
 div.pull-left > a > span.glyphicon.glyphicon-pencil,
-div.pull-left > a > span.glyphicon.glyphicon-remove{
+div.pull-left > a > span.glyphicon.glyphicon-remove {
     color: white;
 }
 
-table.table > tbody > tr:nth-child(even){
+table.table > tbody > tr:nth-child(even) {
     background-color: rgba(173,216,230,0.5);
 } 
 
-table.table > tbody > tr:nth-child(odd){
+table.table > tbody > tr:nth-child(odd) {
     background-color: rgb(255,255,255);
 } 
 
@@ -1036,19 +543,19 @@ section#currentIssue > article > header{
     color:#000080;
 }
 
-section#forum > div.row > article > footer > a{ font-size: 1em; display: block }
+section#forum > div.row > article > footer > a { font-size: 1em; display: block }
 
 section#forum > div.row > article > header > a:hover,
 section#forum > div.row > article > header > a:focus,
 div.pull-right > a > span.glyphicon-remove:hover,
 div.pull-right > a > span.glyphicon-remove:focus,
 section#forum > div.row > article > footer > a:hover,
-section#forum > div.row > article > footer > a:focus{
+section#forum > div.row > article > footer > a:focus {
     color:#0066FF;
     text-decoration: none;
 }
 
-section#replies > article > header > div.pull-right > a > span.glyphicon-remove{
+section#replies > article > header > div.pull-right > a > span.glyphicon-remove {
     font-size: 1em;
     font-weight: normal;
 }
@@ -1058,15 +565,15 @@ section#punishments > table.table {
     background-color: rgb(255,255,255);
 } 
 
-section#punishments > table.table > tbody > tr{
+section#punishments > table.table > tbody > tr {
     background-color: rgba(255,255,255,0.1);
 } 
 
-section#fights > article > main > ul > li > span{
+section#fights > article > main > ul > li > span {
     font-style: italic;
 }
 
-.borrowedPlayer{
+.borrowedPlayer {
     border: 5px solid #A94442;
 }
 
@@ -1089,7 +596,7 @@ table.table > tbody > tr > td > span.text-danger,
 section#post > article > header > time,
 aside > div > table#briefFights > tbody > tr > td:nth-child(6),
 aside > div > table#briefFights > tbody > tr > td:nth-child(5),
-aside > div > table#briefFights > tbody > tr > td:nth-child(4){
+aside > div > table#briefFights > tbody > tr > td:nth-child(4) {
     font-weight: bold;
 }
 
@@ -1097,12 +604,12 @@ main div#baseTable > table > tbody > tr:nth-child(1),
 main div#playOff > table > tbody > tr:nth-child(1),
 main div#stats > table > tbody > tr:nth-child(1),
 aside > div > table#playOff > tbody > tr:nth-child(1),
-aside > div > table#baseTable > tbody > tr:nth-child(1){
+aside > div > table#baseTable > tbody > tr:nth-child(1) {
     color: #A94442;
 }
 
 main > div > div.table-responsive > table > tbody > tr:nth-child(8),
-aside > div > table > tbody > tr:nth-child(8){
+aside > div > table > tbody > tr:nth-child(8) {
     border-bottom: 5px solid #A94442;
 }
 

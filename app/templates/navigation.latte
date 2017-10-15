@@ -1,117 +1,36 @@
-<div id='nav'>
-    <nav class="navbar navbar-default container" role="navigation">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle btn" data-toggle="collapse" 
-                    data-target="#example-navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-        </div>
-        <div class="collapse navbar-collapse" id="example-navbar-collapse">
-            <ul class="nav navbar-nav row">
-                <li n:if="$user->loggedIn" class="dropdown col-lg-1 col-md-1 col-sm-1 hidden-xs">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pridaj <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a n:href="Post:create#nav">Príspevok</a>
-                        </li>
-                        <li>
-                            <a n:href="Tables:add#nav">Záznam do tabuliek</a>
-                        </li>
-                        <li>
-                            <a n:href="Round:add#nav">Kolo</a>
-                        </li>
-                        <li>
-                            <a n:href="Teams:create#nav">Tím</a>
-                        </li>
-                        <li>
-                            <a n:href="Links:create#nav">Link</a>
-                        </li>
-                        <li>
-                            <a n:href="Album:create#nav">Album</a>
-                        </li>
-                        <li>
-                            <a n:href="PlayerTypes:add#nav">Typ hráča</a>
-                        </li>
-                        <li>
-                            <a n:href="Archive:add#nav">Archív</a>
-                        </li>
-                        <li>
-                            <a n:href="Archive:addSeason#nav">Sezónu do archívu</a>
-                        </li>
-                    </ul>
-
-                </li>
-
-                <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Tables:all#nav" role='link'>Tabuľky</a>
-                </li>
-
-                <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Round:all#nav" role='link'>Výsledky</a>
-                </li>
-
-                <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Teams:all#nav" role='link'>Tímy</a>
-                </li>
-
-                <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Events:all#nav" role='link'>Zápasy</a>
-                </li>
-
-                {if $user->loggedIn}
-                    <li class='col-lg-1 col-md-1 col-sm-1'>
-                        <a n:href="Stats:all#nav" role='link'>Štatistiky</a>
-                    </li>
-                {else}
-                    <li class='col-lg-2 col-md-2 col-sm-2'>
-                        <a n:href="Stats:all#nav" role='link'>Štatistiky</a>
-                    </li>
-                {/if}
-
-                <li class='col-lg-2 col-md-2 col-sm-2 dropdown hidden-xs'>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role='link'>Pravidlá a smernice <span class="caret"></span></a>          
-                    <ul class="dropdown-menu">
-                        <li><a n:href="Rules:all#nav"  role='link'>Zoznam</a></li>
-                        <li><a n:href="Punishments:all#nav"  role='link'>Tresty hráčov</a></li>
-                    </ul>
-                </li>
-
-                <li class="visible-xs col-lg-1 col-md-1 col-sm-1">
-                    <a n:href="Rules:all#nav" role='link'>Pravidlá a smernice</a>
-                </li>
-
-                <li class="visible-xs col-lg-1 col-md-1 col-sm-1 ">
-                    <a n:href="Punishments:all#nav" role='link'>Tresty hráčov</a>
-                </li>
-
-
-                <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Album:all#nav" role='link'>Galéria</a>
-                </li>
-
-                <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Links:all#nav" role='link'>Linky</a>
-                </li>
-
-                <li class="col-lg-1 col-md-1 col-sm-1">
-                    <a n:href="Forum:all#nav" role="link">Fórum</a>
-                </li>
-
-                <li class='col-lg-1 col-md-1 col-sm-1'>
-                    <a n:href="Archive:all#nav" role='link'>Archív</a>
-                </li>
-
-                <li n:if="!$user->loggedIn" class='visible-xs col-sm-1'>
-                    <a n:href="Sign:in#nav" role='link'>Prihlásiť</a>
-                </li>
-
-                <li n:if="$user->loggedIn" class='visible-xs col-sm-1'>
-                    <a n:href="Sign:out#nav" role='link'>Odhlásiť</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</div>
+<nav class="navbar pull-right" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle btn" data-toggle="collapse" 
+                data-target="#example-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+        <ul class="nav navbar-nav row">
+            <li n:if="$user->loggedIn" class="dropdown hidden-xs">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    Pridaj <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a n:href="Post:create">Príspevok</a></li>
+                    <li><a n:href="Tables:add">Záznam do tabuliek</a></li>
+                    <li><a n:href="Round:add">Kolo</a></li>
+                    <li><a n:href="Teams:create">Tím</a></li>
+                    <li><a n:href="Links:create">Odkaz</a></li>
+                    <li><a n:href="Album:create">Album</a></li>
+                    <li><a n:href="PlayerTypes:add">Typ hráča</a></li>
+                    <li><a n:href="Archive:add">Archív</a></li>
+                    <li><a n:href="Archive:addSeason">Sezónu do archívu</a></li>
+                </ul>
+            </li>
+            <li><a n:href="Round:all">Zápasy</a></li>
+            <li><a n:href="Stats:all">Hráči</a></li>              
+            <li><a n:href="Rules:all#nav">Praidlá a smernice</a></li>
+            <li><a n:href="Album:all">Geléria</a></li>
+            <li><a n:href="Forum:all">Fórum</a></li>
+            <li><a n:href="Archive:all">Archív</a></li>
+        </ul>
+    </div>
+</nav>

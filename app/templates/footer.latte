@@ -1,4 +1,18 @@
-<section id="sponsors" class="col-md-2">
+<section id="links" class="col-md-3">
+    <h3>Navštívte aj tieto stránky</h3>
+    {foreach $links as $link}
+        <p>
+            <a href='{$link->anchor}' target="_blank">{$link->title}</a>
+        </p>
+    {/foreach}
+    <p>
+        <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
+            SAHL na Facebooku
+        </a>
+    </p>
+</section>
+
+<section id="sponsors" class="col-md-6">
     {if $sponsorsCount > 0}
         <h3>Sponzori</h3>
         {foreach $sponsors as $sponsor}
@@ -13,25 +27,15 @@
     {/if}
 </section>
 
-<section id="copyright" class="col-md-2">
-    Alexander Valach 2014 &copy; 
-    powered by <a target="_blank" href="https://nette.org/">Nette</a>
+<section id="copyright" class="col-md-3">
+    <p>&copy; Alexander Valach, Tomáš Hudák</p><p>2014 - 2017</p> 
+    <p>Powered by <a target="_blank" href="https://nette.org/">Nette Framework</a></p>
 
-    <div class='login'>
-        <h3>Prihlásenie</h3>
-    </div>
+    {if !$user->loggedIn}
+        <div class='login'>
+            <h3><span class="glyphicon glyphicon-user"></span></h3>
+            {control signInForm}
+        </div>
+    {/if}
 </section>
 
-<section id="links" class="col-md-2">
-    <h3>Navštívte aj tieto stránky</h3>
-    {foreach $links as $link}
-        <p>
-            <a href='{$link->anchor}' target="_blank">{$link->title}</a>
-        </p>
-    {/foreach}
-    <p>
-        <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
-            SAHL na Facebooku
-        </a>
-    </p>
-</section>

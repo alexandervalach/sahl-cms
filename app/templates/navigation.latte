@@ -31,6 +31,9 @@
             <li><a n:href="Album:all">Geléria</a></li>
             <li><a n:href="Forum:all">Fórum</a></li>
             <li><a n:href="Archive:all">Archív</a></li>
+            {if $user->loggedIn}
+                <li><a n:href="Sign:out">Odhlásiť</a></li>
+            {/if}
         </ul>
     </div>
 </nav>

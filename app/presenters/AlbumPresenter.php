@@ -7,6 +7,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
+use Nette\IOException;
 
 class AlbumPresenter extends BasePresenter {
 
@@ -19,9 +20,6 @@ class AlbumPresenter extends BasePresenter {
     /** @var string */
     private $storage = 'images/';
 
-    public function actionAll() {
-        
-    }
 
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
@@ -29,11 +27,11 @@ class AlbumPresenter extends BasePresenter {
         $this->template->imgFolder = $this->imgFolder;
     }
 
-    public function actionCreate() {
+    public function actionAdd() {
         $this->userIsLogged();
     }
 
-    public function renderCreate() {
+    public function renderAdd() {
         $this->getComponent('addAlbumForm');
     }
 
@@ -86,13 +84,13 @@ class AlbumPresenter extends BasePresenter {
         $values = $form->getValues();
         $values['created_at'] = date('Y.m.d H:i:s');
         $this->albumsRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedEditAlbumForm(Form $form) {
         $values = $form->getValues();
         $this->albumRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedDeleteForm() {
@@ -101,17 +99,21 @@ class AlbumPresenter extends BasePresenter {
 
         foreach ($imgs as $img) {
             $file = new FileSystem;
-            $file->delete($this->storage . $img->name);
+            try {
+                $file->delete($this->storage . $img->name);
+            } catch(IOException $e) {
+                
+            }
             $img->delete();
         }
 
         $this->albumRow->delete();
         $this->flashMessage('Album odstránený aj so všetkými obrázkami.', 'success');
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

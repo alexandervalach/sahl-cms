@@ -16,12 +16,12 @@
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
         <link rel="stylesheet" href="{$basePath}/js/textEditor/jquery-te-1.4.0.css" type="text/css" />
     </head>
-    <body>
-        <div class="container">
+    <body class="row">
+        <div class="container col-md-offset-2 col-md-8">
             {include 'header.latte'}
             {include 'navigation.latte'}
         </div>
-        <div id='main' class="container">
+        <div id='main' class="container col-md-8 col-md-offset-2">
             <div class="row" id="primary">
                 <main role='main' class='container col-xs-12 col-sm-12 col-md-8 col-lg-8'>
                     <div n:foreach="$flashes as $flash" class="flash {$flash->type}">
@@ -34,7 +34,7 @@
             </div>
 
         </div>
-        <footer class='container text-center'>
+        <footer class='container text-center col-md-8 col-md-offset-2'>
             {include 'footer.latte'}
         </footer>
     </body>

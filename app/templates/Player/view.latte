@@ -1,31 +1,16 @@
 {block content}
 
-<h1 n:block="title">Súpiska tímu</h1>
-
-<p>
-    <a n:href="Teams:all#nav" class='btn btn-large btn-default'>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        Tímy
-    </a>
-</p>
+<h1 n:block="title">{$team->name}</h1>
 
 {if $team->image}
     <figure>
-        <img class="img img-responsive img-rounded" src="{$basePath}{$imgFolder}{$team->image}" title="{$team->name}" alt="{$team->name}" />
+        <img class="img-responsive img-rounded" src="{$basePath}{$imgFolder}{$team->image}" title="{$team->name}" alt="{$team->name}" />
     </figure>
 {/if}
 
 {if $team->name}
     <div class='table-responsive'>
         <table class='table table-striped table-condensed'>
-            <caption class='caption'>
-                {$team->name}
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="create#nav, $team->id" title="pridať hráča">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
-                </div>
-            </caption>
             <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -45,7 +30,9 @@
                                 {$player->lname}{if $type->abbr} - {$type->abbr}{/if}
                             </td>
                             <td>
-                                <time datetime="{$player->born}" pubdate>{$player->born}</time>
+                                <time datetime="{$player->born}" pubdate>
+                                    {date('d.m.Y', strtotime($player->born))}
+                                </time>
                             </td>
                             <td>{$player->num}</td>
                             <td n:if="$user->loggedIn" class="text-center">

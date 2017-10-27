@@ -3,31 +3,33 @@
 <h1 n:block="title">Galéria</h1>
 
 <p n:if="$user->loggedIn">
-    <a n:href="create#nav" class='btn btn-primary btn-large'>
+    <a n:href="add" class='btn btn-primary'>
         <span class="glyphicon glyphicon-plus"></span>
         Pridať album
     </a>
 </p>
 
-<section id="secondary" class="row">
+<section>
     {foreach $albums as $album}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a n:href="Gallery:view#nav, $album->id">
-                {if $album->name}                
-                    <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-thumbnail" />
-                {else}
-                    <img src="{$basePath}{$default}" class="img-responsive img-thumbnail" />
-                {/if}
-            </a>
+            {if file_exists($basePath . $imgFolder . $album->name)}
+                <a n:href="Gallery:view, $album->id">
+                    {if $album->name}                
+                        <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-thumbnail" />
+                    {else}
+                        <img src="{$basePath}{$default}" class="img-responsive img-thumbnail" />
+                    {/if}
+                </a>
+            {/if}
             <p class="text-center">
                 {$album->album}
             </p>
             <p class="text-center" n:if="$user->loggedIn">
-                <a n:href="edit#nav, $album->id" class="btn btn-success">
+                <a n:href="edit, $album->id" class="btn btn-info">
                     <span class="glyphicon glyphicon-pencil"></span>
                     Upraviť
                 </a>
-                 <a n:href="delete#nav, $album->id" class="btn btn-danger">
+                 <a n:href="delete, $album->id" class="btn btn-danger">
                     <span class="glyphicon glyphicon-remove"></span>
                     Odstrániť
                 </a>

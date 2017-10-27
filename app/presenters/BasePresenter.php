@@ -131,6 +131,7 @@ abstract class BasePresenter extends Presenter {
         $this->template->links = $this->linksRepository->findByValue('sponsor', 0);
         $this->template->sponsors = $sponsors;
         $this->template->imgFolder = $this->imgFolder;
+        $this->template->nav_teams = $this->teamsRepository->findByValue('archive_id', NULL);
     }
 
     protected function createComponentDeleteForm() {

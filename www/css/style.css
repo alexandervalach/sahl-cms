@@ -1,14 +1,26 @@
-/* CSS document - Basic layout */
+/* SAHL Layout */
 * {
     box-sizing : border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Helvetica neue', sans-serif;
 }
 
 html, body {
     width: 100%;
     height: 100%;
+    font-family: 'Helvetica neue', sans-serif;
+}
+
+body {
+    background: url("layout/background-lg.jpg");  
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-attachment: fixed;
+    -moz-background-attachment: fixed;
+    -webkit-background-attachment: fixed;
+    -o-background-attachment: fixed;
 }
 
 #switcher {
@@ -149,17 +161,8 @@ section#post > article > main {
     overflow-x: hidden;
 }
 
-section#facebook > div {
-    width: 100%;
-    margin: 0 auto;
-}
-
-div.panel.panel-footer a {
-    margin: 0 10px;
-}
-
 #lightbox {
-    position: fixed; /* keeps the lightbox window in the current viewport */
+    position: fixed;
     top: 0; 
     left: 0; 
     width: 100%; 
@@ -210,10 +213,6 @@ div.panel.panel-footer a {
     -webkit-box-shadow:0 0 25px #111;
     -moz-box-shadow:0 0 25px #111;
     max-width: 100%;
-}
-
-.sender-email-address {
-    display: none;
 }
 
 footer a:hover,
@@ -377,54 +376,6 @@ footer a:focus {
         padding: 0;
     }
 
-}
-
-
-/*================HEADINGS===========================*/
-
-#main main.container h1, 
-#main main.container h3,
-aside.container h3 {
-    text-align: left;
-    font-size: 1.7em;
-    color: navy;
-    display: block;
-    clear: both;
-    background-color: rgba(173,216,230,0.5);
-    padding: 13px;
-    font-weight: bold;
-    margin: 0 0 10px 0;
-    text-align: center;
-    margin-top: 15px;
-}
-
-#main main.container > h1 {
-    text-align: center;
-}
-
-#main main h1.idea {
-    font-size: 17px;
-    font-style: italic;
-}
-
-#main main.container h2 {
-    text-align: left;
-    font-size: 1.5em;
-    color: #FF8C00;
-    display: block;
-    clear: both;
-    background: #FFE4B2;
-    padding: 10px;
-    font-weight: bold;
-}
-
-#main main.container h2 > a {
-    text-decoration: none;
-    color: #FF8C00;
-}
-
-#main main.container h2 > a:hover {
-    color: #CC7000;
 }
   
 @media screen and (min-width: 768px){

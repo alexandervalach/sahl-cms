@@ -1,12 +1,8 @@
 {block content}
 
-<h3 n:block="title">{$album->album}</h3>
+<h1 n:block="title">{$album->album}</h1>
 
 <p>
-    <a n:href="Album:all#nav" class='btn btn-large btn-default'>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        Albumy
-    </a>
     <a n:href="add#nav, $album" class='btn btn-large btn-info' n:if="$user->loggedIn">
         <span class="glyphicon glyphicon-picture"></span>
         Pridať obrázky
@@ -18,17 +14,20 @@
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <a href="{$baseUrl}{$imgFolder}{$img->name}" class="lightbox-trigger" target="_blank">
                 {if $img->name}                
-                    <img src="{$basePath}{$imgFolder}{$img->name}" class="img-responsive img-rounded animate" />
+                    <img src="{$basePath}{$imgFolder}{$img->name}" 
+                        class="img-responsive img-rounded" alt="{$img->name}" />
                 {else}
-                    <img src="{$basePath}{$default}" class="img-responsive img-rounded" />
+                    <img src="{$basePath}{$default}" 
+                        class="img-responsive img-rounded" alt="{$img->name}" />
                 {/if}
             </a>
             <p class="text-center" n:if="$user->loggedIn">
-                <a n:href="delete#nav, $img" class="btn btn-danger">
+                <a n:href="delete, $img" class="btn btn-danger">
                     <span class="glyphicon glyphicon-remove"></span>
                     Zmaž
                 </a>
-                <a n:href="thumbnail#nav, $album->id, $img->id" class="btn btn-primary" title="Nastaví obrázok ako miniatúru albumu">
+                <a n:href="thumbnail, $album->id, $img->id" class="btn btn-primary" 
+                    title="Nastaví obrázok ako miniatúru albumu">
                     <span class="glyphicon glyphicon-picture"></span>
                     Miniatúra
                 </a>
@@ -36,14 +35,12 @@
         </figure>
     {/foreach}
 </section>
-<section id='portrait' class='row'>
-    <!-- -->
-</section>
 {/block}
 
 {block scripts}
-<script src='{$basePath}/js/jquery.js'></script>
-<script src='{$basePath}/bootstrap/js/.bootstrap.min.js'></script>
-<script src='{$basePath}/js/gallery.js'></script>
+    {include #parent}
+    <script src='{$basePath}/js/jquery.js'></script>
+    <script src='{$basePath}/bootstrap/js/.bootstrap.min.js'></script>
+    <script src='{$basePath}/js/gallery.js'></script>
 {/block}
 

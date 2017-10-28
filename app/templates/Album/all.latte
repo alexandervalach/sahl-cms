@@ -12,15 +12,15 @@
 <section>
     {foreach $albums as $album}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            {if file_exists($basePath . $imgFolder . $album->name)}
-                <a n:href="Gallery:view, $album->id">
-                    {if $album->name}                
-                        <img src="{$basePath}{$imgFolder}{$album->name}" class="img-responsive img-thumbnail" />
-                    {else}
-                        <img src="{$basePath}{$default}" class="img-responsive img-thumbnail" />
-                    {/if}
-                </a>
-            {/if}
+            <a n:href="Gallery:view, $album->id">
+                {if $album->name}                
+                    <img src="{$basePath}{$imgFolder}{$album->name}" 
+                        class="img-responsive img-thumbnail" alt="Miniatúra albumu {$album->name}" />
+                {else}
+                    <img src="{$basePath}{$default}" 
+                        class="img-responsive img-thumbnail" alt="Logo SAHL ako miniatúra" />
+                {/if}
+            </a>
             <p class="text-center">
                 {$album->album}
             </p>

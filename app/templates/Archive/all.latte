@@ -4,7 +4,7 @@
 
 <section id="archive">
 	<p n:if="$user->loggedIn">
-	    <a n:href="add#nav" class='btn btn-large btn-primary'>
+	    <a n:href="add#nav" class='btn btn-primary'>
 	        <span class="glyphicon glyphicon-plus"></span>
 	        Pridať
 	    </a>
@@ -12,12 +12,11 @@
 
     <div class="table-responsive">
         <table class="table table-striped">
-            <caption class="caption">Minulé sezóny</caption>
             <tbody>
                 {foreach $archive as $arch}
                     <tr>
                         <td>
-                            <a n:href="view#nav, $arch->id" class="text-primary" title="Prejsť na položku">
+                            <a n:href="view, $arch->id" title="Prejsť na archív">
                             	{$arch->title}
                             </a>
                         </td>

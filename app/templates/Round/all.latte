@@ -1,27 +1,26 @@
 {block content}
 
+<h1 n:block="title">Kolá</h1>
+<div class="pull-right" n:if="$user->loggedIn">
+    <a n:href="add">
+        <span class="glyphicon glyphicon-plus"></span>
+    </a>
+</div>
+
 <section id="rounds">
     <div class="table-responsive">
-        <table class="table table-condensed">
-            <caption class="caption">
-                <span n:block="title">Kolá</span>
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="add#nav">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
-                </div>
-            </caption>
+        <table class="table table-striped">
             <tbody>
                 {foreach $rounds as $round}
                     <tr>
-                        <td><a n:href="Fights:all#nav, $round->id">{$round->name}</a></td>
+                        <td><a n:href="Fights:all, $round->id">{$round->name}</a></td>
                         <td n:if="$user->loggedIn" class='text-center'>
-                            <a n:href="edit#nav $round->id" class="text-success text-center">
+                            <a n:href="edit $round->id" class="text-success text-center">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </a>
                         </td>
                         <td n:if="$user->loggedIn" class='text-center'>                    
-                            <a n:href="delete#nav $round->id" class="text-danger">
+                            <a n:href="delete $round->id" class="text-danger">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </a>
                         </td>

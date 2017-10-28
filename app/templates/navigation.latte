@@ -1,14 +1,14 @@
 <nav class="navbar pull-right" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle btn" data-toggle="collapse" 
-                data-target="#example-navbar-collapse">
+                data-target="#main-nav">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
     </div>
-    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+    <div class="collapse navbar-collapse" id="main-nav">
         <ul class="nav navbar-nav row">
             <li n:if="$user->loggedIn" class="dropdown hidden-xs">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -27,7 +27,7 @@
             </li>
             <li><a n:href="Round:all">Zápasy</a></li>
             <li><a n:href="Stats:all">Hráči</a></li>              
-            <li><a n:href="Rules:all#nav">Pravidlá a smernice</a></li>
+            <li><a n:href="Rules:all">Pravidlá a smernice</a></li>
             <li><a n:href="Album:all">Galéria</a></li>
             <li><a n:href="Forum:all">Fórum</a></li>
             <li><a n:href="Archive:all">Archív</a></li>

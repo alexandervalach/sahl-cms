@@ -24,7 +24,6 @@ class SignPresenter extends BasePresenter {
 
         $form->addSubmit('send', 'Prihlásiť');
 
-        // call method signInFormSucceeded() on success
         $form->onSuccess[] = $this->submittedSignInForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -35,7 +34,7 @@ class SignPresenter extends BasePresenter {
 
         try {
             $this->getUser()->login($values->username, $values->password);
-            $this->redirect('Homepage:#nav');
+            $this->redirect('Homepage:');
         } catch (Nette\Security\AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');
         }
@@ -44,7 +43,7 @@ class SignPresenter extends BasePresenter {
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený.', 'success');
-        $this->redirect('Homepage:#nav');
+        $this->redirect('Homepage:');
     }
 
 }

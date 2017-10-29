@@ -2,38 +2,53 @@
 
 <h1 n:block="title">Galéria</h1>
 
-<p n:if="$user->loggedIn">
-    <a n:href="add" class='btn btn-primary'>
-        <span class="glyphicon glyphicon-plus"></span>
-        Pridať album
-    </a>
-</p>
+{if $user->loggedIn}
+    <div class="clearfix" style="margin: 20px auto">
+        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add">
+            Pridať album
+        </button>
+    </div>
+{/if}
 
 <section>
     {foreach $albums as $album}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <a n:href="Gallery:view, $album->id">
-                {if $album->name}                
-                    <img src="{$basePath}{$imgFolder}{$album->name}" 
-                        class="img-responsive img-thumbnail" alt="Miniatúra albumu {$album->name}" />
+                {if $album->name && file_exists($basePath . $imgFolder . $album->name)}                
+                    <img src="{$basePath}/{$imgFolder}/{$album->name}" 
+                        class="img img-responsive" alt="Miniatúra albumu {$album->name}" />
                 {else}
-                    <img src="{$basePath}{$default}" 
-                        class="img-responsive img-thumbnail" alt="Logo SAHL ako miniatúra" />
+                    <img src="{$basePath}/{$imgFolder}/{$default_img}" 
+                        class="img img-responsive" alt="Logo SAHL ako miniatúra" />
                 {/if}
             </a>
             <p class="text-center">
                 {$album->album}
             </p>
             <p class="text-center" n:if="$user->loggedIn">
-                <a n:href="edit, $album->id" class="btn btn-info">
-                    <span class="glyphicon glyphicon-pencil"></span>
+                <a n:href="edit, $album->id" class="btn btn-large btn-success">
                     Upraviť
                 </a>
-                 <a n:href="delete, $album->id" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-remove"></span>
+                 <a n:href="delete, $album->id" class="btn btn-large btn-danger">
                     Odstrániť
                 </a>
             </p>
         </figure>
     {/foreach}
 </section>
+
+{if $user->loggedIn}
+    <div id="add" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pridať album</h4>
+                </div>
+                <div class="modal-body">
+                    {control addAlbumForm}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}

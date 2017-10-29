@@ -93,7 +93,10 @@ abstract class BasePresenter extends Presenter {
     protected $usersRepository;
 
     /** @var string */
-    protected $imgFolder = "/images/";
+    protected $imgFolder = "images";
+
+    /** @var string */
+    protected $default_img = "sahl.png";
 
     public function __construct(
     ArchiveRepository $archiveRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, OptionsRepository $optionsRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
@@ -137,10 +140,10 @@ abstract class BasePresenter extends Presenter {
     protected function createComponentDeleteForm() {
         $form = new Form;
         $form->addSubmit('cancel', 'Zruš')
-             ->setAttribute('class', 'btn btn-warning btn-large')
+             ->setAttribute('class', 'btn btn-warning')
              ->onClick[] = $this->formCancelled;
         $form->addSubmit('delete', 'Zmaž')
-             ->setAttribute('class', 'btn btn-danger btn-large')
+             ->setAttribute('class', 'btn btn-danger')
              ->onClick[] = $this->submittedDeleteForm;
         $form->addProtection();
         return $form;
@@ -159,12 +162,12 @@ abstract class BasePresenter extends Presenter {
         return $form;
     }
 
-    public function submittedSignInForm($form) {
+    public function submittedSignInForm(Form $form) {
         $values = $form->values;
 
         try {
             $this->getUser()->login($values->username, $values->password);
-            $this->redirect('Homepage:default#nav');
+            $this->redirect('Homepage:');
         } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');
         }
@@ -173,12 +176,12 @@ abstract class BasePresenter extends Presenter {
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený.', 'success');
-        $this->redirect('Homepage:#nav');
+        $this->redirect('Homepage:');
     }
 
     protected function userIsLogged() {
         if (!$this->user->isLoggedIn()) {
-            $this->redirect('Sign:in#nav');
+            $this->redirect('Sign:in');
         }
     }
 

@@ -1,23 +1,27 @@
 <aside class='col-lg-4 col-md-4 hidden-sm hidden-xs'>
     {if $sideFights != null}
-        <div class='table-responsive'>
-            <h3>{$sideRound->name}</h3>
-            <table class='table' id="briefFights">
-                <tbody>
-                    {foreach $sideFights as $fight}
-                        {var $team1 = $fight->ref('teams', 'team1_id');}
-                        {var $team2 = $fight->ref('teams', 'team2_id');}
-                        <tr>
-                            <td>{$team1->name}</td>
-                            <td>-</td>
-                            <td>{$team2->name}</td>
-                            <td>{$fight->score1}</td>
-                            <td>:</td>
-                            <td>{$fight->score2}</td>
-                        </tr>
-                    {/foreach}
-                </tbody>
-            </table>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2 class="text-center" style="font-size: 1.5em; margin: 5px auto">{$sideRound->name}</h2>
+            </div>
+            <div class='panel-body' style="padding: 0">
+                <table class='table' style="margin: 0">
+                    <tbody>
+                        {foreach $sideFights as $fight}
+                            {var $team1 = $fight->ref('teams', 'team1_id');}
+                            {var $team2 = $fight->ref('teams', 'team2_id');}
+                            <tr>
+                                <td>{$team1->name}</td>
+                                <td>-</td>
+                                <td>{$team2->name}</td>
+                                <td>{$fight->score1}</td>
+                                <td>:</td>
+                                <td>{$fight->score2}</td>
+                            </tr>
+                        {/foreach}
+                    </tbody>
+                </table>
+            </div>
         </div>
     {/if}
 
@@ -26,8 +30,8 @@
             {if $option->option == "playOff"}
                 {if $playOff != null}
                     <div class='table-responsive'>
-                        <h3>Play Off</h3>
-                        <table class='table' id="playOff">
+                        <h2 class="text-center" style="font-size: 1.5em; margin: 5px auto">Play Off</h2>
+                        <table class='table'>
                             <tbody>
                                 {foreach $playOff as $table}
                                     <tr>
@@ -45,20 +49,24 @@
 
             {if $option->option == "baseTable"}
                 {if $baseTable != null}
-                    <div class='table-responsive'>
-                        <h3>Základná časť</h3>
-                        <table class='table' id="baseTable">
-                            <tbody>
-                                {foreach $baseTable as $table}
-                                    <tr>
-                                        {var $team = $table->ref('teams', 'team_id')}
-                                        <td>{$iterator->counter}.</td>
-                                        <td>{$team->name}</td>
-                                        <td>{$table->points}</td>
-                                    </tr>
-                                {/foreach}
-                            </tbody>
-                        </table>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h2 class="text-center" style="font-size: 1.5em; margin: 5px auto">Základná časť</h2>
+                        </div>
+                        <div class='panel-body' style="padding: 0">
+                            <table class='table' style="margin: 0">
+                                <tbody>
+                                    {foreach $baseTable as $table}
+                                        <tr>
+                                            {var $team = $table->ref('teams', 'team_id')}
+                                            <td>{$iterator->counter}.</td>
+                                            <td>{$team->name}</td>
+                                            <td>{$table->points}</td>
+                                        </tr>
+                                    {/foreach}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 {/if}
             {/if}

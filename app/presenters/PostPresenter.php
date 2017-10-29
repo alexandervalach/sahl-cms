@@ -27,10 +27,10 @@ class PostPresenter extends BasePresenter {
         if (!$this->postRow) {
             throw new BadRequestException($this->error);
         }
-        $post = $this->postRow;
-        $this->template->post = $post;
-        $this->template->images = $post->related('images')->order('id DESC');
+        $this->template->post = $this->postRow;
+        $this->template->images = $this->postRow->related('images')->order('id DESC');
         $this->template->imgFolder = $this->imgFolder;
+        $this->template->default_img = $this->default_img;
     }
 
     public function actionCreate() {

@@ -1,21 +1,18 @@
 {block content}
 
-<p n:if="$user->loggedIn">
-    <a n:href="edit $post->id" class='btn btn-success'>
-        <span class="glyphicon glyphicon-pencil"></span> Upraviť
-    </a>
-    <a n:href="PostImage:add $post->id" class='btn btn-info'>
-        <span class="glyphicon glyphicon-picture"></span> Pridaj obrázky
-    </a>
-    <a n:href="delete $post->id" class='btn btn-danger'>
-        <span class="glyphicon glyphicon-remove"></span> Odstrániť
-    </a>
-</p>
-<section id="post">
+{if $user->loggedIn}
+    <div class="clearfix">
+        <a n:href="edit $post->id" class='btn btn-success'>Upraviť</a>
+        <a n:href="PostImage:add $post->id" class='btn btn-primary'>Pridať obrázky</a>
+        <a n:href="delete $post->id" class='btn btn-danger'>Odstrániť</a>
+    </div>
+{/if}
+
+<section class="clearfix">
     <article>
         <header>
             <h1 n:block="title">{$post->title}</h1>
-            <time datetime='{$post->created_at|date:"d.m.Y"}' pubdate>
+            <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
                 {$post->created_at|date:'d.m.Y'}
             </time>
         </header>
@@ -25,20 +22,23 @@
         </main>
 
         <footer id="images" class="row">
-            {foreach $images as $image}
+            {foreach $images as $img}
                 <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
-                    <a href="{$basePath}{$imgFolder}{$image->name}" target="_blank">
-                        <img src='{$basePath}{$imgFolder}{$image->name}' 
-                            class='img-responsive img-rounded' />
-                    </a>
-                    <div n:if="$user->loggedIn" class="text-center">
-                        <a n:href="PostImage:delete, $post->id, $image->id" class='btn btn-danger'>
+                    {if file_exists($basePath . "'/'" . $imgFolder . '/' . $img->name)}
+                        <img src="{$basePath}/{$imgFolder}/{$img->name}" 
+                            class='img img-responsive' />
+                    {else}
+                        <img src="{$basePath}/{$imgFolder}/{$default_img}" 
+                            class='img img-responsive' />
+                    {/if}
+                    <figcaption n:if="$user->loggedIn" class="text-center">
+                        <a n:href="PostImage:delete, $post->id, $img->id" class='btn btn-danger'>
                             <span class="glyphicon glyphicon-remove"></span> Odstráň
                         </a>
-                        <a n:href="PostImage:Thumbnail, $post->id, $image->id" class='btn btn-primary'>
+                        <a n:href="PostImage:Thumbnail, $post->id, $img->id" class='btn btn-primary'>
                             <span class="glyphicon glyphicon-picture"></span> Miniatúra
                         </a>
-                    </div>	
+                    </figcaption>	
                 </figure>
             {/foreach}
         </footer>

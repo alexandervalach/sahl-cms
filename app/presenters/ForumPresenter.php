@@ -54,11 +54,10 @@ class ForumPresenter extends BasePresenter {
         $form->addText('author', 'Meno:')
              ->setRequired("Meno je povinné pole.");
         $form->addText('email', 'Nevypĺňať')
-             ->setAttribute('class', 'sender-email-address')
              ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
-             ->setAttribute('id', 'ckeditor');
-        $form->addSubmit('add', 'Pridaj novú tému');
+             ->setAttribute('class', 'form-control');
+        $form->addSubmit('add', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddMessageForm;
         FormHelper::setBootstrapFormRenderer($form);
@@ -76,7 +75,7 @@ class ForumPresenter extends BasePresenter {
         $this->userIsLogged();
         $this->forumRow->delete();
         $this->flashMessage('Príspevok zmazaný.', 'success');
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedAddMessageForm(Form $form) {
@@ -84,13 +83,12 @@ class ForumPresenter extends BasePresenter {
             $values = $form->getValues();
             $values['created_at'] = date('Y-m-d H:i:s');
             $this->forumRepository->insert($values);
-            $this->redirect('all#nav');
         }
-        return false;
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

@@ -25,6 +25,10 @@ class FormHelper {
                 $component->getControlPrototype()->class = "form-control";
             }
 
+            if ($component instanceOf TextArea) {
+                $component->getControlPrototype()->class = "form-control";
+            }
+
             if ($component instanceOf SubmitButton) {
                 if (empty($component->getControlPrototype()->class)) {
                     $component->getControlPrototype()->class = "btn btn-primary";

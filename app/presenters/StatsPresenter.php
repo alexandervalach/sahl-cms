@@ -12,7 +12,13 @@ class StatsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->stats = $this->playersRepository->findByValue('archive_id', null)->where('lname != ?', ' ')->order('goals DESC, lname DESC');
+        $this->template->stats = $this->playersRepository->findByValue('archive_id', null)
+                                      ->where('lname != ?', ' ')
+                                      ->order('goals DESC, lname DESC');
+        $this->template->i = 0;
+        $this->template->j = 0;
+        $this->template->current = 0;
+        $this->template->previous = 0;
     }
 
     public function actionArchView($id) {
@@ -20,7 +26,9 @@ class StatsPresenter extends BasePresenter {
     }
 
     public function renderArchView($id) {
-    	$this->template->stats = $this->playersRepository->findByValue('archive_id', $id)->where('lname != ?', ' ')->order('goals DESC, lname DESC');
+    	$this->template->stats = $this->playersRepository->findByValue('archive_id', $id)
+                                      ->where('lname != ?', ' ')
+                                      ->order('goals DESC, lname DESC');
     	$this->template->archive = $this->archiveRepository->findById($id);
     }
 
@@ -44,15 +52,17 @@ class StatsPresenter extends BasePresenter {
     }
 
     public function submittedResetForm() {
-        $players = $this->playersRepository->findByValue('archive_id', null)->where('goals != ?', 0);
+        $players = $this->playersRepository
+                        ->findByValue('archive_id', null)
+                        ->where('goals != ?', 0);
         $values = array('goals' => 0);
-        foreach($players as $player) {
+        foreach ($players as $player) {
             $player->update($values);
         }
-        $this->redirect("all#nav");
+        $this->redirect("all");
     }
 
     public function formCancelled() {
-        $this->redirect("all#nav");
+        $this->redirect("all");
     }
 }

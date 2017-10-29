@@ -29,30 +29,21 @@ class FightsPresenter extends BasePresenter {
     }
 
     public function renderAll($id) {
-        if (!$this->roundRow) {
+        if (!$this->roundRow)
             throw new BadRequestException("Round not found.");
-        }
+        
+        $goals = array();
         $fights = $this->roundRow->related('fights');
+        
+        foreach ($fights as $fight)
+            $goals[] = $fight->related('goals')->order('goals DESC');
+        
+        if ($this->user->isLoggedIn())
+            $this->getComponent('addFightForm');
+
+        $this->template->goals = $goals;
         $this->template->round = $this->roundRow;
         $this->template->fights = $fights;
-        $goals = array();
-        foreach ($fights as $fight) {
-            $goals[] = $fight->related('goals')->order('goals DESC');
-        }
-        $this->template->goals = $goals;
-    }
-
-    public function actionAdd($id) {
-        $this->userIsLogged();
-        $this->roundRow = $this->roundsRepository->findById($id);
-    }
-
-    public function renderAdd($id) {
-        if (!$this->roundRow) {
-            throw new BadRequestException("Round not found!");
-        }
-        $this->template->round = $this->roundRow;
-        $this->getComponent('addFightForm');
     }
 
     public function actionEdit($id) {

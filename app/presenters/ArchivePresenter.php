@@ -20,14 +20,9 @@ class ArchivePresenter extends BasePresenter {
 
 	public function renderAll() {
 		$this->template->archive = $this->archiveRepository->findAll();
-	}
-
-	public function actionAdd() {
-		$this->userIsLogged();
-	}
-
-	public function renderAdd() {
-		$this->getComponent('addForm');
+		$this->template->default_img = $this->default_img;
+		if ($this->user->isLoggedIn())
+			$this->getComponent('addForm');
 	}
 
 	public function actionEdit($id) {
@@ -89,13 +84,13 @@ class ArchivePresenter extends BasePresenter {
 	public function submittedAddForm(Form $form) {
 		$values = $form->getValues();
 		$this->archiveRepository->insert($values);
-		$this->redirect('all#nav');
+		$this->redirect('all');
 	}
 
 	public function submittedEditForm(Form $form) {
 		$values = $form->getValues();
 		$this->archiveRow->update($values);
-		$this->redirect('all#nav');
+		$this->redirect('all');
 	}
 
 	public function submittedArchiveForm(Form $form) {
@@ -124,7 +119,7 @@ class ArchivePresenter extends BasePresenter {
 			$id = $this->teamsRepository->insert($data);
 			if ($id == null) {
 				$this->flashMessage('Nastala chyba počas archivácie tímov', $this->msg_type);
-				$this->redirect('all#nav');
+				$this->redirect('all');
 			} else {
 				$team_id[$team->id] = $id;
 			}
@@ -218,11 +213,11 @@ class ArchivePresenter extends BasePresenter {
 		}
 
 		$this->flashMessage('Záznamy boli archivované', 'success');
-		$this->redirect('all#nav');
+		$this->redirect('all');
 	}
 
 	public function formCancelled() {
-		$this->redirect('all#nav');
+		$this->redirect('all');
 	}
 
 	private function addToArchive($items, $arch_id) {

@@ -21,14 +21,8 @@ class RoundPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', null);
-    }
-
-    public function actionAdd() {
-        $this->userIsLogged();
-    }
-
-    public function renderAdd() {
-        $this->getComponent('addRoundForm');
+        if ($this->user->isLoggedIn()) 
+            $this->getComponent('addRoundForm');
     }
 
     public function actionEdit($id) {
@@ -69,8 +63,7 @@ class RoundPresenter extends BasePresenter {
     protected function createComponentAddRoundForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::MAX_LENGTH, "Dĺžka názvu môže byť len 50 znakov", 50)
-                ->setRequired("Názov je povinné pole");
+                ->addRule(Form::FILLED, "Opa, zabudli ste vyplniť názov kola");
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedAddRoundForm;
         FormHelper::setBootstrapFormRenderer($form);
@@ -92,14 +85,14 @@ class RoundPresenter extends BasePresenter {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->roundsRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedEditRoundForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->roundRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedDeleteForm() {
@@ -111,11 +104,11 @@ class RoundPresenter extends BasePresenter {
         }
         $this->roundRow->delete();
         $this->flashMessage('Kolo bolo odstránené.', 'success');
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

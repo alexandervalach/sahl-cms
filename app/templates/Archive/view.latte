@@ -3,50 +3,29 @@
 <h1 n:block="title">{$archive->title}</h1>
 
 <section id="archive">
-	<p>
-        <a n:href="all#nav" class='btn btn-default'>
-            <span class="glyphicon glyphicon-arrow-left"></span>
-            Archív
-        </a>
-	</p>
-
     <div class="table-responsive">
         <table class="table table-striped">
             <tbody>
                 <tr>
-                    <td>
-                        <a n:href="Tables:archView#nav, $archive->id">Tabuľky</a>
-                    </td>
+                    <td><a n:href="Tables:archView, $archive->id">Tabuľky</a></td>
                 </tr>
                 <tr>
-                    <td>
-                        <a n:href="Round:archView#nav, $archive->id">Výsledky</a>
-                    </td>
+                    <td><a n:href="Round:archView, $archive->id">Výsledky</a></td>
                 </tr>
                 <tr>
-                    <td>
-                        <a n:href="Teams:archView#nav, $archive->id">Tímy</a>
-                    </td>
+                    <td><a n:href="Teams:archView, $archive->id">Tímy</a></td>
                 </tr>
                 <tr>
-                    <td>
-                        <a n:href="Stats:archView#nav, $archive->id">Štatistiky</a>
-                    </td>
+                    <td><a n:href="Stats:archView, $archive->id">Štatistiky</a></td>
                 </tr>
                 <tr>
-                    <td>
-                        <a n:href="Events:archView#nav, $archive->id">Zápasy</a>
-                    </td>
+                    <td><a n:href="Events:archView, $archive->id">Zápasy</a></td>
                 </tr>
                 <tr>
-                    <td>
-                        <a n:href="Rules:archView#nav, $archive->id">Pravidlá a smernice</a>
-                    </td>
+                    <td><a n:href="Rules:archView, $archive->id">Pravidlá a smernice</a></td>
                 </tr>
                 <tr>
-                    <td>
-                        <a n:href="Punishments:archView#nav, $archive->id">Tresty hráčov</a>
-                    </td>
+                    <td><a n:href="Punishments:archView, $archive->id">Tresty hráčov</a></td>
                 </tr>
             </tbody>
         </table>

@@ -1,4 +1,4 @@
-<nav class="navbar pull-right" role="navigation">
+<nav class="navbar col-md-offset-6 col-md-6" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle btn" data-toggle="collapse" 
                 data-target="#main-nav">
@@ -10,30 +10,12 @@
     </div>
     <div class="collapse navbar-collapse" id="main-nav">
         <ul class="nav navbar-nav row">
-            <li n:if="$user->loggedIn" class="dropdown hidden-xs">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                    Pridaj <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a n:href="Post:create">Príspevok</a></li>
-                    <li><a n:href="Tables:add">Záznam do tabuliek</a></li>
-                    <li><a n:href="Round:add">Kolo</a></li>
-                    <li><a n:href="Teams:create">Tím</a></li>
-                    <li><a n:href="Links:create">Odkaz</a></li>
-                    <li><a n:href="Album:create">Album</a></li>
-                    <li><a n:href="PlayerTypes:add">Typ hráča</a></li>
-                    <li><a n:href="Archive:add">Archív</a></li>
-                    <li><a n:href="Archive:addSeason">Sezónu do archívu</a></li>
-                </ul>
-            </li>
             <li><a n:href="Round:all">Zápasy</a></li>
             <li><a n:href="Stats:all">Hráči</a></li>              
             <li><a n:href="Rules:all">Pravidlá a smernice</a></li>
             <li><a n:href="Album:all">Galéria</a></li>
             <li><a n:href="Forum:all">Fórum</a></li>
             <li><a n:href="Archive:all">Archív</a></li>
-            {if $user->loggedIn}
-                <li><a n:href="Sign:out">Odhlásiť</a></li>
-            {/if}
         </ul>
     </div>
 </nav>

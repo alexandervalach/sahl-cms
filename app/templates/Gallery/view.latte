@@ -2,36 +2,37 @@
 
 <h1 n:block="title">{$album->album}</h1>
 
-<p>
-    <a n:href="add#nav, $album" class='btn btn-large btn-info' n:if="$user->loggedIn">
-        <span class="glyphicon glyphicon-picture"></span>
-        Pridať obrázky
-    </a>
-</p>
+{if $user->loggedIn}
+    <div class="clearfix" style="margin-bottom: 20px">
+        <a n:href="add, $album" class='btn btn-large btn-primary'>
+            Pridať obrázky
+        </a>
+    </div>
+{/if}
 
-<section id="secondary" class="row photos">
+<section class="row">
     {foreach $galleryImgs as $img}
         <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a href="{$baseUrl}{$imgFolder}{$img->name}" class="lightbox-trigger" target="_blank">
+            <a href="{$baseUrl}/{$imgFolder}/{$img->name}" class="lightbox-trigger" target="_blank">
                 {if $img->name}                
-                    <img src="{$basePath}{$imgFolder}{$img->name}" 
-                        class="img-responsive img-rounded" alt="{$img->name}" />
+                    <img src="{$basePath}/{$imgFolder}/{$img->name}" 
+                        class="img img-responsive" alt="{$img->name}" />
                 {else}
-                    <img src="{$basePath}{$default}" 
-                        class="img-responsive img-rounded" alt="{$img->name}" />
+                    <img src="{$basePath}/{$imgFolder}/{$default_img}" 
+                        class="img img-responsive" alt="{$img->name}" />
                 {/if}
             </a>
-            <p class="text-center" n:if="$user->loggedIn">
-                <a n:href="delete, $img" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-remove"></span>
-                    Zmaž
-                </a>
-                <a n:href="thumbnail, $album->id, $img->id" class="btn btn-primary" 
-                    title="Nastaví obrázok ako miniatúru albumu">
-                    <span class="glyphicon glyphicon-picture"></span>
-                    Miniatúra
-                </a>
-            </p>
+            {if $user->loggedIn}
+                <div class="clearfix text-center">
+                    <a n:href="delete, $img" class="btn btn-large btn-danger">
+                        Odstrániť
+                    </a>
+                    <a n:href="thumbnail, $album->id, $img" class="btn btn-large btn-primary" 
+                        title="Nastaví obrázok ako miniatúru albumu">
+                        Miniatúra
+                    </a>
+                </div>
+            {/if}
         </figure>
     {/foreach}
 </section>
@@ -39,8 +40,6 @@
 
 {block scripts}
     {include #parent}
-    <script src='{$basePath}/js/jquery.js'></script>
-    <script src='{$basePath}/bootstrap/js/.bootstrap.min.js'></script>
     <script src='{$basePath}/js/gallery.js'></script>
 {/block}
 

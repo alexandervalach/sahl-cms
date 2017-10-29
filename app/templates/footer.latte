@@ -18,9 +18,12 @@
         {foreach $sponsors as $sponsor}
             <figure>
                 <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                    <img class="img img-responsive img-rounded" 
-                         src="{$basePath}{$imgFolder}{$sponsor->image}" 
-                         alt="{$sponsor->title}" />
+                    {if file_exists($basePath . '/' . $imgFolder . '/' . $sponsor->image)}
+                        <img class="img img-responsive" alt="{$sponsor->title}"
+                             src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
+                    {else}
+                        {$sponsor->title}
+                    {/if}
                 </a>
             </figure>
         {/foreach}
@@ -28,12 +31,12 @@
 </section>
 
 <section id="copyright" class="col-md-3">
-    <p>&copy; Alexander Valach, Tomáš Hudák</p><p>2014 - 2017</p> 
+    <p>&copy; Alexander Valach</p><p>Tomáš Hudák</p><p>2014 - 2017</p> 
     <p>Powered by <a target="_blank" href="https://nette.org/">Nette Framework</a></p>
 
     {if !$user->loggedIn}
         <div class='login'>
-            <h3><span class="glyphicon glyphicon-user"></span></h3>
+            <h2><span class="glyphicon glyphicon-user"></span></h2>
             {control signInForm}
         </div>
     {/if}

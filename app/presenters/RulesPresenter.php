@@ -16,19 +16,13 @@ class RulesPresenter extends BasePresenter {
     private $error = "Rule not found!";
 
     public function actionAll() {
-        
+
     }
 
     public function renderAll() {
         $this->template->rules = $this->rulesRepository->findByValue('archive_id', null);
-    }
-
-    public function actionAdd() {
-        $this->userIsLogged();
-    }
-
-    public function renderAdd() {
-        $this->getComponent('addRuleForm');
+        if ($this->user->isLoggedIn())
+            $this->getComponent('addRuleForm');
     }
 
     public function actionDelete($id) {
@@ -94,25 +88,25 @@ class RulesPresenter extends BasePresenter {
         $this->userIsLogged();
         $this->ruleRow->delete();
         $this->flashMessage('Pravidlo zmazané.', 'success');
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedAddRuleForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->rulesRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedEditRuleForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->ruleRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

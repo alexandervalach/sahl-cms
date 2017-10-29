@@ -1,17 +1,14 @@
 {block content}
 
-<p>
-    <a n:href="Round:all#nav" class='btn btn-default'>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        Kolá
-    </a>
-    <a n:href="add#nav, $round->id" class='btn btn-primary' n:if="$user->loggedIn">
-        <span class="glyphicon glyphicon-plus"></span>
-        Pridať zápas
-    </a>
-</p>
-
 <h1 n:block="title">{$round->name}</h1>
+
+{if $user->loggedIn}
+    <div class="clearfix">
+        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#addFight">
+            Pridať zápas
+        </button>
+    </div>
+{/if}
 
 <section id="fights">
     {foreach $fights as $fight}
@@ -27,13 +24,15 @@
                     {$fight->score2} {$team2->name}
                 </span>
 
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="delete#nav, $fight->id">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </div>
+                {if $user->loggedIn}
+                    <div class="pull-right">
+                        <a n:href="delete, $fight->id">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </div>
+                {/if}
             </header>
-            <main>
+            <main class="clearfix">
                 <div>
                     ({$fight->st_third_1}:{$fight->st_third_2}; 
                     {$fight->nd_third_1}:{$fight->nd_third_2};
@@ -41,41 +40,59 @@
                 </div>
                 {var $homeGoals = $fight->related('goals')->where('home', 1)}
                 {var $guestGoals = $fight->related('goals')->where('home', 0)}
-                <ul n:if="$homeGoals->count() > 0 OR $guestGoals->count() > 0">
-                    <li>
-                        Domáci:
-                        <span>
-                        {foreach $homeGoals as $goal}
-                            {var $player = $goal->ref('players', 'player_id')}
-                            {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
-                        {/foreach}
-                        </span>
-                    </li>
-                    <li>
-                        Hostia:
-                        <span>
-                        {foreach $guestGoals as $goal}
-                            {var $player = $goal->ref('players', 'player_id')}
-                            {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
-                        {/foreach}
-                        </span>
-                    </li>
-                </ul>
+                {if ($homeGoals->count() > 0 || $guestGoals->count() > 0)}
+                    <ul>
+                        <li>
+                            Domáci:
+                            <span>
+                            {foreach $homeGoals as $goal}
+                                {var $player = $goal->ref('players', 'player_id')}
+                                {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
+                            {/foreach}
+                            </span>
+                        </li>
+                        <li>
+                            Hostia:
+                            <span>
+                            {foreach $guestGoals as $goal}
+                                {var $player = $goal->ref('players', 'player_id')}
+                                {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
+                            {/foreach}
+                            </span>
+                        </li>
+                    </ul>
+                {/if}
             </main>
-            <footer n:if="$user->loggedIn">
-                <a class="btn btn-success" n:href="edit#nav, $fight->id">
-                    <span class="glyphicon glyphicon-pencil"></span> Zápas
-                </a>
-                <a class="btn btn-warning" n:href="editThird#nav, $fight->id">
-                    <span class="glyphicon glyphicon-pencil"></span> Tretiny
-                </a>
-                <a class="btn btn-primary" n:href="Goal:add#nav, $fight->id">
-                    <span class="glyphicon glyphicon-plus"></span> Góly
-                </a>
-                <a class="btn btn-danger" n:href="Goal:view#nav, $fight->id">
-                    <span class="glyphicon glyphicon-eye-open"></span> Góly
-                </a>
-            </footer>
+            {if $user->loggedIn}
+                <footer class="clearfix">
+                    <a class="btn btn-success" n:href="edit, $fight->id">
+                        Upraviť zápas
+                    </a>
+                    <a class="btn btn-warning" n:href="editThird, $fight->id">
+                        Pridať góly do tretín
+                    </a>
+                    <a class="btn btn-primary" n:href="Goal:add, $fight->id">
+                        Pridať góly
+                    </a>
+                    <a class="btn btn-danger" n:href="Goal:view, $fight->id">
+                        Zobraziť góly
+                    </a>
+                </footer>
+            {/if}
         </article>
     {/foreach}
 </section>
+
+<div id="addFight" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Pridať zápas</h3>
+            </div>
+            <div class="modal-body">
+                {control addFightForm}
+            </div>
+        </div>
+    </div>
+</div>

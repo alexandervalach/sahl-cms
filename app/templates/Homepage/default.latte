@@ -1,11 +1,11 @@
 {block content}
 
-<h1>
+<p>
     Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
     samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla SAHL – Pravidlá a Smernice.
-</h1>
+</p>
 
-<!-- Zobrazí prvé štyri novinky-->
+{*
 <div id="slider" class='row'>
     {foreach $latests as $latest}
         {if $iterator->last}
@@ -13,52 +13,49 @@
                 alt="{$latest->thumbnail}" />
         {/if}
 
-        <p data-src="{$basePath}{$imgFolder}{$latest->thumbnail}">
+        <p data-src="{$basePath}/{$imgFolder}/{$latest->thumbnail}">
             <a n:href="Post:show $latest->id">
                 {$latest->title}
             </a>
         </p>
     {/foreach}
 </div>
+*}
 
 <section id="posts">
     {foreach $posts as $post}
-        <article class="post">
-            <header>
+        <article class="row">
+            <header style="clear: both">
                 <h2>
                     <a n:href="Post:show $post->id">{$post->title}</a>
                 </h2>
             </header>
 
-            <div class="thumbnail">
-                {if file_exists($basePath . $imgFolder . $post->thumbnail)}
-                    <img src='{$basePath}{$imgFolder}{$post->thumbnail}' class='img-responsive' />
+            <figure class="pull-left col-md-4 col-lg-3">
+                {if file_exists($basePath . "'/'" . $imgFolder . '/' . $post->thumbnail)}
+                    <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class='img img-responsive' />
                 {else}
-                    <img src='{$basePath}{$imgFolder}{$default}' class="img-responsive">
+                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive">
                 {/if}
-            </div>
+            </figure>
 
-            <main>
-                <time datetime='{$post->created_at|date:'d.m.Y'}' pubdate>
+            <main class="pull-right col-md-8 col-lg-">
+                <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
                     {$post->created_at|date:'d.m.Y'}
                 </time>
-                <div>{$post->content|noescape|truncate:205}</div>
+                <div>{$post->content|noescape|truncate:300}</div>
             </main>
 
-            <footer n:if="$user->loggedIn">
-                <a n:href="Post:edit, $post->id" class='btn btn-success'>
-                    <span class="glyphicon glyphicon-pencil"></span> Upraviť
+            <footer style="clear: both" n:if="$user->loggedIn">
+                <a n:href="Post:edit, $post->id" class='btn btn-large btn-success'>
+                    Upraviť
                 </a>
-                <a n:href="Post:delete $post->id" class='btn btn-danger'>
-                    <span class="glyphicon glyphicon-remove"></span> Odstrániť
-                </a>
-                <a n:href="PostImage:add, $post->id" class='btn btn-info'>
-                    <span class="glyphicon glyphicon-picture"></span> Pridať obrázky
+                <a n:href="PostImage:add, $post->id" class='btn btn-large btn-primary'>
+                    Pridať obrázky
                 </a>
             </footer>
         </article>
     {/foreach}
-    {control visualPaginator}
 </section>
 {/block}
 

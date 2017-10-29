@@ -18,21 +18,15 @@ class AlbumPresenter extends BasePresenter {
     private $error = "Album not found!";
 
     /** @var string */
-    private $storage = 'images/';
+    private $storage = "images/";
 
 
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
-        $this->template->default = $this->imgFolder . "sahl.jpg";
+        $this->template->default_img = $this->default_img;
         $this->template->imgFolder = $this->imgFolder;
-    }
-
-    public function actionAdd() {
-        $this->userIsLogged();
-    }
-
-    public function renderAdd() {
-        $this->getComponent('addAlbumForm');
+        if ($this->user->isLoggedIn())  
+            $this->getComponent('addAlbumForm');
     }
 
     public function actionEdit($id) {

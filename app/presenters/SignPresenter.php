@@ -3,7 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
-use Nette;
+use Nette\Application\UI\Form;
 
 /**
  * Sign in/out presenters.
@@ -15,25 +15,25 @@ class SignPresenter extends BasePresenter {
      * @return Nette\Application\UI\Form
      */
     protected function createComponentSignInForm() {
-        $form = new Nette\Application\UI\Form;
-        $form->addText('username', 'Užívateľské meno:')
-                ->setRequired('Zadaj, prosím, užívateľské meno.');
+        $form = new Form;
+        $form->addText('username', 'Používateľské meno:')
+             ->setRequired('Zadajte používateľské meno.');
 
         $form->addPassword('password', 'Heslo:')
-                ->setRequired('Zadaj, prosím, heslo.');
+             ->setRequired('Zadaj heslo.');
 
-        $form->addSubmit('send', 'Prihlásiť');
+        $form->addSubmit('login', 'Prihlásiť');
 
         $form->onSuccess[] = $this->submittedSignInForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedSignInForm($form) {
+    public function submittedSignInForm(Form $form) {
         $values = $form->values;
 
         try {
-            $this->getUser()->login($values->username, $values->password);
+            $this->getUser()->login($values->sahl_username, $values->sahl_password);
             $this->redirect('Homepage:');
         } catch (Nette\Security\AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');

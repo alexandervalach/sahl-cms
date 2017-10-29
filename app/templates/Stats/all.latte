@@ -1,15 +1,16 @@
 {block content}
 
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <h1 n:block="title">Štatistiky</h1>
-    <p>
-        <a n:if="$user->loggedIn" n:href="reset#nav" class="btn btn-info">
-            <span class='glyphicon glyphicon-erase'></span> Vynulovať
-        </a>
-    </p>
+<h1 n:block="title">Štatistiky</h1>
 
-    <div class='table-responsive' id="stats">
-        <table class='table table-striped'>
+{if $user->loggedIn}
+    <div class="clearfix">
+        <a n:href="reset" class="btn btn-danger">Vynulovať</a>
+    </div>
+{/if}
+
+<section id="stats">
+    <div class='table-responsive'>
+        <table class='table'>
             <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -21,10 +22,6 @@
                 </tr>
             </thead>
             <tbody>
-                {var $i = 0}
-                {var $j = 0}
-                {var $previous = i}
-                {var current = i}
                 {foreach $stats as $stat}
                     {var $current = $stat->goals}
                     <tr>
@@ -34,12 +31,12 @@
                         <td>{$stat->ref('team_id')->name}</td>
                         <td>{$stat->goals}</td>
                         <td n:if="$user->loggedIn">
-                            <a n:href="Player:edit#nav, $stat->id" class="text-success">
+                            <a n:href="Player:edit, $stat->id" class="text-success">
                                 <span class='glyphicon glyphicon-pencil'></span>
                             </a>
                         </td>
                         <td n:if="$user->loggedIn">
-                            <a n:href="Player:delete#nav, $stat->id" class="text-danger">
+                            <a n:href="Player:delete, $stat->id" class="text-danger">
                                 <span class='glyphicon glyphicon-remove'></span>
                             </a>
                         </td>
@@ -49,15 +46,16 @@
             </tbody>
         </table>
     </div>
-    {/block}
-</div>
+</section>
+
+{/block}
 
 {block scripts}
     {include #parent}
     <script type="text/javascript" src="{$basePath}/data-tables/datatables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#stats .table').DataTable();
-        } );
+            $('#stats .table-responsive .table').DataTable();
+        });
     </script>
 {/block}

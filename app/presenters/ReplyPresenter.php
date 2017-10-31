@@ -6,6 +6,7 @@ use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Application\BadRequestException;
+use Nette\Database\Table\Selection;
 
 class ReplyPresenter extends BasePresenter {
 
@@ -15,7 +16,7 @@ class ReplyPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $replyRow;
     
-    /** @var Nette\Database\Table\Selection */
+    /** @var Selection */
     private $reply;
 
     /** @var string */
@@ -28,7 +29,7 @@ class ReplyPresenter extends BasePresenter {
 
     public function renderAdd($id) {
         if (!$this->forumRow) {
-            throw new BadRequestException("Message not found!");
+            throw new BadRequestException("Thread not found!");
         }
         $this->template->forum = $this->forumRow;
         $this->template->replies = $this->reply;
@@ -52,12 +53,13 @@ class ReplyPresenter extends BasePresenter {
         $form->addText('author', 'Meno')
              ->setRequired("Meno je povinné pole")
              ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
-        $form->addText('email', 'Nevypĺňať')
-             ->setAttribute('class', 'sender-email-address')
+        $form->addText('url', 'Nevypĺňať')
+             ->setAttribute('class', 'url_address')
              ->setOmitted();
         $form->addTextArea('text', 'Text')
-             ->setAttribute('id', 'ckeditor');
-        $form->addSubmit('add', 'Pridaj');
+             ->setAttribute('class', 'form-control');
+        $form->addSubmit('save', 'Pridaj');
+
         $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -65,23 +67,21 @@ class ReplyPresenter extends BasePresenter {
 
     public function submittedAddForm(Form $form) {
         if (isset($_POST['url']) && $_POST['url'] == '') {
-            $id = $this->forumRow->id;
             $values = $form->getValues();
-            $values['forum_id'] = $id;
+            $values['forum_id'] = $this->forumRow;
             $this->replyRepository->insert($values);
-            $this->redirect('add#nav', $id);
         }
-        return false;
+        $this->redirect('add', $this->forumRow);
     }
     
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->replyRow->delete();
-        $this->redirect('add#nav', $this->replyRow->forum_id);
+        $this->redirect('add', $this->replyRow->forum_id);
     }
 
     public function formCancelled() {
-        $this->redirect('add#nav', $this->replyRow->forum_id);
+        $this->redirect('add', $this->replyRow->forum_id);
     }
 
 }

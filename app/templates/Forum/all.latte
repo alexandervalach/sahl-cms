@@ -36,15 +36,6 @@
                         <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
                     </time>
                 </div>
-                <div class="pull-right">
-                    {var $count = $forum->related('reply')->count()}
-                    {if $count}
-                        <span class="badge">{$count}</span>
-                    {/if}
-                    <a n:href="Reply:add, $forum->id">
-                        <span class="glyphicon glyphicon-share-alt"></span> Odpovedať
-                    </a>
-                </div>
             </footer>
         </article>
     {/foreach}

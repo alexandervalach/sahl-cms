@@ -1,48 +1,54 @@
 {block content}
 
-<h1 n:block="title">{$forum->title}</h1>
+<div class="alert alert-info" style="margin: 20px auto">
+    <header class="clearfix">
+        <h2 n:block="title">{$forum->title}</h2> 
+    </header>
+    <main class="clearfix">
+        {$forum->message}
+    </main>
+    <footer class="clearfix">
+        <div class="pull-left">
+            {$forum->author}
+        </div>
+        <div class="pull-right">
+            <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#react">
+                Pridať príspevok
+            </button>
+        </div>
+    </footer>
+</div>
 
-<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-    <p>
-        <a n:href="Forum:all#nav" class='btn btn-default'>
-            <span class="glyphicon glyphicon-arrow-left"></span> Fórum
-        </a>
-    </p>
-
-    <section id="currentIssue">
-        <article>
+<section>
+    {foreach $replies as $reply}
+        <article class="alert alert-success" style="margin: 20px auto">
             <header>
-                {$forum->author}
+                {$reply->author}
+                <div class="pull-right" n:if="$user->loggedIn">
+                    <a n:href="Reply:delete, $reply->id" class="text-success">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </div>
             </header>
-            {$forum->message|noescape}
+            <main>
+                {$reply->text}
+            </main>
         </article>
-    </section>
-
-    <section id="replies">
-        {foreach $replies as $reply}
-            <article>
-                <header>
-                    {$reply->author}
-                    <div class="pull-right" n:if="$user->loggedIn">
-                        <a n:href="Reply:delete#nav, $reply->id">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </div>
-                </header>
-                {$reply->text|noescape}
-            </article>
-        {/foreach}
-    </section>
-
-    {control addForm}
+    {/foreach}
 </section>
 
-{/block}
+<div id="react" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Pridať príspevok do diskusie</h3>
+            </div>
+            <div class="modal-body">
+                {control addForm}
+            </div>
+        </div>
+    </div>
+</div>
 
-{block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">
-        CKEDITOR.replace('ckeditor');
-    </script>
 {/block}

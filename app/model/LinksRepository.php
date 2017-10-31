@@ -10,5 +10,3 @@ class LinksRepository extends Repository {
     }
 
 }
-
-?>

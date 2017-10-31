@@ -2,7 +2,8 @@
 
 namespace App\Model;
 
-class RoundsRepository extends Repository{
+class RoundsRepository extends Repository {
+
     public function getLatestRound() {
         $id = $this->findByValue('archive_id', null)->max('id');
         if ($id) {
@@ -19,4 +20,5 @@ class RoundsRepository extends Repository{
         }
         return null;
     }
+    
 }

@@ -2,7 +2,8 @@
 
 namespace App\Model;
 
-class PlayerTypesRepository extends Repository{
+class PlayerTypesRepository extends Repository {
+    
     public function getTypes() {
         $types = $this->findAll();
         

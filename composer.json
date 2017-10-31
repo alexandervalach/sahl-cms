@@ -19,7 +19,8 @@
             "nette/nette": "~2.4.0",
             "dg/adminer-custom": "~1.5",
             "ipub/visual-paginator": "*",
-                "twbs/bootstrap": "^3.3"
+                "twbs/bootstrap": "^3.3",
+                "alnux/nette-breadcrumb": "dev-master"
         },
         "require-dev": {
             "nette/tester": "~1.0"

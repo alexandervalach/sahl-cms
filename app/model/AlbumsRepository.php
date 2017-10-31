@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-class AlbumsRepository extends Repository{
+class AlbumsRepository extends Repository {
 	
 }
-
-?>

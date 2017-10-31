@@ -2,15 +2,4 @@
 
 <h1 n:block="title">Pridať obrázky do albumu {$album->album}</h1>
 
-<p>
-    <a n:href="view#nav, $album->id" class="btn btn-large btn-default">
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        {$album->album}
-    </a>
-</p>
-
-<div class="alert alert-info">
-    <strong>Do jedného formulára môžeš nahrať maximálne 7 MB obrázkov.</strong>
-</div>
-
 {control addImagesForm}

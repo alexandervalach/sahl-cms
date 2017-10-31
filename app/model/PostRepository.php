@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-class PostsRepository extends Repository{
+class PostsRepository extends Repository {
 
 }
-
-?>

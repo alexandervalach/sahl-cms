@@ -1,44 +1,40 @@
-<section id="links" class="col-md-3">
-    <h3>Navštívte aj tieto stránky</h3>
-    {foreach $links as $link}
-        <p>
+<footer class='container text-center col-md-8 col-md-offset-2' style="margin-top: 30px">
+    <section id="links" class="col-md-3">
+        <h3>Navštívte aj tieto stránky</h3>
+        <p n:foreach="$links as $link">
             <a href='{$link->anchor}' target="_blank">{$link->title}</a>
         </p>
-    {/foreach}
-    <p>
-        <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
-            SAHL na Facebooku
-        </a>
-    </p>
-</section>
+        <p>
+            <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
+                SAHL na Facebooku
+            </a>
+        </p>
+    </section>
 
-<section id="sponsors" class="col-md-6">
-    {if $sponsorsCount > 0}
-        <h3>Sponzori</h3>
-        {foreach $sponsors as $sponsor}
-            <figure>
-                <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                    {if file_exists($basePath . '/' . $imgFolder . '/' . $sponsor->image)}
-                        <img class="img img-responsive" alt="{$sponsor->title}"
-                             src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
-                    {else}
-                        {$sponsor->title}
-                    {/if}
-                </a>
-            </figure>
-        {/foreach}
-    {/if}
-</section>
+    <section id="sponsors" class="col-md-6">
+        {if $sponsorsCount > 0}
+            <h3>Sponzori</h3>
+                <figure n:foreach="$sponsors as $sponsor">
+                    <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
+                        {if file_exists($basePath . '/' . $imgFolder . '/' . $sponsor->image)}
+                            <img class="img img-responsive" alt="{$sponsor->title}"
+                                 src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
+                        {else}
+                            {$sponsor->title}
+                        {/if}
+                    </a>
+                </figure>
+        {/if}
+    </section>
 
-<section id="copyright" class="col-md-3">
-    <p>&copy; Alexander Valach</p><p>Tomáš Hudák</p><p>2014 - 2017</p> 
-    <p>Powered by <a target="_blank" href="https://nette.org/">Nette Framework</a></p>
+    <section id="copyright" class="col-md-3">
+        <p>&copy; Alexander Valach</p><p>Tomáš Hudák</p><p>2014 - 2017</p> 
+        <p>Powered by <a target="_blank" href="https://nette.org/">Nette Framework</a></p>
 
-    {if !$user->loggedIn}
-        <div class='login'>
+        <div n:if="!$user->loggedIn">
             <h2><span class="glyphicon glyphicon-user"></span></h2>
             {control signInForm}
         </div>
-    {/if}
-</section>
+    </section>
+</footer>
 

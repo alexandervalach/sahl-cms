@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-class EventsRepository extends Repository{
+class EventsRepository extends Repository {
 
 }
-
-?>

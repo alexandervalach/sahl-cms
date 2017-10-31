@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-class UsersRepository extends Repository{
+class UsersRepository extends Repository {
 
 }
-
-?>

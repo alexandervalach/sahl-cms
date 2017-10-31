@@ -1,0 +1,12 @@
+<div class="clearfix" style="width: 40%; margin: 20px auto">
+    <div>
+        {foreach $nav_teams as $nav_team}
+            {if $nav_team->logo != NULL}
+                <a n:href="Player:view, $nav_team->id">
+                    <img src="{$basePath}/{$imgFolder}/{$nav_team->logo}" 
+                        width="11%" height="auto" alt="{$nav_team->name} Logo" />
+                </a>
+            {/if}
+        {/foreach}
+    </div>
+</div>

@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-class GalleryRepository extends Repository{
+class GalleryRepository extends Repository {
 	
 }
-
-?>

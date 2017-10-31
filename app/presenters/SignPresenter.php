@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use Nette\Application\UI\Form;
+use Nette\Security\AuthenticationException;
 
 /**
  * Sign in/out presenters.
@@ -12,7 +13,7 @@ class SignPresenter extends BasePresenter {
 
     /**
      * Sign-in form factory.
-     * @return Nette\Application\UI\Form
+     * @return Form
      */
     protected function createComponentSignInForm() {
         $form = new Form;
@@ -33,9 +34,9 @@ class SignPresenter extends BasePresenter {
         $values = $form->values;
 
         try {
-            $this->getUser()->login($values->sahl_username, $values->sahl_password);
+            $this->getUser()->login($values->username, $values->password);
             $this->redirect('Homepage:');
-        } catch (Nette\Security\AuthenticationException $e) {
+        } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');
         }
     }

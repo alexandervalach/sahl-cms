@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-class RulesRepository extends Repository{
+class RulesRepository extends Repository {
 	
 }
-
-?>

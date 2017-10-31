@@ -139,11 +139,11 @@ abstract class BasePresenter extends Presenter {
 
     protected function createComponentDeleteForm() {
         $form = new Form;
-        $form->addSubmit('cancel', 'Zruš')
-             ->setAttribute('class', 'btn btn-warning')
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
              ->onClick[] = $this->formCancelled;
-        $form->addSubmit('delete', 'Zmaž')
-             ->setAttribute('class', 'btn btn-danger')
+        $form->addSubmit('delete', 'Odstrániť')
+             ->setAttribute('class', 'btn btn-large btn-danger')
              ->onClick[] = $this->submittedDeleteForm;
         $form->addProtection();
         return $form;
@@ -155,7 +155,7 @@ abstract class BasePresenter extends Presenter {
              ->setRequired('Zadajte používateľské meno.');
         $form->addPassword('password', 'Heslo')
              ->setRequired('Zadajte heslo.');
-        $form->addSubmit('send', 'Prihlásiť');
+        $form->addSubmit('send', 'Administrácia');
         $form->addProtection();
         $form->onSuccess[] = $this->submittedSignInForm;
         FormHelper::setBootstrapFormRenderer($form);

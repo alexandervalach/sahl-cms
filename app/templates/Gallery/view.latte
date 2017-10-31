@@ -2,39 +2,28 @@
 
 <h1 n:block="title">{$album->album}</h1>
 
-{if $user->loggedIn}
-    <div class="clearfix" style="margin-bottom: 20px">
-        <a n:href="add, $album" class='btn btn-large btn-primary'>
-            Pridať obrázky
-        </a>
-    </div>
-{/if}
+<div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
+    <a n:href="add, $album" class='btn btn-large btn-primary'>
+        Pridať obrázky
+    </a>
+</div>
 
 <section class="row">
-    {foreach $galleryImgs as $img}
-        <figure class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-            <a href="{$baseUrl}/{$imgFolder}/{$img->name}" class="lightbox-trigger" target="_blank">
-                {if $img->name}                
-                    <img src="{$basePath}/{$imgFolder}/{$img->name}" 
-                        class="img img-responsive" alt="{$img->name}" />
-                {else}
-                    <img src="{$basePath}/{$imgFolder}/{$default_img}" 
-                        class="img img-responsive" alt="{$img->name}" />
-                {/if}
+    <figure n:foreach="$galleryImgs as $img" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <a href="{$baseUrl}/{$imgFolder}/{$img->name}" class="lightbox-trigger" target="_blank">
+            <img n:if="$img->name" src="{$basePath}/{$imgFolder}/{$img->name}" 
+                class="img img-responsive" alt="{$img->name}" />
+        </a>
+        <div n:if="$user->loggedIn" class="clearfix text-center">
+            <a n:href="delete, $img" class="btn btn-large btn-danger">
+                Odstrániť
             </a>
-            {if $user->loggedIn}
-                <div class="clearfix text-center">
-                    <a n:href="delete, $img" class="btn btn-large btn-danger">
-                        Odstrániť
-                    </a>
-                    <a n:href="thumbnail, $album->id, $img" class="btn btn-large btn-primary" 
-                        title="Nastaví obrázok ako miniatúru albumu">
-                        Miniatúra
-                    </a>
-                </div>
-            {/if}
-        </figure>
-    {/foreach}
+            <a n:href="thumbnail, $album->id, $img" class="btn btn-large btn-primary" 
+                title="Nastaví obrázok ako miniatúru albumu">
+                Miniatúra
+            </a>
+        </div>
+    </figure>
 </section>
 {/block}
 

@@ -20,18 +20,14 @@ class GalleryPresenter extends BasePresenter {
     /** @var string */
     private $error = "Image not found!";
 
-    /** @var string */
-    private $storage = 'images/';
-
     public function actionView($id) {
         
     }
 
     public function renderView($id) {
         $this->albumRow = $this->albumsRepository->findById($id);
-        $gallerySelection = $this->albumRow->related('gallery');
         $this->template->album = $this->albumRow;
-        $this->template->galleryImgs = $gallerySelection;
+        $this->template->galleryImgs = $this->albumRow->related('gallery');
         $this->template->imgFolder = $this->imgFolder;
     }
 
@@ -72,8 +68,8 @@ class GalleryPresenter extends BasePresenter {
 
     protected function createComponentSetThumbnailForm() {
         $form = new Form;
-        $form->addCheckbox('setThumbnail', ' Nastaviť ako prezenčný obrázok')
-                ->setValue(true);
+        $form->addCheckbox('setThumbnail', ' Nastaviť ako miniatúru')
+             ->setValue(true);
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = $this->submittedSetThumbnailForm;
         FormHelper::setBootstrapFormRenderer($form);
@@ -82,18 +78,21 @@ class GalleryPresenter extends BasePresenter {
 
     public function submittedSetThumbnailForm(Form $form) {
         $values = $form->getValues();
+
         if ($values['setThumbnail']) {
             $data = array();
             $data['name'] = $this->galleryRow->name;
             $this->albumRow->update($data);
         }
-        $this->redirect('Album:all#nav');
+
+        $this->redirect('Album:all');
     }
 
     public function submittedAddImagesForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $imgData = array();
+
         foreach ($values['images'] as $img) {
             $name = strtolower($img->getSanitizedName());
 
@@ -105,42 +104,31 @@ class GalleryPresenter extends BasePresenter {
             $imgData['album_id'] = $this->albumRow;
             $this->galleryRepository->insert($imgData);
         }
-        $this->redirect('view#nav', $this->albumRow);
+
+        $this->redirect('view', $this->albumRow);
     }
 
     protected function createComponentAddImagesForm() {
         $form = new Form;
-        $form->addMultiUpload('images', "Nahrať obrátok");
-        $form->addSubmit('upload', 'Uložiť');
+        $form->addMultiUpload('images', "Nahrať obrázok");
+        $form->addSubmit('upload', 'Nahrať');
         $form->onSuccess[] = $this->submittedAddImagesForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    /**
-     * Create items paginator
-     *
-     * @return VisualPaginator\Control
-     */
-    protected function createComponentVisualPaginator() {
-        $control = new VisualPaginator\Control;
-        $control->setTemplateFile('bootstrap.latte');
-        $control->disableAjax();
-        return $control;
-    }
-
     public function submittedDeleteForm() {
-        $this->userIsLogged();
         $gallery = $this->galleryRow;
         $img = new FileSystem;
         $img->delete($this->storage . $gallery->name);
         $gallery->delete();
+
         $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('view#nav', $gallery->album_id);
+        $this->redirect('view', $gallery->album_id);
     }
 
     public function formCancelled() {
-        $this->redirect('view#nav', $this->galleryRow->album_id);
+        $this->redirect('view', $this->galleryRow->album_id);
     }
 
 }

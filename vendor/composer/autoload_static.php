@@ -24,6 +24,7 @@ class ComposerStaticInit8ae1fdfdd742a571c81c5a0c083d9d50
     );
 
     public static $classMap = array (
+        'Alnux\\NetteBreadCrumb\\BreadCrumb' => __DIR__ . '/..' . '/alnux/nette-breadcrumb/src/BreadCrumb.php',
         'Latte\\CompileException' => __DIR__ . '/..' . '/latte/latte/src/Latte/exceptions.php',
         'Latte\\Compiler' => __DIR__ . '/..' . '/latte/latte/src/Latte/Compiler/Compiler.php',
         'Latte\\Engine' => __DIR__ . '/..' . '/latte/latte/src/Latte/Engine.php',

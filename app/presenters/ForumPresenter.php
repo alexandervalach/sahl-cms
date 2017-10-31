@@ -22,15 +22,8 @@ class ForumPresenter extends BasePresenter {
 
     public function renderAll() {
         $forumSelection = $this->forumRepository->findAll()->order("id DESC");
-
-        $visualPaginator = $this->getComponent('visualPaginator');
-        $paginator = $visualPaginator->getPaginator();
-        $paginator->itemsPerPage = 10;
-        $paginator->itemCount = $forumSelection->count();
-        $forumSelection->limit($paginator->itemsPerPage, $paginator->offset);
-
+        $this->getComponent("addForm");
         $this->template->forums = $forumSelection;
-        $this->template->default = '/images/forum.png';
     }
 
     public function actionDelete($id) {
@@ -46,7 +39,7 @@ class ForumPresenter extends BasePresenter {
         $this->template->forum = $this->forumRow;
     }
 
-    protected function createComponentAddMessageForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
 
         $form->addText('title', 'Názov novej témy:')
@@ -59,16 +52,9 @@ class ForumPresenter extends BasePresenter {
              ->setAttribute('class', 'form-control');
         $form->addSubmit('add', 'Uložiť');
 
-        $form->onSuccess[] = $this->submittedAddMessageForm;
+        $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
-    }
-
-    protected function createComponentVisualPaginator() {
-        $control = new VisualPaginator\Control;
-        $control->setTemplateFile('bootstrap.latte');
-        $control->disableAjax();
-        return $control;
     }
 
     public function submittedDeleteForm() {
@@ -78,7 +64,7 @@ class ForumPresenter extends BasePresenter {
         $this->redirect('all');
     }
 
-    public function submittedAddMessageForm(Form $form) {
+    public function submittedAddForm(Form $form) {
         if (isset($_POST['url']) && $_POST['url'] == '') {
             $values = $form->getValues();
             $values['created_at'] = date('Y-m-d H:i:s');

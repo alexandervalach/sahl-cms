@@ -1,5 +1,5 @@
 <form n:name=$form>
-    <ul class=error n:if="$form->ownErrors">
+    <ul class="text-danger" n:if="$form->ownErrors">
         <li n:foreach="$form->ownErrors as $error">{$error}</li>
     </ul>
 

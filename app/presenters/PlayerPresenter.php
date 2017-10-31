@@ -23,8 +23,10 @@ class PlayerPresenter extends BasePresenter {
     }
 
     public function renderView($id) {
-        $this->template->players = $this->playersRepository->findByValue('team_id', $id)->where('NOT type_id', 2)->where('archive_id', null);
-        $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)->where('type_id', 2)->where('archive_id', null);
+        $this->template->players = $this->playersRepository->findByValue('team_id', $id)
+                                        ->where('NOT type_id', 2)->where('archive_id', null);
+        $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
+                                        ->where('type_id', 2)->where('archive_id', null);
         $this->template->team = $this->teamRow;
         $this->template->imgFolder = $this->imgFolder;
     }
@@ -48,7 +50,7 @@ class PlayerPresenter extends BasePresenter {
         if (!$this->playerRow) {
             throw new BadRequestException($this->error);
         }
-        $this->template->team = $this->playerRow->ref('team_id');
+        $this->template->player = $this->playerRow;
         $this->getComponent('editPlayerForm')->setDefaults($this->playerRow);
     }
 

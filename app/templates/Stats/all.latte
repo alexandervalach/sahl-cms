@@ -1,6 +1,6 @@
 {block content}
 
-<h1 n:block="title">Štatistiky</h1>
+<h1 n:block="title">Rebríček</h1>
 
 {if $user->loggedIn}
     <div class="clearfix">
@@ -50,7 +50,7 @@
 
 {/block}
 
-{block scripts}
+{*block scripts}
     {include #parent}
     <script type="text/javascript" src="{$basePath}/data-tables/datatables.min.js"></script>
     <script type="text/javascript">
@@ -58,4 +58,4 @@
             $('#stats .table-responsive .table').DataTable();
         });
     </script>
-{/block}
+{/block*}

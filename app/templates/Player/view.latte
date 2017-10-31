@@ -2,16 +2,16 @@
 
 <h1 n:block="title">{$team->name}</h1>
 
-{if $team->image}
-    <figure>
-        <img class="img-responsive img-rounded" src="{$basePath}{$imgFolder}{$team->image}" 
-            title="{$team->name}" alt="Obrázok tímu {$team->name}" />
+{if $team->image && file_exists($basePath . "'/'" . $imgFolder . '/' . $team->image)}
+    <figure class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+        <img class="img-responsive" src="{$basePath}{$imgFolder}{$team->image}" 
+            title="{$team->name}" alt="{$team->name}" />
     </figure>
 {/if}
 
 {if $team->name}
     <div class='table-responsive'>
-        <table class='table table-striped'>
+        <table class='table'>
             <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -24,7 +24,11 @@
             <tbody>
                 {foreach $players as $player}
                     {var $type = $player->ref('playerTypes', 'type_id')}
-                    <tr {if $player->trans}class="borrowedPlayer"{/if}>
+                    {if $player->trans}
+                    <tr class="borrowed-player">
+                    {else}
+                    <tr>
+                    {/if}
                         {if $player->lname}
                             <td>{$iterator->counter}.</td>
                             <td>
@@ -37,13 +41,13 @@
                             </td>
                             <td>{$player->num}</td>
                             <td n:if="$user->loggedIn" class="text-center">
-                                <a n:href="edit, $player->id" class="text-success">
+                                <a n:href="edit, $player" class="text-success">
                                     <span class='glyphicon glyphicon-pencil'></span>
                                 </a>
                             </td>
                             <td n:if="$user->loggedIn" class="text-center">
-                                <a n:href="delete, $player->id" class="text-danger">
-                                    <span class='glyphicon glyphicon-remove'></span>
+                                <a n:href="delete, $player" class="text-danger">
+                                    <span class='glyphicon glyphicon-trash'></span>
                                 </a>
                             </td>
                         {else}
@@ -51,12 +55,12 @@
                                 <td>&nbsp;</td>
                             {/for}
                             <td n:if="$user->loggedIn" class="text-center">
-                                <a n:href="edit, $player->id" class="text-success">
+                                <a n:href="edit, $player" class="text-success">
                                     <span class='glyphicon glyphicon-pencil'></span>
                                 </a>
                             </td>
                             <td n:if="$user->loggedIn" class="text-center">
-                                <a n:href="delete, $player->id" class="text-danger">
+                                <a n:href="delete, $player" class="text-danger">
                                     <span class='glyphicon glyphicon-remove'></span>
                                 </a>
                             </td>

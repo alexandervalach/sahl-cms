@@ -9,11 +9,11 @@
 
 <section>
     {foreach $forums as $forum}
-        <article class="col-xs-12 col-sm-12 col-md-12 col-log-6">
+        <article class="col-xs-12 col-sm-12 col-md-12 col-log-6 alert alert-info" style="margin: 10px auto">
             <header>
-                <div class="pull-left">
+                <div class="clearfix">
                     <a n:href="Reply:add, $forum->id">
-                        <h4>{$forum->title}</h4>
+                        <h3>{$forum->title}</h3>
                     </a>
                 </div>
                 <div n:if="$user->loggedIn" class="pull-right" >
@@ -23,31 +23,34 @@
                 </div>
             </header>
 
-            <main class="pull-left">
+            <main class="clearfix">
                 <p>
                     {$forum->message}
                 </p>
             </main>
 
-            <footer class="pull-left"> 
-                <span class="glyphicon glyphicon-user"></span> {$forum->author}
-                <time datetime="{$forum->created_at|date:'d.m.Y H:i'}" pubdate>
-                    <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
-                </time>
-                {var $count = $forum->related('reply')->count()}
-                {if $count}
-                    <span class="badge">{$forum->related('reply')->count()}</span>
-                {/if}
-                <a n:href="Reply:add, $forum->id">
-                    <span class="glyphicon glyphicon-share-alt"></span> Odpovedať
-                </a>
+            <footer class="clearfix">
+                <div class="pull-left">
+                    <span class="glyphicon glyphicon-user"></span> {$forum->author},
+                    <time datetime="{$forum->created_at|date:'d.m.Y H:i'}" pubdate>
+                        <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
+                    </time>
+                </div>
+                <div class="pull-right">
+                    {var $count = $forum->related('reply')->count()}
+                    {if $count}
+                        <span class="badge">{$count}</span>
+                    {/if}
+                    <a n:href="Reply:add, $forum->id">
+                        <span class="glyphicon glyphicon-share-alt"></span> Odpovedať
+                    </a>
+                </div>
             </footer>
         </article>
     {/foreach}
-    {control visualPaginator}
 </section>
 
-<div n:if="$user->loggedIn" id="add_topic" class="modal fade" role="dialog">
+<div id="add_topic" class="modal fade" role="dialog">
     <div class="model-dialog">
 
         <div class="modal-content">
@@ -56,7 +59,7 @@
                 <h4 class="modal-title">Pridať príspevok do fóra</h4>
             </div>
             <div class="modal-body">
-                {control addMessageForm}
+                {control addForm}
             </div>
         </div>
         

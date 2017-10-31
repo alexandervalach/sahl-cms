@@ -1,9 +1,9 @@
 {block content}
 
-<p>
+<div class="alert alert-info">
     Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
     samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla SAHL – Pravidlá a Smernice.
-</p>
+</div>
 
 {*
 <div id="slider" class='row'>
@@ -25,7 +25,7 @@
 <section id="posts">
     {foreach $posts as $post}
         <article class="row">
-            <header style="clear: both">
+            <header class="clearfix">
                 <h2>
                     <a n:href="Post:show $post->id">{$post->title}</a>
                 </h2>
@@ -43,10 +43,13 @@
                 <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
                     {$post->created_at|date:'d.m.Y'}
                 </time>
-                <div>{$post->content|noescape|truncate:300}</div>
+                <button type="button" data-toggle="collapse" data-target="#article-{$iterator->counter}">
+                    &hellip;
+                </button>
+                <div id="article-{$iterator->counter}" class="collapse">{$post->content|noescape}</div>
             </main>
 
-            <footer style="clear: both" n:if="$user->loggedIn">
+            <footer class="clearfix" n:if="$user->loggedIn">
                 <a n:href="Post:edit, $post->id" class='btn btn-large btn-success'>
                     Upraviť
                 </a>

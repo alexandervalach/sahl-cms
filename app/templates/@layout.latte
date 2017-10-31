@@ -14,13 +14,14 @@
         <link rel="shortcut icon" href="{$basePath}/favicon.ico">
         <link rel="stylesheet" type="text/css" href="{$basePath}/data-tables/datatables.min.css"/>
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     </head>
     <body class="row">
         <div class="container col-md-offset-2 col-md-8">
             {include 'header.latte'}
             {include 'navigation.latte'}
         </div>
-        <div id='main' class="container col-md-8 col-md-offset-2">
+        <div id='main' class="container col-md-8 col-md-offset-2" style="margin-top: 30px">
             <div class="row" id="primary">
                 <main role='main' class='container col-xs-12 col-sm-12 col-md-8 col-lg-8'>
                     <div n:foreach="$flashes as $flash" class="flash {$flash->type}">
@@ -31,9 +32,20 @@
 
                 {include 'tables.latte'}
             </div>
-
         </div>
-        <footer class='container text-center col-md-8 col-md-offset-2'>
+        <div class="clearfix" style="width: 40%; margin: 20px auto">
+            <div>
+                {foreach $nav_teams as $nav_team}
+                    {if $nav_team->logo != NULL}
+                        <a n:href="Player:view, $nav_team->id">
+                            <img src="{$basePath}/{$imgFolder}/{$nav_team->logo}" 
+                                width="11%" height="auto" alt="{$nav_team->name} Logo" />
+                        </a>
+                    {/if}
+                {/foreach}
+            </div>
+        </div>
+        <footer class='container text-center col-md-8 col-md-offset-2' style="margin-top: 30px">
             {include 'footer.latte'}
         </footer>
     </body>

@@ -22,7 +22,7 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-article header h2 {
+article header h2, aside table h2 {
     font-size: 1.6em;
     line-height: 32px;
     font-family: 'Open Sans', sans-serif;
@@ -52,70 +52,23 @@ main table {
     margin: 20px auto;
 }
 
-main table th {
+main table th, aside table caption {
     font-weight: bold;
     color: #FFFFFF;
     background-color: #337ab7;
 }
 
-main table tr {
+main table tr, aside table tr {
     background-color: #FFFFFF;
 }
 
-#switcher {
-    width: 909px;
-    height: 606px;
-    margin: -15px auto; 
-    position: relative;
+aside table caption {
+    padding: 0;
 }
 
-#switcher > img {
-    position: absolute; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-}
-
-div#slider {
-    width: 100%;
-    margin: 0px auto;
-    position: relative;
-    display: block;
-    height: 393px;
+aside table {
     margin-bottom: 20px;
 }
-
-div#slider img {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    float: left;
-    width: 100%;
-    height: 313px;
-}
-
-div#slider p {
-    float: left;
-    width: 25%;
-    display: inline-block;
-    text-align: center;
-    position: relative;
-    overflow: hidden; 
-    height: 60px;
-    word-wrap: break-word;
-    top: 313px;
-}
-
-#slider p:nth-child(1){ background: #3071a9; color: #ffffff }
-#slider p:nth-child(2){ background: #FF8C00 }
-#slider p:nth-child(3){ background: #ADD8E6; color: #000000 }
-#slider p:nth-child(n+4){ background: #9ACD32 }
-
-#slider p:nth-child(1):focus, div#slider p:nth-child(1):hover { background: #ADD8E6; color: #000000 }
-#slider p:nth-child(2):focus, div#slider p:nth-child(2):hover { background: #9ACD32 }
-#slider p:nth-child(3):focus, div#slider p:nth-child(3):hover { background: #3071a9; color: #ffffff }
-#slider p:nth-child(n+4):focus, div#slider p:nth-child(n+4):hover { background: #FF8C00 }
 
 #lightbox {
     position: fixed;
@@ -180,12 +133,12 @@ ul {
     list-style: none;
 }
 
-.borrowed-player {
-    border: 5px solid #A94442;
-}
-
 aside table tbody tr:nth-child(8) {
     border-bottom: 5px solid #A94442;
+}
+
+.borrowed-player {
+    border: 5px solid #A94442;
 }
 
 /* Large devices (large desktops, 1200px and up) */

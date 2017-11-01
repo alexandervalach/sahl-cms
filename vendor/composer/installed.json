@@ -1701,50 +1701,5 @@
             "responsive",
             "web"
         ]
-    },
-    {
-        "name": "alnux/nette-breadcrumb",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/alnux/nette-breadcrumb.git",
-            "reference": "e8d590753b71bbc1f8dd84eee8e69015c1261f23"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/alnux/nette-breadcrumb/zipball/e8d590753b71bbc1f8dd84eee8e69015c1261f23",
-            "reference": "e8d590753b71bbc1f8dd84eee8e69015c1261f23",
-            "shasum": ""
-        },
-        "require": {
-            "nette/nette": "~2.0",
-            "php": ">=5.3.2"
-        },
-        "time": "2015-03-29T15:14:42+00:00",
-        "type": "library",
-        "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "src/"
-            ]
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Leonardo Allende",
-                "email": "alnux@ya.ru"
-            }
-        ],
-        "description": "Simple Breadcrumbs navigation generator for Nette Framework",
-        "homepage": "https://github.com/alnux/nette-breadcrumb",
-        "keywords": [
-            "breadcrumbs",
-            "generator",
-            "nette"
-        ]
     }
 ]

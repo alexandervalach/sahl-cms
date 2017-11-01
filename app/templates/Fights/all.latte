@@ -1,18 +1,17 @@
 {block content}
 
+{control breadCrumb}
+
 <h1 n:block="title">{$round->name}</h1>
 
-{if $user->loggedIn}
-    <div class="clearfix">
-        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#addFight">
-            Pridať zápas
-        </button>
-    </div>
-{/if}
+<div n:if="$user->loggedIn" class="clearfix">
+    <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#addFight">
+        Pridať zápas
+    </button>
+</div>
 
 <section id="fights">
-    {foreach $fights as $fight}
-        <article>
+        <article n:foreach="$fights as $fight" class="alert alert-info" style="margin: 20px auto;">
             {var $team1 = $fight->ref('teams', 'team1_id')}
             {var $team2 = $fight->ref('teams', 'team2_id')}
             <header>  
@@ -24,13 +23,11 @@
                     {$fight->score2} {$team2->name}
                 </span>
 
-                {if $user->loggedIn}
-                    <div class="pull-right">
-                        <a n:href="delete, $fight->id">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    </div>
-                {/if}
+                <div n:if="$user->loggedIn" class="pull-right">
+                    <a n:href="delete, $fight" class="text-danger">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </div>
             </header>
             <main class="clearfix">
                 <div>
@@ -63,24 +60,21 @@
                     </ul>
                 {/if}
             </main>
-            {if $user->loggedIn}
-                <footer class="clearfix">
-                    <a class="btn btn-success" n:href="edit, $fight->id">
-                        Upraviť zápas
-                    </a>
-                    <a class="btn btn-warning" n:href="editThird, $fight->id">
-                        Pridať góly do tretín
-                    </a>
-                    <a class="btn btn-primary" n:href="Goal:add, $fight->id">
-                        Pridať góly
-                    </a>
-                    <a class="btn btn-danger" n:href="Goal:view, $fight->id">
-                        Zobraziť góly
-                    </a>
-                </footer>
-            {/if}
+            <footer n:if="$user->loggedIn" class="clearfix">
+                <a class="btn btn-large btn-info" n:href="editThird, $fight">
+                    Pridať góly do tretín
+                </a>
+                <a class="btn btn-large btn-success" n:href="edit, $fight">
+                    Upraviť zápas
+                </a>
+                <a class="btn btn-large btn-primary" n:href="Goal:add, $fight">
+                    Pridať góly hráčom
+                </a>
+                <a class="btn btn-large btn-danger" n:href="Goal:view, $fight">
+                    Zobraziť góly
+                </a>
+            </footer>
         </article>
-    {/foreach}
 </section>
 
 <div id="addFight" class="modal fade" role="dialog">

@@ -2,6 +2,7 @@
 
 namespace App\Presenters;
 
+use App\BreadCrumb\BreadCrumb;
 use App\FormHelper;
 use App\Model\AlbumsRepository;
 use App\Model\ArchiveRepository;
@@ -139,24 +140,30 @@ abstract class BasePresenter extends Presenter {
 
     protected function createComponentDeleteForm() {
         $form = new Form;
+
         $form->addSubmit('cancel', 'Zrušiť')
              ->setAttribute('class', 'btn btn-large btn-warning')
              ->onClick[] = $this->formCancelled;
+
         $form->addSubmit('delete', 'Odstrániť')
              ->setAttribute('class', 'btn btn-large btn-danger')
              ->onClick[] = $this->submittedDeleteForm;
+
         $form->addProtection();
+        FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     protected function createComponentSignInForm() {
         $form = new Form;
+
         $form->addText('username', 'Používateľské meno')
              ->setRequired('Zadajte používateľské meno.');
         $form->addPassword('password', 'Heslo')
              ->setRequired('Zadajte heslo.');
-        $form->addSubmit('send', 'Administrácia');
+        $form->addSubmit('login', 'Administrácia');
         $form->addProtection();
+
         $form->onSuccess[] = $this->submittedSignInForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -183,6 +190,12 @@ abstract class BasePresenter extends Presenter {
         if (!$this->user->isLoggedIn()) {
             $this->redirect('Sign:in');
         }
+    }
+
+    protected function createComponentBreadCrumb() {
+        $breadCrumb = new BreadCrumb();
+        $breadCrumb->addLink('Domov', $this->link('Homepage:'));
+        return $breadCrumb;
     }
 
 }

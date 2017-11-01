@@ -109,7 +109,7 @@ class FightsPresenter extends BasePresenter {
         $form->addText('score1', 'Skóre 1');
         $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
-        $form->addCheckbox('type', ' Play Off');
+        $form->addCheckbox('type', ' Označiť zápas ako Play Off zápas');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddFightForm;
@@ -173,7 +173,7 @@ class FightsPresenter extends BasePresenter {
         $this->updateTableRows($values, $type);
         $this->updateTablePoints($values, $type);
         $this->updateTableGoals($values, $type);
-        $this->redirect('all#nav', $fight->ref('rounds', 'round_id'));
+        $this->redirect('all', $fight->ref('rounds', 'round_id'));
     }
 
     public function submittedEditForm(Form $form) {
@@ -185,7 +185,7 @@ class FightsPresenter extends BasePresenter {
         }
 
         $this->fightRow->update($values);
-        $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
+        $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
     }
 
     public function submittedEditThirdForm(Form $form) {
@@ -207,7 +207,7 @@ class FightsPresenter extends BasePresenter {
         }
 
         $this->fightRow->update($values);
-        $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
+        $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
     }
 
     public function submittedDeleteForm() {
@@ -215,7 +215,7 @@ class FightsPresenter extends BasePresenter {
         $id = $this->fightRow->ref('rounds', 'round_id');
         $this->fightRow->delete();
         $this->flashMessage('Zápas odstránený.', 'success');
-        $this->redirect('all#nav', $id);
+        $this->redirect('all', $id);
     }
 
     public function formCancelled() {

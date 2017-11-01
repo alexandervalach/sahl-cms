@@ -14,7 +14,7 @@ class ForumPresenter extends BasePresenter {
     private $forumRow;
 
     /** @var string */
-    private $error = "Message not found!";
+    private $error = "Thread not found!";
 
     public function actionAll() {
         
@@ -24,6 +24,7 @@ class ForumPresenter extends BasePresenter {
         $forumSelection = $this->forumRepository->findAll()->order("id DESC");
         $this->getComponent("addForm");
         $this->template->forums = $forumSelection;
+        $this['breadCrumb']->addLink("Fórum");
     }
 
     public function actionDelete($id) {
@@ -46,7 +47,7 @@ class ForumPresenter extends BasePresenter {
              ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
              ->setRequired("Meno je povinné pole.");
-        $form->addText('email', 'Nevypĺňať')
+        $form->addText('url', 'Nevypĺňať')
              ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
              ->setAttribute('class', 'form-control');

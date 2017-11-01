@@ -1,5 +1,7 @@
 {block content}
 
+{control breadCrumb}
+
 <h1 n:block="title">{$album->album}</h1>
 
 <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
@@ -9,7 +11,7 @@
 </div>
 
 <section class="row">
-    <figure n:foreach="$galleryImgs as $img" class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+    <figure n:foreach="$galleryImgs as $img" class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin: 10px auto;">
         <a href="{$baseUrl}/{$imgFolder}/{$img->name}" class="lightbox-trigger" target="_blank">
             <img n:if="$img->name" src="{$basePath}/{$imgFolder}/{$img->name}" 
                 class="img img-responsive" alt="{$img->name}" />

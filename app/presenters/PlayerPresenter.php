@@ -24,11 +24,15 @@ class PlayerPresenter extends BasePresenter {
 
     public function renderView($id) {
         $this->template->players = $this->playersRepository->findByValue('team_id', $id)
-                                        ->where('NOT type_id', 2)->where('archive_id', null);
+                                        ->where('type_id != ?', 2)->where('archive_id', null);
         $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
                                         ->where('type_id', 2)->where('archive_id', null);
         $this->template->team = $this->teamRow;
         $this->template->imgFolder = $this->imgFolder;
+        $this->template->i = 0;
+        $this->template->j = 0;
+        $this['breadCrumb']->addLink("Tímy", $this->link("Teams:all"));
+        $this['breadCrumb']->addLink($this->teamRow->name);
     }
 
     public function actionCreate($id) {

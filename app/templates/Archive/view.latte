@@ -1,32 +1,20 @@
 {block content}
 
+{control breadCrumb}
+
 <h1 n:block="title">{$archive->title}</h1>
 
 <section id="archive">
     <div class="table-responsive">
-        <table class="table table-striped">
+        <table class="table table">
             <tbody>
-                <tr>
-                    <td><a n:href="Tables:archView, $archive->id">Tabuľky</a></td>
-                </tr>
-                <tr>
-                    <td><a n:href="Round:archView, $archive->id">Výsledky</a></td>
-                </tr>
-                <tr>
-                    <td><a n:href="Teams:archView, $archive->id">Tímy</a></td>
-                </tr>
-                <tr>
-                    <td><a n:href="Stats:archView, $archive->id">Štatistiky</a></td>
-                </tr>
-                <tr>
-                    <td><a n:href="Events:archView, $archive->id">Zápasy</a></td>
-                </tr>
-                <tr>
-                    <td><a n:href="Rules:archView, $archive->id">Pravidlá a smernice</a></td>
-                </tr>
-                <tr>
-                    <td><a n:href="Punishments:archView, $archive->id">Tresty hráčov</a></td>
-                </tr>
+                <tr><td><a n:href="Tables:archView, $archive->id">Tabuľky</a></td></tr>
+                <tr><td><a n:href="Round:archView, $archive->id">Výsledky</a></td></tr>
+                <tr><td><a n:href="Teams:archView, $archive->id">Tímy</a></td></tr>
+                <tr><td><a n:href="Stats:archView, $archive->id">Štatistiky</a></td></tr>
+                <tr><td><a n:href="Events:archView, $archive->id">Zápasy</a></td></tr>
+                <tr><td><a n:href="Rules:archView, $archive->id">Pravidlá a smernice</a></td></tr>
+                <tr><td><a n:href="Punishments:archView, $archive->id">Tresty hráčov</a></td></tr>
             </tbody>
         </table>
     </div>

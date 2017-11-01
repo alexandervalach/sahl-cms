@@ -49,6 +49,3 @@ services:
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository
 	- App\Model\UsersRepository
-
-extensions:
-	visualPaginator: IPub\VisualPaginator\DI\VisualPaginatorExtension

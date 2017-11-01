@@ -1,12 +1,8 @@
 {block content}
 
-<h1 n:block="title">Odstráň rozpis</h1>
+<h1 n:block="title">Odstrániť rozpis zápasov</h1>
 
-{if $event}
-    <p class='delete text-warning'>
-        Naozaj chceš zmazať tento rozpis zápasov?
-    </p>
-    {control deleteForm}
-{else}
-    <p>Rozpis nenájdený.</p>
-{/if}
+<p class='delete text-warning'>
+    Naozaj chcete zmazať tento rozpis zápasov?
+</p>
+{control deleteForm}

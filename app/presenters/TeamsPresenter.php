@@ -16,11 +16,15 @@ class TeamsPresenter extends BasePresenter {
     /** @var string */
     private $error = "Team not found";
 
-    /** @var string */
-    private $storage = "images/";
+    public function actionAll() {
+        
+    }
 
-    public function actionCreate() {
-        $this->userIsLogged();
+    public function renderAll() {
+        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC");
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent("addForm");
+        }
     }
 
     public function actionDelete($id) {
@@ -47,14 +51,6 @@ class TeamsPresenter extends BasePresenter {
 
         $this->getComponent('editTeamForm')->setDefaults($this->teamRow);
         $this->template->team = $this->teamRow;
-    }
-
-    public function actionAll() {
-        
-    }
-
-    public function renderAll() {
-        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC");
     }
 
     public function actionUpload($id) {
@@ -84,16 +80,15 @@ class TeamsPresenter extends BasePresenter {
         return $form;
     }
 
-    protected function createComponentAddTeamForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
 
         $form->addText('name', 'Tím: ')
-                ->setRequired('Názov tímu je povinné pole.')
-                ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
-
+             ->setRequired('Názov tímu je povinné pole.')
+             ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = $this->submittedAddTeamForm;
+        $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -122,7 +117,7 @@ class TeamsPresenter extends BasePresenter {
             $data = array('image' => $name);
             $this->teamRow->update($data);
         }
-        $this->redirect('Player:view#nav', $this->teamRow);
+        $this->redirect('Player:view', $this->teamRow);
     }
 
     public function submittedDeleteForm() {
@@ -137,25 +132,25 @@ class TeamsPresenter extends BasePresenter {
         $img->delete( $this->storage . $team->image );
         $team->delete();
         $this->flashMessage('Tím bol odstránený aj so všetkými hráčmi.', 'success');
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
-    public function submittedAddTeamForm(Form $form) {
+    public function submittedAddForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->teamsRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedEditTeamForm(Form $form) {
         $this->userIsLogged();
         $values = $form->getValues();
         $this->teamRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

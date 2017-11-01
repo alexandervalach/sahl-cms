@@ -2,11 +2,11 @@
 
 <h1 n:block="title">Rebríček</h1>
 
-{if $user->loggedIn}
-    <div class="clearfix">
-        <a n:href="reset" class="btn btn-danger">Vynulovať</a>
-    </div>
-{/if}
+<div n:if="$user->loggedIn" class="clearfix">
+    <button type="button" class="btn btn-large btn-danger" data-toggle="modal" data-target="#reset-stats">
+        Vynulovať
+    </button>
+</div>
 
 <section id="stats">
     <div class='table-responsive'>
@@ -22,31 +22,46 @@
                 </tr>
             </thead>
             <tbody>
-                {foreach $stats as $stat}
+                <tr n:foreach="$stats as $stat">
                     {var $current = $stat->goals}
-                    <tr>
-                        <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
-                        <td>{$stat->lname}</td>
-                        <td>{$stat->num}</td>
-                        <td>{$stat->ref('team_id')->name}</td>
-                        <td>{$stat->goals}</td>
-                        <td n:if="$user->loggedIn">
-                            <a n:href="Player:edit, $stat->id" class="text-success">
-                                <span class='glyphicon glyphicon-pencil'></span>
-                            </a>
-                        </td>
-                        <td n:if="$user->loggedIn">
-                            <a n:href="Player:delete, $stat->id" class="text-danger">
-                                <span class='glyphicon glyphicon-remove'></span>
-                            </a>
-                        </td>
-                    </tr>
+                    <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
+                    <td>{$stat->lname}</td>
+                    <td>{$stat->num}</td>
+                    <td>{$stat->ref('team_id')->name}</td>
+                    <td>{$stat->goals}</td>
+                    <td n:if="$user->loggedIn">
+                        <a n:href="Player:edit, $stat->id" class="text-success">
+                            <span class='glyphicon glyphicon-pencil'></span>
+                        </a>
+                    </td>
+                    <td n:if="$user->loggedIn">
+                        <a n:href="Player:delete, $stat->id" class="text-danger">
+                            <span class='glyphicon glyphicon-trash'></span>
+                        </a>
+                    </td>
                     {var $previous = $stat->goals}
-                {/foreach}
+                </tr>
             </tbody>
         </table>
     </div>
 </section>
+
+<div n:if="$user->loggedIn" id="reset-stats" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Vynulovať štatistiky?</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    V závislosti od pripojenia to môže trvať viac ako minútu.
+                </p>
+                {control resetForm}
+            </div>
+        </div>
+    </div>
+</div>
 
 {/block}
 

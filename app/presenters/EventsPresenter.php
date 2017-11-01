@@ -6,7 +6,6 @@ use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
-use IPub\VisualPaginator\Components as VisualPaginator;
 
 class EventsPresenter extends BasePresenter {
 
@@ -21,15 +20,10 @@ class EventsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $eventSelection = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
-
-        $visualPaginator = $this->getComponent('visualPaginator');
-        $paginator = $visualPaginator->getPaginator();
-        $paginator->itemsPerPage = 5;
-        $paginator->itemCount = $eventSelection->count();
-        $eventSelection->limit($paginator->itemsPerPage, $paginator->offset);
-
-        $this->template->events = $eventSelection;
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent("addForm");
+        }
+        $this->template->events = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
     }
 
     public function actionEdit($id) {
@@ -57,41 +51,29 @@ class EventsPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
-    public function actionCreate() {
-        $this->userIsLogged();
-    }
-
-    public function renderCreate() {
-        $this->getComponent('addEventForm');
-    }
-
     public function actionArchView($id) {
         
     }
 
     public function renderArchView($id) {
-        $this->template->archive = $this->archiveRepository->findById($id);
-        $events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
-
-        $visualPaginator = $this->getComponent('visualPaginator');
-        $paginator = $visualPaginator->getPaginator();
-        $paginator->itemsPerPage = 5;
-        $paginator->itemCount = $events->count();
-        $events->limit($paginator->itemsPerPage, $paginator->offset);
-
-        $this->template->events = $events;
+        $archive = $this->archiveRepository->findById($id);
+        $this->template->archive = $archive;
+        $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
+        
+        $this['breadCrumb']->addLink("Archívy", $this->link("Archive:all"));
+        $this['breadCrumb']->addLink($archive->title);
+        $this['breadCrumb']->addLink("Zápasy");
     }
 
-    protected function createComponentAddEventForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
 
         $form->addTextArea('event', 'Rozpis zápasov')
                 ->setAttribute('id', 'ckeditor')
                 ->setRequired("Rozpis zápasov je povinné pole.");
-
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = $this->submittedAddEventForm;
+        $form->onSuccess[] = $this->submittedAddForm;
 
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -103,7 +85,6 @@ class EventsPresenter extends BasePresenter {
         $form->addTextArea('event', 'Rozpis zápasov')
                 ->setAttribute('id', 'ckeditor')
                 ->setRequired('Rozpis zápasov je povinné pole.');
-
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedEditEventForm;
@@ -112,39 +93,26 @@ class EventsPresenter extends BasePresenter {
         return $form;
     }
 
-    /**
-     * Create items paginator
-     *
-     * @return VisualPaginator\Control
-     */
-    protected function createComponentVisualPaginator() {
-        $control = new VisualPaginator\Control;
-        $control->setTemplateFile('bootstrap.latte');
-        $control->disableAjax();
-        return $control;
-    }
-
-    public function submittedAddEventForm(Form $form) {
+    public function submittedAddForm(Form $form) {
         $values = $form->getValues();
         $this->eventsRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedEditEventForm(Form $form) {
         $values = $form->getValues();
         $this->eventRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedDeleteForm() {
-        $this->userIsLogged();
         $this->eventRow->delete();
         $this->flashMessage('Rozpis odstránený!', 'success');
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

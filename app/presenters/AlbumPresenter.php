@@ -25,8 +25,12 @@ class AlbumPresenter extends BasePresenter {
         $this->template->albums = $this->albumsRepository->findAll();
         $this->template->default_img = $this->default_img;
         $this->template->imgFolder = $this->imgFolder;
-        if ($this->user->isLoggedIn())  
+
+        $this['breadCrumb']->addLink("Albumy");
+
+        if ($this->user->isLoggedIn()) { 
             $this->getComponent('addAlbumForm');
+        }
     }
 
     public function actionEdit($id) {

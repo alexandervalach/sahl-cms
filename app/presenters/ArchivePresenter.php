@@ -21,8 +21,11 @@ class ArchivePresenter extends BasePresenter {
 	public function renderAll() {
 		$this->template->archive = $this->archiveRepository->findAll();
 		$this->template->default_img = $this->default_img;
-		if ($this->user->isLoggedIn())
+		$this['breadCrumb']->addLink('Archív');
+
+		if ($this->user->isLoggedIn()) {
 			$this->getComponent('addForm');
+		}
 	}
 
 	public function actionEdit($id) {
@@ -47,6 +50,8 @@ class ArchivePresenter extends BasePresenter {
 			throw new BadRequestException($this->error);
 		}
 		$this->template->archive = $this->archiveRow;
+		$this['breadCrumb']->addLink('Archívy', $this->link('all'));
+		$this['breadCrumb']->addLink($this->archiveRow->title);
 	}
 
 	protected function createComponentAddForm() {

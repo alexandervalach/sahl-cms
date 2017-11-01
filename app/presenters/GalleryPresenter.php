@@ -3,7 +3,6 @@
 namespace App\Presenters;
 
 use App\FormHelper;
-use IPub\VisualPaginator\Components as VisualPaginator;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -29,6 +28,9 @@ class GalleryPresenter extends BasePresenter {
         $this->template->album = $this->albumRow;
         $this->template->galleryImgs = $this->albumRow->related('gallery');
         $this->template->imgFolder = $this->imgFolder;
+
+        $this['breadCrumb']->addLink('Albumy', $this->link('Album:all'));
+        $this['breadCrumb']->addLink($this->albumRow->album);
     }
 
     public function actionAdd($id) {

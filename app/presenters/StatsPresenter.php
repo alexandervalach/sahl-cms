@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
+use App\FormHelper;
 
 class StatsPresenter extends BasePresenter {
 
@@ -19,6 +20,10 @@ class StatsPresenter extends BasePresenter {
         $this->template->j = 0;
         $this->template->current = 0;
         $this->template->previous = 0;
+        
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent('resetForm');
+        }
     }
 
     public function actionArchView($id) {
@@ -32,22 +37,20 @@ class StatsPresenter extends BasePresenter {
     	$this->template->archive = $this->archiveRepository->findById($id);
     }
 
-    public function actionReset() {
-        $this->userIsLogged();
-    }
-
-    public function renderReset() {
-        $this->getComponent('resetForm');
-    }
-
     protected function createComponentResetForm() {
         $form = new Form;
+        
         $form->addSubmit('reset', 'Vynulovať')
-             ->setAttribute('class', 'btn btn-danger')
+             ->setAttribute('class', 'btn btn-large btn-danger')
              ->onClick[] = $this->submittedResetForm;
+
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-warning')
-             ->onClick[] = $this->formCancelled;
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
+
+        $form->addProtection();
+
+        FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 

@@ -12,7 +12,6 @@ use App\Model\ForumRepository;
 use App\Model\GalleryRepository;
 use App\Model\GoalsRepository;
 use App\Model\LinksRepository;
-use App\Model\OptionsRepository;
 use App\Model\PlayersRepository;
 use App\Model\PlayerTypesRepository;
 use App\Model\PostImageRepository;
@@ -21,6 +20,7 @@ use App\Model\PunishmentsRepository;
 use App\Model\ReplyRepository;
 use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
+use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
 use App\Model\UsersRepository;
@@ -57,8 +57,8 @@ abstract class BasePresenter extends Presenter {
     /** @var LinksRepository */
     protected $linksRepository;
     
-    /** @var OptionsRepository */
-    protected $optionsRepository;
+    /** @var TableTypesRepository */
+    protected $tableTypesRepository;
     
     /** @var PlayerTypesRepository */
     protected $playerTypesRepository;
@@ -94,13 +94,16 @@ abstract class BasePresenter extends Presenter {
     protected $usersRepository;
 
     /** @var string */
-    protected $imgFolder = "images";
+    protected $imgFolder;
 
     /** @var string */
-    protected $default_img = "sahl.png";
+    protected $default_img;
+
+    /** @var array */ 
+    protected $side_table_types;
 
     public function __construct(
-    ArchiveRepository $archiveRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, OptionsRepository $optionsRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
+    ArchiveRepository $archiveRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
         parent::__construct();
         $this->archiveRepository = $archiveRepository;
         $this->albumsRepository = $albumsRepository;
@@ -110,7 +113,7 @@ abstract class BasePresenter extends Presenter {
         $this->galleryRepository = $galleryRepository;
         $this->goalsRepository = $goalsRepository;
         $this->linksRepository = $linksRepository;
-        $this->optionsRepository = $optionsRepository;
+        $this->tableTypesRepository = $tableTypesRepository;
         $this->playersRepository = $playersRepository;
         $this->playerTypesRepository = $playerTypesRepository;
         $this->postImageRepository = $postImageRepository;
@@ -122,20 +125,30 @@ abstract class BasePresenter extends Presenter {
         $this->tablesRepository = $tablesRepository;
         $this->teamsRepository = $teamsRepository;
         $this->usersRepository = $usersRepository;
+        $this->side_table_types = null;
+        $this->default_img = "sahl.png";
+        $this->imgFolder = "images";
     }
 
     public function beforeRender() {
-        $sponsors = $this->linksRepository->getSponsors();
+        if ($this->side_table_types == null) {
+            $this->side_table_types = $this->tableTypesRepository->findByValue('visible = ?', 1);
+
+            foreach($this->side_table_types as $type) {
+                $side_tables[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
+                                                                   ->where('type = ?', $type);
+            }
+        }
+
         $this->template->sideRound = $this->roundsRepository->getLatestRound();
         $this->template->sideFights = $this->roundsRepository->getLatestRoundFights();
-        $this->template->baseTable = $this->tablesRepository->getTableStats(2);
-        $this->template->playOff = $this->tablesRepository->getTableStats(1);
-        $this->template->options = $this->optionsRepository->findByValue('visible', 1);
-        $this->template->sponsorsCount = $sponsors->count();
+        $this->template->side_table_types = $this->side_table_types;
         $this->template->links = $this->linksRepository->findByValue('sponsor', 0);
-        $this->template->sponsors = $sponsors;
+        $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = $this->imgFolder;
         $this->template->nav_teams = $this->teamsRepository->findByValue('archive_id', NULL);
+        $this->template->side_table_types = $this->side_table_types;
+        $this->template->side_tables = $side_tables;
     }
 
     protected function createComponentDeleteForm() {

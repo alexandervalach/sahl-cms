@@ -16,39 +16,19 @@
         </table>
     </div>
 
-    {if $options != null}
-        <section n:foreach="$options as $option">
-            <div n:if="($playOff != null) and ($option->option == 'playOff')" class='table-responsive'>
-                <caption>
-                    <h2 class="text-center">Play Off</h2>
-                </caption>
-                <table class='table'>
-                    <tbody>
-                        <tr n:foreach="$playOff as $table">
-                            {var $team = $table->ref('teams', 'team_id')}
-                            <td>{$iterator->counter}.</td>
-                            <td>{$team->name}</td>
-                            <td>{$table->points}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div n:if="($baseTable != null) and ($option->option == 'baseTable')" class='table-responsive'>
-                <table class='table'>
-                    <caption>
-                        <h2 class="text-center">Základná časť</h2>
-                    </caption>
-                    <tbody>
-                        <tr n:foreach="$baseTable as $table">
-                            {var $team = $table->ref('teams', 'team_id')}
-                            <td>{$iterator->counter}.</td>
-                            <td>{$team->name}</td>
-                            <td>{$table->points}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    {/if}
+    <div n:foreach="$side_table_types as $type" class='table-responsive'>
+        <table class='table'>
+            <caption>
+                <h2 class="text-center">{$type->name}</h2>
+            </caption>
+            <tbody>
+                <tr n:foreach="$side_tables[$type->name] as $row">
+                    {var $team = $row->ref('teams', 'team_id')}
+                    <td>{$iterator->counter}.</td>
+                    <td>{$team->name}</td>
+                    <td>{$row->points}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </aside>

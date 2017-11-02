@@ -19,11 +19,11 @@ class PostPresenter extends BasePresenter {
     /** @var string */
     private $storage = 'images/';
 
-    public function actionShow($id) {
+    public function actionView($id) {
         $this->postRow = $this->postsRepository->findById($id);
     }
 
-    public function renderShow($id) {
+    public function renderView($id) {
         if (!$this->postRow) {
             throw new BadRequestException($this->error);
         }
@@ -31,6 +31,13 @@ class PostPresenter extends BasePresenter {
         $this->template->images = $this->postRow->related('images')->order('id DESC');
         $this->template->imgFolder = $this->imgFolder;
         $this->template->default_img = $this->default_img;
+
+        $this['breadCrumb']->addLink($this->postRow->title);
+
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent("editForm")->setDefaults($this->postRow);
+            $this->getComponent("deleteForm");
+        }
     }
 
     public function actionCreate() {
@@ -38,37 +45,10 @@ class PostPresenter extends BasePresenter {
     }
 
     public function renderCreate() {
-        $this->getComponent('addPostForm');
+        $this->getComponent('addForm');
     }
 
-    public function actionEdit($id) {
-        $this->userIsLogged();
-        $this->postRow = $this->postsRepository->findById($id);
-    }
-
-    public function renderEdit($id) {
-        $post = $this->postRow;
-        if (!$post) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->post = $post;
-        $this->getComponent('editPostForm')->setDefaults($post);
-    }
-
-    public function actionDelete($id) {
-        $this->userIsLogged();
-        $this->postRow = $this->postsRepository->findById($id);
-    }
-
-    public function renderDelete($id) {
-        if (!$this->postRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->getComponent('deleteForm');
-        $this->template->post = $this->postRow;
-    }
-
-    protected function createComponentAddPostForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
 
         $form->addText('title', 'Názov:')
@@ -80,12 +60,12 @@ class PostPresenter extends BasePresenter {
 
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = $this->submittedAddPostForm;
+        $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditPostForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
 
         $form->addText('title', 'Názov:')
@@ -97,31 +77,43 @@ class PostPresenter extends BasePresenter {
 
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = $this->submittedEditPostForm;
+        $form->onSuccess[] = $this->submittedEditForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddPostForm(Form $form) {
-        $this->userIsLogged();
-        $post = $this->postsRepository;
-        $values = $form->getValues();
-        $id = $post->insert($values);
-        $this->redirect('show#nav', $id);
+    protected function createComponentDeleteForm() {
+        $form = new Form;
+
+        $form->addSubmit('delete', 'Odstrániť')
+             ->setAttribute('class', 'btn btn-large btn-danger');
+
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
+
+        $form->addProtection();
+
+        $form->onSuccess[] = $this->submittedDeleteForm;
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
     }
 
-    public function submittedEditPostForm(Form $form) {
-        $this->userIsLogged();
-        $post = $this->postRow;
+    public function submittedAddForm(Form $form) {
         $values = $form->getValues();
-        $post->update($values);
-        $this->redirect('show#nav', $post->id);
+        $post = $this->postsRepository->insert($values);
+        $this->redirect('view', $post);
+    }
+
+    public function submittedEditForm(Form $form) {
+        $values = $form->getValues();
+        $this->postRow->update($values);
+        $this->redirect('view', $this->postRow);
     }
 
     public function submittedDeleteForm() {
-        $this->userIsLogged();
-
         $imgs = $this->postRow->related('images');
+        
         foreach ($imgs as $img) {
             $file = new FileSystem;
             $file->delete($this->storage . $img->name);
@@ -130,11 +122,11 @@ class PostPresenter extends BasePresenter {
 
         $this->postRow->delete();
         $this->flashMessage('Príspevok odstránený aj so všetkými obrázkami.', 'success');
-        $this->redirect('Homepage:#nav');
+        $this->redirect('Homepage:');
     }
 
     public function formCancelled() {
-        $this->redirect('Homepage:#nav');
+        $this->redirect('Homepage:');
     }
 
 }

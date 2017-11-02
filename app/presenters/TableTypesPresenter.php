@@ -6,7 +6,7 @@ use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 
-class OptionsPresenter extends BasePresenter {
+class TableTypesPresenter extends BasePresenter {
 
     /** @var ActiveRow */
     private $optionRow;

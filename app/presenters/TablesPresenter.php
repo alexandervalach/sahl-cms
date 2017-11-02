@@ -21,17 +21,19 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->basic = $this->tablesRepository->findByValue('type', 2)->where('archive_id', null)->order('points DESC')->order('score1 - score2 DESC');
-        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->where('archive_id', null)->order('points DESC')->order('score1 - score2 DESC');
-        $this->template->options = $this->optionsRepository->findByValue('visible', 1);
-    }
+        $table_types = $this->tableTypesRepository->findByValue('visible', 1);
+        $this->template->table_types = $table_types;
 
-    public function actionAdd() {
-        $this->userIsLogged();
-    }
+        $table_rows = array();
+        foreach ($table_types as $type) {
+            $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
+                                                              ->where('type = ?', $type);
+        }
+        $this->template->tables = $table_rows;
 
-    public function renderAdd() {
-        $this->getComponent('addTableRowForm');
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent("addForm");
+        }
     }
 
     public function actionEdit($id) {
@@ -83,14 +85,16 @@ class TablesPresenter extends BasePresenter {
         $this->template->archive = $this->archiveRepository->findById($id);
     }
 
-    protected function createComponentAddTableRowForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
         $teams = $this->teamsRepository->getTeams();
+        $table_types = $this->tableTypesRepository->getTypes();
+
         $form->addSelect('team_id', 'Mužstvo', $teams);
-        $form->addSelect('type', 'Tabuľka', TablesRepository::$TABLES);
+        $form->addSelect('type', 'Tabuľka', $table_types);
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = $this->submittedAddTableRowForm;
+        $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -103,35 +107,36 @@ class TablesPresenter extends BasePresenter {
         $form->addText('score1', 'Skóre 1');
         $form->addText('score2', 'Skóre 2');
         $form->addText('points', 'Body');
-        $form->addSelect('type', 'Tabuľka', TablesRepository::$TABLES);
         $form->addSubmit('save', 'Uložiť');
+
         $form->onSuccess[] = $this->submittedEditTableRowForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddTableRowForm(Form $form) {
+    public function submittedAddForm(Form $form) {
         $values = $form->getValues();
         $this->tablesRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->flashMessage('Záznam pridaný do tabuliek', 'success');
+        $this->redirect('all');
     }
 
     public function submittedEditTableRowForm(Form $form) {
         $values = $form->getValues();
         $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
         $this->tableRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedDeleteForm() {
         $this->userIsLogged();
         $this->tableRow->delete();
-        $this->flashMessage('Záznam zmazaný!', 'success');
-        $this->redirect('all#nav');
+        $this->flashMessage('Záznam odstránený z tabuľky', 'success');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

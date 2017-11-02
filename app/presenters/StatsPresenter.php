@@ -20,6 +20,8 @@ class StatsPresenter extends BasePresenter {
         $this->template->j = 0;
         $this->template->current = 0;
         $this->template->previous = 0;
+
+        $this['breadCrumb']->addLink("Rebríček");
         
         if ($this->user->isLoggedIn()) {
             $this->getComponent('resetForm');

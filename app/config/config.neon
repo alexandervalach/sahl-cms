@@ -37,7 +37,6 @@ services:
 	- App\Model\GalleryRepository
 	- App\Model\GoalsRepository
 	- App\Model\LinksRepository
-	- App\Model\OptionsRepository
 	- App\Model\PlayerTypesRepository
 	- App\Model\PlayersRepository
 	- App\Model\PostImageRepository
@@ -46,6 +45,7 @@ services:
 	- App\Model\ReplyRepository
 	- App\Model\RoundsRepository
 	- App\Model\RulesRepository
+	- App\Model\TableTypesRepository
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository
 	- App\Model\UsersRepository

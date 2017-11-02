@@ -2,13 +2,9 @@
 
 <h1 n:block="title">Odstráň zápas</h1>
 
-{if $fight}
-    <p class='delete text-warning'>
-        Naozaj chceš zmazať zápas 
-        <mark>{$fight->ref( 'teams', 'team1_id' )->name}</mark> vs. 
-        <mark>{$fight->ref( 'teams', 'team2_id' )->name}</mark>?
-    </p>
-    {control deleteForm}
-{else}
-    <p class='error'>Nemôžem nájsť zápas.</p>
-{/if}
+<p class='delete text-warning'>
+    Naozaj chcete zmazať zápas 
+    <mark>{$fight->ref( 'teams', 'team1_id' )->name}</mark> vs. 
+    <mark>{$fight->ref( 'teams', 'team2_id' )->name}</mark>?
+</p>
+{control deleteForm}

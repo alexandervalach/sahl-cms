@@ -10,11 +10,6 @@ class TeamsRepository extends Repository {
      * @return array
      */
     public function getTeams() {
-        $teamSelection = $this->findByValue('archive_id', null)->order('name ASC');
-        $teams = array();
-        foreach ($teamSelection as $team) {
-            $teams[$team->id] = $team->name;
-        }
-        return $teams;
+        return $this->findByValue('archive_id', null)->order('name ASC')->fetchPairs('id', 'name');
     }
 }

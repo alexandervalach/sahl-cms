@@ -27,33 +27,32 @@
         <article class="row">
             <header class="clearfix">
                 <h2>
-                    <a n:href="Post:show $post->id">{$post->title}</a>
+                    <a n:href="Post:view $post">{$post->title}</a>
                 </h2>
             </header>
 
-            <figure class="pull-left col-md-4 col-lg-3">
+            <figure class="col-md-4 col-lg-3">
                 {if file_exists($basePath . "'/'" . $imgFolder . '/' . $post->thumbnail)}
                     <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class='img img-responsive' />
                 {else}
-                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive">
+                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
                 {/if}
             </figure>
 
-            <main class="pull-right col-md-8 col-lg-">
+            <main class="col-md-8 col-lg-9">
                 <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
                     {$post->created_at|date:'d.m.Y'}
                 </time>
-                <button type="button" data-toggle="collapse" data-target="#article-{$iterator->counter}">
+                <button style="margin-bottom: 20px;" type="button" data-toggle="collapse" data-target="#article-{$iterator->counter}">
                     &hellip;
                 </button>
-                <div id="article-{$iterator->counter}" class="collapse">{$post->content|noescape}</div>
+                <div id="article-{$iterator->counter}" class="collapse">
+                    {$post->content|noescape}
+                </div>
             </main>
 
             <footer class="clearfix" n:if="$user->loggedIn">
-                <a n:href="Post:edit, $post->id" class='btn btn-large btn-success'>
-                    Upraviť
-                </a>
-                <a n:href="PostImage:add, $post->id" class='btn btn-large btn-primary'>
+                <a n:href="PostImage:add, $post" class='btn btn-large btn-primary'>
                     Pridať obrázky
                 </a>
             </footer>

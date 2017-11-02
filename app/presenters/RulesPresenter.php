@@ -21,8 +21,12 @@ class RulesPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->rules = $this->rulesRepository->findByValue('archive_id', null);
-        if ($this->user->isLoggedIn())
+
+        $this['breadCrumb']->addLink("Pravidlá a smernice");
+        
+        if ($this->user->isLoggedIn()) {
             $this->getComponent('addRuleForm');
+        }
     }
 
     public function actionDelete($id) {

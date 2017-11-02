@@ -49,9 +49,15 @@ class ArchivePresenter extends BasePresenter {
 		if(!$this->archiveRow) {
 			throw new BadRequestException($this->error);
 		}
+
 		$this->template->archive = $this->archiveRow;
 		$this['breadCrumb']->addLink('Archívy', $this->link('all'));
 		$this['breadCrumb']->addLink($this->archiveRow->title);
+
+		if ($this->user->isLoggedIn()) {
+			$this->getComponent("editForm")->setDefaults($this->archiveRow);
+			$this->getComponent("deleteForm");
+		}
 	}
 
 	protected function createComponentAddForm() {
@@ -68,12 +74,31 @@ class ArchivePresenter extends BasePresenter {
 
 	protected function createComponentEditForm() {
 		$form = new Form;
+
 		$form->addText('title', 'Názov')
 		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
 		$form->addSubmit('save', 'Uložiť');
+
 		$form->onSuccess[] = $this->submittedEditForm;
 		FormHelper::setBootstrapFormRenderer($form);
 		return $form;
+	}
+
+	protected function createComponentDeleteForm() {
+		$form = new Form;
+
+        $form->addSubmit('remove', 'Odstrániť')
+             ->setAttribute('class', 'btn btn-large btn-danger');
+
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
+
+        $form->onSuccess[] = $this->submittedDeleteForm;
+        $form->addProtection();
+
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
 	}
 
 	protected function createComponentArchiveForm() {
@@ -95,7 +120,11 @@ class ArchivePresenter extends BasePresenter {
 	public function submittedEditForm(Form $form) {
 		$values = $form->getValues();
 		$this->archiveRow->update($values);
-		$this->redirect('all');
+		$this->redirect('view', $this->archiveRow);
+	}
+
+	public function submittedDeleteForm(Form $form) {
+        $this->redirect('Archive:all');
 	}
 
 	public function submittedArchiveForm(Form $form) {

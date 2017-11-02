@@ -70,23 +70,25 @@
                 <a class="btn btn-large btn-primary" n:href="Goal:add, $fight">
                     Pridať góly hráčom
                 </a>
-                <a class="btn btn-large btn-danger" n:href="Goal:view, $fight">
+                <a class="btn btn-large btn-default" n:href="Goal:view, $fight">
                     Zobraziť góly
                 </a>
             </footer>
         </article>
 </section>
 
-<div id="addFight" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Pridať zápas</h3>
-            </div>
-            <div class="modal-body">
-                {control addFightForm}
+<section id="modals" n:if="$user->loggedIn">
+    <div id="addFight" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Pridať zápas</h3>
+                </div>
+                <div class="modal-body">
+                    {control addFightForm}
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>

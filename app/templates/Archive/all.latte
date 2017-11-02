@@ -4,31 +4,23 @@
 
 <h1 n:block="title">Archív</h1>
 
+<div class="clearfix" n:if="$user->loggedIn">
+    <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add">
+        Pridať
+    </button>
+</div>
+
 <section class="row">
-    <p n:if="$user->loggedIn">
-	    <button type="button" class='btn btn-primary' data-toggle="modal" data-target="#add">
-            Pridať
-	    </button>
-	</p>
-
-
-    {foreach $archive as $arch}
-        <figure class="col-xs-12 col-sm-12 col-md-6 col-lg-4" style="margin: 20px auto">
-            <a n:href="view, $arch->id">
-                <img src="{$basePath}/{$imgFolder}/{$default_img}" class="img img-responsive">
+    <figure n:foreach="$archive as $arch" class="col-xs-12 col-sm-12 col-md-6 col-lg-4" style="margin: 20px auto">
+        <a n:href="view, $arch">
+            <img src="{$basePath}/{$imgFolder}/{$default_img}" class="img img-responsive">
+        </a>
+        <figcaption>
+            <a n:href="view, $arch">
+                {$arch->title}
             </a>
-            <figcaption>
-                <a n:href="view, $arch->id">
-                    {$arch->title}
-                </a>
-                <div n:if="$user->loggedIn" class="clearfix">
-                    <a n:href="edit, $arch->id" class="btn btn-large btn-success">
-                        Upraviť
-                    </a>
-                </div>
-            </figcation>
-        </figure>
-    {/foreach}
+        </figcaption>
+    </figure>
 </section>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">

@@ -21,8 +21,12 @@ class RoundPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', null);
-        if ($this->user->isLoggedIn()) 
+        
+        $this['breadCrumb']->addLink("Kolá");
+
+        if ($this->user->isLoggedIn()) {
             $this->getComponent('addRoundForm');
+        }
     }
 
     public function actionEdit($id) {

@@ -26,11 +26,14 @@ class FightsPresenter extends BasePresenter {
 
     public function actionAll($id) {
         $this->roundRow = $this->roundsRepository->findById($id);
+        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
+        $this['breadCrumb']->addLink($this->roundRow->name);
     }
 
     public function renderAll($id) {
-        if (!$this->roundRow)
+        if (!$this->roundRow) {
             throw new BadRequestException("Round not found.");
+        }
         
         $goals = array();
         $fights = $this->roundRow->related('fights');
@@ -38,8 +41,9 @@ class FightsPresenter extends BasePresenter {
         foreach ($fights as $fight)
             $goals[] = $fight->related('goals')->order('goals DESC');
         
-        if ($this->user->isLoggedIn())
+        if ($this->user->isLoggedIn()) {
             $this->getComponent('addFightForm');
+        }
 
         $this->template->goals = $goals;
         $this->template->round = $this->roundRow;
@@ -157,7 +161,7 @@ class FightsPresenter extends BasePresenter {
     public function submittedAddFightForm(Form $form) {
         $values = $form->getValues(TRUE);
         if ($values['team1_id'] == $values['team2_id']) {
-            $form->addError('Zvoľ dva rozdielne tímy.');
+            $form->addError('Zvoľte dva rozdielne tímy.');
             return false;
         }
         $values['round_id'] = $this->roundRow;
@@ -180,7 +184,7 @@ class FightsPresenter extends BasePresenter {
         $values = $form->getValues();
 
         if ($values->team1_id == $values->team2_id) {
-            $form->addError('Zvoľ dva rozdielne tímy.');
+            $form->addError('Zvoľte dva rozdielne tímy.');
             return false;
         }
 
@@ -218,10 +222,6 @@ class FightsPresenter extends BasePresenter {
         $this->redirect('all', $id);
     }
 
-    public function formCancelled() {
-        $this->redirect('all#nav', $this->fightRow->ref('rounds', 'round_id'));
-    }
-
     public function updateTableRows($values, $type, $value = 1) {
         $state1 = 'tram';
         $state2 = 'tram';
@@ -257,6 +257,10 @@ class FightsPresenter extends BasePresenter {
         $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score2', $values['score2']);
         $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);
         $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score2', $values['score1']);
+    }
+
+    public function formCancelled() {
+        $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
     }
 
 }

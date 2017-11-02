@@ -12,19 +12,17 @@
     </section>
 
     <section id="sponsors" class="col-md-6">
-        {if $sponsorsCount > 0}
-            <h3>Sponzori</h3>
-                <figure n:foreach="$sponsors as $sponsor">
-                    <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                        {if file_exists($basePath . '/' . $imgFolder . '/' . $sponsor->image)}
-                            <img class="img img-responsive" alt="{$sponsor->title}"
-                                 src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
-                        {else}
-                            {$sponsor->title}
-                        {/if}
-                    </a>
-                </figure>
-        {/if}
+        <h3>Sponzori</h3>
+            <figure n:foreach="$sponsors as $sponsor">
+                <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
+                    {if file_exists($basePath . '/' . $imgFolder . '/' . $sponsor->image)}
+                        <img class="img img-responsive" alt="{$sponsor->title}"
+                             src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
+                    {else}
+                        {$sponsor->title}
+                    {/if}
+                </a>
+            </figure>
     </section>
 
     <section id="copyright" class="col-md-3">

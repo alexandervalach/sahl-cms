@@ -1,4 +1,7 @@
-<footer class='container text-center col-md-8 col-md-offset-2' style="margin-top: 30px">
+<footer class='row text-center'>
+    <section class="col-md-2">
+        <!-- -->
+    </section>
     <section id="links" class="col-md-3">
         <h3>Navštívte aj tieto stránky</h3>
         <p n:foreach="$links as $link">
@@ -11,7 +14,7 @@
         </p>
     </section>
 
-    <section id="sponsors" class="col-md-6">
+    <section id="sponsors" class="col-md-2">
         <h3>Sponzori</h3>
             <figure n:foreach="$sponsors as $sponsor">
                 <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">

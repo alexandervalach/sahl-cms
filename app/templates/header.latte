@@ -1,18 +1,5 @@
 <header role="banner">
 	<div class="clearfix">
-		<figure class="col-lg-4 col-md-4">
-			<img src="{$basePath}/{$imgFolder}/stanley_cup.png" alt="Stanley Cup" width="24%" />
-		</figure>
-		<figure class="col-lg-4 col-md-4">
-			<a n:href="Homepage:">
-				<img src="{$basePath}/{$imgFolder}/sahl.png" alt="Logo SAHL" width="100%" />
-			</a>
-		</figure>
-	</div>
-	<div class="clearfix">
-		<h1 class="text-center">Spišská amatérska hokejová liga</h1>
-	</div>
-	<div class="clearfix">
 		<div style="width: 50%; margin: 0 auto">
 			{foreach $nav_teams as $nav_team}
 				{if $nav_team->logo != NULL}

@@ -10,7 +10,7 @@ html, body {
 }
 
 body {
-    background: url("layout/background-lg.jpg");  
+    background: url("../images/all.jpg");  
     background-size: cover;
     -moz-background-size: cover;
     -webkit-background-size: cover;
@@ -124,9 +124,48 @@ aside table {
     max-width: 100%;
 }
 
-footer a:hover,
-footer a:focus {
+body > footer {
+    background-color: #286090;
+    color: #FFFFFF;
+    padding: 20px;
+}
+
+body > footer a {
+    color: white;
+}
+
+body > footer a:hover,
+body > footer a:focus {
     text-decoration: none;
+}
+
+div#header  {
+    background-color: #286090;
+    color: #FFFFFF;
+    padding: 20px;
+}
+
+div#main {
+    background: none;
+    padding: 40px 0;
+}
+
+div#primary {
+    padding: 20px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+nav a {
+    color: white;
+}
+
+nav ul li a:focus,
+nav ul li a:hover {
+    background-color: red;
 }
 
 ul {

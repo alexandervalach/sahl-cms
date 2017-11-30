@@ -34,7 +34,9 @@
 
         <div n:if="!$user->loggedIn">
             <h2><span class="glyphicon glyphicon-user"></span></h2>
-            {control signInForm}
+            <div class="col-md-8 col-md-offset-2">
+                {control signInForm}
+            </div>
         </div>
     </section>
 </footer>

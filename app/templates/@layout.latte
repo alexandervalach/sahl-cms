@@ -19,22 +19,22 @@
     <body class="row">
         <div class="row" id="header">
             {include 'navigation.latte'}
-            {include 'header.latte'}
         </div>
         <div id='main' class="row">
             {include 'teams.latte'}
-            <div class="col-md-2"></div>
-            <div class="col-md-8" id="primary">
-                <main role='main' class='container col-xs-12 col-sm-12 col-md-8 col-lg-8'>
+            <div class="row" id="primary">
+                <main role='main' class='container col-md-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8'>
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
                         {$flash->message}
                     </div>
-                    {include content}
+                    <div class="col-md-8 col-lg-8">
+                        {include content}
+                    </div>
+                    <div class="col-md-4 col-lg-4">
+                        {include 'tables.latte'}
+                    </div>
                 </main>
-
-                {include 'tables.latte'}
             </div>
-            <div class="col-md-2"></div>
             {include 'teams.latte'}
         </div>
         {include 'footer.latte'}

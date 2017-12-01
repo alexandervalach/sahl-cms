@@ -20,10 +20,12 @@
         <div class="row" id="header">
             {include 'navigation.latte'}
         </div>
-        <div id='main' class="row">
-            {include 'teams.latte'}
+        <div id="main" class="row">
             <div class="row" id="primary">
-                <main role='main' class='container col-md-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8'>
+                <div class="row">
+                    {include 'teams.latte'}
+                </div>
+                <main role='main' class='col-md-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8'>
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
                         {$flash->message}
                     </div>
@@ -34,8 +36,10 @@
                         {include 'tables.latte'}
                     </div>
                 </main>
+                <div class="col-md-12 col-lg-12">
+                    {include 'teams.latte'}
+                </div>
             </div>
-            {include 'teams.latte'}
         </div>
         {include 'footer.latte'}
     </body>

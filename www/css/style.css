@@ -10,16 +10,8 @@ html, body {
 }
 
 body {
-    background: url("../images/all.jpg");  
-    background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-    -o-background-size: cover;
-    background-attachment: fixed;
-    -moz-background-attachment: fixed;
-    -webkit-background-attachment: fixed;
-    -o-background-attachment: fixed;
     font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
 }
 
 article header h2, aside table h2 {
@@ -151,17 +143,27 @@ div#header  {
 }
 
 div#main {
-    background: none;
-    padding: 40px 0;
+    background: url("../images/all.jpg");  
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    background-attachment: fixed;
+    -moz-background-attachment: fixed;
+    -webkit-background-attachment: fixed;
+    -o-background-attachment: fixed;
 }
 
-div#primary > main {
+div#primary {
+    background: rgba(255,255,255,0.4);
     padding: 20px;
-    background: rgba(255,255,255,0.8);
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    -o-border-radius: 10px;
+    margin: 0;
+}
+
+.primary-content {
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    padding: 20px;
 }
 
 nav a {

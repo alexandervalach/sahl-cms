@@ -2,15 +2,15 @@
 
 {control breadCrumb}
 
-<h1 n:block="title">Pravidlá a smernice</h1>
+<section class="primary-content">
+    <h1 n:block="title">Pravidlá a smernice</h1>
 
-<div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
-    <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
-        Pridať
-    </button>
-</div>
+    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
+        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
+            Pridať
+        </button>
+    </div>
 
-<section id="rules">
     <article n:foreach="$rules as $rule">
         <main>
             {$rule->rule|noescape}

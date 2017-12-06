@@ -39,6 +39,11 @@
                 <div class="col-md-12 col-lg-12">
                     {include 'teams.latte'}
                 </div>
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <button type="button" id="scroll-to-top">
+                        <i class="glyphicon glyphicon-menu-up"></i>
+                    </button>
+                </div>
             </div>
         </div>
         {include 'footer.latte'}
@@ -47,6 +52,7 @@
 
 {block scripts}
     <script src="{$basePath}/js/jquery-2.1.3.js"></script>
+    <script src="{$basePath}/js/switch.js"></script>
     <script src="{$basePath}/js/netteForms.js"></script>
     <script src="{$basePath}/bootstrap/js/bootstrap.min.js"></script>
 {/block}

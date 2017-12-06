@@ -1,5 +1,5 @@
 // jQuery news slider on Hompage:default
-
+/*
 $(function () {
     var slider = $('#slider');
     var para = slider.find('p');
@@ -30,4 +30,22 @@ $(function () {
         $(this).animate({height: paraHeight}, options.speed);
     });
 
+});
+*/
+
+$(function() {
+    $(window).scroll( function() {
+        if (body.scrollTop() > 20) {
+            scroll_btn.fadeIn();
+        } else {
+            scroll_btn.fadeOut();
+        }
+    });
+
+    var scroll_btn = $('#scroll-to-top');
+    var body = $('html, body');
+
+    scroll_btn.bind('click', function() {
+        body.animate({ scrollTop: 0}, 'fast');
+    });
 });

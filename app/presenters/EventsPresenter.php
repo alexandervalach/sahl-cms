@@ -24,6 +24,7 @@ class EventsPresenter extends BasePresenter {
             $this->getComponent("addForm");
         }
         $this->template->events = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
+        $this['breadCrumb']->addLink("Zápasy");
     }
 
     public function actionEdit($id) {

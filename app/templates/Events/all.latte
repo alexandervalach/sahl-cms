@@ -2,24 +2,22 @@
 
 {control breadCrumb}
 
-<h1 n:block="title">Rozpis zápasov</h1>
+<section id="events" class="primary-content">
+    <div n:if="$user->loggedIn" style="margin: 20px auto">
+        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
+            Pridať
+        </button>
+    </div>
 
-<div n:if="$user->loggedIn" style="margin: 20px auto">
-    <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
-        Pridať
-    </button>
-</div>
-
-<section id="events">
     <article n:foreach="$events as $event" class="alert alert-info" style="margin: 20px auto;">
         <main>
             {$event->event|noescape}
         </main>
         <footer n:if="$user->loggedIn">
-            <a n:href="edit, $event->id" class="btn btn-large btn-success">
+            <a n:href="edit, $event" class="btn btn-large btn-success">
                 Upraviť
             </a>&nbsp;
-            <a n:href="delete, $event->id" class="btn btn-large btn-danger">    
+            <a n:href="delete, $event" class="btn btn-large btn-danger">    
                 Odstrániť
             </a>
         </footer>

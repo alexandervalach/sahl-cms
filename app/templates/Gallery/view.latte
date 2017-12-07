@@ -2,29 +2,35 @@
 
 {control breadCrumb}
 
-<div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
-    <a n:href="add, $album" class='btn btn-large btn-primary'>
-        Pridať obrázky
-    </a>
-</div>
+<section class="primary-content clearfix">
+    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
+        <a n:href="add, $album" class='btn btn-large btn-primary'>
+            Pridať obrázky
+        </a>
+        <a n:href="Album:edit, $album" class="btn btn-large btn-success">
+            Upraviť            
+        </a>
+        <a n:href="Album:delete, $album" class="btn btn-large btn-danger">
+            Odstrániť            
+        </a>
+    </div>
 
-<section class="row">
     <figure n:foreach="$galleryImgs as $img" class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin: 10px auto;">
         <a href="{$baseUrl}/{$imgFolder}/{$img->name}" class="lightbox-trigger" target="_blank">
             <img n:if="$img->name" src="{$basePath}/{$imgFolder}/{$img->name}" 
                 class="img img-responsive" alt="{$img->name}" />
         </a>
-        <div n:if="$user->loggedIn" class="clearfix text-center">
+        <div n:if="$user->loggedIn" class="text-center" style="margin: 10px 0;">
             <a n:href="delete, $img" class="btn btn-large btn-danger">
                 Odstrániť
             </a>
-            <a n:href="thumbnail, $album->id, $img" class="btn btn-large btn-primary" 
+            <a n:href="thumbnail, $album, $img" class="btn btn-large btn-primary" 
                 title="Nastaví obrázok ako miniatúru albumu">
                 Miniatúra
             </a>
         </div>
     </figure>
-</section>
+
 {/block}
 
 {block scripts}

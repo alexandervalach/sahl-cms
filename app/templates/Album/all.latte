@@ -21,14 +21,6 @@
         </a>
         <figcaption class="text-center" style="margin: 10px 0;">
             {$album->album}
-            <p n:if="$user->loggedIn" class="text-center">
-                <a n:href="edit, $album" class="btn btn-large btn-success">
-                    Upraviť
-                </a>
-                 <a n:href="delete, $album" class="btn btn-large btn-danger">
-                    Odstrániť
-                </a>
-            </p>
         </figcaption>
     </figure>
 

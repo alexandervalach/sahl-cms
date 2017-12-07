@@ -34,6 +34,8 @@ class ReplyPresenter extends BasePresenter {
         $this->template->forum = $this->forumRow;
         $this->template->replies = $this->reply;
         $this->getComponent('addForm');
+        $this['breadCrumb']->addLink("Fórum", $this->link("Forum:all"));
+        $this['breadCrumb']->addLink($this->forumRow->title);
     }
 
     public function actionDelete($id) {

@@ -2,44 +2,42 @@
 
 {control breadCrumb}
 
-<div class="pull-left">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_topic">
-        Pridať príspevok
-    </button>
-</div>
+<section class="primary-content" id="forum">
+    <div class="clearfix">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_topic">
+            Pridať príspevok
+        </button>
+    </div>
 
-<section>
-    {foreach $forums as $forum}
-        <article class="col-xs-12 col-sm-12 col-md-12 col-log-6 alert alert-info" style="margin: 10px auto">
-            <header class="clearfix">
-                <div class="pull-left">
-                    <a n:href="Reply:add, $forum->id">
-                        <h3>{$forum->title}</h3>
-                    </a>
-                </div>
-                <div n:if="$user->loggedIn" class="pull-right" >
-                    <a n:href="delete, $forum->id" title="odstrániť">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </div>
-            </header>
+    <article n:foreach="$forums as $forum" class="clearfix alert alert-info">
+        <header class="clearfix">
+            <div class="text-center">
+                <a n:href="Reply:add, $forum->id">
+                    <h3>{$forum->title}</h3>
+                </a>
+            </div>
+            <div n:if="$user->loggedIn" class="pull-right">
+                <a n:href="delete, $forum->id" title="odstrániť">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </div>
+        </header>
 
-            <main class="clearfix">
-                <p>
-                    {$forum->message}
-                </p>
-            </main>
+        <main class="clearfix">
+            <p>
+                {$forum->message}
+            </p>
+        </main>
 
-            <footer class="clearfix">
-                <div class="pull-left">
-                    <span class="glyphicon glyphicon-user"></span> {$forum->author},
-                    <time datetime="{$forum->created_at|date:'d.m.Y H:i'}" pubdate>
-                        <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
-                    </time>
-                </div>
-            </footer>
-        </article>
-    {/foreach}
+        <footer class="clearfix">
+            <div class="pull-left">
+                <span class="glyphicon glyphicon-user"></span> {$forum->author},
+                <time datetime="{$forum->created_at|date:'d.m.Y H:i'}" pubdate>
+                    <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
+                </time>
+            </div>
+        </footer>
+    </article>
 </section>
 
 <div id="add_topic" class="modal fade" role="dialog">

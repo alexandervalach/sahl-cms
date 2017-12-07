@@ -1,11 +1,5 @@
 {block content}
 
-<div class="alert alert-info">
-    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
-    samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla  
-    <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
-</div>
-
 {*
 <div id="slider" class='row'>
     {foreach $latests as $latest}
@@ -23,8 +17,14 @@
 </div>
 *}
 
-<section id="posts">
-    <article n:foreach="$posts as $post" class="row">
+<div class="alert alert-info">
+    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
+    samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla  
+    <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
+</div>
+
+<section id="posts" class="primary-content">
+    <article n:foreach="$posts as $post" class="clearfix">
         <header class="clearfix">
             <a n:href="Post:view $post">
                 <h2>{$post->title}</h2>
@@ -43,19 +43,14 @@
             <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
                 {$post->created_at|date:'d.m.Y'}
             </time>
-            <button style="margin-bottom: 20px;" type="button" data-toggle="collapse" data-target="#article-{$iterator->counter}">
-                &hellip;
+            <button type="button" 
+                data-toggle="collapse" data-target="#article-{$iterator->counter}">
+                <i class="glyphicon glyphicon-menu-down"></i>
             </button>
             <div id="article-{$iterator->counter}" class="collapse">
                 {$post->content|noescape}
             </div>
         </main>
-
-        <footer class="clearfix" n:if="$user->loggedIn">
-            <a n:href="PostImage:add, $post" class='btn btn-large btn-primary'>
-                Pridať obrázky
-            </a>
-        </footer>
     </article>
 </section>
 {/block}

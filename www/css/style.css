@@ -217,7 +217,6 @@ div#main {
 }
 
 div#primary {
-    background: rgba(255,255,255,0.4);
     padding: 20px;
     margin: 0;
 }
@@ -241,8 +240,8 @@ ul {
     list-style: none;
 }
 
-aside table tbody tr:nth-child(8) {
-    border-bottom: 5px solid #A94442;
+aside table tbody tr:nth-child(9) {
+    border-top: 5px solid #A94442;
 }
 
 .borrowed-player {
@@ -264,6 +263,24 @@ aside table tbody tr:nth-child(8) {
     cursor: pointer;
     padding: 15px;
     border-radius: 50px;
+}
+
+#forum article {
+    margin: 20px auto; 
+    padding: 0 20px 20px 20px;
+    font-weight: normal;
+}
+
+#forum button {
+    margin-top: 10px;
+}
+
+#archive figure {
+    padding: 20px;
+}
+
+#archive figure a {
+    text-decoration: none;
 }
 
 /* Large devices (large desktops, 1200px and up) */

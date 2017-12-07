@@ -1,40 +1,41 @@
 {block content}
 
-<div class="alert alert-info" style="margin: 20px auto">
-    <header class="clearfix">
-        <h2 n:block="title">{$forum->title}</h2> 
-    </header>
-    <main class="clearfix">
-        {$forum->message}
-    </main>
-    <footer class="clearfix">
-        <div class="pull-left">
-            {$forum->author}
-        </div>
-        <div class="pull-right">
-            <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#react">
-                Reagovať
-            </button>
-        </div>
-    </footer>
-</div>
+{control breadCrumb}
 
-<section>
-    {foreach $replies as $reply}
-        <article class="alert alert-success" style="margin: 20px auto">
-            <header>
-                {$reply->author}
-                <div class="pull-right" n:if="$user->loggedIn">
-                    <a n:href="Reply:delete, $reply->id" class="text-success">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </div>
-            </header>
-            <main>
-                {$reply->text}
-            </main>
-        </article>
-    {/foreach}
+<section id="forum" class="primary-content">
+    <article class="clearfix">
+        <header class="clearfix">
+            <h1 n:block="title">{$forum->title}</h1> 
+        </header>
+        <main class="clearfix">
+            {$forum->message}
+        </main>
+        <footer class="clearfix">
+            <div class="clearfix">
+                {$forum->author}
+            </div>
+            <div class="clearfix">
+                <button type="button" class="btn btn-large btn-primary" data-toggle="modal" 
+                    data-target="#react">
+                    Reagovať
+                </button>
+            </div>
+        </footer>
+    </article>
+
+    <article n:foreach="$replies as $reply" class="alert alert-success" style="margin: 20px">
+        <header>
+            <h2>{$reply->author}</h2>
+            <div n:if="$user->loggedIn" class="pull-right">
+                <a n:href="Reply:delete, $reply" class="text-success">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </div>
+        </header>
+        <main>
+            {$reply->text}
+        </main>
+    </article>
 </section>
 
 <div id="react" class="modal fade" role="dialog">

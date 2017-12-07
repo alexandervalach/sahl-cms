@@ -2,12 +2,9 @@
 
 {control breadCrumb}
 
-<h1 n:block="title">{$team->name}</h1>
-
-{if ($team->image) and (file_exists($basePath . "'/'" . $imgFolder . '/' . $team->image))}
-    <figure class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-        <img class="img-responsive" src="{$basePath}{$imgFolder}{$team->image}" 
-            title="{$team->name}" alt="{$team->name}" />
+{if ($team->image) and (file_exists($imgFolder . '/' . $team->image))}
+    <figure class="clearfix" style="margin-bottom: 20px">
+        <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" alt="{$team->name}" />
     </figure>
 {/if}
 

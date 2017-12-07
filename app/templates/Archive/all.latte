@@ -2,18 +2,18 @@
 
 {control breadCrumb}
 
-<div class="clearfix" n:if="$user->loggedIn">
-    <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add">
-        Pridať
-    </button>
-</div>
+<section id="archive" class="primary-content clearfix">
+    <div n:if="$user->loggedIn" class="clearfix">
+        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add">
+            Pridať
+        </button>
+    </div>
 
-<section class="row">
-    <figure n:foreach="$archive as $arch" class="col-xs-12 col-sm-12 col-md-6 col-lg-4" style="margin: 20px auto">
+    <figure n:foreach="$archive as $arch" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <a n:href="view, $arch">
             <img src="{$basePath}/{$imgFolder}/{$default_img}" class="img img-responsive">
         </a>
-        <figcaption>
+        <figcaption class="text-center">
             <a n:href="view, $arch">
                 {$arch->title}
             </a>

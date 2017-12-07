@@ -58,7 +58,7 @@ class ReplyPresenter extends BasePresenter {
              ->setOmitted();
         $form->addTextArea('text', 'Text')
              ->setAttribute('class', 'form-control');
-        $form->addSubmit('save', 'Pridaj');
+        $form->addSubmit('save', 'Pridať');
 
         $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);

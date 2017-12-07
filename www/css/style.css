@@ -67,6 +67,27 @@ aside table {
     margin-bottom: 20px;
 }
 
+#teams {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#teams a {
+    text-decoration: none;
+}
+
+#teams img {
+    margin-left: 1px;
+    margin-right: 1px;
+    transition: margin-top 0.4s ease;
+    margin-top: 0;
+}
+
+#teams img:hover,
+#teams img:focus {
+    margin-top: -0.8em;
+}
+
 #lightbox {
     position: fixed;
     top: 0; 
@@ -128,12 +149,17 @@ body > footer {
 }
 
 body > footer a {
-    color: white;
+    color: #ffffff;
 }
 
 body > footer a:hover,
 body > footer a:focus {
+    color: #cccccc;
     text-decoration: none;
+}
+
+body > footer {
+
 }
 
 ol.breadcrumb a {
@@ -141,10 +167,31 @@ ol.breadcrumb a {
     text-decoration: none;
 }
 
-div#header  {
+#header  {
+    height: 70px;
     background-color: #286090;
-    color: #FFFFFF;
-    padding: 20px;
+}
+
+#header nav,
+#header nav > div {
+    height: inherit;
+}
+
+#header ul li a,
+#header div a {
+    transition : background-color 0.5s ease;
+    height: 70px;
+    line-height: 70px;
+    text-align: center;
+    padding: 0 2em;
+}
+
+#header ul li a:hover,
+#header ul li a:focus,
+#header div a:focus,
+#header div a:hover {
+    background-color: #5b94c5;
+    color: #e5e5e5;
 }
 
 div#main {

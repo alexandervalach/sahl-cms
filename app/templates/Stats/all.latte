@@ -2,15 +2,13 @@
 
 {control breadCrumb}
 
-<h1 n:block="title">Rebríček</h1>
-
 <div n:if="$user->loggedIn" class="clearfix">
     <button type="button" class="btn btn-large btn-danger" data-toggle="modal" data-target="#reset-stats">
         Vynulovať
     </button>
 </div>
 
-<section id="stats">
+<section id="stats" style="margin-top: 20px">
     <div class='table-responsive'>
         <table class='table'>
             <thead>

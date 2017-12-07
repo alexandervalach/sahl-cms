@@ -140,15 +140,18 @@ abstract class BasePresenter extends Presenter {
             }
         }
 
+        $n_teams = $this->teamsRepository->findByValue('archive_id', NULL)->order('id');
         $this->template->sideRound = $this->roundsRepository->getLatestRound();
         $this->template->sideFights = $this->roundsRepository->getLatestRoundFights();
         $this->template->side_table_types = $this->side_table_types;
-        $this->template->links = $this->linksRepository->findByValue('sponsor', 0);
+        $this->template->links = $this->linksRepository->findByValue('sponsor', 0)->order('title');
         $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = $this->imgFolder;
-        $this->template->nav_teams = $this->teamsRepository->findByValue('archive_id', NULL);
+        $this->template->n_teams = $n_teams; 
+        $this->template->r_teams = $this->teamsRepository->findByValue('archive_id', NULL)->order('id DESC');
         $this->template->side_table_types = $this->side_table_types;
         $this->template->side_tables = $side_tables;
+        $this->template->teams_count = $n_teams->count();
     }
 
     protected function createComponentDeleteForm() {

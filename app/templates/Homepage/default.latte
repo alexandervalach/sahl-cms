@@ -2,7 +2,8 @@
 
 <div class="alert alert-info">
     Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
-    samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla SAHL – Pravidlá a Smernice.
+    samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla  
+    <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
 </div>
 
 {*
@@ -23,45 +24,42 @@
 *}
 
 <section id="posts">
-    {foreach $posts as $post}
-        <article class="row">
-            <header class="clearfix">
-                <h2>
-                    <a n:href="Post:view $post">{$post->title}</a>
-                </h2>
-            </header>
+    <article n:foreach="$posts as $post" class="row">
+        <header class="clearfix">
+            <a n:href="Post:view $post">
+                <h2>{$post->title}</h2>
+            </a>
+        </header>
 
-            <figure class="col-md-4 col-lg-3">
-                {if file_exists($basePath . "'/'" . $imgFolder . '/' . $post->thumbnail)}
-                    <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class='img img-responsive' />
-                {else}
-                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
-                {/if}
-            </figure>
+        <figure class="col-md-5 col-lg-4">
+            {if file_exists($imgFolder . "/" . $post->thumbnail)}
+                <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class='img img-responsive' />
+            {else}
+                <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
+            {/if}
+        </figure>
 
-            <main class="col-md-8 col-lg-9">
-                <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
-                    {$post->created_at|date:'d.m.Y'}
-                </time>
-                <button style="margin-bottom: 20px;" type="button" data-toggle="collapse" data-target="#article-{$iterator->counter}">
-                    &hellip;
-                </button>
-                <div id="article-{$iterator->counter}" class="collapse">
-                    {$post->content|noescape}
-                </div>
-            </main>
+        <main class="col-md-7 col-lg-8">
+            <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
+                {$post->created_at|date:'d.m.Y'}
+            </time>
+            <button style="margin-bottom: 20px;" type="button" data-toggle="collapse" data-target="#article-{$iterator->counter}">
+                &hellip;
+            </button>
+            <div id="article-{$iterator->counter}" class="collapse">
+                {$post->content|noescape}
+            </div>
+        </main>
 
-            <footer class="clearfix" n:if="$user->loggedIn">
-                <a n:href="PostImage:add, $post" class='btn btn-large btn-primary'>
-                    Pridať obrázky
-                </a>
-            </footer>
-        </article>
-    {/foreach}
+        <footer class="clearfix" n:if="$user->loggedIn">
+            <a n:href="PostImage:add, $post" class='btn btn-large btn-primary'>
+                Pridať obrázky
+            </a>
+        </footer>
+    </article>
 </section>
 {/block}
 
 {block scripts}
     {include #parent}
-    <script type="text/javascript" src='{$basePath}/js/switch.js'></script>
 {/block}

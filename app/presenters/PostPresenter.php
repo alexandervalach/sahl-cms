@@ -102,12 +102,14 @@ class PostPresenter extends BasePresenter {
     public function submittedAddForm(Form $form) {
         $values = $form->getValues();
         $post = $this->postsRepository->insert($values);
+        $this->flashMessage('Pridaný nový príspevok', 'success');
         $this->redirect('view', $post);
     }
 
     public function submittedEditForm(Form $form) {
         $values = $form->getValues();
         $this->postRow->update($values);
+        $this->flashMessage('Príspevok upravený', 'success');
         $this->redirect('view', $this->postRow);
     }
 

@@ -31,6 +31,10 @@ class PostImagePresenter extends BasePresenter {
         if (!$this->postRow) {
             throw new BadRequestException("Post not found.");
         }
+        
+        $this['breadCrumb']->addLink(substr($this->postRow->title, 0, strpos($this->postRow->title, " ")), $this->link("Post:view", $this->postRow));
+        $this['breadCrumb']->addLink("Pridať obrázky");
+
         $this->getComponent('addImageForm');
         $this->template->post = $this->postRow;
     }
@@ -81,7 +85,6 @@ class PostImagePresenter extends BasePresenter {
     }
 
     public function submittedDeleteForm() {
-        $this->userIsLogged();
         $img = $this->imgRow;
         $post = $this->postRow;
         $id = $img->posts_id;
@@ -103,7 +106,7 @@ class PostImagePresenter extends BasePresenter {
             $values['thumbnail'] = $this->imgRow->name;
             $this->postRow->update($values);
         }
-        $this->redirect('Post:show#nav', $this->postRow->id);
+        $this->redirect('Post:view', $this->postRow);
     }
 
     public function submittedImageForm(Form $form) {
@@ -120,12 +123,11 @@ class PostImagePresenter extends BasePresenter {
             $imgData['posts_id'] = $this->postRow;
             $this->postImageRepository->insert($imgData);
         }
-        $this->redirect('Post:show#nav', $this->postRow);
+        $this->redirect('Post:view', $this->postRow);
     }
 
     public function formCancelled() {
-        $id = $this->imgRow->id;
-        $this->redirect('Post:show#nav', $id);
+        $this->redirect('Post:view', $this->postRow);
     }
 
 }

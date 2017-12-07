@@ -1,22 +1,5 @@
 {block content}
 
-<h1 n:block="title">Pridaj obrázky</h1>
-
-<p>
-    <a n:href="Post:show#nav, $post->id" class="btn btn-large btn-default">
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        {$post->title}
-    </a>
-</p>
-
-<div class="alert alert-info">
-    <strong>Do jedného formulára môžeš nahrať maximálne 7 MB obrázkov.</strong>
-</div>
+{control breadCrumb}
 
 {control addImageForm}
-
-{block scripts}
-	<script src="{$basePath}/js/jquery-2.1.3.js"></script>
-	<script src="{$basePath}/bootstrap/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src='http://localhost/sahl/vendor/olicek/dropzone-uploader/client-side/dropzoneUploader.js'></script>
-{/block}

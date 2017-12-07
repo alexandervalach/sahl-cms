@@ -16,7 +16,7 @@
 
 <section class="clearfix">
     <article>
-        <header style="margin-bottom: 30px">
+        <header>
             <h1 n:block="title">{$post->title}</h1>
         </header>
 
@@ -33,17 +33,18 @@
             </div>
         </footer>
     </article>
-    <div class="clearfix">
-        <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6' n:foreach="$images as $img">
-            {if file_exists($basePath . "'/'" . $imgFolder . '/' . $img->name)}
+    <div id="post-images" class="clearfix">
+        <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
+            {var $img_path = $imgFolder . "/" . $img->name}
+            {if file_exists($img_path)}
                 <img src="{$basePath}/{$imgFolder}/{$img->name}" 
                     class='img img-responsive' />
             {else}
                 <img src="{$basePath}/{$imgFolder}/{$default_img}" 
-                    class='img img-responsive' />
+                   alt="{$img_path}" class='img img-responsive' />
             {/if}
             <figcaption n:if="$user->loggedIn" class="text-center">
-                <a n:href="PostImage:delete, $post->id, $img->id" class='btn btn-large btn-danger'>
+                <a n:href="PostImage:delete, $post, $img" class='btn btn-large btn-danger'>
                     Odstrániť
                 </a>
                 <a n:href="PostImage:Thumbnail, $post, $img" class='btn btn-large btn-primary'>

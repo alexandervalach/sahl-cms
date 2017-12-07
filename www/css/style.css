@@ -194,6 +194,16 @@ ol.breadcrumb a {
     color: #e5e5e5;
 }
 
+#post-images figure {
+    margin-top: 20px;
+}
+
+#post-images figcaption a {
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
 div#main {
     background: url("../images/all.jpg");  
     background-size: cover;

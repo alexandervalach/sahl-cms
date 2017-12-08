@@ -1,70 +1,78 @@
 {block content}
 
-<div class="alert alert-info">
-    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
-    na amatérskej úrovni, samozrejme v rámci pravidiel. <br />
-    Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
-</div>
+{control breadCrumb}
 
-<div id="hot-news" class="carousel slide" data-ride="carousel" style="margin-bottom: 20px">
-    <ol class="carousel-indicators">
-        <li data-target="#hot-news" data-slide-to="0" class="active"></li>
-        <li data-target="#hot-news" data-slide-to="1"></li>
-        <li data-target="#hot-news" data-slide-to="2"></li>
-    </ol>
-
-    <div class="carousel-inner">
-        <div n:foreach="$slider as $post" class="item {if $iterator->first}active{/if}">
-            {if file_exists($imgFolder . "/" . $post->thumbnail)}
-                <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$post->thumbnail}" 
-                    alt="Slide pre článok {$post->title}" />
-            {else}
-                <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$default_img}" 
-                    alt="Slide pre článok {$post->title}" />
-            {/if}
-            <div class="carousel-caption">
-                <p>{$post->title}</p>
-            </div>
+<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12 primary-content">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 clearfix">
+        <div class="alert alert-info">
+            Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
+            na amatérskej úrovni, samozrejme v rámci pravidiel.
+            Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
         </div>
     </div>
 
-    <a class="left carousel-control" href="#hot-news" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-        <span class="sr-only">Predchádzajúci</span>
-    </a>
-    <a class="right carousel-control" href="#hot-news" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span>
-        <span class="sr-only">Nasledujúci</span>
-    </a>
-</div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 clearfix">
+        <div n:if="$sideFights != null" class="table-responsive">
+            <table class='table'>
+                <caption>
+                    <h2 class="text-center">
+                        <a n:href="Fights:all, $sideRound">{$sideRound->name}</a>
+                    </h2>
+                </caption>
+                <tbody>
+                    <tr n:foreach="$sideFights as $fight">
+                        {var $team1 = $fight->ref('teams', 'team1_id');}
+                        {var $team2 = $fight->ref('teams', 'team2_id');}
+                        <td>
+                            <img src="{$basePath}/{$imgFolder}/{$team1->logo}" width="20px" /> 
+                            {$team1->name}
+                        </td>
+                        <td>
+                            <img src="{$basePath}/{$imgFolder}/{$team2->logo}" width="20px" />
+                            {$team2->name}
+                        </td>
+                        <td>{$fight->score1}</td>
+                        <td>:</td>
+                        <td>{$fight->score2}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-<section id="posts" class="primary-content">
-    <article n:foreach="$posts as $post" class="clearfix">
-        <header class="clearfix">
+        <div n:foreach="$side_table_types as $type" class='table-responsive'>
+            <table class='table tables'>
+                <caption>
+                    <h2 class="text-center">
+                        <a n:href="Tables:all">{$type->name}</a>
+                    </h2>
+                </caption>
+                <tbody>
+                    <tr n:foreach="$side_tables[$type->name] as $row">
+                        {var $team = $row->ref('teams', 'team_id')}
+                        <td>{$iterator->counter}.</td>
+                        <td>
+                            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="20px" />
+                            {$team->name}
+                        </td>
+                        <td>{$row->points}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <figure n:foreach="$posts as $post" class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
             <a n:href="Post:view $post">
-                <h2>{$post->title}</h2>
+                {if file_exists($imgFolder . "/" . $post->thumbnail)}
+                    <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' height="150px" />
+                {else}
+                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
+                {/if}
             </a>
-        </header>
-
-        <figure class="col-md-5 col-lg-4">
-            {if file_exists($imgFolder . "/" . $post->thumbnail)}
-                <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class='img img-responsive' />
-            {else}
-                <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
-            {/if}
+            <figcaption class="desc">
+                {$post->title}
+            </figcaption>
         </figure>
-
-        <main class="col-md-7 col-lg-8">
-            <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
-                {$post->created_at|date:'d.m.Y'}
-            </time>
-            <button type="button" 
-                data-toggle="collapse" data-target="#article-{$iterator->counter}">
-                <i class="glyphicon glyphicon-menu-down"></i>
-            </button>
-            <div id="article-{$iterator->counter}" class="collapse">
-                {$post->content|noescape}
-            </div>
-        </main>
-    </article>
+    </div>
 </section>

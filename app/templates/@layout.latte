@@ -26,25 +26,15 @@
                     {include 'teams.latte'}
                 </div>
                 <main role='main' class='col-md-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8'>
-                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <strong>
-                            {if $flash->type == "success"}
-                                <span class="glyphicon glyphicon-ok"></span>&nbsp;
-                            {/if}
-                        </strong>
+                    <div class="col-xs-12 colcol-md-12 col-lg-12" style="margin-bottom: 20px;">
+                        <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <span n:if="$flash->type == 'success'" class="glyphicon glyphicon-ok"></span>&nbsp;
                         {$flash->message}
-                    </div>
-                    <div class="col-md-8 col-lg-8" style="margin-bottom: 20px;">
+                        </div>
                         {include content}
                     </div>
-                    <div class="col-md-4 col-lg-4">
-                        {include 'tables.latte'}
-                    </div>
                 </main>
-                <div class="col-md-12 col-lg-12 hidden-xs">
-                    {include 'teams.latte'}
-                </div>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <button type="button" id="scroll-to-top">
                         <i class="glyphicon glyphicon-menu-up"></i>

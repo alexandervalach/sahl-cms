@@ -1,18 +1,20 @@
 {block content}
 
-<h3>Tabuľky</h3>
-
-<div class="clearfix" n:if="$user->loggedIn">
-    <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
-        Pridať záznam
-    </button>
-</div>
+{control breadCrumb}
 
 <section class="col-xs-12 col-lg-12 col-sm-12 col-md-12">
-    <div class='table-responsive' n:foreach="$table_types as $type">
-        <table class='table'>
+    <div n:if="$user->loggedIn" class="clearfix">
+        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
+            Pridať záznam
+        </button>
+    </div>
+
+    <div n:foreach="$table_types as $type" class='table-responsive'>
+        <table class='table tables'>
             <caption>
-                <h3>{$type->name}</h3>
+                <h3 class="text-center">
+                    {$type->name}
+                </h3>
             </caption>
             <thead>
                 <tr>

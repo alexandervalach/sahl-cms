@@ -4,7 +4,8 @@
 
 {if ($team->image) and (file_exists($imgFolder . '/' . $team->image))}
     <figure class="clearfix" style="margin-bottom: 20px">
-        <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" alt="{$team->name}" />
+        <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
+            alt="{$team->name}" style="margin: 0 auto" />
     </figure>
 {/if}
 

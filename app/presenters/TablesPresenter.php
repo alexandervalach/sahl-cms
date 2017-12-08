@@ -30,6 +30,7 @@ class TablesPresenter extends BasePresenter {
                                                               ->where('type = ?', $type);
         }
         $this->template->tables = $table_rows;
+        $this['breadCrumb']->addLink("Tabuľky");
 
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");

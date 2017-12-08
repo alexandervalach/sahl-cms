@@ -16,15 +16,15 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', null)->order('id DESC');
-    }
+        $this->template->punishments =
+            $this->punishmentsRepository->findByValue('archive_id', null)->order('id DESC');
 
-    public function actionAdd() {
-        $this->userIsLogged();
-    }
+        $this['breadCrumb']->addLink("Hráči", $this->link("Stats:all"));
+        $this['breadCrumb']->addLink("Tresty hráčov");
 
-    public function rednerAdd() {
-        $this->getComponent('addPunishmentForm');
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent("addForm");
+        }
     }
 
     public function actionEdit($id) {
@@ -67,7 +67,7 @@ class PunishmentsPresenter extends BasePresenter {
         return $form;
     }
 
-    protected function createComponentAddPunishmentForm() {
+    protected function createComponentAddForm() {
         $players = $this->playersRepository->getPlayersByValue('num !=', 0);
         $form = new Form;
         $form->addSelect('player_id', 'Hráč', $players)
@@ -76,34 +76,31 @@ class PunishmentsPresenter extends BasePresenter {
         $form->addText('round', 'Kolá');
         $form->addCheckbox('condition', ' Podmienka');
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedAddPunishmentForm;
+        $form->onSuccess[] = $this->submittedAddForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedEditPunishmentForm(Form $form) {
-        $this->userIsLogged();
         $values = $form->getValues();
         $this->punishmentRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
-    public function submittedAddPunishmentForm(Form $form) {
-        $this->userIsLogged();
+    public function submittedAddForm(Form $form) {
         $values = $form->getValues();
         $this->punishmentsRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedDeleteForm() {
-        $this->userIsLogged();
         $this->punishmentRow->delete();
         $this->flashMessage('Trest bol odstránený', 'success');
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

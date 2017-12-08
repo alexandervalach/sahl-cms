@@ -1,50 +1,42 @@
 {block content}
 
-<h1 n:block="title">Tresty hráčov</h1>
+{control breadCrumb}
 
-<p n:if="$user->loggedIn">
-    <a n:href="add#nav" class="btn btn-large btn-primary">
-        <span class="glyphicon glyphicon-plus"></span> Pridať
-    </a>
-</p>
+<section class="primary-content" class="clearfix">
+    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 30px">
+        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
+            Pridať
+        </button>
+    </div>
+    
+    <div n:foreach="$punishments as $punishment" class="alert alert-info">
+        {var $player = $punishment->ref('players', 'player_id')}
+        {var $team = $player->ref('teams', 'team_id')}
 
-<section id="punishments">
-    {foreach $punishments as $punishment}
-    {var $player = $punishment->ref('players', 'player_id')}
-    <div class="panel panel-primary">
-        <div class="panel-heading text-center">{$player->lname}, {$player->num}</div>
-        <div class="panel-body">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td><span class="text-muted">Tím</span></td>
-                        <td>{$player->ref('teams', 'team_id')->name}</td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-muted">Stop na</span></td>
-                        <td><span class="text-info">{$punishment->round}</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-muted">Poznámka</span></td>
-                        <td><span class="text-warning">{$punishment->text}</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-muted">Podmienka</span></td>
-                        <td>{if $punishment->condition == 1}ÁNO{else}NIE{/if}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="panel panel-footer" n:if="$user->loggedIn">
-                <a n:href="edit#nav, $punishment->id" class="text-success">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    Upraviť
-                </a>
-                <a n:href="delete#nav, $punishment->id" class="text-danger">
-                    <span class="glyphicon glyphicon-remove"></span>
-                    Odstrániť
-                </a>
+        <h3>{$player->lname} ({$player->num}), {$team->name}</h3>
+        <ul style="padding: 0">
+            <li>Stop na {$punishment->round}</li>
+            <li>{$punishment->text}</li>
+            <li>{if $punishment->condition == 1}Podmienka{/if}</li>
+        </ul>
+    </div>
+</section>
+
+<div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Pridať pravidlo</h3>
             </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <strong>
+                        TIP: Pri kopírovaní textu, použite skratku Ctrl+Shift+V na prilepenie.
+                    </strong>
+                </div>
+                {control addForm}
             </div>
         </div>
-    {/foreach}
-</section>
+    </div>
+</div>

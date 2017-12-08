@@ -2,28 +2,22 @@
 
 {control breadCrumb}
 
-<div class="clearfix" n:if="$user->loggedIn">
-    <button type="button" class='btn btn-large btn-success' data-target="#edit" data-toggle="modal">
-        Upraviť názov
-    </button>
+<section id="archive" class="clearfix primary-content">
+    <div n:if="$user->loggedIn" style="margin-bottom: 20px">
+        <button type="button" class='btn btn-large btn-success' data-target="#edit" data-toggle="modal">
+            Upraviť názov
+        </button>
+    </div>
 
-    {*
-    <button type="button" class='btn btn-large btn-danger' data-target="#remove" data-toggle="modal">
-        Odstrániť
-    </button>
-    *}
-</div>
-
-<section id="archive">
     <div class="table-responsive">
         <table class="table table">
             <tbody>
-                <tr><td><a n:href="Tables:archView, $archive->id">Tabuľky</a></td></tr>
-                <tr><td><a n:href="Round:archView, $archive->id">Výsledky</a></td></tr>
-                <tr><td><a n:href="Teams:archView, $archive->id">Tímy</a></td></tr>
-                <tr><td><a n:href="Stats:archView, $archive->id">Štatistiky</a></td></tr>
-                <tr><td><a n:href="Events:archView, $archive->id">Zápasy</a></td></tr>
-                <tr><td><a n:href="Rules:archView, $archive->id">Pravidlá a smernice</a></td></tr>
+                <tr><td><a n:href="Tables:archView, $archive">Tabuľky</a></td></tr>
+                <tr><td><a n:href="Round:archView, $archive">Výsledky</a></td></tr>
+                <tr><td><a n:href="Teams:archView, $archive">Tímy</a></td></tr>
+                <tr><td><a n:href="Stats:archView, $archive">Rebríček</a></td></tr>
+                <tr><td><a n:href="Events:archView, $archive">Rozpis zápasov</a></td></tr>
+                <tr><td><a n:href="Rules:archView, $archive">Pravidlá a smernice</a></td></tr>
                 <tr><td><a n:href="Punishments:archView, $archive->id">Tresty hráčov</a></td></tr>
             </tbody>
         </table>

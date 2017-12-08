@@ -16,11 +16,6 @@
                     <h3>{$forum->title}</h3>
                 </a>
             </div>
-            <div n:if="$user->loggedIn" class="pull-right">
-                <a n:href="delete, $forum->id" title="odstrániť">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a>
-            </div>
         </header>
 
         <main class="clearfix">
@@ -32,8 +27,8 @@
         <footer class="clearfix">
             <div class="pull-left">
                 <span class="glyphicon glyphicon-user"></span> {$forum->author},
-                <time datetime="{$forum->created_at|date:'d.m.Y H:i'}" pubdate>
-                    <small>{$forum->created_at|date:'d.m.Y H:i'}</small>
+                <time datetime="{$forum->created_at|date:'d.m.Y'}" pubdate>
+                    <small>{$forum->created_at|date:'d.m.Y'}</small>
                 </time>
             </div>
         </footer>

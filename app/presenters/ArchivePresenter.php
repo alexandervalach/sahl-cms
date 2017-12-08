@@ -120,6 +120,7 @@ class ArchivePresenter extends BasePresenter {
 	public function submittedEditForm(Form $form) {
 		$values = $form->getValues();
 		$this->archiveRow->update($values);
+		$this->flashMessage("Záznam aktualizovaný", "success");
 		$this->redirect('view', $this->archiveRow);
 	}
 

@@ -177,8 +177,8 @@ ol.breadcrumb a {
     height: inherit;
 }
 
-#header ul li a,
-#header div a {
+#header ul.nav > li > a,
+#header div.navbar-header a {
     transition : background-color 0.5s ease;
     height: 70px;
     line-height: 70px;
@@ -186,10 +186,10 @@ ol.breadcrumb a {
     padding: 0 2em;
 }
 
-#header ul li a:hover,
-#header ul li a:focus,
-#header div a:focus,
-#header div a:hover {
+#header ul.nav > li > a:hover,
+#header ul.nav > li > a:focus,
+#header div.navbar-header a:focus,
+#header div.navbar-header a:hover {
     background-color: #5b94c5;
     color: #e5e5e5;
 }

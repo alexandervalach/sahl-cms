@@ -1,26 +1,41 @@
 {block content}
 
-{*
-<div id="slider" class='row'>
-    {foreach $latests as $latest}
-        {if $iterator->last}
-            <img src='{$basePath}{$imgFolder}{$latest->thumbnail}' class='img-responsive' 
-                alt="{$latest->thumbnail}" />
-        {/if}
-
-        <p data-src="{$basePath}/{$imgFolder}/{$latest->thumbnail}">
-            <a n:href="Post:show $latest->id">
-                {$latest->title}
-            </a>
-        </p>
-    {/foreach}
-</div>
-*}
-
 <div class="alert alert-info">
-    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej na amatérskej úrovni, 
-    samozrejme v rámci pravidiel. Po dohode siedmich mužstiev vznikla  
-    <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
+    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
+    na amatérskej úrovni, samozrejme v rámci pravidiel. <br />
+    Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
+</div>
+
+<div id="hot-news" class="carousel slide" data-ride="carousel" style="margin-bottom: 20px">
+    <ol class="carousel-indicators">
+        <li data-target="#hot-news" data-slide-to="0" class="active"></li>
+        <li data-target="#hot-news" data-slide-to="1"></li>
+        <li data-target="#hot-news" data-slide-to="2"></li>
+    </ol>
+
+    <div class="carousel-inner">
+        <div n:foreach="$slider as $post" class="item {if $iterator->first}active{/if}">
+            {if file_exists($imgFolder . "/" . $post->thumbnail)}
+                <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$post->thumbnail}" 
+                    alt="Slide pre článok {$post->title}" />
+            {else}
+                <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$default_img}" 
+                    alt="Slide pre článok {$post->title}" />
+            {/if}
+            <div class="carousel-caption">
+                <p>{$post->title}</p>
+            </div>
+        </div>
+    </div>
+
+    <a class="left carousel-control" href="#hot-news" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Predchádzajúci</span>
+    </a>
+    <a class="right carousel-control" href="#hot-news" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Nasledujúci</span>
+    </a>
 </div>
 
 <section id="posts" class="primary-content">
@@ -53,8 +68,3 @@
         </main>
     </article>
 </section>
-{/block}
-
-{block scripts}
-    {include #parent}
-{/block}

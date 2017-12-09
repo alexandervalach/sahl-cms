@@ -32,17 +32,18 @@ class PostImagePresenter extends BasePresenter {
             throw new BadRequestException("Post not found.");
         }
         
-        $this['breadCrumb']->addLink(substr($this->postRow->title, 0, strpos($this->postRow->title, " ")), $this->link("Post:view", $this->postRow));
+        $this['breadCrumb']->addLink($this->postRow->title, $this->link("Post:view", $this->postRow));
         $this['breadCrumb']->addLink("Pridať obrázky");
 
         $this->getComponent('addImageForm');
         $this->template->post = $this->postRow;
     }
 
-    public function actionThumbnail($id, $id2) {
+    public function actionThumbnail($id, $img_id) {
         $this->userIsLogged();
         $this->postRow = $this->postsRepository->findById($id);
-        $this->imgRow = $this->postImageRepository->findById($id2);
+        $this->imgRow = $this->postImageRepository->findById($img_id);
+        $this->submittedSetThumbnailForm();
     }
 
     public function renderThumbnail($id, $id2) {
@@ -74,16 +75,6 @@ class PostImagePresenter extends BasePresenter {
         return $form;
     }
 
-    protected function createComponentSetThumbnailForm() {
-        $form = new Form;
-        $form->addCheckbox('thumbnail', ' Nastaviť ako prezenčný obrázok')
-                ->setValue(true);
-        $form->addSubmit('save', 'Ulož');
-        $form->onSuccess[] = $this->submittedSetThumbnailForm;
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
     public function submittedDeleteForm() {
         $img = $this->imgRow;
         $post = $this->postRow;
@@ -97,20 +88,21 @@ class PostImagePresenter extends BasePresenter {
         $image->delete($this->storage . $img->name);
         $img->delete();
         $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('Post:show#nav', $id);
+        $this->redirect('Post:view', $id);
     }
 
-    public function submittedSetThumbnailForm(Form $form) {
-        $values = $form->getValues();
-        if ($values['thumbnail'] == true) {
+    public function submittedSetThumbnailForm() {
+        if ($this->imgRow != NULL) {
             $values['thumbnail'] = $this->imgRow->name;
             $this->postRow->update($values);
+            $this->flashMessage("Nová miniatúra bola nastavená", "success");
+        } else {
+            $this->flashMessage("Miniatúru sa nepodarilo nastaviť", "danger");
         }
         $this->redirect('Post:view', $this->postRow);
     }
 
     public function submittedImageForm(Form $form) {
-        $this->userIsLogged();
         $values = $form->getValues();
         $imgData = array();
         foreach ($values['images'] as $img) {

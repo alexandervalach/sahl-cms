@@ -58,36 +58,23 @@ class GalleryPresenter extends BasePresenter {
         $this->template->img = $this->galleryRow;
     }
 
-    public function actionThumbnail($id, $id2) {
+    public function actionThumbnail($id, $img_id) {
         $this->userIsLogged();
         $this->albumRow = $this->albumsRepository->findById($id);
-        $this->galleryRow = $this->galleryRepository->findById($id2);
+        $this->galleryRow = $this->galleryRepository->findById($img_id);
+        $this->submittedSetThumbnailForm();
     }
 
-    public function renderThumbnail($id, $id2) {
-        $this->getComponent('setThumbnailForm');
-    }
-
-    protected function createComponentSetThumbnailForm() {
-        $form = new Form;
-        $form->addCheckbox('setThumbnail', ' Nastaviť ako miniatúru')
-             ->setValue(true);
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedSetThumbnailForm;
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
-    public function submittedSetThumbnailForm(Form $form) {
-        $values = $form->getValues();
-
-        if ($values['setThumbnail']) {
-            $data = array();
+    protected function submittedSetThumbnailForm() {
+        if ($this->galleryRow != NULL) {
             $data['name'] = $this->galleryRow->name;
             $this->albumRow->update($data);
+            $this->flashMessage("Nová miniatúra bola nastavená", "success");
+            $this->redirect('Album:all');
+        } else {
+            $this->flashMessage("Miniatúru sa nepodarilo nastaviť", "danger");
+            $this->redirect('Gallery:view', $this->albumRow);
         }
-
-        $this->redirect('Album:all');
     }
 
     public function submittedAddImagesForm(Form $form) {

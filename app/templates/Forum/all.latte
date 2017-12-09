@@ -2,14 +2,14 @@
 
 {control breadCrumb}
 
-<section class="primary-content" id="forum">
+<section id="forum">
     <div class="clearfix">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_topic">
             Pridať príspevok
         </button>
     </div>
 
-    <article n:foreach="$forums as $forum" class="clearfix alert alert-info">
+    <article n:foreach="$forums as $forum" class="content">
         <header class="clearfix">
             <div class="text-center">
                 <a n:href="Reply:add, $forum->id">

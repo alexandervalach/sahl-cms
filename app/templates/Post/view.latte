@@ -2,19 +2,19 @@
 
 {control breadCrumb}
 
-<div class="clearfix" n:if="$user->loggedIn">
-    <button type="button" class='btn btn-large btn-success' data-target="#edit" data-toggle="modal">
-        Upraviť
-    </button>
-    
-    <a n:href="PostImage:add $post" class='btn btn-large btn-primary'>Pridať obrázky</a>
+<section class="content">
+    <div class="clearfix" n:if="$user->loggedIn">
+        <button type="button" class='btn btn-large btn-success' data-target="#edit" data-toggle="modal">
+            Upraviť
+        </button>
+        
+        <a n:href="PostImage:add $post" class='btn btn-large btn-primary'>Pridať obrázky</a>
 
-    <button type="button" class='btn btn-large btn-danger' data-target="#remove" data-toggle="modal">
-        Odstrániť
-    </button>
-</div>
+        <button type="button" class='btn btn-large btn-danger' data-target="#remove" data-toggle="modal">
+            Odstrániť
+        </button>
+    </div>
 
-<section class="clearfix primary-content">
     <article>
         <header>
             <h1 n:block="title">{$post->title}</h1>
@@ -33,6 +33,7 @@
             </div>
         </footer>
     </article>
+    
     <div id="post-images" class="clearfix">
         <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
             {var $img_path = $imgFolder . "/" . $img->name}

@@ -1,12 +1,7 @@
 {block content}
 
-<h1 n:block="title">Uprav zápas</h1>
+{control breadCrumb}
 
-<p>
-    <a n:href="all, $round" class='btn btn-large btn-default'>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        {$round->name}
-    </a>
-</p>
-
-{control editFightForm}
+<section class="primary-content">
+	{control editFightForm}
+</section>

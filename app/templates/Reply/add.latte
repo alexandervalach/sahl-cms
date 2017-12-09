@@ -2,8 +2,8 @@
 
 {control breadCrumb}
 
-<section id="forum" class="primary-content">
-    <article class="clearfix">
+<section id="forum">
+    <article class="content">
         <header class="clearfix">
             <h1 n:block="title">{$forum->title}</h1> 
         </header>
@@ -23,9 +23,9 @@
         </footer>
     </article>
 
-    <article n:foreach="$replies as $reply" class="alert alert-success" style="margin: 20px">
+    <article n:foreach="$replies as $reply" class="content" style="margin: 10px; padding: 20px">
         <header>
-            <h2>{$reply->author}</h2>
+            <strong>{$reply->author}</strong>
             <div n:if="$user->loggedIn" class="pull-right">
                 <a n:href="Reply:delete, $reply" class="text-success">
                     <span class="glyphicon glyphicon-remove"></span>

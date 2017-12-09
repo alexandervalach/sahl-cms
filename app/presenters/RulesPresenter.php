@@ -12,6 +12,9 @@ class RulesPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $ruleRow;
 
+    /** @var ArchiveRow */
+    private $archiveRow;
+
     /** @var string */
     private $error = "Rule not found!";
 
@@ -55,12 +58,15 @@ class RulesPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-
+        $this->archiveRow = $this->archiveRepository->findById($id);
     }
 
     public function renderArchView($id) {
         $this->template->rules = $this->rulesRepository->findByValue('archive_id', $id);
-        $this->template->archive = $this->archiveRepository->findById($id);
+        $this->template->archive = $this->archiveRow;
+        $this['breadCrumb']->addLink($this->archiveRow->title, 
+                                     $this->link("Archive:view", $this->archiveRow));
+        $this['breadCrumb']->addLink("Pravidlá a smernice");
     }
 
     protected function createComponentAddRuleForm() {

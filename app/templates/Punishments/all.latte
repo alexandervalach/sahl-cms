@@ -2,14 +2,14 @@
 
 {control breadCrumb}
 
-<section class="primary-content" class="clearfix">
+<section class="clearfix">
     <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 30px">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať
         </button>
     </div>
     
-    <div n:foreach="$punishments as $punishment" class="alert alert-info">
+    <div n:foreach="$punishments as $punishment" class="content">
         {var $player = $punishment->ref('players', 'player_id')}
         {var $team = $player->ref('teams', 'team_id')}
 

@@ -113,21 +113,40 @@ main table {
     color: #ffffff;
     font-weight: bold;
     overflow-y: scroll;
+    display: none;
 }
 
-#lightbox div#show-prev, #lightbox div#show-next {
+#lightbox div#show-prev, 
+#lightbox div#show-next {
+    transition: color 0.5s ease;
+    color: #fff;
     height: 100%;
     margin: 10px 0 30px 0;
 }
 
+#lightbox div#show-prev span:hover,
+#lightbox div#show-prev span:focus, 
+#lightbox div#show-next span:hover,
+#lightbox div#show-next span:focus {
+    color: #898989;
+}
+
 #lightbox div {
-    height: 50px;
-    line-height: 50px;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
 } 
 
-#lightbox #close {
+#lightbox p {
+    transition: color 0.5s ease;
+    color: #fff;
     font-size: 1.5em;
+    display: inline-block;
+}
+
+#lightbox #close:hover,
+#lightbox #close:focus {
+    color: #898989;
 }
 
 #lightbox div > span {
@@ -144,18 +163,13 @@ main table {
     text-align: left;
 }
 
-#lightbox p {
-    text-align: right;  
-    margin-right: 20px; 
-    font-size: 12px; 
-}
-
 #lightbox img {
     box-shadow:0 0 25px #111;
     -webkit-box-shadow:0 0 25px #111;
     -moz-box-shadow:0 0 25px #111;
     max-width: 100%;
 }
+
 
 body > footer {
     background-color: #286090;
@@ -232,10 +246,21 @@ div#primary {
     margin: 0;
 }
 
-.primary-content {
-    background-color: rgba(255,255,255,0.6);
+.content {
+    background-color: #fcfcfc;
     border-radius: 6px;
     padding: 20px;
+}
+
+nav .breadcrumb {
+    background-color: #fcfcfc;
+}
+
+main figure img {
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
 }
 
 nav a {

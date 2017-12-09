@@ -2,14 +2,14 @@
 
 {control breadCrumb}
 
-<section id="events" class="primary-content">
-    <div n:if="$user->loggedIn" style="margin: 20px auto">
+<section id="events">
+    <div n:if="$user->loggedIn" style="margin-bottom: 20px">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať
         </button>
     </div>
 
-    <article n:foreach="$events as $event" class="alert alert-info" style="margin: 20px auto;">
+    <article n:foreach="$events as $event" class="content" style="margin-bottom: 20px">
         <main>
             {$event->event|noescape}
         </main>

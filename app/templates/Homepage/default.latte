@@ -2,7 +2,7 @@
 
 {control breadCrumb}
 
-<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12 primary-content">
+<section class="row">
     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 clearfix">
         <div class="alert alert-info">
             Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
@@ -11,7 +11,24 @@
         </div>
     </div>
 
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 clearfix">
+    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+        <article n:foreach="$posts as $post" class="clearfix content" style="margin-bottom: 20px">
+            <a n:href="Post:view $post">
+                <figure class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                    {if file_exists($imgFolder . "/" . $post->thumbnail)}
+                        <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img img-responsive" />
+                    {else}
+                        <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
+                    {/if}
+                </figure>
+                <main class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                    {$post->title}
+                </main>
+            </a>
+        </article>
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
         <div n:if="$sideFights != null" class="table-responsive">
             <table class='table'>
                 <caption>
@@ -59,20 +76,5 @@
                 </tbody>
             </table>
         </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <figure n:foreach="$posts as $post" class="col-xs-12 col-sm-12 col-md-6 col-lg-4">
-            <a n:href="Post:view $post">
-                {if file_exists($imgFolder . "/" . $post->thumbnail)}
-                    <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' height="150px" />
-                {else}
-                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
-                {/if}
-            </a>
-            <figcaption class="desc">
-                {$post->title}
-            </figcaption>
-        </figure>
     </div>
 </section>

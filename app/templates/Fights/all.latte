@@ -9,70 +9,70 @@
 </div>
 
 <section id="fights">
-        <article n:foreach="$fights as $fight" class="alert alert-info" style="margin: 20px auto;">
-            {var $team1 = $fight->ref('teams', 'team1_id')}
-            {var $team2 = $fight->ref('teams', 'team2_id')}
-            <header>  
-                <span class="{if $fight->score1 > $fight->score2}text-success{elseif $fight->score1 < $fight->score2}text-danger{/if}">
-                    {$team1->name} {$fight->score1}
-                </span>
-                : 
-                <span class="{if $fight->score1 < $fight->score2}text-success{elseif $fight->score1 > $fight->score2}text-danger{/if}">
-                    {$fight->score2} {$team2->name}
-                </span>
+    <article n:foreach="$fights as $fight" class="content" style="margin: 20px auto;">
+        {var $team1 = $fight->ref('teams', 'team1_id')}
+        {var $team2 = $fight->ref('teams', 'team2_id')}
+        <header>  
+            <span class="{if $fight->score1 > $fight->score2}text-success{elseif $fight->score1 < $fight->score2}text-danger{/if}">
+                {$team1->name} {$fight->score1}
+            </span>
+            : 
+            <span class="{if $fight->score1 < $fight->score2}text-success{elseif $fight->score1 > $fight->score2}text-danger{/if}">
+                {$fight->score2} {$team2->name}
+            </span>
 
-                <div n:if="$user->loggedIn" class="pull-right">
-                    <a n:href="delete, $fight" class="text-danger">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                </div>
-            </header>
-            <main class="clearfix">
-                <div>
-                    ({$fight->st_third_1}:{$fight->st_third_2}; 
-                    {$fight->nd_third_1}:{$fight->nd_third_2};
-                    {$fight->th_third_1}:{$fight->th_third_2})
-                </div>
-                {var $homeGoals = $fight->related('goals')->where('home', 1)}
-                {var $guestGoals = $fight->related('goals')->where('home', 0)}
-                {if ($homeGoals->count() > 0 || $guestGoals->count() > 0)}
-                    <ul>
-                        <li>
-                            Domáci:
-                            <span>
-                            {foreach $homeGoals as $goal}
-                                {var $player = $goal->ref('players', 'player_id')}
-                                {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
-                            {/foreach}
-                            </span>
-                        </li>
-                        <li>
-                            Hostia:
-                            <span>
-                            {foreach $guestGoals as $goal}
-                                {var $player = $goal->ref('players', 'player_id')}
-                                {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
-                            {/foreach}
-                            </span>
-                        </li>
-                    </ul>
-                {/if}
-            </main>
-            <footer n:if="$user->loggedIn" class="clearfix">
-                <a class="btn btn-large btn-info" n:href="editThird, $fight">
-                    Pridať góly do tretín
+            <div n:if="$user->loggedIn" class="pull-right">
+                <a n:href="delete, $fight" class="text-danger">
+                    <span class="glyphicon glyphicon-trash"></span>
                 </a>
-                <a class="btn btn-large btn-success" n:href="edit, $fight">
-                    Upraviť zápas
-                </a>
-                <a class="btn btn-large btn-primary" n:href="Goal:add, $fight">
-                    Pridať góly hráčom
-                </a>
-                <a class="btn btn-large btn-default" n:href="Goal:view, $fight">
-                    Zobraziť góly
-                </a>
-            </footer>
-        </article>
+            </div>
+        </header>
+        <main class="clearfix">
+            <div>
+                ({$fight->st_third_1}:{$fight->st_third_2}; 
+                {$fight->nd_third_1}:{$fight->nd_third_2};
+                {$fight->th_third_1}:{$fight->th_third_2})
+            </div>
+            {var $homeGoals = $fight->related('goals')->where('home', 1)}
+            {var $guestGoals = $fight->related('goals')->where('home', 0)}
+            {if ($homeGoals->count() > 0 || $guestGoals->count() > 0)}
+                <ul>
+                    <li>
+                        Domáci:
+                        <span>
+                        {foreach $homeGoals as $goal}
+                            {var $player = $goal->ref('players', 'player_id')}
+                            {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
+                        {/foreach}
+                        </span>
+                    </li>
+                    <li>
+                        Hostia:
+                        <span>
+                        {foreach $guestGoals as $goal}
+                            {var $player = $goal->ref('players', 'player_id')}
+                            {$player->lname}{if $goal->goals > 1} {$goal->goals}{/if}{if !$iterator->last};{/if}
+                        {/foreach}
+                        </span>
+                    </li>
+                </ul>
+            {/if}
+        </main>
+        <footer n:if="$user->loggedIn" class="clearfix">
+            <a class="btn btn-large btn-info" n:href="editThird, $fight">
+                Pridať góly do tretín
+            </a>
+            <a class="btn btn-large btn-success" n:href="edit, $fight">
+                Upraviť zápas
+            </a>
+            <a class="btn btn-large btn-primary" n:href="Goal:add, $fight">
+                Pridať góly hráčom
+            </a>
+            <a class="btn btn-large btn-default" n:href="Goal:view, $fight">
+                Zobraziť góly
+            </a>
+        </footer>
+    </article>
 </section>
 
 <section id="modals" n:if="$user->loggedIn">

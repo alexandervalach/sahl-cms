@@ -2,20 +2,20 @@
 
 {control breadCrumb}
 
-<section class="primary-content clearfix">
+<section class="content clearfix">
     <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
         <a n:href="add, $album" class='btn btn-large btn-primary'>
             Pridať obrázky
         </a>
-        <a n:href="Album:edit, $album" class="btn btn-large btn-success">
+        <button type="button" class="btn btn-large btn-success">
             Upraviť            
-        </a>
-        <a n:href="Album:delete, $album" class="btn btn-large btn-danger">
+        </button>
+        <button type="button" class="btn btn-large btn-danger">
             Odstrániť            
-        </a>
+        </button>
     </div>
 
-    <figure n:foreach="$galleryImgs as $img" class="col-lg-6 col-md-6 col-sm-12 col-xs-12" style="margin: 10px auto;">
+    <figure n:foreach="$galleryImgs as $img" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin: 10px auto;">
         <a href="{$baseUrl}/{$imgFolder}/{$img->name}" class="lightbox-trigger" target="_blank">
             <img n:if="$img->name" src="{$basePath}/{$imgFolder}/{$img->name}" 
                 class="img img-responsive" alt="{$img->name}" />
@@ -30,6 +30,27 @@
             </a>
         </div>
     </figure>
+</section>
+
+<div id="lightbox">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+        <div class="text-center"> 
+            <p id="metadata"></p>
+            <p id="close" class="pull-right">
+                <span class="glyphicon glyphicon-remove"></span>
+            </p>
+        </div>
+    </div>
+    <div id="show-prev" class="col-xs-1 col-sm-1 col-md-1 col-lg-2">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+    </div>
+    <div id="picture" class="col-xs-10 col-sm-10 col-md-10 col-lg-8">
+        <img />
+    </div>
+    <div id="show-next" class="col-xs-1 col-sm-1 col-md-1 col-lg-2">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+    </div>
+</div>
 
 {/block}
 

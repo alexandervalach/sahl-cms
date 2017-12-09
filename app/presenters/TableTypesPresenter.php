@@ -5,6 +5,7 @@ namespace App\Presenters;
 use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
+use Nette\Database\Table\ActiveRow;
 
 class TableTypesPresenter extends BasePresenter {
 

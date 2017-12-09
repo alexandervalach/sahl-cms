@@ -1,40 +1,19 @@
 {block content}
 
-<section id="punishments">
-    <h1 n:block="title">Tresty hráčov</h1>
-    
-    <p>
-        <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
-            <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
-        </a>
-    </p>
+{control breadCrumb}
 
-    {foreach $punishments as $punishment}
-    {var $player = $punishment->ref('players', 'player_id')}
-    <div class="panel panel-primary">
-        <div class="panel-heading text-center">{$player->lname}, {$player->num}</div>
-        <div class="panel-body">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td><span class="text-muted">Tím</span></td>
-                        <td>{$player->ref('teams', 'team_id')->name}</td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-muted">Stop na</span></td>
-                        <td><span class="text-info">{$punishment->round}</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-muted">Poznámka</span></td>
-                        <td><span class="text-warning">{$punishment->text}</span></td>
-                    </tr>
-                    <tr>
-                        <td><span class="text-muted">Podmienka</span></td>
-                        <td>{if $punishment->condition == 1}ÁNO{else}NIE{/if}</td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-        </div>
-    {/foreach}
+<section id="punishments">
+    <div n:foreach="$punishments as $punishment" class="content">
+        {var $player = $punishment->ref('players', 'player_id')}
+        {var $team = $player->ref('teams', 'team_id')}
+
+        <strong>
+            {$player->lname} ({$player->num}), {$team->name}
+        </strong>
+        <ul style="padding: 0">
+            <li>Stop na {$punishment->round}</li>
+            <li>{$punishment->text}</li>
+            <li>{if $punishment->condition == 1}Podmienka{/if}</li>
+        </ul>
+    </div>
 </section>

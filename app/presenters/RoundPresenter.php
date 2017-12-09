@@ -12,6 +12,9 @@ class RoundPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $roundRow;
 
+    /** @var ActiveRow */
+    private $archRow;
+
     /** @var string */
     private $error = "Round not found!";
 
@@ -56,12 +59,15 @@ class RoundPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-
+        $this->archRow = $this->archiveRepository->findById($id);
     }
 
     public function renderArchView($id) {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', $id);
-        $this->template->archive = $this->archiveRepository->findById($id);
+        $this->template->archive = $this->archRow;
+        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Kolá");
     }
 
     protected function createComponentAddRoundForm() {

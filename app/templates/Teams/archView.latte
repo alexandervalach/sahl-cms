@@ -1,34 +1,22 @@
 {block content}
 
-<div class="row">
-    <h1 n:block="title">Tímy</h1>
-    <p>
-        <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
-            <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
-        </a>
-    </p>
+{control breadCrumb}
 
-    <div class='table-responsive'>
-        <table class='table table-striped table-condensed'>
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Názov</th>
-                </tr>
-            </thead>
-            {foreach $teams as $team}
-                <tbody>
-                    <tr>
-                        <td>
-                            {$iterator->counter}.
-                        </td>
-                        <td>
-                            <a n:href='Player:archView#nav, $archive->id, $team->id'>{$team->name}</a>
-                        </td>
-                    </tr>
-                </tbody>
-            {/foreach}
-        </table>
-    </div>
-</div>
+<section class='table-responsive'>
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>P.č.</th>
+                <th>Názov</th>
+            </tr>
+        </thead>
+        <tbody n:foreach='$teams as $team'>
+            <tr>
+                <td>{$iterator->counter}.</td>
+                <td>{$team->name}</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
 {/block}

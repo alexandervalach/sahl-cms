@@ -1,22 +1,17 @@
 {block content}
 
+{control breadCrumb}
+
 <section id="rounds">
-    <h1 n:block="title">Kolá</h1>
-    <p>
-        <a n:href="Archive:view#nav, $archive->id" class="btn btn-default">
-            <span class="glyphicon glyphicon-arrow-left"></span> {$archive->title}
-        </a>
-    </p>
     <div class="table-responsive">
-        <table class="table table-condensed">
+        <table class="table">
+            <caption class="text-center">Kolá</caption>
             <tbody>
-                {foreach $rounds as $round}
-                    <tr>
-                        <td>
-                            <a n:href="Fights:archView#nav, $archive->id, $round->id">{$round->name}</a>
-                        </td>
-                    </tr>
-                {/foreach}
+                <tr n:foreach="$rounds as $round">
+                    <td>
+                        <a n:href="Fights:archView, $archive, $round">{$round->name}</a>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

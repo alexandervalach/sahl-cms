@@ -15,6 +15,9 @@ class FightsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $fightRow;
 
+    /** @var ActiveRow */
+    private $archRow;
+
     /** @var string */
     private $error = "Match not found!";
 
@@ -77,15 +80,22 @@ class FightsPresenter extends BasePresenter {
 
     public function actionArchView($id, $param) {
         $this->roundRow = $this->roundsRepository->findById($param);
+        $this->archRow = $this->archiveRepository->findById($id);
     }
 
     public function renderArchView($id, $param) {
         if (!$this->roundRow) {
             throw new BadRequestException($this->error);
         }
-        $this->template->fights = $this->fightsRepository->findByValue('round_id', $param)->where('archive_id', $id);
+        $this->template->fights = $this->fightsRepository
+                                       ->findByValue('round_id', $param)
+                                       ->where('archive_id', $id);
         $this->template->round = $this->roundRow;
         $this->template->archive = $this->roundRow->ref('archive', 'archive_id');
+        $this['breadCrumb']->addLink('Archív', $this->link("Archive:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Kolá", $this->link("Round:archView", $this->archRow));
+        $this['breadCrumb']->addLink($this->roundRow->name);
     }
 
     public function actionEditThird($id) {
@@ -113,7 +123,7 @@ class FightsPresenter extends BasePresenter {
         $form->addText('score1', 'Skóre 1');
         $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
-        $form->addCheckbox('type', ' Označiť zápas ako Play Off zápas');
+        $form->addCheckbox('type', ' Označiť zápas ako Play Off');
         $form->addSubmit('save', 'Uložiť');
 
         $form->onSuccess[] = $this->submittedAddFightForm;
@@ -215,7 +225,6 @@ class FightsPresenter extends BasePresenter {
     }
 
     public function submittedDeleteForm() {
-        $this->userIsLogged();
         $id = $this->fightRow->ref('rounds', 'round_id');
         $this->fightRow->delete();
         $this->flashMessage('Zápas odstránený.', 'success');

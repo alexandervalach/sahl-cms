@@ -13,15 +13,20 @@ class TeamsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $teamRow;
 
+    /** @var ActiveRow */
+    private $archRow;
+
     /** @var string */
     private $error = "Team not found";
 
     public function actionAll() {
-        
+
     }
 
     public function renderAll() {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC");
+        $this['breadCrumb']->addLink("Tímy");
+
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
         }
@@ -64,11 +69,16 @@ class TeamsPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
+        $this->archRow = $this->archiveRepository->findById($id);
     }
 
     public function renderArchView($id) {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
-        $this->template->archive = $this->archiveRepository->findById($id);
+        $this->template->archive = $this->archRow;
+
+        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Tímy");
     }
 
     protected function createComponentUploadForm() {
@@ -136,14 +146,12 @@ class TeamsPresenter extends BasePresenter {
     }
 
     public function submittedAddForm(Form $form) {
-        $this->userIsLogged();
         $values = $form->getValues();
         $this->teamsRepository->insert($values);
         $this->redirect('all');
     }
 
     public function submittedEditTeamForm(Form $form) {
-        $this->userIsLogged();
         $values = $form->getValues();
         $this->teamRow->update($values);
         $this->redirect('all');

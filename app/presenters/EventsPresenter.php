@@ -12,6 +12,9 @@ class EventsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $eventRow;
 
+    /** @var ActiveRow */
+    private $archRow; 
+
     /** @var string */
     private $error = "Event not found!";
 
@@ -53,16 +56,15 @@ class EventsPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-        
+        $this->archRow = $this->archiveRepository->findById($id);
     }
 
     public function renderArchView($id) {
-        $archive = $this->archiveRepository->findById($id);
-        $this->template->archive = $archive;
+        $this->template->archive = $this->archRow;
         $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
         
         $this['breadCrumb']->addLink("Archívy", $this->link("Archive:all"));
-        $this['breadCrumb']->addLink($archive->title);
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
         $this['breadCrumb']->addLink("Zápasy");
     }
 

@@ -11,6 +11,9 @@ class PunishmentsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $punishmentRow;
 
+    /** @var ActiveRow */
+    private $archRow;
+
     public function actionAll() {
         
     }
@@ -48,11 +51,15 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-
+        $this->archRow = $this->archiveRepository->findById($id);
     }
 
     public function renderArchView($id) {
-        $this->template->archive = $this->archiveRepository->findById($id);
+        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Tresty hráčov");
+
+        $this->template->archive = $this->archRow;
         $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', $id);
     }
 

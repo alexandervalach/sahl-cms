@@ -13,7 +13,10 @@
         {var $player = $punishment->ref('players', 'player_id')}
         {var $team = $player->ref('teams', 'team_id')}
 
-        <h3>{$player->lname} ({$player->num}), {$team->name}</h3>
+        <strong>
+            {$player->lname} ({$player->num}), 
+            <a n:href="Player:view, $team">{$team->name}</a>
+        </strong>
         <ul style="padding: 0">
             <li>Stop na {$punishment->round}</li>
             <li>{$punishment->text}</li>

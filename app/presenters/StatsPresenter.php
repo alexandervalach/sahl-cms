@@ -4,9 +4,13 @@ namespace App\Presenters;
 
 use Nette\Application\UI\Form;
 use Nette\Database\Connection;
+use Nette\Database\Table\ActiveRow;
 use App\FormHelper;
 
 class StatsPresenter extends BasePresenter {
+
+    /** @var ActiveRow */
+    private $archRow;
 
     public function actionAll() {
         
@@ -21,7 +25,7 @@ class StatsPresenter extends BasePresenter {
         $this->template->current = 0;
         $this->template->previous = 0;
 
-        $this['breadCrumb']->addLink("Rebríček");
+        $this['breadCrumb']->addLink("Štatistiky");
         
         if ($this->user->isLoggedIn()) {
             $this->getComponent('resetForm');
@@ -29,14 +33,22 @@ class StatsPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-
+        $this->archRow = $this->archiveRepository->findById($id);
     }
 
     public function renderArchView($id) {
     	$this->template->stats = $this->playersRepository->findByValue('archive_id', $id)
                                       ->where('lname != ?', ' ')
                                       ->order('goals DESC, lname DESC');
-    	$this->template->archive = $this->archiveRepository->findById($id);
+    	$this->template->archive = $this->archRow;
+        $this->template->i = 0;
+        $this->template->j = 0;
+        $this->template->current = 0;
+        $this->template->previous = 0;
+
+        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Štatistiky");
     }
 
     protected function createComponentResetForm() {

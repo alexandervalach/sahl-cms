@@ -45,17 +45,19 @@ header a:hover {
     text-decoration: none;
 }
 
-main table th, main table caption {
+main table th, 
+main table caption {
     font-weight: bold;
     color: #FFFFFF;
     background-color: #337ab7;
 }
 
-main table tr, main table tr {
+main table tr {
     background-color: #FFFFFF;
 }
 
-main table caption a {
+main table caption a,
+main table caption {
     font-weight: bold;
     color: #FFFFFF;
     text-decoration: none;
@@ -75,7 +77,6 @@ main table caption a:focus {
 }
 
 main table caption {
-    padding: 0;
 }
 
 main table {
@@ -250,6 +251,7 @@ div#primary {
     background-color: #fcfcfc;
     border-radius: 6px;
     padding: 20px;
+    margin-bottom: 20px;
 }
 
 nav .breadcrumb {

@@ -2,10 +2,8 @@
 
 {control breadCrumb}
 
-<h1 n:block="title">Rozpis zápasov</h1>
-
 <section id="events">
-    <article n:foreach="$events as $event">
-        <main>{$event->event|noescape}</main>
-    </article>
+    <div n:foreach="$events as $event" class="content">
+        {$event->event|noescape}
+    </div>
 </section>

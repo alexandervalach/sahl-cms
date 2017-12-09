@@ -2,10 +2,6 @@
 
 {control breadCrumb}
 
-<div class="clearfix">
-    <h1 n:block="title">Tímy</h1>
-</div>
-
 <div class="clearfix" n:if="$user->loggedIn">
     <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal">
         Pridať
@@ -27,21 +23,23 @@
                 <td>
                     <a n:href='Player:view, $team'>{$team->name}</a>
                 </td>
-                <td n:if='$user->loggedIn'>
-                    <a n:href='edit, $team' class="text-success">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                </td>
-                <td  n:if='$user->loggedIn'>
-                    <a n:href='delete, $team' class="text-danger">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
-                <td  n:if='$user->loggedIn'>
-                    <a n:href='upload, $team' class="text-primary">
-                        <span class="glyphicon glyphicon-picture"></span>
-                    </a>
-                </td>
+                {if $user->loggedIn}
+                    <td>
+                        <a n:href='edit, $team' class="text-success">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a n:href='delete, $team' class="text-danger">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a n:href='upload, $team' class="text-primary">
+                            <span class="glyphicon glyphicon-picture"></span>
+                        </a>
+                    </td>
+                {/if}
             </tr>
         </tbody>
     </table>

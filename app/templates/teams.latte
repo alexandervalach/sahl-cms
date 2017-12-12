@@ -1,18 +1,9 @@
-<section id="teams" class="col-md-offset-1">
+<section id="teams" class="text-center">
     {foreach $n_teams as $n_team}
         {if $n_team->logo != NULL}
             <a n:href="Player:view, $n_team" title="{$n_team->name}">
                 <img src="{$basePath}/{$imgFolder}/{$n_team->logo}" 
                     width="{40/$teams_count}%" alt="{$n_team->name} Logo" />
-            </a>
-        {/if}
-    {/foreach}
-
-    {foreach $r_teams as $r_team}
-        {if $r_team->logo != NULL}
-            <a n:href="Player:view, $r_team" title="{$r_team->name}">
-                <img src="{$basePath}/{$imgFolder}/{$r_team->logo}" 
-                    width="{40/$teams_count}%" alt="{$r_team->name} Logo" />
             </a>
         {/if}
     {/foreach}

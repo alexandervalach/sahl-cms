@@ -99,9 +99,6 @@ abstract class BasePresenter extends Presenter {
     /** @var string */
     protected $default_img;
 
-    /** @var array */ 
-    protected $side_table_types;
-
     public function __construct(
     ArchiveRepository $archiveRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
         parent::__construct();
@@ -125,32 +122,17 @@ abstract class BasePresenter extends Presenter {
         $this->tablesRepository = $tablesRepository;
         $this->teamsRepository = $teamsRepository;
         $this->usersRepository = $usersRepository;
-        $this->side_table_types = null;
         $this->default_img = "sahl.png";
         $this->imgFolder = "images";
     }
 
     public function beforeRender() {
-        if ($this->side_table_types == null) {
-            $this->side_table_types = $this->tableTypesRepository->findByValue('visible = ?', 1);
-
-            foreach($this->side_table_types as $type) {
-                $side_tables[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
-                                                                   ->where('type = ?', $type);
-            }
-        }
-
-        $n_teams = $this->teamsRepository->findByValue('archive_id', NULL)->order('id');
-        $this->template->sideRound = $this->roundsRepository->getLatestRound();
-        $this->template->sideFights = $this->roundsRepository->getLatestRoundFights();
-        $this->template->side_table_types = $this->side_table_types;
         $this->template->links = $this->linksRepository->findByValue('sponsor', 0)->order('title');
         $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = $this->imgFolder;
-        $this->template->n_teams = $n_teams; 
-        $this->template->r_teams = $this->teamsRepository->findByValue('archive_id', NULL)->order('id DESC');
-        $this->template->side_table_types = $this->side_table_types;
-        $this->template->side_tables = $side_tables;
+
+        $n_teams = $this->teamsRepository->findByValue('archive_id', NULL)->order('id');
+        $this->template->n_teams = $n_teams;
         $this->template->teams_count = $n_teams->count();
     }
 

@@ -2,7 +2,7 @@
 
 {control breadCrumb}
 
-<section class="col-xs-12 col-lg-12 col-sm-12 col-md-12">
+<section>
     <div n:if="$user->loggedIn" class="clearfix">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať záznam
@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th>P.č.</th>
-                    <th>Mužstvo</th>
+                    <th>Tím</th>
                     <th><span class="glyphicon glyphicon-thumbs-up"></span></th>
                     <th><span class="glyphicon glyphicon-thumbs-down"></span></th>
                     <th>Remízy</th>
@@ -41,16 +41,18 @@
                     <td>
                         <strong class="text-danger">{$row->points}</strong>
                     </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="edit, $row" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="delete, $row" class="text-danger">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
+                    {if $user->loggedIn}
+                        <td>
+                            <a n:href="edit, $row" class="text-success">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a n:href="delete, $row" class="text-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </td>
+                    {/if}
                 </tr>
             </tbody>
         </table>

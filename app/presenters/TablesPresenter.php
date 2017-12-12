@@ -22,14 +22,16 @@ class TablesPresenter extends BasePresenter {
 
     public function renderAll() {
         $table_types = $this->tableTypesRepository->findByValue('visible', 1);
-        $this->template->table_types = $table_types;
-
         $table_rows = array();
+
         foreach ($table_types as $type) {
             $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
-                                                              ->where('type = ?', $type);
+                                                              ->where('type = ?', $type)
+                                                              ->order('points DESC');
         }
+        
         $this->template->tables = $table_rows;
+        $this->template->table_types = $table_types;
         $this['breadCrumb']->addLink("Tabuľky");
 
         if ($this->user->isLoggedIn()) {

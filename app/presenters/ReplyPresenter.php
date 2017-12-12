@@ -22,12 +22,15 @@ class ReplyPresenter extends BasePresenter {
     /** @var string */
     private $error = "Reply not found!";
 
-    public function actionAdd($id) {
+    public function actionAdd($id) 
+    {
+        $this->redrawControl('main');
         $this->forumRow = $this->forumRepository->findById($id);
         $this->reply = $this->forumRow->related('reply');
     }
 
-    public function renderAdd($id) {
+    public function renderAdd($id) 
+    {
         if (!$this->forumRow) {
             throw new BadRequestException("Thread not found!");
         }
@@ -38,11 +41,13 @@ class ReplyPresenter extends BasePresenter {
         $this['breadCrumb']->addLink($this->forumRow->title);
     }
 
-    public function actionDelete($id) {
+    public function actionDelete($id) 
+    {
         $this->replyRow = $this->replyRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderDelete($id) 
+    {
         if (!$this->replyRow) {
             throw new BadRequestException($this->error);
         }
@@ -50,39 +55,37 @@ class ReplyPresenter extends BasePresenter {
         $this->template->reply = $this->replyRow;
     }
 
-    protected function createComponentAddForm() {
+    protected function createComponentAddForm() 
+    {
         $form = new Form;
         $form->addText('author', 'Meno')
              ->setRequired("Meno je povinné pole")
              ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
-        $form->addText('url', 'Nevypĺňať')
-             ->setAttribute('class', 'url_address')
-             ->setOmitted();
         $form->addTextArea('text', 'Text')
              ->setAttribute('class', 'form-control');
         $form->addSubmit('save', 'Pridať');
-
-        $form->onSuccess[] = $this->submittedAddForm;
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddForm(Form $form) {
+    public function submittedAddForm(Form $form, $values) 
+    {
         if (isset($_POST['url']) && $_POST['url'] == '') {
-            $values = $form->getValues();
             $values['forum_id'] = $this->forumRow;
             $this->replyRepository->insert($values);
         }
         $this->redirect('add', $this->forumRow);
     }
     
-    public function submittedDeleteForm() {
-        $this->userIsLogged();
+    public function submittedDeleteForm() 
+    {
         $this->replyRow->delete();
         $this->redirect('add', $this->replyRow->forum_id);
     }
 
-    public function formCancelled() {
+    public function formCancelled() 
+    {
         $this->redirect('add', $this->replyRow->forum_id);
     }
 

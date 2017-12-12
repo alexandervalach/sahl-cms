@@ -172,18 +172,18 @@ main table {
 }
 
 
-body > footer {
+footer {
     background-color: #286090;
     color: #FFFFFF;
     padding: 20px;
 }
 
-body > footer a {
+footer a {
     color: #ffffff;
 }
 
-body > footer a:hover,
-body > footer a:focus {
+footer a:hover,
+footer a:focus {
     color: #cccccc;
     text-decoration: none;
 }

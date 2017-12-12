@@ -8,7 +8,7 @@
             <h1 n:block="title">{$forum->title}</h1> 
         </header>
         <main class="clearfix">
-            {$forum->message}
+            {$forum->message|noescape}
         </main>
         <footer class="clearfix">
             <div class="clearfix">
@@ -23,11 +23,11 @@
         </footer>
     </article>
 
-    <article n:foreach="$replies as $reply" class="content" style="margin: 10px; padding: 20px">
+    <article n:foreach="$replies as $reply" class="content" style="padding: 20px">
         <header>
             <strong>{$reply->author}</strong>
             <div n:if="$user->loggedIn" class="pull-right">
-                <a n:href="Reply:delete, $reply" class="text-success">
+                <a n:href="Reply:delete $reply" class="text-success">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
             </div>

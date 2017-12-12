@@ -7,13 +7,13 @@
         <div class="alert alert-info">
             Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
             na amatérskej úrovni, samozrejme v rámci pravidiel.
-            Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
+            Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all" class="ajax">SAHL – Pravidlá a Smernice</a>.
         </div>
     </div>
 
     <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
         <article n:foreach="$posts as $post" class="clearfix content" style="margin-bottom: 20px">
-            <a n:href="Post:view $post">
+            <a n:href="Post:view $post" class="ajax">
                 <figure class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
                     {if file_exists($imgFolder . "/" . $post->thumbnail)}
                         <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img img-responsive" />
@@ -33,7 +33,7 @@
             <table class='table'>
                 <caption>
                     <h2 class="text-center">
-                        <a n:href="Fights:all, $sideRound">{$sideRound->name}</a>
+                        <a n:href="Fights:all $sideRound" class="ajax">{$sideRound->name}</a>
                     </h2>
                 </caption>
                 <tbody>
@@ -60,7 +60,7 @@
             <table class='table tables'>
                 <caption>
                     <h2 class="text-center">
-                        <a n:href="Tables:all">{$type->name}</a>
+                        <a n:href="Tables:all" class="ajax">{$type->name}</a>
                     </h2>
                 </caption>
                 <tbody>
@@ -78,3 +78,5 @@
         </div>
     </div>
 </section>
+
+{/block}

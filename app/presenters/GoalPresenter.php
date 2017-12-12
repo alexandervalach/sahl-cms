@@ -33,6 +33,7 @@ class GoalPresenter extends BasePresenter {
     }
 
     public function renderView($id) {
+        $this->redrawControl('main');
         $this->template->fight = $this->fightRow;
         $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow)
                                                        ->order('home DESC, goals DESC');

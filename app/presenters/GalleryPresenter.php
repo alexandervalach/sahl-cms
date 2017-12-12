@@ -19,11 +19,8 @@ class GalleryPresenter extends BasePresenter {
     /** @var string */
     private $error = "Image not found!";
 
-    public function actionView($id) {
-        
-    }
-
     public function renderView($id) {
+        $this->redrawControl('main');
         $this->albumRow = $this->albumsRepository->findById($id);
         $this->template->album = $this->albumRow;
         $this->template->galleryImgs = $this->albumRow->related('gallery');

@@ -126,35 +126,23 @@ abstract class BasePresenter extends Presenter {
         $this->imgFolder = "images";
     }
 
-    public function beforeRender() {
-        $this->template->links = $this->linksRepository->findByValue('sponsor', 0)->order('title');
-        $this->template->sponsors = $this->linksRepository->getSponsors();
-        $this->template->imgFolder = $this->imgFolder;
-
-        $n_teams = $this->teamsRepository->findByValue('archive_id', NULL)->order('id');
-        $this->template->n_teams = $n_teams;
-        $this->template->teams_count = $n_teams->count();
-    }
-
-    protected function createComponentDeleteForm() {
+    protected function createComponentDeleteForm() 
+    {
         $form = new Form;
-
         $form->addSubmit('cancel', 'Zrušiť')
              ->setAttribute('class', 'btn btn-large btn-warning')
-             ->onClick[] = $this->formCancelled;
-
+             ->onClick[] = [$this, 'formCancelled'];
         $form->addSubmit('delete', 'Odstrániť')
              ->setAttribute('class', 'btn btn-large btn-danger')
-             ->onClick[] = $this->submittedDeleteForm;
-
+             ->onClick[] = [$this, 'submittedDeleteForm'];
         $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentSignInForm() {
+    protected function createComponentSignInForm() 
+    {
         $form = new Form;
-
         $form->addText('username', 'Používateľské meno')
              ->setRequired('Zadajte používateľské meno.');
         $form->addPassword('password', 'Heslo')
@@ -162,36 +150,38 @@ abstract class BasePresenter extends Presenter {
         $form->addSubmit('login', 'Administrácia')
              ->setAttribute('class', 'btn btn-success');
         $form->addProtection();
-
-        $form->onSuccess[] = $this->submittedSignInForm;
+        $form->onSuccess[] = [$this, 'submittedSignInForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedSignInForm(Form $form) {
-        $values = $form->values;
-
+    public function submittedSignInForm(Form $form, $values) 
+    {
         try {
             $this->getUser()->login($values->username, $values->password);
             $this->redirect('Homepage:');
         } catch (AuthenticationException $e) {
-            $form->addError('Nesprávne meno alebo heslo.');
+            $this->flashMessage('Nesprávne meno alebo heslo.', 'error');
+            $this->redirect('Homepage:');
         }
     }
 
-    public function actionOut() {
+    public function actionOut() 
+    {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený.', 'success');
         $this->redirect('Homepage:');
     }
 
-    protected function userIsLogged() {
+    protected function userIsLogged() 
+    {
         if (!$this->user->isLoggedIn()) {
             $this->redirect('Homepage:');
         }
     }
 
-    protected function createComponentBreadCrumb() {
+    protected function createComponentBreadCrumb() 
+    {
         $breadCrumb = new BreadCrumb();
         $breadCrumb->addLink('Domov', $this->link('Homepage:'));
         return $breadCrumb;

@@ -8,8 +8,8 @@ use Nette\Application\BadRequetsException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
 
-class TeamsPresenter extends BasePresenter {
-
+class TeamsPresenter extends BasePresenter 
+{
     /** @var ActiveRow */
     private $teamRow;
 
@@ -19,25 +19,24 @@ class TeamsPresenter extends BasePresenter {
     /** @var string */
     private $error = "Team not found";
 
-    public function actionAll() {
-
-    }
-
-    public function renderAll() {
+    public function renderAll() 
+    {
+        $this->redrawControl('main');
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC");
         $this['breadCrumb']->addLink("Tímy");
-
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
         }
     }
 
-    public function actionDelete($id) {
+    public function actionDelete($id) 
+    {
         $this->userIsLogged();
         $this->teamRow = $this->teamsRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderDelete($id) 
+    {
         if (!$this->teamRow) {
             throw new BadRequetsException($this->error);
         }
@@ -45,12 +44,14 @@ class TeamsPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
-    public function actionEdit($id) {
+    public function actionEdit($id) 
+    {
         $this->userIsLogged();
         $this->teamRow = $this->teamsRepository->findById($id);
     }
 
-    public function renderEdit($id) {
+    public function renderEdit($id) 
+    {
         if (!$this->teamRow)
             throw new BadRequetsException($this->error);
 
@@ -58,69 +59,71 @@ class TeamsPresenter extends BasePresenter {
         $this->template->team = $this->teamRow;
     }
 
-    public function actionUpload($id) {
+    public function actionUpload($id) 
+    {
         $this->userIsLogged();
         $this->teamRow = $this->teamsRepository->findById($id);
     }
 
-    public function renderUpload($id) {
+    public function renderUpload($id) 
+    {
+        $this->redrawControl('main');
         $this->template->team = $this->teamRow;
         $this->getComponent('uploadForm');
     }
 
-    public function actionArchView($id) {
+    public function actionArchView($id) 
+    {
         $this->archRow = $this->archiveRepository->findById($id);
     }
 
-    public function renderArchView($id) {
+    public function renderArchView($id) 
+    {
+        $this->redrawControl('main');
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
-
         $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
         $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
         $this['breadCrumb']->addLink("Tímy");
     }
 
-    protected function createComponentUploadForm() {
+    protected function createComponentUploadForm() 
+    {
         $form = new Form;
         $form->addUpload('image', 'Nahraj obrázok');
         $form->addSubmit('upload', 'Uložiť');
-        $form->onSuccess[] = $this->submittedUploadForm;
+        $form->onSuccess[] = [$this, 'submittedUploadForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentAddForm() {
+    protected function createComponentAddForm() 
+    {
         $form = new Form;
-
         $form->addText('name', 'Tím: ')
              ->setRequired('Názov tímu je povinné pole.')
              ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
         $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedAddForm;
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditTeamForm() {
+    protected function createComponentEditTeamForm() 
+    {
         $form = new Form;
-
         $form->addText('name', 'Tím: ')
                 ->setRequired('Názov tímu je povinné pole.')
                 ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
-
         $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedEditTeamForm;
+        $form->onSuccess[] = [$this, 'submittedEditTeamForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedUploadForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedUploadForm(Form $form, $values) 
+    {
         $img = $values->image;
-
         if ($img->isOk() AND $img->isImage()) {
             $name = $img->getSanitizedName();
             $img->move($this->storage . $name);
@@ -130,7 +133,8 @@ class TeamsPresenter extends BasePresenter {
         $this->redirect('Player:view', $this->teamRow);
     }
 
-    public function submittedDeleteForm() {
+    public function submittedDeleteForm() 
+    {
         $team = $this->teamRow;
         $players = $team->related('players');
         $img = new FileSystem;
@@ -145,20 +149,20 @@ class TeamsPresenter extends BasePresenter {
         $this->redirect('all');
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddForm(Form $form, $values) 
+    {
         $this->teamsRepository->insert($values);
         $this->redirect('all');
     }
 
-    public function submittedEditTeamForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditTeamForm(Form $form, $values) 
+    {
         $this->teamRow->update($values);
         $this->redirect('all');
     }
 
-    public function formCancelled() {
+    public function formCancelled() 
+    {
         $this->redirect('all');
     }
-
 }

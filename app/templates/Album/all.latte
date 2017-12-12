@@ -10,7 +10,7 @@
     </div>
 
     <figure n:foreach="$albums as $album" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-        <a n:href="Gallery:view, $album->id">
+        <a n:href="Gallery:view $album" class="ajax">
             {if $album->name && file_exists($imgFolder . "/" . $album->name)}                
                 <img src="{$basePath}/{$imgFolder}/{$album->name}" 
                     class="img img-responsive" alt="Miniatúra albumu {$album->name}" />

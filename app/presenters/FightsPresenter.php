@@ -28,6 +28,7 @@ class FightsPresenter extends BasePresenter {
     private $team2;
 
     public function actionAll($id) {
+        $this->redrawControl('main');
         $this->roundRow = $this->roundsRepository->findById($id);
         $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
         $this['breadCrumb']->addLink($this->roundRow->name);

@@ -12,16 +12,14 @@
     <article n:foreach="$forums as $forum" class="content">
         <header class="clearfix">
             <div class="text-center">
-                <a n:href="Reply:add, $forum->id">
+                <a n:href="Reply:add, $forum" class="ajax">
                     <h3>{$forum->title}</h3>
                 </a>
             </div>
         </header>
 
         <main class="clearfix">
-            <p>
-                {$forum->message|noescape}
-            </p>
+            {$forum->message|noescape}
         </main>
 
         <footer class="clearfix">

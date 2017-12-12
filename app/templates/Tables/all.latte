@@ -3,7 +3,7 @@
 {control breadCrumb}
 
 <section>
-    <div n:if="$user->loggedIn" class="clearfix">
+    <div n:if="$user->loggedIn" style="margin-bottom: 20px">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať záznam
         </button>
@@ -31,8 +31,9 @@
             </thead>
             <tbody>
                 <tr n:foreach="$tables[$type->name] as $row" class="{$iterator->first ? 'first'}">
+                    {var $team = $row->ref('teams','team_id')}
                     <td>{$iterator->counter}</td>
-                    <td>{$row->ref('teams','team_id')->name}</td>
+                    <td><a n:href="Player:view $team" class="ajax">{$team->name}</a></td>
                     <td>{$row->win}</td>
                     <td>{$row->lost}</td>
                     <td>{$row->tram}</td>
@@ -43,12 +44,12 @@
                     </td>
                     {if $user->loggedIn}
                         <td>
-                            <a n:href="edit, $row" class="text-success">
+                            <a n:href="edit $row" class="text-success">
                                 <span class="glyphicon glyphicon-pencil"></span>
                             </a>
                         </td>
                         <td>
-                            <a n:href="delete, $row" class="text-danger">
+                            <a n:href="delete $row" class="text-danger">
                                 <span class="glyphicon glyphicon-trash"></span>
                             </a>
                         </td>

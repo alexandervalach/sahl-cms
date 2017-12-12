@@ -3,7 +3,6 @@
 namespace App\Presenters;
 
 use App\FormHelper;
-use IPub\VisualPaginator\Components as VisualPaginator;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Application\BadRequestException;
@@ -16,14 +15,10 @@ class ForumPresenter extends BasePresenter {
     /** @var string */
     private $error = "Thread not found!";
 
-    public function actionAll() {
-        
-    }
-
     public function renderAll() {
-        $forumSelection = $this->forumRepository->findAll()->order("id DESC");
+        $this->redrawControl('main');
         $this->getComponent("addForm");
-        $this->template->forums = $forumSelection;
+        $this->template->forums = $this->forumRepository->findAll()->order("id DESC");
         $this['breadCrumb']->addLink("Fórum");
     }
 

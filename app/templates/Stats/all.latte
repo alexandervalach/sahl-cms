@@ -2,18 +2,18 @@
 
 {control breadCrumb}
 
-<div n:if="$user->loggedIn" class="clearfix">
-    <button type="button" class="btn btn-large btn-danger" data-toggle="modal" data-target="#reset-stats">
-        Vynulovať
-    </button>
-</div>
+<section id="stats">
+    <div n:if="$user->loggedIn" style="margin-bottom: 20px">
+        <button type="button" class="btn btn-large btn-danger" data-toggle="modal" data-target="#reset-stats">
+            Vynulovať
+        </button>
+    </div>
 
-<section id="stats" style="margin-top: 20px">
     <div class='table-responsive'>
         <table class='table'>
             <thead>
                 <tr>
-                    <th>&nbsp;</th>
+                    <th>P.č.</th>
                     <th>Meno a priezvisko</th>
                     <th>Číslo</th>
                     <th>Tím</th>
@@ -24,21 +24,24 @@
             <tbody>
                 <tr n:foreach="$stats as $stat">
                     {var $current = $stat->goals}
+                    {var $team = $stat->ref('team_id')}
                     <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
                     <td>{$stat->lname}</td>
                     <td>{$stat->num}</td>
-                    <td>{$stat->ref('team_id')->name}</td>
+                    <td><a n:href="Player:view $team" class="ajax">{$team->name}</td>
                     <td>{$stat->goals}</td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="Player:edit, $stat->id" class="text-success">
-                            <span class='glyphicon glyphicon-pencil'></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="Player:delete, $stat->id" class="text-danger">
-                            <span class='glyphicon glyphicon-trash'></span>
-                        </a>
-                    </td>
+                    {if $user->loggedIn}
+                        <td>
+                            <a n:href="Player:edit $stat" class="text-success">
+                                <span class='glyphicon glyphicon-pencil'></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a n:href="Player:delete $stat" class="text-danger">
+                                <span class='glyphicon glyphicon-trash'></span>
+                            </a>
+                        </td>
+                    {/if}
                     {var $previous = $stat->goals}
                 </tr>
             </tbody>
@@ -64,13 +67,3 @@
 </div>
 
 {/block}
-
-{*block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/data-tables/datatables.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#stats .table-responsive .table').DataTable();
-        });
-    </script>
-{/block*}

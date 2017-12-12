@@ -22,6 +22,7 @@ class AlbumPresenter extends BasePresenter {
 
 
     public function renderAll() {
+        $this->redrawControl('main');
         $this->template->albums = $this->albumsRepository->findAll();
         $this->template->default_img = $this->default_img;
         $this->template->imgFolder = $this->imgFolder;

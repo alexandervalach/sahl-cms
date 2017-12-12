@@ -18,7 +18,7 @@
             </thead>
             <tbody>
                 <tr n:foreach="$rounds as $round">
-                    <td><a n:href="Fights:all, $round">{$round->name}</a></td>
+                    <td><a n:href="Fights:all $round" class="ajax">{$round->name}</a></td>
                 </tr>
             </tbody>
         </table>

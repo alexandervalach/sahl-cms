@@ -32,15 +32,14 @@ class TableTypesPresenter extends BasePresenter {
         $form = new Form;
         $form->addCheckbox('visible', ' Zobraziť na bočnom paneli.');
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedAddToSidebarForm;
+        $form->onSuccess[] = [$this, 'submittedAddToSidebarForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddToSidebarForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddToSidebarForm(Form $form, $values) {
         $this->optionRow->update($values);
-        $this->redirect('Tables:all#nav');
+        $this->redirect('Tables:all');
     }
 
 }

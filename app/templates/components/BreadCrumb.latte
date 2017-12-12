@@ -2,7 +2,7 @@
 	<ol class="breadcrumb">
 		<li n:foreach="$links as $link" class="breadcrumb-item {if !$link['link']}active{/if}">
 			{if $link['link']}
-				<a href="{$link['link']}">{$link['title']}</a>
+				<a class="ajax" href="{$link['link']}">{$link['title']}</a>
 			{else}
 				{$link['title']}
 			{/if}

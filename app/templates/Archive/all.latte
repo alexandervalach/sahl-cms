@@ -3,15 +3,15 @@
 {control breadCrumb}
 
 <section id="archive" class="content">
-    <div n:if="$user->loggedIn" class="clearfix">
+    <div n:if="$user->loggedIn" style="margin-bottom: 20px;">
         <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add">
             Pridať
         </button>
     </div>
 
-    <ul>
+    <ul style="padding-left: 0">
         <li n:foreach="$archive as $arch">
-            <a n:href="view, $arch">{$arch->title}</a>
+            <a n:href="view $arch" class="ajax">{$arch->title}</a>
         </li>
     </ul>
 </section>

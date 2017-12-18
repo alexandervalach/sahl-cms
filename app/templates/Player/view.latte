@@ -2,92 +2,96 @@
 
 {control breadCrumb}
 
-{if ($team->image) and (file_exists($imgFolder . '/' . $team->image))}
-    <figure class="clearfix" style="margin-bottom: 20px">
-        <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
-            alt="{$team->name}" style="margin: 0 auto" />
-    </figure>
-{/if}
+<section id="players">
+    {if ($team->image) and (file_exists($imgFolder . '/' . $team->image))}
+        <figure class="clearfix" style="margin-bottom: 20px">
+            <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
+                alt="{$team->name}" style="margin: 0 auto" />
+        </figure>
+    {/if}
 
-<div n:if="$team->name" class='table-responsive'>
-    <table class='table'>
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Meno a priezvisko</th>
-                <th>Rok narodenia</th>
-                <th>Číslo dresu</th>
-                <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
-            </tr>
-        </thead>
-        <tbody>
-            {foreach $players as $player}
-                {var $type = $player->ref('playerTypes', 'type_id')}
-                {if $player->trans}
-                    <tr class="borrowed-player">
-                {else}
-                    <tr>
-                {/if}
-                    {if $player->lname}
-                        <td>{$iterator->counter}.</td>
+    <div n:if="$team->name" class='table-responsive'>
+        <table class='table'>
+            <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>Meno a priezvisko</th>
+                    <th>Rok narodenia</th>
+                    <th>Číslo dresu</th>
+                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach $players as $player}
+                    {var $type = $player->ref('playerTypes', 'type_id')}
+                    {if $player->trans}<tr class="borrowed-player">{else}<tr>{/if}
+                        {if $player->lname}
+                            <td>{$iterator->counter}.</td>
+                            <td>
+                                {$player->lname}{if $type->abbr} - {$type->abbr}{/if}
+                            </td>
+                            <td>
+                                <time datetime="{$player->born}" pubdate>
+                                    {date('Y', strtotime($player->born))}
+                                </time>
+                            </td>
+                            <td>{$player->num}</td>
+                            {if $user->loggedIn}
+                                <td>
+                                    <a n:href="edit $player" class="text-success">
+                                        <span class='glyphicon glyphicon-pencil'></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a n:href="delete $player" class="text-danger">
+                                        <span class='glyphicon glyphicon-trash'></span>
+                                    </a>
+                                </td>
+                            {/if}
+                        {else}
+                            <td n:for="$j = 0; $j < 4; $j++">&nbsp;</td>
+                            {if $user->loggedIn}
+                                <td>
+                                    <a n:href="edit $player" class="text-success">
+                                        <span class='glyphicon glyphicon-pencil'></span>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a n:href="delete $player" class="text-danger">
+                                        <span class='glyphicon glyphicon-trash'></span>
+                                    </a>
+                                </td>
+                            {/if}
+                        {/if}
+                    </tr>
+                    {var $i = $iterator->counter}
+                {/foreach}
+
+                <tr n:foreach="$goalies as $goalie">
+                    <td>{$iterator->counter + $i}.</td>
+                    <td>{$goalie->lname}</td>
+                    <td>
+                        <time datetime="{$goalie->born}" pubdate>
+                            {date('Y', strtotime($goalie->born))}
+                        </time>
+                    </td>
+                    <td>Brankár, {$goalie->num}</td>
+                    {if $user->loggedIn}
                         <td>
-                            {$player->lname}{if $type->abbr} - {$type->abbr}{/if}
+                            <a n:href="edit $goalie" class="text-success">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
                         </td>
                         <td>
-                            <time datetime="{$player->born}" pubdate>
-                                {date('Y', strtotime($player->born))}
-                            </time>
-                        </td>
-                        <td>{$player->num}</td>
-                        <td n:if="$user->loggedIn" class="text-center">
-                            <a n:href="edit, $player" class="text-success">
-                                <span class='glyphicon glyphicon-pencil'></span>
-                            </a>
-                        </td>
-                        <td n:if="$user->loggedIn" class="text-center">
-                            <a n:href="delete, $player" class="text-danger">
-                                <span class='glyphicon glyphicon-trash'></span>
-                            </a>
-                        </td>
-                    {else}
-                        <td n:for="$j = 0; $j < 4; $j++">&nbsp;</td>
-                        <td n:if="$user->loggedIn" class="text-center">
-                            <a n:href="edit, $player" class="text-success">
-                                <span class='glyphicon glyphicon-pencil'></span>
-                            </a>
-                        </td>
-                        <td n:if="$user->loggedIn" class="text-center">
-                            <a n:href="delete, $player" class="text-danger">
-                                <span class='glyphicon glyphicon-trash'></span>
+                            <a n:href="delete $goalie" class="text-danger">
+                                <span class="glyphicon glyphicon-trash"></span>
                             </a>
                         </td>
                     {/if}
                 </tr>
-                {var $i = $iterator->counter}
-            {/foreach}
-
-            <tr n:foreach="$goalies as $goalie">
-                <td>{$iterator->counter + $i}.</td>
-                <td>{$goalie->lname}</td>
-                <td>
-                    <time datetime="{$goalie->born}" pubdate>
-                        {date('Y', strtotime($goalie->born))}
-                    </time>
-                </td>
-                <td>Brankár, {$goalie->num}</td>
-                <td n:if="$user->loggedIn">
-                    <a n:href="edit, $goalie" class="text-success">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                </td>
-                <td n:if="$user->loggedIn">
-                    <a n:href="delete, $goalie" class="text-danger">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            </tbody>
+        </table>
+    </div>
+</section>
 
 {/block}

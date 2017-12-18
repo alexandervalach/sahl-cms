@@ -1,13 +1,22 @@
 $(function () {
     $.nette.init();
-});
 
-$(function() {
+    // Scroll to top
     var scroll_btn = $('#scroll-to-top');
     var body = $('html, body');
 
     show_scroll_btn(body, scroll_btn);
     scrol_to_top(body, scroll_btn);
+});
+
+$(document).ajaxComplete( function() {
+    var main = $('#snippet--main').height();
+    var flash = $('#snippet--flash').height();
+    var new_height = main + flash + 50;
+    
+    $('#ajax').animate({
+        height: new_height
+    }, 200)
 });
 
 function scrol_to_top(body, scroll_btn) {

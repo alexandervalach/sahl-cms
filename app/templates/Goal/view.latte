@@ -2,11 +2,15 @@
 
 {control breadCrumb}
 
-<section class="table-responsive">
+<div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
+    <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#addGoal">
+        Pridať góly hráčom
+    </button>
+</div>
+
+<section id="goals" class="table-responsive">
     <table class="table">
         <caption class="text-center">
-            {var $team1 = $fight->ref('teams', 'team1_id')}
-            {var $team2 = $fight->ref('teams', 'team2_id')}
             <h1>{$team1->name} : {$team2->name}</h1>
         </caption>
         <thead>
@@ -39,3 +43,21 @@
         </tbody>
     </table>
 </section>
+
+<section id="modals" n:if="$user->loggedIn">
+    <div id="addGoal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Pridať góly hráčom</h3>
+                </div>
+                <div class="modal-body">
+                    {control addForm}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{/block}

@@ -28,10 +28,7 @@ class FightsPresenter extends BasePresenter {
     private $team2;
 
     public function actionAll($id) {
-        $this->redrawControl('main');
         $this->roundRow = $this->roundsRepository->findById($id);
-        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
-        $this['breadCrumb']->addLink($this->roundRow->name);
     }
 
     public function renderAll($id) {
@@ -39,19 +36,41 @@ class FightsPresenter extends BasePresenter {
             throw new BadRequestException("Round not found.");
         }
         
-        $goals = array();
+        $this->redrawControl('main');
+        $i = 0;
+        $fight_data = array();
         $fights = $this->roundRow->related('fights');
-        
-        foreach ($fights as $fight)
-            $goals[] = $fight->related('goals')->order('goals DESC');
+
+        foreach ($fights as $fight) {
+            $fight_data[$i]['goals'] = $fight->related('goals')->order('goals DESC');
+            $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
+            $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
+            $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
+            $fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
+            
+            if ($fight->score1 > $fight->score2) {
+                $fight_data[$i]['state_1'] = 'text-success';
+                $fight_data[$i]['state_2'] = 'text-danger';
+            } else if ($fight->score1 < $fight->score2) {
+                $fight_data[$i]['state_1'] = 'text-danger';
+                $fight_data[$i]['state_2'] = 'text-success';
+            } else {
+                $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
+            }
+            
+            $i++;
+        }
         
         if ($this->user->isLoggedIn()) {
-            $this->getComponent('addFightForm');
+            $this->getComponent('addForm');
         }
 
-        $this->template->goals = $goals;
         $this->template->round = $this->roundRow;
         $this->template->fights = $fights;
+        $this->template->fight_data = $fight_data;
+        $this->template->i = 0;
+        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
+        $this['breadCrumb']->addLink($this->roundRow->name);
     }
 
     public function actionEdit($id) {
@@ -116,34 +135,29 @@ class FightsPresenter extends BasePresenter {
         $this->getComponent('editThirdForm')->setDefaults($this->fightRow);
     }
 
-    protected function createComponentAddFightForm() {
-        $form = new Form;
+    protected function createComponentAddForm() {
         $teams = $this->teamsRepository->getTeams();
-
+        $form = new Form;
         $form->addSelect('team1_id', 'Tím 1', $teams);
         $form->addText('score1', 'Skóre 1');
         $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
         $form->addCheckbox('type', ' Označiť zápas ako Play Off');
         $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedAddFightForm;
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     protected function createComponentEditFightForm() {
-        $form = new Form;
-
         $teams = $this->teamsRepository->getTeams();
-
+        $form = new Form;
         $form->addSelect('team1_id', 'Tím 1', $teams);
         $form->addText('score1', 'Skóre 1');
         $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
-
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedEditForm;
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -169,7 +183,7 @@ class FightsPresenter extends BasePresenter {
         return $form;
     }
 
-    public function submittedAddFightForm(Form $form) {
+    public function submittedAddForm(Form $form) {
         $values = $form->getValues(TRUE);
         if ($values['team1_id'] == $values['team2_id']) {
             $form->addError('Zvoľte dva rozdielne tímy.');
@@ -191,9 +205,7 @@ class FightsPresenter extends BasePresenter {
         $this->redirect('all', $fight->ref('rounds', 'round_id'));
     }
 
-    public function submittedEditForm(Form $form) {
-        $values = $form->getValues();
-
+    public function submittedEditForm(Form $form, $values) {
         if ($values->team1_id == $values->team2_id) {
             $form->addError('Zvoľte dva rozdielne tímy.');
             return false;
@@ -203,9 +215,7 @@ class FightsPresenter extends BasePresenter {
         $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
     }
 
-    public function submittedEditThirdForm(Form $form) {
-        $values = $form->getValues();
-
+    public function submittedEditThirdForm(Form $form, $values) {
         FormHelper::changeEmptyToZero($values);
 
         $score1 = $values['st_third_1'] + $values['nd_third_1'] + $values['th_third_1'];

@@ -1,0 +1,81 @@
+{block content}
+
+<p n:if="$user->loggedIn">
+    <a n:href="create#nav" class='btn btn-large btn-primary'>
+        <span class="glyphicon glyphicon-plus"></span>
+        Pridať
+    </a>
+</p>
+
+<section id="links">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <caption n:block="title" class="caption">Navštívte aj tieto stránky</caption>
+            <tbody>
+                {foreach $txtLinks as $link}
+                    <tr>
+                        <td>
+                            <a href='{$link->anchor}' class="text-primary" target="_blank">{$link->title}</a>
+                        </td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="edit#nav, $link->id" class="text-success text-center">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                            </a>
+                        </td>
+                        <td n:if="$user->loggedIn">
+                            <a n:href="delete#nav, $link->id" class="text-danger text-center">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+
+    <figure n:foreach="$imgLinks as $link">
+        <div class="clearfix">
+            <a href='{$link->anchor}' target="_blank">
+                <img src='{$basePath}{$imgFolder}{$link->image}' title='{$link->title}' 
+                     alt='{$link->title}' class='img-gallery img-rounded img-responsive'/>
+            </a>
+        </div>
+        <footer n:if="$user->loggedIn">
+            <a n:href="edit#nav, $link->id" class="text-success">
+                <span class="glyphicon glyphicon-pencil"></span>
+                Upraviť
+            </a>
+            <a n:href="delete#nav, $link->id" class="text-danger">
+                <span class="glyphicon glyphicon-remove"></span>
+                Odstrániť
+            </a>
+        </footer>
+    </figure>
+
+    {if !$sponsors != null}
+        <section id="sponsors">
+            <h2>Sponzori</h2>
+            {foreach $sponsors as $sponsor}
+                <figure>
+                    <div class="clearfix">
+                        <a href='{$sponsor->anchor}' target="_blank">
+                            <img src='{$basePath}{$imgFolder}{$sponsor->image}' title='{$sponsor->title}' 
+                                 alt='{$sponsor->title}' class='img-gallery img-rounded img-responsive'/>
+                        </a>
+                    </div>
+                    <footer n:if="$user->loggedIn">
+                        <a n:href="edit#nav, $sponsor->id" class="text-success">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            Upraviť
+                        </a>
+                        <a n:href="delete#nav, $sponsor->id" class="text-danger">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            Odstrániť
+                        </a>
+                    </footer>
+                </figure>
+            {/foreach}
+        </section>
+    {/if}
+
+</section>

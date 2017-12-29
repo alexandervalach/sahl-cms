@@ -1,0 +1,49 @@
+{block content}
+
+<p>
+    <a n:href="Homepage:default#nav" class='btn btn-large btn-default'>
+        <span class="glyphicon glyphicon-arrow-left"></span>
+        Príspevky
+    </a>
+</p>
+<p n:if="$user->loggedIn">
+    <a n:href="edit#nav $post->id" class='btn btn-large btn-success'>
+        <span class="glyphicon glyphicon-pencil"></span> Upraviť
+    </a>
+    <a n:href="PostImage:add#nav $post->id" class='btn btn-large btn-info'>
+        <span class="glyphicon glyphicon-picture"></span> Pridaj obrázky
+    </a>
+    <a n:href="delete#nav $post->id" class='btn btn-large btn-danger'>
+        <span class="glyphicon glyphicon-remove"></span> Odstrániť
+    </a>
+</p>
+<section id="post">
+    <article>
+        <header>
+            <h1 n:block="title">{$post->title}</h1>
+            <time datetime='{$post->created_at|date:'d.m.Y'}' pubdate>{$post->created_at|date:'d.m.Y'}</time>
+        </header>
+
+        <main>
+            {$post->content|noescape}
+        </main>
+
+        <footer id="images" class="row">
+            {foreach $images as $image}
+                <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
+                    <a href="{$basePath}{$imgFolder}{$image->name}" target="_blank">
+                        <img src='{$basePath}{$imgFolder}{$image->name}' class='img-responsive img-rounded' />
+                    </a>
+                    <div n:if="$user->loggedIn" class="text-center">
+                        <a n:href="PostImage:delete#nav, $post->id, $image->id" class='btn btn-large btn-danger'>
+                            <span class="glyphicon glyphicon-remove"></span> Odstráň
+                        </a>
+                        <a n:href="PostImage:Thumbnail#nav, $post->id, $image->id" class='btn btn-large btn-primary'>
+                            <span class="glyphicon glyphicon-picture"></span> Prezenčný
+                        </a>
+                    </div>	
+                </figure>
+            {/foreach}
+        </footer>
+    </article>
+</section>

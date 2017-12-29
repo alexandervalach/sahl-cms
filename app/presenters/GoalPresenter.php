@@ -33,13 +33,15 @@ class GoalPresenter extends BasePresenter {
     }
 
     public function renderView($id) {
-        $this->redrawControl('main');
         $this->template->fight = $this->fightRow;
         $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow)
                                                        ->order('home DESC, goals DESC');
         $this->template->team1 = $this->fightRow->ref('teams', 'team1_id');
         $this->template->team2 = $this->fightRow->ref('teams', 'team2_id');
-        $this->getComponent('addForm');
+        
+        if ($this->user->isloggedIn()) {
+            $this->getComponent('addForm');
+        }
     }
 
     public function actionEdit($id) {
@@ -72,20 +74,15 @@ class GoalPresenter extends BasePresenter {
     }
 
     protected function createComponentAddForm() {
-        $form = new Form;
-
         $players = $this->teamPlayersHelper($this->fightRow);
-
+        $form = new Form;
         $form->addSelect('player_id', 'Hráči', $players)
                 ->setRequired();
         $form->addText('goals', 'Počet gólov')
-                ->setRequired()
                 ->setDefaultValue(1)
                 ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
-        $form->addSubmit('save', 'Uložiť')
-             ->setAttribute('class', 'btn btn-large btn-primary ajax');
-
+        $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -94,17 +91,15 @@ class GoalPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('goals', 'Počet gólov')
-                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+             ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
-
         $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddForm(Form $form, $values) {
         $values['fight_id'] = $this->fightRow;
         $values['player_id'] = $values['player_id'];
         $this->goalsRepository->insert($values);
@@ -114,13 +109,11 @@ class GoalPresenter extends BasePresenter {
         $goals = array('goals' => $numOfGoals);
         $player->update($goals);
 
-        $this->flashMessage("Góly pridané hráčovi $player->lname", 'success');
-        $this->redrawControl('flash');
-        $this->redrawControl('main');
+        $this->flashMessage("Góly boli pridané", 'success');
+        $this->redirect('view', $this->fightRow);
     }
 
-    public function submittedEditForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditForm(Form $form, $values) {
         $goalDifference = $values['goals'] - $this->goalRow->goals;
         $this->goalRow->update($values);
 
@@ -129,6 +122,7 @@ class GoalPresenter extends BasePresenter {
         $goals = array('goals' => $numOfGoals);
         $player->update($goals);
 
+        $this->flashMessage("Góly boli upravené", 'success');
         $this->redirect('view', $this->fightRow);
     }
 
@@ -139,7 +133,7 @@ class GoalPresenter extends BasePresenter {
         $player->update($goals);
 
         $this->goalRow->delete();
-        $this->flashMessage("Góly boli hráčovi odpočítané", 'success');
+        $this->flashMessage("Góly boli odpočítané", 'success');
         $this->redirect('view', $this->fightRow);
     }
 

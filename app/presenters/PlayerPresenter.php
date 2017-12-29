@@ -23,7 +23,6 @@ class PlayerPresenter extends BasePresenter {
     }
 
     public function renderView($id) {
-        $this->redrawControl('main');
         $this->template->players = $this->playersRepository->findByValue('team_id', $id)
                                         ->where('type_id != ?', 2)->where('archive_id', null);
         $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
@@ -129,14 +128,14 @@ class PlayerPresenter extends BasePresenter {
         $id = $this->teamRow;
         $values['team_id'] = $id;
         $this->playersRepository->insert($values);
-        $this->redirect('view', $id);
+        $this->redirect('view#nav', $id);
     }
 
     public function submittedEditPlayerForm($form) {
         $values = $form->getValues();
         $player = $this->playerRow;
         $player->update($values);
-        $this->redirect('view', $player->team_id);
+        $this->redirect('view#nav', $player->team_id);
     }
 
     public function submittedDeleteForm() {
@@ -144,11 +143,11 @@ class PlayerPresenter extends BasePresenter {
         $team = $player->team_id;
         $player->delete();
         $this->flashMessage('Hráč odstránený.', 'success');
-        $this->redirect('view', $team);
+        $this->redirect('view#nav', $team);
     }
 
     public function formCancelled() {
-        $this->redirect('view', $this->playerRow->team_id);
+        $this->redirect('view#nav', $this->playerRow->team_id);
     }
 
 }

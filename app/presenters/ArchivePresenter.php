@@ -18,25 +18,22 @@ class ArchivePresenter extends BasePresenter {
 	/** @var string */
 	private $msg_type = 'danger'; 
 
-	public function renderAll() 
-	{
-		$this->redrawControl('main');
+	public function renderAll() {
 		$this->template->archive = $this->archiveRepository->findAll();
 		$this->template->default_img = $this->default_img;
 		$this['breadCrumb']->addLink('Archív');
+
 		if ($this->user->isLoggedIn()) {
 			$this->getComponent('addForm');
 		}
 	}
 
-	public function actionEdit($id) 
-	{
+	public function actionEdit($id) {
 		$this->userIsLogged();
 		$this->archiveRow = $this->archiveRepository->findById($id);
 	}
 
-	public function renderEdit($id) 
-	{
+	public function renderEdit($id) {
 		if(!$this->archiveRow) {
 			throw new BadRequestException($this->error);
 		}
@@ -44,92 +41,95 @@ class ArchivePresenter extends BasePresenter {
 		$this->getComponent('editForm')->setDefaults($this->archiveRow);
 	}
 
-	public function actionView($id) 
-	{
+	public function actionView($id) {
 		$this->archiveRow = $this->archiveRepository->findById($id);
 	}
 
 	public function renderView($id) {
-		$this->redrawControl('main');
 		if(!$this->archiveRow) {
 			throw new BadRequestException($this->error);
 		}
+
 		$this->template->archive = $this->archiveRow;
 		$this['breadCrumb']->addLink('Archívy', $this->link('all'));
 		$this['breadCrumb']->addLink($this->archiveRow->title);
+
 		if ($this->user->isLoggedIn()) {
 			$this->getComponent("editForm")->setDefaults($this->archiveRow);
 			$this->getComponent("deleteForm");
 		}
 	}
 
-	protected function createComponentAddForm() 
-	{
+	protected function createComponentAddForm() {
 		$form = new Form;
 		$form->addText('title', 'Názov')
 		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
 		$form->addSubmit('save', 'Uložiť');
-		$form->onSuccess[] = [$this, 'submittedAddForm'];
+
+		$form->onSuccess[] = $this->submittedAddForm;
+
 		FormHelper::setBootstrapFormRenderer($form);
 		return $form;
 	}
 
-	protected function createComponentEditForm() 
-	{
+	protected function createComponentEditForm() {
 		$form = new Form;
+
 		$form->addText('title', 'Názov')
 		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
 		$form->addSubmit('save', 'Uložiť');
-		$form->onSuccess[] = [$this, 'submittedEditForm'];
+
+		$form->onSuccess[] = $this->submittedEditForm;
 		FormHelper::setBootstrapFormRenderer($form);
 		return $form;
 	}
 
-	protected function createComponentDeleteForm() 
-	{
+	protected function createComponentDeleteForm() {
 		$form = new Form;
+
         $form->addSubmit('remove', 'Odstrániť')
              ->setAttribute('class', 'btn btn-large btn-danger');
+
         $form->addSubmit('cancel', 'Zrušiť')
              ->setAttribute('class', 'btn btn-large btn-warning')
              ->setAttribute('data-dismiss', 'modal');
-        $form->onSuccess[] = [$this, 'submittedDeleteForm'];
+
+        $form->onSuccess[] = $this->submittedDeleteForm;
         $form->addProtection();
+
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
 	}
 
-	protected function createComponentArchiveForm() 
-	{
+	protected function createComponentArchiveForm() {
         $form = new Form;
         $archives = $this->archiveRepository->getArchives();
         $form->addSelect('archive_id', 'Vyber archív: ', $archives);
         $form->addSubmit('save', 'Archivovať');
-        $form->onSuccess[] = [$this, 'submittedArchiveForm'];
+        $form->onSuccess[] = $this->submittedArchiveForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
 	}
 
-	public function submittedAddForm(Form $form, $values) 
-	{
+	public function submittedAddForm(Form $form) {
+		$values = $form->getValues();
 		$this->archiveRepository->insert($values);
 		$this->redirect('all');
 	}
 
-	public function submittedEditForm(Form $form, $values) 
-	{
+	public function submittedEditForm(Form $form) {
+		$values = $form->getValues();
 		$this->archiveRow->update($values);
 		$this->flashMessage("Záznam aktualizovaný", "success");
 		$this->redirect('view', $this->archiveRow);
 	}
 
-	public function submittedDeleteForm() 
-	{
-        $this->redirect('all');
+	public function submittedDeleteForm(Form $form) {
+        $this->redirect('Archive:all');
 	}
 
-	public function submittedArchiveForm(Form $form, $values) 
-	{
+	public function submittedArchiveForm(Form $form) {
+		$values = $form->getValues();
 		$team_id = array();
 		$player_id = array();
 		$arch_id = array( 'archive_id' => $values['archive_id'] );
@@ -251,13 +251,11 @@ class ArchivePresenter extends BasePresenter {
 		$this->redirect('all');
 	}
 
-	public function formCancelled() 
-	{
+	public function formCancelled() {
 		$this->redirect('all');
 	}
 
-	protected function addToArchive($items, $arch_id) 
-	{
+	private function addToArchive($items, $arch_id) {
 		foreach ($items as $item) {
 			$item->update($arch_id);
 		}

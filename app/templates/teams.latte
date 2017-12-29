@@ -1,10 +1,10 @@
-<div class="col-sm-12 col-md-12 col-lg-12 hidden-xs text-center" id="teams">
+<section id="teams" class="text-center">
     {foreach $n_teams as $n_team}
         {if $n_team->logo != NULL}
-            <a n:href="Player:view, $n_team" class="ajax">
+            <a n:href="Player:view, $n_team" title="{$n_team->name}">
                 <img src="{$basePath}/{$imgFolder}/{$n_team->logo}" 
                     width="{40/$teams_count}%" alt="{$n_team->name} Logo" />
             </a>
         {/if}
     {/foreach}
-</div>
+</section>

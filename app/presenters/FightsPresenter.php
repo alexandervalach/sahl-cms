@@ -29,14 +29,16 @@ class FightsPresenter extends BasePresenter {
 
     public function actionAll($id) {
         $this->roundRow = $this->roundsRepository->findById($id);
+        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
+        $this['breadCrumb']->addLink($this->roundRow->name);
     }
 
     public function renderAll($id) {
+
         if (!$this->roundRow) {
             throw new BadRequestException("Round not found.");
         }
-        
-        $this->redrawControl('main');
+
         $i = 0;
         $fight_data = array();
         $fights = $this->roundRow->related('fights');
@@ -47,7 +49,7 @@ class FightsPresenter extends BasePresenter {
             $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
             $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
             $fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
-            
+
             if ($fight->score1 > $fight->score2) {
                 $fight_data[$i]['state_1'] = 'text-success';
                 $fight_data[$i]['state_2'] = 'text-danger';
@@ -56,21 +58,19 @@ class FightsPresenter extends BasePresenter {
                 $fight_data[$i]['state_2'] = 'text-success';
             } else {
                 $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
-            }
-            
+            } 
             $i++;
         }
-        
-        if ($this->user->isLoggedIn()) {
-            $this->getComponent('addForm');
-        }
 
-        $this->template->round = $this->roundRow;
         $this->template->fights = $fights;
         $this->template->fight_data = $fight_data;
         $this->template->i = 0;
         $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
         $this['breadCrumb']->addLink($this->roundRow->name);
+
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent('addForm');
+        }
     }
 
     public function actionEdit($id) {
@@ -162,27 +162,6 @@ class FightsPresenter extends BasePresenter {
         return $form;
     }
 
-    protected function createComponentEditThirdForm() {
-        $form = new Form;
-
-        $form->addGroup('Tím ' . $this->team1->name);
-        $form->addText('st_third_1', 'Počet gólov v 1. tretine');
-        $form->addText('nd_third_1', 'Počet gólov v 2. tretine');
-        $form->addText('th_third_1', 'Počet gólov v 3. tretine');
-        $form->addText('score1', 'Počet gólov v zápase');
-
-        $form->addGroup('Tím ' . $this->team2->name);
-        $form->addText('st_third_2', 'Počet gólov v 1. tretine');
-        $form->addText('nd_third_2', 'Počet gólov v 2. tretine');
-        $form->addText('th_third_2', 'Počet gólov v 3. tretine');
-        $form->addText('score2', 'Počet gólov v zápase');
-
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedEditThirdForm;
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
     public function submittedAddForm(Form $form) {
         $values = $form->getValues(TRUE);
         if ($values['team1_id'] == $values['team2_id']) {
@@ -202,6 +181,7 @@ class FightsPresenter extends BasePresenter {
         $this->updateTableRows($values, $type);
         $this->updateTablePoints($values, $type);
         $this->updateTableGoals($values, $type);
+        $this->flashMessage('Zápas pridaný', 'success');
         $this->redirect('all', $fight->ref('rounds', 'round_id'));
     }
 
@@ -210,27 +190,6 @@ class FightsPresenter extends BasePresenter {
             $form->addError('Zvoľte dva rozdielne tímy.');
             return false;
         }
-
-        $this->fightRow->update($values);
-        $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
-    }
-
-    public function submittedEditThirdForm(Form $form, $values) {
-        FormHelper::changeEmptyToZero($values);
-
-        $score1 = $values['st_third_1'] + $values['nd_third_1'] + $values['th_third_1'];
-        $score2 = $values['st_third_2'] + $values['nd_third_2'] + $values['th_third_2'];
-
-        if ($score1 != $values['score1']) {
-            $form->addError("Pre tím " . $this->team1->name . " nesedí súčet gólov v tretinách s celkovým počtom gólov.");
-            return false;
-        }
-
-        if ($score2 != $values['score2']) {
-            $form->addError("Pre tím " . $this->team2->name . " nesedí súčet gólov v tretinách s celkovým počtom gólov.");
-            return false;
-        }
-
         $this->fightRow->update($values);
         $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
     }
@@ -238,7 +197,7 @@ class FightsPresenter extends BasePresenter {
     public function submittedDeleteForm() {
         $id = $this->fightRow->ref('rounds', 'round_id');
         $this->fightRow->delete();
-        $this->flashMessage('Zápas odstránený.', 'success');
+        $this->flashMessage('Zápas odstránený', 'success');
         $this->redirect('all', $id);
     }
 

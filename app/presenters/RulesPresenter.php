@@ -18,24 +18,26 @@ class RulesPresenter extends BasePresenter {
     /** @var string */
     private $error = "Rule not found!";
 
-    public function renderAll() 
-    {
-        $this->redrawControl('main');
+    public function actionAll() {
+
+    }
+
+    public function renderAll() {
         $this->template->rules = $this->rulesRepository->findByValue('archive_id', null);
+
         $this['breadCrumb']->addLink("Pravidlá a smernice");
+        
         if ($this->user->isLoggedIn()) {
             $this->getComponent('addRuleForm');
         }
     }
 
-    public function actionDelete($id) 
-    {
+    public function actionDelete($id) {
         $this->userIsLogged();
         $this->ruleRow = $this->rulesRepository->findById($id);
     }
 
-    public function renderDelete($id) 
-    {
+    public function renderDelete($id) {
         if (!$this->ruleRow) {
             throw new BadRequestException($this->error);
         }
@@ -43,28 +45,23 @@ class RulesPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
-    public function actionEdit($id) 
-    {
+    public function actionEdit($id) {
         $this->userIsLogged();
         $this->ruleRow = $this->rulesRepository->findById($id);
     }
 
-    public function renderEdit($id) 
-    {
+    public function renderEdit($id) {
         if (!$this->ruleRow) {
             throw new BadRequestException($this->error);
         }
         $this->getComponent('editRuleForm')->setDefaults($this->ruleRow);
     }
 
-    public function actionArchView($id) 
-    {
+    public function actionArchView($id) {
         $this->archRow = $this->archiveRepository->findById($id);
     }
 
-    public function renderArchView($id) 
-    {
-        $this->redrawControl('main');
+    public function renderArchView($id) {
         $this->template->rules = $this->rulesRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
         $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
@@ -72,26 +69,27 @@ class RulesPresenter extends BasePresenter {
         $this['breadCrumb']->addLink("Pravidlá a smernice");
     }
 
-    protected function createComponentAddRuleForm() 
-    {
+    protected function createComponentAddRuleForm() {
         $form = new Form;
+
         $form->addTextArea('rule', 'Text:')
                 ->setAttribute('id', 'ckeditor')
                 ->setRequired("Text je povinné pole.");
+
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = [$this, 'submittedAddRuleForm'];
+
+        $form->onSuccess[] = $this->submittedAddRuleForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditRuleForm() 
-    {
+    protected function createComponentEditRuleForm() {
         $form = new Form;
         $form->addTextArea('rule', 'Text:')
                 ->setAttribute('id', 'ckeditor')
                 ->setRequired("Text je povinné pole.");
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = [$this, 'submittedEditRuleForm'];
+        $form->onSuccess[] = $this->submittedEditRuleForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -103,18 +101,21 @@ class RulesPresenter extends BasePresenter {
         $this->redirect('all');
     }
 
-    public function submittedAddRuleForm(Form $form, $values) {
+    public function submittedAddRuleForm(Form $form) {
+        $this->userIsLogged();
+        $values = $form->getValues();
         $this->rulesRepository->insert($values);
         $this->redirect('all');
     }
 
-    public function submittedEditRuleForm(Form $form, $values) {
+    public function submittedEditRuleForm(Form $form) {
+        $this->userIsLogged();
+        $values = $form->getValues();
         $this->ruleRow->update($values);
         $this->redirect('all');
     }
 
-    public function formCancelled() 
-    {
+    public function formCancelled() {
         $this->redirect('all');
     }
 

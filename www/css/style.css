@@ -172,18 +172,18 @@ main table {
 }
 
 
-body > div >footer {
+body > footer {
     background-color: #286090;
-    color: #fff;
+    color: #FFFFFF;
     padding: 20px;
 }
 
-body > div > footer a {
-    color: #fff;
+body > footer a {
+    color: #ffffff;
 }
 
-body > div > footer a:hover,
-body > div > footer a:focus {
+body > footer a:hover,
+body > footer a:focus {
     color: #cccccc;
     text-decoration: none;
 }
@@ -299,35 +299,24 @@ table.tables tr:nth-child(9) {
     background-color: #FFFFFF;
     color: #286090;
     cursor: pointer;
-    padding: 1em;
+    padding: 15px;
     border-radius: 50px;
 }
 
 #forum article {
-    margin: 2em auto; 
-    padding: 0 2em 2em 2em;
+    margin: 20px auto; 
+    padding: 0 20px 20px 20px;
     font-weight: normal;
 }
 
 #forum button {
-    margin-top: 1em;
+    margin-top: 10px;
 }
 
 #archive figure {
-    padding: 2em;
+    padding: 20px;
 }
 
 #archive figure a {
     text-decoration: none;
-}
-
-#fights ul {
-    padding: 0;
-    line-height: 1em;
-    font-size: 1em;
-}
-
-#fights > div,
-#fights section {
-    margin-bottom: 2em;
 }

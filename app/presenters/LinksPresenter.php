@@ -19,11 +19,11 @@ class LinksPresenter extends BasePresenter {
     /** @var string */
     private $storage = 'images/';
 
-    public function actionAdd() {
+    public function actionCreate() {
         $this->userIsLogged();
     }
 
-    public function renderAdd() {
+    public function renderCreate() {
         $this->getComponent('addLinkForm');
     }
 
@@ -61,7 +61,7 @@ class LinksPresenter extends BasePresenter {
         $form->addCheckbox('sponsor', ' Sponzor');
         $form->addSubmit('save', 'Uložiť');
 
-        $form->onSuccess[] = [$this, 'submittedAddLinkForm'];
+        $form->onSuccess[] = $this->submittedAddLinkForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -85,33 +85,35 @@ class LinksPresenter extends BasePresenter {
 
         if ($link->image) {
             $image = new FileSystem;
-            $image->delete($this->imgFolder . '/' . $link->image);
+            $image->delete($this->storage . $link->image);
         }
 
         $link->delete();
-        $this->redirect('Homepage:default');
+        $this->redirect('all#nav');
     }
 
-    public function submittedAddLinkForm(Form $form, $values) {
+    public function submittedAddLinkForm(Form $form) {
+        $values = $form->getValues();
         $img = $values->image;
 
         if ($img->isOk() && $img->isImage()) {
             $name = $img->getSanitizedName();
-            $img->move($this->imgFolder . '/' . $name);
+            $img->move($this->storage . $name);
             $values->image = $name;
         }
 
         $this->linksRepository->insert($values);
-        $this->redirect('Homepage:default');
+        $this->redirect('all#nav');
     }
 
-    public function submittedEditLinkForm(Form $form, $values) {
+    public function submittedEditLinkForm(Form $form) {
+        $values = $form->getValues();
         $this->linkRow->update($values);
-        $this->redirect('Homepage:default');
+        $this->redirect('all#nav');
     }
 
     public function formCancelled() {
-        $this->redirect('Homepage:default');
+        $this->redirect('all#nav');
     }
 
 }

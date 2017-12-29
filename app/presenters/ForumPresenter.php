@@ -15,11 +15,18 @@ class ForumPresenter extends BasePresenter {
     /** @var string */
     private $error = "Thread not found!";
 
+    public function actionAll() {
+        
+    }
+
     public function renderAll() {
-        $this->redrawControl('main');
-        $this->getComponent("addForm");
-        $this->template->forums = $this->forumRepository->findAll()->order("id DESC");
+        $forumSelection = $this->forumRepository->findAll()->order("id DESC");
+        $this->template->forums = $forumSelection;
         $this['breadCrumb']->addLink("Fórum");
+
+        if (!$this->user->loggedIn) {
+            $this->getComponent("addForm");
+        }
     }
 
     public function actionDelete($id) {

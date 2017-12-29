@@ -15,21 +15,24 @@ class SignPresenter extends BasePresenter {
      * Sign-in form factory.
      * @return Form
      */
-    protected function createComponentSignInForm() 
-    {
+    protected function createComponentSignInForm() {
         $form = new Form;
         $form->addText('username', 'Používateľské meno:')
              ->setRequired('Zadajte používateľské meno.');
+
         $form->addPassword('password', 'Heslo:')
              ->setRequired('Zadaj heslo.');
+
         $form->addSubmit('login', 'Prihlásiť');
-        $form->onSuccess[] = [$this, 'submittedSignInForm'];
+
+        $form->onSuccess[] = $this->submittedSignInForm;
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedSignInForm(Form $form, $values) 
-    {
+    public function submittedSignInForm(Form $form) {
+        $values = $form->values;
+
         try {
             $this->getUser()->login($values->username, $values->password);
             $this->redirect('Homepage:');
@@ -38,8 +41,7 @@ class SignPresenter extends BasePresenter {
         }
     }
 
-    public function actionOut() 
-    {
+    public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený.', 'success');
         $this->redirect('Homepage:');

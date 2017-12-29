@@ -23,13 +23,11 @@ class EventsPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->redrawControl('main');
-        $this->template->events = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
-        $this['breadCrumb']->addLink("Zápasy");
-
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
         }
+        $this->template->events = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
+        $this['breadCrumb']->addLink("Zápasy");
     }
 
     public function actionEdit($id) {

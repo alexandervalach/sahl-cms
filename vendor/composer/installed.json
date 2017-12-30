@@ -17,7 +17,7 @@
         "require": {
             "php": ">=5.3.0"
         },
-        "time": "2016-03-19T14:34:02+00:00",
+        "time": "2016-03-19 14:34:02",
         "bin": [
             "src/tester"
         ],
@@ -83,7 +83,7 @@
             "nette/tester": "^2.0",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-07-10T23:47:08+00:00",
+        "time": "2017-07-10 23:47:08",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -144,7 +144,7 @@
             "nette/tester": "^2.0",
             "tracy/tracy": "^2.4"
         },
-        "time": "2017-07-11T19:28:57+00:00",
+        "time": "2017-07-11 19:28:57",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -207,7 +207,7 @@
             "nette/tester": "^2.0",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-07-14T07:06:27+00:00",
+        "time": "2017-07-14 07:06:27",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -263,7 +263,7 @@
             "nette/tester": "~2.0",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-07-11T18:29:08+00:00",
+        "time": "2017-07-11 18:29:08",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -323,7 +323,7 @@
             "nette/tester": "~2.0",
             "tracy/tracy": "^2.4"
         },
-        "time": "2017-07-11T09:41:59+00:00",
+        "time": "2017-07-11 09:41:59",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -382,7 +382,7 @@
             "nette/tester": "^2.0",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-07-11T08:59:35+00:00",
+        "time": "2017-07-11 08:59:35",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -415,74 +415,6 @@
         "homepage": "https://nette.org"
     },
     {
-        "name": "ipub/visual-paginator",
-        "version": "v1.0.5",
-        "version_normalized": "1.0.5.0",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/iPublikuj/visual-paginator.git",
-            "reference": "3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/iPublikuj/visual-paginator/zipball/3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962",
-            "reference": "3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962",
-            "shasum": ""
-        },
-        "require": {
-            "latte/latte": "~2.2",
-            "nette/application": "~2.2",
-            "nette/di": "~2.2",
-            "nette/utils": "~2.2",
-            "php": ">=5.4.0"
-        },
-        "require-dev": {
-            "janmarek/mockista": "@dev",
-            "nette/bootstrap": "~2.2",
-            "nette/forms": "~2.2",
-            "nette/mail": "~2.2",
-            "nette/robot-loader": "~2.2",
-            "nette/safe-stream": "~2.2",
-            "nette/tester": "@dev",
-            "tracy/tracy": "@dev"
-        },
-        "time": "2017-07-12T09:42:19+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "IPub\\VisualPaginator\\": "src/"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "BSD-3-Clause",
-            "GPL-2.0",
-            "GPL-3.0"
-        ],
-        "authors": [
-            {
-                "name": "David Grudl",
-                "email": "david@grudl.com"
-            },
-            {
-                "name": "iPublikuj:cms",
-                "email": "info@ipublikuj.eu",
-                "homepage": "http://www.ipublikuj.eu/"
-            }
-        ],
-        "description": "Visual paginator for Nette Framework",
-        "homepage": "https://github.com/iPublikuj/visual-paginator",
-        "keywords": [
-            "ipub",
-            "ipublikuj",
-            "nette",
-            "paginator",
-            "paging",
-            "tools"
-        ]
-    },
-    {
         "name": "nette/database",
         "version": "v2.4.4",
         "version_normalized": "2.4.4.0",
@@ -512,7 +444,7 @@
             "nette/tester": "^2.0",
             "tracy/tracy": "^2.4"
         },
-        "time": "2017-07-27T10:58:17+00:00",
+        "time": "2017-07-27 10:58:17",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -587,7 +519,7 @@
         "suggest": {
             "ext-fileinfo": "to detect type of attached files"
         },
-        "time": "2017-07-13T16:51:28+00:00",
+        "time": "2017-07-13 16:51:28",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -648,7 +580,7 @@
             "nette/tester": "~2.0",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-07-11T00:21:10+00:00",
+        "time": "2017-07-11 00:21:10",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -705,7 +637,7 @@
             "nette/tester": "~1.7",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-07-13T18:20:37+00:00",
+        "time": "2017-07-13 18:20:37",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -772,7 +704,7 @@
             "nette/utils": "^2.2",
             "tracy/tracy": "^2.2"
         },
-        "time": "2017-07-14T07:25:32+00:00",
+        "time": "2017-07-14 07:25:32",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -843,7 +775,7 @@
             "nette/utils": "^2.4",
             "tracy/tracy": "^2.4"
         },
-        "time": "2016-05-03T15:59:52+00:00",
+        "time": "2016-05-03 15:59:52",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -916,7 +848,7 @@
             "ext-mbstring": "to use filters like lower, upper, capitalize, ...",
             "nette/utils": "to use filter |webalize"
         },
-        "time": "2017-08-29T08:24:52+00:00",
+        "time": "2017-08-29 08:24:52",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -991,7 +923,7 @@
             "ext-mbstring": "to use Strings::lower() etc...",
             "ext-xml": "to use Strings::length() etc. when mbstring is not available"
         },
-        "time": "2017-08-20T17:32:29+00:00",
+        "time": "2017-08-20 17:32:29",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1070,7 +1002,7 @@
             "ext-fileinfo": "to detect type of uploaded files",
             "nette/security": "allows use Nette\\Http\\UserStorage"
         },
-        "time": "2017-08-24T21:04:00+00:00",
+        "time": "2017-08-24 21:04:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1155,7 +1087,7 @@
             "latte/latte": "Allows using Latte in templates",
             "nette/forms": "Allows to use Nette\\Application\\UI\\Form"
         },
-        "time": "2017-08-24T21:30:36+00:00",
+        "time": "2017-08-24 21:30:36",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1243,7 +1175,7 @@
             "nette/robot-loader": "to use Configurator::createRobotLoader()",
             "tracy/tracy": "to use Configurator::enableTracy()"
         },
-        "time": "2017-08-20T17:36:59+00:00",
+        "time": "2017-08-20 17:36:59",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1310,7 +1242,7 @@
             "nette/tester": "~2.0",
             "tracy/tracy": "^2.4"
         },
-        "time": "2017-08-25T12:45:48+00:00",
+        "time": "2017-08-25 12:45:48",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1382,7 +1314,7 @@
         "suggest": {
             "ext-pdo_sqlite": "to use SQLiteStorage or SQLiteJournal"
         },
-        "time": "2017-08-30T12:12:25+00:00",
+        "time": "2017-08-30 12:12:25",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1451,7 +1383,7 @@
             "nette/tester": "^2.0",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-08-31T22:42:00+00:00",
+        "time": "2017-08-31 22:42:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1517,7 +1449,7 @@
             "nette/tester": "~1.7",
             "tracy/tracy": "^2.3"
         },
-        "time": "2017-09-08T14:16:06+00:00",
+        "time": "2017-09-08 14:16:06",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1576,7 +1508,7 @@
         "suggest": {
             "https://nette.org/donate": "Please support Tracy via a donation"
         },
-        "time": "2017-10-04T18:43:42+00:00",
+        "time": "2017-10-04 18:43:42",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1633,7 +1565,7 @@
             "reference": "f1982e3b59d1435e70c0f58a78d3b417a4887ccd",
             "shasum": ""
         },
-        "time": "2017-08-30T07:41:05+00:00",
+        "time": "2017-08-30 07:41:05",
         "type": "library",
         "installation-source": "dist",
         "notification-url": "https://packagist.org/downloads/",
@@ -1667,7 +1599,7 @@
         "replace": {
             "twitter/bootstrap": "self.version"
         },
-        "time": "2016-07-25T15:51:55+00:00",
+        "time": "2016-07-25 15:51:55",
         "type": "library",
         "extra": {
             "branch-alias": {

@@ -4,7 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b507c0cc87b02c16a2e36d4cec228c6a",
+    "hash": "845849776a2f4c11f4759fc8ea425f3f",
+    "content-hash": "d47755dd1ae2d5edec5f67d4f8080b4d",
     "packages": [
         {
             "name": "dg/adminer-custom",
@@ -33,73 +34,7 @@
                 "postgresql",
                 "sqlite"
             ],
-            "time": "2017-08-30T07:41:05+00:00"
-        },
-        {
-            "name": "ipub/visual-paginator",
-            "version": "v1.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/iPublikuj/visual-paginator.git",
-                "reference": "3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/iPublikuj/visual-paginator/zipball/3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962",
-                "reference": "3e5d51fdf80feca5cf4e2c7413a90a6ff46a2962",
-                "shasum": ""
-            },
-            "require": {
-                "latte/latte": "~2.2",
-                "nette/application": "~2.2",
-                "nette/di": "~2.2",
-                "nette/utils": "~2.2",
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "janmarek/mockista": "@dev",
-                "nette/bootstrap": "~2.2",
-                "nette/forms": "~2.2",
-                "nette/mail": "~2.2",
-                "nette/robot-loader": "~2.2",
-                "nette/safe-stream": "~2.2",
-                "nette/tester": "@dev",
-                "tracy/tracy": "@dev"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "IPub\\VisualPaginator\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause",
-                "GPL-2.0",
-                "GPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "David Grudl",
-                    "email": "david@grudl.com"
-                },
-                {
-                    "name": "iPublikuj:cms",
-                    "email": "info@ipublikuj.eu",
-                    "homepage": "http://www.ipublikuj.eu/"
-                }
-            ],
-            "description": "Visual paginator for Nette Framework",
-            "homepage": "https://github.com/iPublikuj/visual-paginator",
-            "keywords": [
-                "ipub",
-                "ipublikuj",
-                "nette",
-                "paginator",
-                "paging",
-                "tools"
-            ],
-            "time": "2017-07-12T09:42:19+00:00"
+            "time": "2017-08-30 07:41:05"
         },
         {
             "name": "latte/latte",
@@ -171,7 +106,7 @@
                 "template",
                 "twig"
             ],
-            "time": "2017-08-29T08:24:52+00:00"
+            "time": "2017-08-29 08:24:52"
         },
         {
             "name": "nette/application",
@@ -258,7 +193,7 @@
                 "routing",
                 "seo"
             ],
-            "time": "2017-08-24T21:30:36+00:00"
+            "time": "2017-08-24 21:30:36"
         },
         {
             "name": "nette/bootstrap",
@@ -334,7 +269,7 @@
                 "configurator",
                 "nette"
             ],
-            "time": "2017-08-20T17:36:59+00:00"
+            "time": "2017-08-20 17:36:59"
         },
         {
             "name": "nette/caching",
@@ -403,7 +338,7 @@
                 "nette",
                 "sqlite"
             ],
-            "time": "2017-08-30T12:12:25+00:00"
+            "time": "2017-08-30 12:12:25"
         },
         {
             "name": "nette/component-model",
@@ -460,7 +395,7 @@
             ],
             "description": "Nette Component Model",
             "homepage": "https://nette.org",
-            "time": "2017-07-11T08:59:35+00:00"
+            "time": "2017-07-11 08:59:35"
         },
         {
             "name": "nette/database",
@@ -532,7 +467,7 @@
                 "queries",
                 "sqlite"
             ],
-            "time": "2017-07-27T10:58:17+00:00"
+            "time": "2017-07-27 10:58:17"
         },
         {
             "name": "nette/deprecated",
@@ -592,7 +527,7 @@
             "keywords": [
                 "nette"
             ],
-            "time": "2017-07-14T07:25:32+00:00"
+            "time": "2017-07-14 07:25:32"
         },
         {
             "name": "nette/di",
@@ -661,7 +596,7 @@
                 "nette",
                 "static"
             ],
-            "time": "2017-08-31T22:42:00+00:00"
+            "time": "2017-08-31 22:42:00"
         },
         {
             "name": "nette/finder",
@@ -717,7 +652,7 @@
             ],
             "description": "Nette Finder: Files Searching",
             "homepage": "https://nette.org",
-            "time": "2017-07-10T23:47:08+00:00"
+            "time": "2017-07-10 23:47:08"
         },
         {
             "name": "nette/forms",
@@ -785,7 +720,7 @@
                 "nette",
                 "validation"
             ],
-            "time": "2017-08-25T12:45:48+00:00"
+            "time": "2017-08-25 12:45:48"
         },
         {
             "name": "nette/http",
@@ -857,7 +792,7 @@
                 "session",
                 "url"
             ],
-            "time": "2017-08-24T21:04:00+00:00"
+            "time": "2017-08-24 21:04:00"
         },
         {
             "name": "nette/mail",
@@ -918,7 +853,7 @@
             ],
             "description": "Nette Mail: Sending E-mails",
             "homepage": "https://nette.org",
-            "time": "2017-07-13T16:51:28+00:00"
+            "time": "2017-07-13 16:51:28"
         },
         {
             "name": "nette/neon",
@@ -972,7 +907,7 @@
             ],
             "description": "Nette NEON: parser & generator for Nette Object Notation",
             "homepage": "http://ne-on.org",
-            "time": "2017-07-11T18:29:08+00:00"
+            "time": "2017-07-11 18:29:08"
         },
         {
             "name": "nette/nette",
@@ -1049,7 +984,7 @@
                 "mvc",
                 "templating"
             ],
-            "time": "2016-05-03T15:59:52+00:00"
+            "time": "2016-05-03 15:59:52"
         },
         {
             "name": "nette/php-generator",
@@ -1105,7 +1040,7 @@
             ],
             "description": "Nette PHP Generator",
             "homepage": "https://nette.org",
-            "time": "2017-07-14T07:06:27+00:00"
+            "time": "2017-07-14 07:06:27"
         },
         {
             "name": "nette/reflection",
@@ -1169,7 +1104,7 @@
                 "nette",
                 "reflection"
             ],
-            "time": "2017-07-11T19:28:57+00:00"
+            "time": "2017-07-11 19:28:57"
         },
         {
             "name": "nette/robot-loader",
@@ -1228,7 +1163,7 @@
             ],
             "description": "Nette RobotLoader: comfortable autoloading",
             "homepage": "https://nette.org",
-            "time": "2017-07-11T00:21:10+00:00"
+            "time": "2017-07-11 00:21:10"
         },
         {
             "name": "nette/safe-stream",
@@ -1289,7 +1224,7 @@
                 "nette",
                 "safe"
             ],
-            "time": "2017-07-13T18:20:37+00:00"
+            "time": "2017-07-13 18:20:37"
         },
         {
             "name": "nette/security",
@@ -1347,7 +1282,7 @@
             ],
             "description": "Nette Security: Access Control Component",
             "homepage": "https://nette.org",
-            "time": "2017-07-11T09:41:59+00:00"
+            "time": "2017-07-11 09:41:59"
         },
         {
             "name": "nette/tokenizer",
@@ -1402,7 +1337,7 @@
             ],
             "description": "Nette Tokenizer",
             "homepage": "https://nette.org",
-            "time": "2017-09-08T14:16:06+00:00"
+            "time": "2017-09-08 14:16:06"
         },
         {
             "name": "nette/utils",
@@ -1481,7 +1416,7 @@
                 "utility",
                 "validation"
             ],
-            "time": "2017-08-20T17:32:29+00:00"
+            "time": "2017-08-20 17:32:29"
         },
         {
             "name": "tracy/tracy",
@@ -1548,7 +1483,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2017-10-04T18:43:42+00:00"
+            "time": "2017-10-04 18:43:42"
         },
         {
             "name": "twbs/bootstrap",
@@ -1599,7 +1534,7 @@
                 "responsive",
                 "web"
             ],
-            "time": "2016-07-25T15:51:55+00:00"
+            "time": "2016-07-25 15:51:55"
         }
     ],
     "packages-dev": [
@@ -1657,7 +1592,7 @@
                 "testing",
                 "unit"
             ],
-            "time": "2016-03-19T14:34:02+00:00"
+            "time": "2016-03-19 14:34:02"
         }
     ],
     "aliases": [],

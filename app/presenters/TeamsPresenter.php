@@ -19,12 +19,8 @@ class TeamsPresenter extends BasePresenter {
     /** @var string */
     private $error = "Team not found";
 
-    public function actionAll() {
-
-    }
-
     public function renderAll() {
-        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC");
+        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC"); 
         $this['breadCrumb']->addLink("Tímy");
 
         if ($this->user->isLoggedIn()) {
@@ -32,40 +28,31 @@ class TeamsPresenter extends BasePresenter {
         }
     }
 
-    public function actionDelete($id) {
-        $this->userIsLogged();
+    public function actionView($id) {
         $this->teamRow = $this->teamsRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderView($id) {
         if (!$this->teamRow) {
             throw new BadRequetsException($this->error);
         }
+
+        $this->template->players = $this->playersRepository->findByValue('team_id', $id)
+                                        ->where('type_id != ?', 2)->where('archive_id', null);
+        $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
+                                        ->where('type_id', 2)->where('archive_id', null);
         $this->template->team = $this->teamRow;
-        $this->getComponent('deleteForm');
-    }
+        $this->template->imgFolder = $this->imgFolder;
+        $this->template->i = 0;
+        $this->template->j = 0;
+        $this['breadCrumb']->addLink("Tímy", $this->link("Teams:all"));
+        $this['breadCrumb']->addLink($this->teamRow->name);
 
-    public function actionEdit($id) {
-        $this->userIsLogged();
-        $this->teamRow = $this->teamsRepository->findById($id);
-    }
-
-    public function renderEdit($id) {
-        if (!$this->teamRow)
-            throw new BadRequetsException($this->error);
-
-        $this->getComponent('editTeamForm')->setDefaults($this->teamRow);
-        $this->template->team = $this->teamRow;
-    }
-
-    public function actionUpload($id) {
-        $this->userIsLogged();
-        $this->teamRow = $this->teamsRepository->findById($id);
-    }
-
-    public function renderUpload($id) {
-        $this->template->team = $this->teamRow;
-        $this->getComponent('uploadForm');
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent('editForm')->setDefaults($this->teamRow);
+            $this->getComponent('uploadForm');
+            $this->getComponent('deleteForm');
+        }   
     }
 
     public function actionArchView($id) {
@@ -83,82 +70,89 @@ class TeamsPresenter extends BasePresenter {
 
     protected function createComponentUploadForm() {
         $form = new Form;
-        $form->addUpload('image', 'Nahraj obrázok');
-        $form->addSubmit('upload', 'Uložiť');
-        $form->onSuccess[] = $this->submittedUploadForm;
+        $form->addUpload('image', 'Nahrajte obrázok');
+        $form->addSubmit('upload', 'Nastaviť obrázok');
+        $form->onSuccess[] = [$this, 'submittedUploadForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     protected function createComponentAddForm() {
         $form = new Form;
-
         $form->addText('name', 'Tím: ')
              ->setRequired('Názov tímu je povinné pole.')
              ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
-        $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedAddForm;
+        $form->addSubmit('save', 'Pridať');
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditTeamForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
-
         $form->addText('name', 'Tím: ')
-                ->setRequired('Názov tímu je povinné pole.')
-                ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
-
-        $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedEditTeamForm;
+             ->setRequired('Názov tímu je povinné pole.')
+             ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
+        $form->addSubmit('save', 'Upraviť')
+             ->setAttribute('class', 'btn btn-large btn-success');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedUploadForm(Form $form) {
-        $values = $form->getValues();
+    protected function createComponentDeleteForm() {
+        $form = new Form;
+        $form->addSubmit('delete', 'Odstrániť')
+             ->setAttribute('class', 'btn btn-large btn-danger');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
+        $form->addProtection();
+        $form->onSuccess[] = [$this, 'submittedDeleteForm'];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
+    public function submittedUploadForm(Form $form, $values) {
         $img = $values->image;
 
         if ($img->isOk() AND $img->isImage()) {
-            $name = $img->getSanitizedName();
-            $img->move($this->storage . $name);
-            $data = array('image' => $name);
+            $img_name = $img->getSanitizedName();
+            $img->move($this->imgFolder . '/' . $img_name);
+            $data = array('image' => $img_name);
             $this->teamRow->update($data);
+            $this->flashMessage('Obrázok bol pridaný', 'success');
+        } else {
+            $this->flashMessage('Nastala chyba. Skúste znova', 'danger');
         }
-        $this->redirect('Player:view', $this->teamRow);
+
+        $this->redirect('view', $this->teamRow);
     }
 
     public function submittedDeleteForm() {
-        $team = $this->teamRow;
-        $players = $team->related('players');
-        $img = new FileSystem;
-
+        $players = $this->teamRow->related('players');
         foreach ($players as $player) {
             $player->delete();
         }
-        
-        $img->delete( $this->storage . $team->image );
-        $team->delete();
-        $this->flashMessage('Tím bol odstránený aj so všetkými hráčmi.', 'success');
+        FileSystem::delete($this->imgFolder . '/' . $this->teamRow->image);
+        $this->teamRow->delete();
+        $this->flashMessage('Tím bol odstránený', 'success');
         $this->redirect('all');
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddForm(Form $form, $values) {
         $this->teamsRepository->insert($values);
+        $this->flashMessage('Tím bol pridaný', 'success');
         $this->redirect('all');
     }
 
-    public function submittedEditTeamForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditForm(Form $form, $values) {
         $this->teamRow->update($values);
-        $this->redirect('all');
-    }
-
-    public function formCancelled() {
-        $this->redirect('all');
+        $this->flashMessage('Tím bol upravený', 'success');
+        $this->redirect('view', $this->teamRow);
     }
 
 }

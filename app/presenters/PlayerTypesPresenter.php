@@ -96,22 +96,18 @@ class PlayerTypesPresenter extends BasePresenter {
         return $form;
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddForm(Form $form, $values) {
         $this->playerTypesRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
-    public function submittedEditForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditForm(Form $form, $values) {
         $this->playerTypeRow->update($values);
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function submittedRemoveForm() {
-        $this->userIsLogged();
         $players = $this->playerTypeRow->related('player');
-        
         $data = array('type_id' => 1);
         
         foreach($players as $player) {
@@ -119,11 +115,11 @@ class PlayerTypesPresenter extends BasePresenter {
         }
         
         $this->playerTypeRow->delete();
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#primary');
+        $this->redirect('all');
     }
 
 }

@@ -8,38 +8,20 @@
     </button>
 </div>
 
-<section class='table-responsive'>
+<section n:if="$teams->count()" class='table-responsive'>
     <table class='table'>
         <thead>
             <tr>
-                <th>P.č.</th>
-                <th>Názov</th>
-                <th n:if="$user->loggedIn" colspan="3">&nbsp;</th>
+                <th width="5%">P.č.</th>
+                <th width="95%">Názov</th>
             </tr>
         </thead>
         <tbody n:foreach='$teams as $team'>
             <tr>
                 <td>{$iterator->counter}.</td>
                 <td>
-                    <a n:href='Player:view, $team'>{$team->name}</a>
+                    <a n:href='view, $team'>{$team->name}</a>
                 </td>
-                {if $user->loggedIn}
-                    <td>
-                        <a n:href='edit, $team' class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a n:href='delete, $team' class="text-danger">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a n:href='upload, $team' class="text-primary">
-                            <span class="glyphicon glyphicon-picture"></span>
-                        </a>
-                    </td>
-                {/if}
             </tr>
         </tbody>
     </table>

@@ -19,7 +19,7 @@ class FightsPresenter extends BasePresenter {
     private $archRow;
 
     /** @var string */
-    private $error = "Match not found!";
+    private $error = "Fight not found!";
 
     /** @var ActiveRow */
     private $team1;

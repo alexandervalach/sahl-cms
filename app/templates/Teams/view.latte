@@ -2,6 +2,18 @@
 
 {control breadCrumb}
 
+<div n:if="$user->loggedIn" style="margin-bottom: 20px;">
+    <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
+        Upraviť
+    </button>
+    <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
+        Odstrániť
+    </button>
+    <button type="button" class="btn btn-large btn-primary" data-target="#upload" data-toggle="modal">
+        Nastaviť obrázok    
+    </button>
+</div>
+
 <section id="players">
     {if ($team->image) and (file_exists($imgFolder . '/' . $team->image))}
         <figure class="clearfix" style="margin-bottom: 20px">
@@ -10,7 +22,7 @@
         </figure>
     {/if}
 
-    <div n:if="$team->name" class='table-responsive'>
+    <div n:if="$players->count()" class='table-responsive'>
         <table class='table'>
             <thead>
                 <tr>
@@ -93,5 +105,49 @@
         </table>
     </div>
 </section>
+
+{if $user->loggedIn}
+    <div id="edit" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Upraviť tím</h3>
+                </div>
+                <div class="modal-body">
+                    {control editForm}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="remove" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Odstrániť tím</h3>
+                </div>
+                <div class="modal-body">
+                    {control deleteForm}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="upload" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Nastaviť obrázok tímu</h3>
+                </div>
+                <div class="modal-body">
+                    {control uploadForm}
+                </div>
+            </div>
+        </div>
+    </div>
+{/if}
 
 {/block}

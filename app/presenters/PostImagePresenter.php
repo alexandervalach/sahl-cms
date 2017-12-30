@@ -34,7 +34,6 @@ class PostImagePresenter extends BasePresenter {
         
         $this['breadCrumb']->addLink($this->postRow->title, $this->link("Post:view", $this->postRow));
         $this['breadCrumb']->addLink("Pridať obrázky");
-
         $this->getComponent('addImageForm');
         $this->template->post = $this->postRow;
     }

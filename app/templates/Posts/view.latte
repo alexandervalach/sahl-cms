@@ -8,7 +8,9 @@
             Upraviť
         </button>
         
-        <a n:href="PostImages:add $post" class='btn btn-large btn-primary'>Pridať obrázky</a>
+        <button type="button" class='btn btn-large btn-primary' data-target="#upload" data-toggle="modal">
+            Pridať obrázky
+        </button>
 
         <button type="button" class='btn btn-large btn-danger' data-target="#remove" data-toggle="modal">
             Odstrániť
@@ -45,10 +47,10 @@
                    alt="{$img_path}" class='img img-responsive' />
             {/if}
             <figcaption n:if="$user->loggedIn" class="text-center">
-                <a n:href="PostImages:delete, $post, $img" class='btn btn-large btn-danger'>
+                <a n:href="removeImg, $img->post_id, $img" class='btn btn-large btn-danger'>
                     Odstrániť
                 </a>
-                <a n:href="PostImages:Thumbnail, $post, $img" class='btn btn-large btn-primary'>
+                <a n:href="setImg, $img->post_id, $img" class='btn btn-large btn-primary'>
                     Nastaviť ako miniatúru
                 </a>
             </figcaption>   
@@ -57,6 +59,7 @@
 </section>
 
 <section id="modals" n:if="$user->loggedIn">
+
     <div id="edit" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -70,6 +73,7 @@
             </div>
         </div>
     </div>
+
     <div id="remove" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -84,6 +88,21 @@
             </div>
         </div>
     </div>
+
+    <div id="upload" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Pridať obrázky</h3>
+                </div>
+                <div class="modal-body">
+                    {control addImgForm}
+                </div>
+            </div>
+        </div>
+    </div>
+
 </section>
 
 {/block}

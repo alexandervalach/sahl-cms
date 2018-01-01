@@ -87,3 +87,8 @@
 {/if}
 
 {/block}
+
+{block scripts}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/gallery.js"></script>
+{/block}

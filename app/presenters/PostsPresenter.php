@@ -13,6 +13,9 @@ class PostsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $postRow;
 
+    /** @var ActiveRow */
+    private $imgRow;
+
     /** @var string */
     private $error = "Post not found";
 
@@ -32,8 +35,9 @@ class PostsPresenter extends BasePresenter {
         $this['breadCrumb']->addLink($this->postRow->title);
 
         if ($this->user->isLoggedIn()) {
-            $this->getComponent("editForm")->setDefaults($this->postRow);
-            $this->getComponent("removeForm");
+            $this->getComponent('editForm')->setDefaults($this->postRow);
+            $this->getComponent('removeForm');
+            $this->getComponent('addImgForm');
         }
     }
 
@@ -43,6 +47,24 @@ class PostsPresenter extends BasePresenter {
 
     public function renderAdd() {
         $this->getComponent('addForm');
+    }
+
+    public function actionSetImg($post_id, $id) {
+        $this->imgRow = $this->postImagesRepository->findById($id);
+        $this->postRow = $this->postsRepository->findById($post_id);
+        if (!$this->imgRow) {
+            throw new BadRequestException("Image not found");
+        }
+        $this->submittedSetImgForm();
+    }
+
+    public function actionRemoveImg($post_id, $id) {
+        $this->imgRow = $this->postImagesRepository->findById($id);
+        $this->postRow = $this->postsRepository->findById($post_id);
+        if (!$this->imgRow) {
+            throw new BadRequestException("Image not found");
+        }
+        $this->submittedRemoveImgForm();
     }
 
     protected function createComponentAddForm() {
@@ -82,6 +104,15 @@ class PostsPresenter extends BasePresenter {
         return $form;
     }
 
+    protected function createComponentAddImgForm() {
+        $form = new Form;
+        $form->addMultiUpload('images', 'Obrázok:');
+        $form->addSubmit('upload', 'Nahrať');
+        $form->onSuccess[] = [$this, 'submittedAddImgForm'];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
     public function submittedAddForm(Form $form, $values) {
         $post = $this->postsRepository->insert($values);
         $this->flashMessage('Príspevok bol pridaný', 'success');
@@ -105,6 +136,35 @@ class PostsPresenter extends BasePresenter {
         $this->postRow->delete();
         $this->flashMessage('Príspevok bol odstránený', 'success');
         $this->redirect('Homepage:');
+    }
+
+    public function submittedSetImgForm() {
+        $values['thumbnail'] = $this->imgRow->name;
+        $this->postRow->update($values);
+        $this->flashMessage('Miniatúra bola nastavená', 'success');
+        $this->redirect('Posts:view', $this->postRow);
+    }
+
+    public function submittedRemoveImgForm() {
+        FileSystem::delete($this->imgFolder . "/" . $this->imgRow->name);
+        $this->imgRow->delete();
+        $this->flashMessage('Obrázok bol odstránený', 'success');
+        $this->redirect('Posts:view', $this->postRow);
+    }
+
+    public function submittedAddImgForm(Form $form, $values) {
+        foreach ($values['images'] as $img) {
+            $name = strtolower($img->getSanitizedName());
+
+            if ($img->isOk() AND $img->isImage()) {
+                $img->move($this->imgFolder . '/' . $name);
+                $data['name'] = $name;
+                $data['post_id'] = $this->postRow;
+                $this->postImagesRepository->insert($data);
+            }
+        }
+        $this->flashMessage('Obrázky boli pridané', 'success');
+        $this->redirect('Posts:view', $this->postRow);
     }
 
 }

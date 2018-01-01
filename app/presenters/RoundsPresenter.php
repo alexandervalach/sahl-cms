@@ -16,15 +16,14 @@ class RoundsPresenter extends BasePresenter {
     private $archRow;
 
     /** @var string */
-    private $error = "Round not found!";
+    private $error = "Round not found";
 
     public function renderAll() {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', null);
-        
         $this['breadCrumb']->addLink("Kolá");
 
-        if ($this->user->isLoggedIn()) {
-            $this->getComponent('addRoundForm');
+        if ($this->user->loggedIn) {
+            $this->getComponent('addForm');
         }
     }
 
@@ -33,9 +32,8 @@ class RoundsPresenter extends BasePresenter {
     }
 
     public function renderView($id) {
-
         if (!$this->roundRow) {
-            throw new BadRequestException("Round not found.");
+            throw new BadRequestException($this->error);
         }
 
         $i = 0;
@@ -64,41 +62,14 @@ class RoundsPresenter extends BasePresenter {
         $this->template->fights = $fights;
         $this->template->fight_data = $fight_data;
         $this->template->i = 0;
-        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
+        $this->template->round = $this->roundRow;
+        $this['breadCrumb']->addLink("Kolá", $this->link("Rounds:all"));
         $this['breadCrumb']->addLink($this->roundRow->name);
 
-        if ($this->user->isLoggedIn()) {
-            $this->getComponent('addForm');
+        if ($this->user->loggedIn) {
+            $this->getComponent('editForm')->setDefaults($this->roundRow);
+            $this->getComponent('removeForm');
         }
-
-        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
-        $this['breadCrumb']->addLink($this->roundRow->name);
-    }
-
-    public function actionEdit($id) {
-        $this->userIsLogged();
-        $this->roundRow = $this->roundsRepository->findById($id);
-    }
-
-    public function renderEdit($id) {
-        if (!$this->roundRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->round = $this->roundRow;
-        $this->getComponent('editRoundForm')->setDefaults($this->roundRow);
-    }
-
-    public function actionDelete($id) {
-        $this->userIsLogged();
-        $this->roundRow = $this->roundsRepository->findById($id);
-    }
-
-    public function renderDelete($id) {
-        if (!$this->roundRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->round = $this->roundRow;
-        $this->getComponent('deleteForm');
     }
 
     public function actionArchView($id) {
@@ -108,60 +79,66 @@ class RoundsPresenter extends BasePresenter {
     public function renderArchView($id) {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
-        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
         $this['breadCrumb']->addLink("Kolá");
     }
 
-    protected function createComponentAddRoundForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::FILLED, "Opa, zabudli ste vyplniť názov kola");
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedAddRoundForm;
+             ->addRule(Form::FILLED, "Opa, zabudli ste vyplniť názov kola");
+        $form->addSubmit('add', 'Pridať');
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditRoundForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::MAX_LENGTH, "Dĺžka názvu môže byť len 50 znakov", 50)
-                ->setRequired("Názov je povinné pole");
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedEditRoundForm;
+             ->addRule(Form::MAX_LENGTH, "Dĺžka názvu môže byť len 50 znakov", 50)
+             ->setRequired("Názov je povinné pole");
+        $form->addSubmit('edit', 'Upraviť')
+             ->setAttribute('class', 'btn btn-large btn-success');
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddRoundForm(Form $form) {
-        $this->userIsLogged();
-        $values = $form->getValues();
+    protected function createComponentRemoveForm() {
+        $form = new Form;
+        $form->addSubmit('remove', 'Odstrániť')
+             ->setAttribute('class', 'btn btn-large btn-danger');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'close');
+        $form->onSuccess[] = [$this, 'submittedRemoveForm'];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
+    public function submittedAddForm(Form $form, $values) {
         $this->roundsRepository->insert($values);
+        $this->flashMessage('Kolo bolo pridané', 'success');
         $this->redirect('all');
     }
 
-    public function submittedEditRoundForm(Form $form) {
-        $this->userIsLogged();
-        $values = $form->getValues();
+    public function submittedEditForm(Form $form, $values) {
         $this->roundRow->update($values);
-        $this->redirect('all');
+        $this->flashMessage('Kolo bolo upravené', 'success');
+        $this->redirect('view', $this->roundRow);
     }
 
-    public function submittedDeleteForm() {
-        $this->userIsLogged();
+    public function submittedRemoveForm() {
         $fights = $this->roundRow->related('fights');
-        /* Odstráni všetky zápasy daného kola */
+
         foreach ($fights as $fight) {
             $fight->delete();
         }
+
         $this->roundRow->delete();
-        $this->flashMessage('Kolo bolo odstránené.', 'success');
+        $this->flashMessage('Kolo bolo odstránené', 'success');
         $this->redirect('all');
     }
-
-    public function formCancelled() {
-        $this->redirect('all');
-    }
-
 }

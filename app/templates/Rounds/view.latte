@@ -19,13 +19,13 @@
 <div id="fights">
     <section n:foreach="$fights as $fight" class="content text-center">
         <div n:if="$user->loggedIn" class="clearfix">
-            <a class="btn btn-large btn-success" n:href="edit $fight">
+            <a class="btn btn-large btn-success" n:href="Fights:edit $fight">
                 Upraviť zápas
             </a>
             <a class="btn btn-large btn-default" n:href="Goals:view $fight">
                 Zobraziť góly
             </a>
-            <a class="btn btn-large btn-danger" n:href="delete $fight">
+            <a class="btn btn-large btn-danger" n:href="Fights:delete $fight">
                 Odstrániť
             </a>
         </div>

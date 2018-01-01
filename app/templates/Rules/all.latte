@@ -8,34 +8,24 @@
     </div>
     
     <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
-        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
-            Pridať
+        <button type="button" class="btn btn-large btn-success" data-toggle="modal" data-target="#edit">
+            Upraviť
         </button>
     </div>
 
-    <article n:foreach="$rules as $rule">
+    <article>
         <main>
             {$rule->rule|noescape}
         </main>
-
-        <footer n:if="$user->loggedIn">
-            <a n:href="edit, $rule" class="btn btn-large btn-success">
-                Upraviť
-            </a>
-            <a n:href="delete, $rule" class="btn btn-large btn-danger">
-                Odstrániť
-            </a>
-        </footer>
-
     </article>
 </section>
 
-<div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
+<div n:if="$user->loggedIn" id="edit" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Pridať pravidlo</h3>
+                <h3 class="modal-title">Upraviť pravidlá a smernice</h3>
             </div>
             <div class="modal-body">
                 <div class="alert alert-info">
@@ -43,8 +33,17 @@
                         TIP: Pri kopírovaní textu, použite skratku Ctrl+Shift+V na prilepenie.
                     </strong>
                 </div>
-                {control addRuleForm}
+                {control editForm}
             </div>
         </div>
     </div>
 </div>
+
+{block scripts}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('ckeditor');
+    </script>
+{/block}
+

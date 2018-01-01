@@ -19,9 +19,6 @@ class PostImagesPresenter extends BasePresenter {
     /** @var string */
     private $error = "Image not found!";
 
-    /** @var string */
-    private $storage = "images/";
-
     public function actionAdd($id) {
         $this->userIsLogged();
         $this->postRow = $this->postsRepository->findById($id);
@@ -29,10 +26,10 @@ class PostImagesPresenter extends BasePresenter {
 
     public function renderAdd($id) {
         if (!$this->postRow) {
-            throw new BadRequestException("Post not found.");
+            throw new BadRequestException("Post not found");
         }
         
-        $this['breadCrumb']->addLink($this->postRow->title, $this->link("Post:view", $this->postRow));
+        $this['breadCrumb']->addLink($this->postRow->title, $this->link("Posts:view", $this->postRow));
         $this['breadCrumb']->addLink("Pridať obrázky");
         $this->getComponent('addImageForm');
         $this->template->post = $this->postRow;
@@ -69,25 +66,19 @@ class PostImagesPresenter extends BasePresenter {
         $form->addMultiUpload('images', 'Obrázok:');
         $form->addSubmit('upload', 'Nahrať');
         $form->onSuccess[] = $this->submittedImageForm;
-        $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedDeleteForm() {
-        $img = $this->imgRow;
-        $post = $this->postRow;
-        $id = $img->posts_id;
-
-        if ($post->thumbnail == $img->name) {
-            $post->update(array('thumbnail' => 'sahl.jpg'));
+        if ($this->postRow->thumbnail == $this->imgRow->name) {
+            $postRow->update(array('thumbnail' => 'sahl.jpg'));
         }
 
-        $image = new FileSystem;
-        $image->delete($this->storage . $img->name);
-        $img->delete();
-        $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('Post:view', $id);
+        FileSystem::delete($this->imgFolder . '/' . $this->imgRow->name);
+        $this->imgRow->delete();
+        $this->flashMessage('Obrázok bol odstránený.', 'success');
+        $this->redirect('Posts:view', $this->postRow);
     }
 
     public function submittedSetThumbnailForm() {
@@ -98,7 +89,7 @@ class PostImagesPresenter extends BasePresenter {
         } else {
             $this->flashMessage("Miniatúru sa nepodarilo nastaviť", "danger");
         }
-        $this->redirect('Post:view', $this->postRow);
+        $this->redirect('Posts:view', $this->postRow);
     }
 
     public function submittedImageForm(Form $form) {
@@ -108,17 +99,17 @@ class PostImagesPresenter extends BasePresenter {
             $name = strtolower($img->getSanitizedName());
 
             if ($img->isOk() AND $img->isImage()) {
-                $img->move($this->storage . $name);
+                $img->move($this->imgFolder . '/' . $name);
             }
             $imgData['name'] = $name;
             $imgData['posts_id'] = $this->postRow;
             $this->postImageRepository->insert($imgData);
         }
-        $this->redirect('Post:view', $this->postRow);
+        $this->redirect('Posts:view', $this->postRow);
     }
 
     public function formCancelled() {
-        $this->redirect('Post:view', $this->postRow);
+        $this->redirect('Posts:view', $this->postRow);
     }
 
 }

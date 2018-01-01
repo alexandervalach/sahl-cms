@@ -30,19 +30,21 @@ class FightsPresenter extends BasePresenter {
     public function actionEdit($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
+        $this->roundRow = $this->fightRow->ref('rounds', 'round_id');
     }
 
     public function renderEdit($id) {
         if (!$this->fightRow) {
             throw new BadRequestException($this->error);
         }
-        $this->template->round = $this->fightRow->ref('rounds', 'round_id');
-        $this->getComponent('editFightForm')->setDefaults($this->fightRow);
+        $this->template->round = $this->roundRow;
+        $this->getComponent('editForm')->setDefaults($this->fightRow);
     }
 
     public function actionDelete($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
+        $this->roundRow = $this->fightRow->ref('rounds', 'round_id');
     }
 
     public function renderDelete($id) {
@@ -72,23 +74,6 @@ class FightsPresenter extends BasePresenter {
         $this['breadCrumb']->addLink($this->roundRow->name);
     }
 
-    public function actionEditThird($id) {
-        $this->userIsLogged();
-        $this->fightRow = $this->fightsRepository->findById($id);
-        $this->roundRow = $this->fightsRepository->getForFight($this->fightRow, 'round_id', 'rounds');
-        $this->team1 = $this->fightsRepository->getForFight($this->fightRow, 'team1_id');
-        $this->team2 = $this->fightsRepository->getForFight($this->fightRow, 'team2_id');
-    }
-
-    public function renderEditThird($id) {
-        if (!$this->fightRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->fight = $this->fightRow;
-        $this->template->round = $this->roundRow;
-        $this->getComponent('editThirdForm')->setDefaults($this->fightRow);
-    }
-
     protected function createComponentAddForm() {
         $teams = $this->teamsRepository->getTeams();
         $form = new Form;
@@ -103,7 +88,7 @@ class FightsPresenter extends BasePresenter {
         return $form;
     }
 
-    protected function createComponentEditFightForm() {
+    protected function createComponentEditForm() {
         $teams = $this->teamsRepository->getTeams();
         $form = new Form;
         $form->addSelect('team1_id', 'Tím 1', $teams);
@@ -116,8 +101,7 @@ class FightsPresenter extends BasePresenter {
         return $form;
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues(TRUE);
+    public function submittedAddForm(Form $form, $values) {
         if ($values['team1_id'] == $values['team2_id']) {
             $form->addError('Zvoľte dva rozdielne tímy.');
             return false;
@@ -135,8 +119,8 @@ class FightsPresenter extends BasePresenter {
         $this->updateTableRows($values, $type);
         $this->updateTablePoints($values, $type);
         $this->updateTableGoals($values, $type);
-        $this->flashMessage('Zápas pridaný', 'success');
-        $this->redirect('all', $fight->ref('rounds', 'round_id'));
+        $this->flashMessage('Zápas bol pridaný', 'success');
+        $this->redirect('Rounds:view', $fight->ref('rounds', 'round_id'));
     }
 
     public function submittedEditForm(Form $form, $values) {
@@ -145,14 +129,14 @@ class FightsPresenter extends BasePresenter {
             return false;
         }
         $this->fightRow->update($values);
-        $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
+        $this->flashMessage('Zápas bol upravený', 'success');
+        $this->redirect('Rounds:view', $this->roundRow);
     }
 
     public function submittedDeleteForm() {
-        $id = $this->fightRow->ref('rounds', 'round_id');
         $this->fightRow->delete();
-        $this->flashMessage('Zápas odstránený', 'success');
-        $this->redirect('all', $id);
+        $this->flashMessage('Zápas bol odstránený', 'success');
+        $this->redirect('Rounds:view', $this->roundRow);
     }
 
     public function updateTableRows($values, $type, $value = 1) {
@@ -193,7 +177,7 @@ class FightsPresenter extends BasePresenter {
     }
 
     public function formCancelled() {
-        $this->redirect('all', $this->fightRow->ref('rounds', 'round_id'));
+        $this->redirect('Rounds:view', $this->roundRow);
     }
 
 }

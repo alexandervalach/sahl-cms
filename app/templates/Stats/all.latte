@@ -18,7 +18,6 @@
                     <th>Číslo</th>
                     <th>Tím</th>
                     <th>Góly</th>
-                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,20 +27,8 @@
                     <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
                     <td>{$stat->lname}</td>
                     <td>{$stat->num}</td>
-                    <td><a n:href="Player:view $team" class="ajax">{$team->name}</td>
+                    <td><a n:href="Teams:view $team">{$team->name}</td>
                     <td>{$stat->goals}</td>
-                    {if $user->loggedIn}
-                        <td>
-                            <a n:href="Player:edit $stat" class="text-success">
-                                <span class='glyphicon glyphicon-pencil'></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a n:href="Player:delete $stat" class="text-danger">
-                                <span class='glyphicon glyphicon-trash'></span>
-                            </a>
-                        </td>
-                    {/if}
                     {var $previous = $stat->goals}
                 </tr>
             </tbody>

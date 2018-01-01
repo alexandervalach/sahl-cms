@@ -30,7 +30,6 @@
                     <th>Meno a priezvisko</th>
                     <th>Rok narodenia</th>
                     <th>Číslo dresu</th>
-                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,32 +47,8 @@
                                 </time>
                             </td>
                             <td>{$player->num}</td>
-                            {if $user->loggedIn}
-                                <td>
-                                    <a n:href="edit $player" class="text-success">
-                                        <span class='glyphicon glyphicon-pencil'></span>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a n:href="delete $player" class="text-danger">
-                                        <span class='glyphicon glyphicon-trash'></span>
-                                    </a>
-                                </td>
-                            {/if}
                         {else}
                             <td n:for="$j = 0; $j < 4; $j++">&nbsp;</td>
-                            {if $user->loggedIn}
-                                <td>
-                                    <a n:href="edit $player" class="text-success">
-                                        <span class='glyphicon glyphicon-pencil'></span>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a n:href="delete $player" class="text-danger">
-                                        <span class='glyphicon glyphicon-trash'></span>
-                                    </a>
-                                </td>
-                            {/if}
                         {/if}
                     </tr>
                     {var $i = $iterator->counter}
@@ -88,18 +63,6 @@
                         </time>
                     </td>
                     <td>Brankár, {$goalie->num}</td>
-                    {if $user->loggedIn}
-                        <td>
-                            <a n:href="edit $goalie" class="text-success">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a n:href="delete $goalie" class="text-danger">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </a>
-                        </td>
-                    {/if}
                 </tr>
             </tbody>
         </table>

@@ -26,14 +26,13 @@
                     <th>Skóre</th>
                     <th>Rozdiel</th>
                     <th>Body</th>
-                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
                 <tr n:foreach="$tables[$type->name] as $row" class="{$iterator->first ? 'first'}">
                     {var $team = $row->ref('teams','team_id')}
                     <td>{$iterator->counter}</td>
-                    <td><a n:href="Player:view $team" class="ajax">{$team->name}</a></td>
+                    <td><a n:href="Teams:view $team">{$team->name}</a></td>
                     <td>{$row->win}</td>
                     <td>{$row->lost}</td>
                     <td>{$row->tram}</td>
@@ -42,18 +41,6 @@
                     <td>
                         <strong class="text-danger">{$row->points}</strong>
                     </td>
-                    {if $user->loggedIn}
-                        <td>
-                            <a n:href="edit $row" class="text-success">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                            </a>
-                        </td>
-                        <td>
-                            <a n:href="delete $row" class="text-danger">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </a>
-                        </td>
-                    {/if}
                 </tr>
             </tbody>
         </table>
@@ -62,7 +49,6 @@
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -72,6 +58,5 @@
                 {control addForm}
             </div>
         </div>
-
     </div>
 </div>

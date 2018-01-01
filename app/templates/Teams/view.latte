@@ -2,27 +2,33 @@
 
 {control breadCrumb}
 
-<div n:if="$user->loggedIn" style="margin-bottom: 20px;">
-    <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
-        Upraviť
-    </button>
-    <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
-        Odstrániť
-    </button>
-    <button type="button" class="btn btn-large btn-primary" data-target="#upload" data-toggle="modal">
-        Nastaviť obrázok    
-    </button>
-</div>
+<section class="content">
+    <div class="text-center">
+        <h1 n:block="title">{$team->name}</h1>
+    </div>
 
-<section id="players">
+    <div n:if="$user->loggedIn" style="margin-top: 20px">
+        <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
+            Upraviť
+        </button>
+        <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
+            Odstrániť
+        </button>
+        <button type="button" class="btn btn-large btn-primary" data-target="#upload" data-toggle="modal">
+            Nastaviť obrázok    
+        </button>
+    </div>
+
     {if ($team->image) and (file_exists($imgFolder . '/' . $team->image))}
-        <figure class="clearfix" style="margin-bottom: 20px">
+        <figure class="clearfix" style="margin-top: 20px">
             <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
                 alt="{$team->name}" style="margin: 0 auto" />
         </figure>
     {/if}
+</section>
 
-    <div n:if="$players->count()" class='table-responsive'>
+<section n:if="$players->count()" id="players">
+    <div class='table-responsive'>
         <table class='table'>
             <thead>
                 <tr>

@@ -16,14 +16,17 @@ class RulesPresenter extends BasePresenter {
     private $archRow;
 
     /** @var string */
-    private $error = "Rule not found!";
+    private $error = "Rule not found";
 
     public function actionAll() {
-
+        $this->ruleRow = $this->rulesRepository->findByValue('archive_id', null)->fetch();
     }
 
     public function renderAll() {
-        $this->ruleRow = $this->rulesRepository->findByValue('archive_id', null)->fetch();
+        if (!$this->ruleRow) {
+            throw new BadRequestException($this->error);
+        }
+
         $this->template->rule = $this->ruleRow;
         $this['breadCrumb']->addLink("Pravidlá a smernice");
         

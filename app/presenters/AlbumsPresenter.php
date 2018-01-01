@@ -15,14 +15,14 @@ class AlbumsPresenter extends BasePresenter {
     private $albumRow;
 
     /** @var string */
-    private $error = "Album not found!";
+    private $error = "Album not found.";
 
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
         $this->template->default_img = $this->default_img;
         $this->template->imgFolder = $this->imgFolder;
 
-        $this['breadCrumb']->addLink("Albumy");
+        $this['breadCrumb']->addLink("Galéria");
 
         if ($this->user->isLoggedIn()) { 
             $this->getComponent('addForm');
@@ -42,7 +42,7 @@ class AlbumsPresenter extends BasePresenter {
         $this->template->imgs = $this->albumRow->related('images');
         $this->template->imgFolder = $this->imgFolder;
 
-        $this['breadCrumb']->addLink('Albumy', $this->link('Albums:all'));
+        $this['breadCrumb']->addLink('Galéria', $this->link('Albums:all'));
         $this['breadCrumb']->addLink($this->albumRow->name);
 
         if ($this->user->isLoggedIn()) { 

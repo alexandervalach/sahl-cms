@@ -29,10 +29,6 @@ class TablesPresenter extends BasePresenter {
         $this->template->tables = $table_rows;
         $this->template->table_types = $table_types;
         $this['breadCrumb']->addLink("Tabuľky");
-
-        if ($this->user->loggedIn) {
-            $this->getComponent("addForm");
-        }
     }
 
     public function actionEdit($id) {
@@ -84,19 +80,6 @@ class TablesPresenter extends BasePresenter {
         $this->template->archive = $this->archiveRepository->findById($id);
     }
 
-    protected function createComponentAddForm() {
-        $teams = $this->teamsRepository->getTeams();
-        $table_types = $this->tableTypesRepository->getTypes();
-
-        $form = new Form;
-        $form->addSelect('team_id', 'Mužstvo', $teams);
-        $form->addSelect('type', 'Tabuľka', $table_types);
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('win', 'Výhry');
@@ -110,12 +93,6 @@ class TablesPresenter extends BasePresenter {
         $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
-    }
-
-    public function submittedAddForm(Form $form, $values) {
-        $this->tablesRepository->insert($values);
-        $this->flashMessage('Záznam bol pridaný', 'success');
-        $this->redirect('all');
     }
 
     public function submittedEditForm(Form $form, $values) {

@@ -16,9 +16,10 @@
 
     <section id="sponsors" class="col-md-2">
         <h3>Sponzori</h3>
-            <figure n:foreach="$sponsors as $sponsor">
+            <figure n:foreach="$sponsors as $sponsor" style="margin: 20px 0">
+                {var $imgPath = $imgFolder . '/' . $sponsor->image}
                 <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                    {if file_exists($basePath . '/' . $imgFolder . '/' . $sponsor->image)}
+                    {if file_exists($imgPath)}
                         <img class="img img-responsive" alt="{$sponsor->title}"
                              src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
                     {else}

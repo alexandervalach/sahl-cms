@@ -2,11 +2,17 @@
 
 {control breadCrumb}
 
-<div n:if="$user->loggedIn" style="margin-bottom: 20px;">
-    <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal">
-        Pridať
-    </button>
-</div>
+<section class="content">
+    <div class="text-center">
+        <h1 n:block="title">Tímy</h1>
+    </div>
+
+    <div n:if="$user->loggedIn">
+        <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal">
+            Pridať
+        </button>
+    </div>
+</section>
 
 <section n:if="$teams->count()" class='table-responsive'>
     <table class='table'>

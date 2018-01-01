@@ -27,52 +27,6 @@ class FightsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $team2;
 
-    public function actionAll($id) {
-        $this->roundRow = $this->roundsRepository->findById($id);
-        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
-        $this['breadCrumb']->addLink($this->roundRow->name);
-    }
-
-    public function renderAll($id) {
-
-        if (!$this->roundRow) {
-            throw new BadRequestException("Round not found.");
-        }
-
-        $i = 0;
-        $fight_data = array();
-        $fights = $this->roundRow->related('fights');
-
-        foreach ($fights as $fight) {
-            $fight_data[$i]['goals'] = $fight->related('goals')->order('goals DESC');
-            $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
-            $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
-            $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
-            $fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
-
-            if ($fight->score1 > $fight->score2) {
-                $fight_data[$i]['state_1'] = 'text-success';
-                $fight_data[$i]['state_2'] = 'text-danger';
-            } else if ($fight->score1 < $fight->score2) {
-                $fight_data[$i]['state_1'] = 'text-danger';
-                $fight_data[$i]['state_2'] = 'text-success';
-            } else {
-                $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
-            } 
-            $i++;
-        }
-
-        $this->template->fights = $fights;
-        $this->template->fight_data = $fight_data;
-        $this->template->i = 0;
-        $this['breadCrumb']->addLink("Kolá", $this->link("Round:all"));
-        $this['breadCrumb']->addLink($this->roundRow->name);
-
-        if ($this->user->isLoggedIn()) {
-            $this->getComponent('addForm');
-        }
-    }
-
     public function actionEdit($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);

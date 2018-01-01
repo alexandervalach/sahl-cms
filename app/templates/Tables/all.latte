@@ -2,12 +2,17 @@
 
 {control breadCrumb}
 
-<section>
-    <div n:if="$user->loggedIn" style="margin-bottom: 20px">
+<section class="content">
+    <div class="text-center">
+        <h1 n:block="title">Tabuľky</h1>
+    </div>
+
+    <div n:if="$user->loggedIn">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
-            Pridať záznam
+            Pridať
         </button>
     </div>
+</section>
 
     <div n:foreach="$table_types as $type" class='table-responsive'>
         <table class='table tables'>

@@ -1,0 +1,57 @@
+{block content}
+
+{control breadCrumb}
+
+<section id="forum">
+    <article class="content">
+        <header class="clearfix text-center">
+            <h1 n:block="title">{$topic->title}</h1> 
+        </header>
+
+        <main class="clearfix">
+            {$topic->message|noescape}
+        </main>
+        
+        <footer class="clearfix">
+            <div class="clearfix">
+                {$topic->author}
+            </div>
+            <div class="clearfix">
+                <button type="button" class="btn btn-large btn-primary" data-toggle="modal" 
+                    data-target="#react">
+                    Reagovať
+                </button>
+            </div>
+        </footer>
+    </article>
+
+    <article n:foreach="$replies as $reply" class="content" style="padding: 20px">
+        <header>
+            <strong>{$reply->author}</strong>
+            <div n:if="$user->loggedIn" class="pull-right">
+                <a n:href="delete $reply" class="text-success">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </div>
+        </header>
+        <main>
+            {$reply->content}
+        </main>
+    </article>
+</section>
+
+<div id="react" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Pridať príspevok</h3>
+            </div>
+            <div class="modal-body">
+                {control addForm}
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

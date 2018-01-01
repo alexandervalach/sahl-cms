@@ -104,6 +104,10 @@ main table {
     margin-top: -0.8em;
 }
 
+div < input#frm-addForm-url {
+    display: none;
+}
+
 #lightbox {
     position: fixed;
     top: 0; 

@@ -18,12 +18,8 @@ class EventsPresenter extends BasePresenter {
     /** @var string */
     private $error = "Event not found!";
 
-    public function actionAll() {
-        
-    }
-
     public function renderAll() {
-        if ($this->user->isLoggedIn()) {
+        if ($this->user->loggedIn) {
             $this->getComponent("addForm");
         }
         $this->template->events = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
@@ -39,20 +35,20 @@ class EventsPresenter extends BasePresenter {
         if (!$this->eventRow) {
             throw new BadRequestException($this->error);
         }
-        $this->getComponent('editEventForm')->setDefaults($this->eventRow);
+        $this->getComponent('editForm')->setDefaults($this->eventRow);
     }
 
-    public function actionDelete($id) {
+    public function actionRemove($id) {
         $this->userIsLogged();
         $this->eventRow = $this->eventsRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderRemove($id) {
         if (!$this->eventRow) {
             throw new BadRequestException($this->error);
         }
         $this->template->event = $this->eventRow;
-        $this->getComponent('deleteForm');
+        $this->getComponent('removeForm');
     }
 
     public function actionArchView($id) {
@@ -70,47 +66,55 @@ class EventsPresenter extends BasePresenter {
 
     protected function createComponentAddForm() {
         $form = new Form;
-
         $form->addTextArea('event', 'Rozpis zápasov')
-                ->setAttribute('id', 'ckeditor')
-                ->setRequired("Rozpis zápasov je povinné pole.");
-        $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedAddForm;
-
+             ->setAttribute('id', 'ckeditor')
+             ->setRequired("Rozpis zápasov je povinné pole.");
+        $form->addSubmit('add', 'Pridať');
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditEventForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
-
         $form->addTextArea('event', 'Rozpis zápasov')
-                ->setAttribute('id', 'ckeditor')
-                ->setRequired('Rozpis zápasov je povinné pole.');
-        $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedEditEventForm;
-
+             ->setAttribute('id', 'ckeditor')
+             ->setRequired('Rozpis zápasov je povinné pole.');
+        $form->addSubmit('edit', 'Upraviť')
+             ->setAttribute('class', 'btn btn-large btn-success');
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues();
+    protected function createComponentRemoveForm() {
+        $form = new Form;
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->onClick[] = $this->formCancelled;
+        $form->addSubmit('delete', 'Odstrániť')
+             ->setAttribute('class', 'btn btn-large btn-danger')
+             ->onClick[] = $this->submittedRemoveForm;
+        $form->addProtection();
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
+    public function submittedAddForm(Form $form, $values) {
         $this->eventsRepository->insert($values);
+        $this->flashMessage('Rozpis bol pridaný', 'success');
         $this->redirect('all');
     }
 
-    public function submittedEditEventForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditForm(Form $form, $values) {
         $this->eventRow->update($values);
+        $this->flashMessage('Rozpis bol upravený', 'success');
         $this->redirect('all');
     }
 
-    public function submittedDeleteForm() {
+    public function submittedRemoveForm() {
         $this->eventRow->delete();
-        $this->flashMessage('Rozpis odstránený!', 'success');
+        $this->flashMessage('Rozpis bol odstránený', 'success');
         $this->redirect('all');
     }
 

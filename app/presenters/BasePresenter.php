@@ -5,25 +5,24 @@ namespace App\Presenters;
 use App\BreadCrumb\BreadCrumb;
 use App\FormHelper;
 use App\Model\AlbumsRepository;
-use App\Model\ArchiveRepository;
+use App\Model\ArchivesRepository;
 use App\Model\EventsRepository;
 use App\Model\FightsRepository;
-use App\Model\ForumRepository;
-use App\Model\GalleryRepository;
+use App\Model\ImagesRepository;
 use App\Model\GoalsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
 use App\Model\PlayerTypesRepository;
-use App\Model\PostImageRepository;
+use App\Model\PostImagesRepository;
 use App\Model\PostsRepository;
 use App\Model\PunishmentsRepository;
-use App\Model\ReplyRepository;
+use App\Model\RepliesRepository;
 use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
 use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
+use App\Model\TopicsRepository;
 use App\Model\TeamsRepository;
-use App\Model\UsersRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Security\AuthenticationException;
@@ -36,8 +35,8 @@ abstract class BasePresenter extends Presenter {
     /** @var AlbumsRepository */
     protected $albumsRepository;
 
-    /** @var ArchiveRepository */
-    protected $archiveRepository;
+    /** @var ArchivesRepository */
+    protected $archivesRepository;
 
     /** @var EventsRepository */
     protected $eventsRepository;
@@ -45,11 +44,8 @@ abstract class BasePresenter extends Presenter {
     /** @var FightsRepository */
     protected $fightsRepository;
 
-    /** @var ForumRepository */
-    protected $forumRepository;
-
-    /** @var GalleryRepository */
-    protected $galleryRepository;
+    /** @var ImagesRepository */
+    protected $imagesRepository;
 
     /** @var GoalsRepository */
     protected $goalsRepository;
@@ -66,8 +62,8 @@ abstract class BasePresenter extends Presenter {
     /** @var PlayersRepository */
     protected $playersRepository;
 
-    /** @var PostImageRepository */
-    protected $postImageRepository;
+    /** @var PostImagesRepository */
+    protected $postImagesRepository;
 
     /** @var PostsRepository */
     protected $postsRepository;
@@ -75,8 +71,8 @@ abstract class BasePresenter extends Presenter {
     /** @var PunishmentsRepository */
     protected $punishmentsRepository;
 
-    /** @var ReplyRepository */
-    protected $replyRepository;
+    /** @var RepliesRepository */
+    protected $repliesRepository;
 
     /** @var RoundsRepository */
     protected $roundsRepository;
@@ -90,8 +86,8 @@ abstract class BasePresenter extends Presenter {
     /** @var TeamsRepository */
     protected $teamsRepository;
 
-    /** @var UsersRepository */
-    protected $usersRepository;
+    /** @var TopicsRepository */
+    protected $topicsRepository;
 
     /** @var string */
     protected $imgFolder;
@@ -100,28 +96,27 @@ abstract class BasePresenter extends Presenter {
     protected $default_img;
 
     public function __construct(
-    ArchiveRepository $archiveRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, ForumRepository $forumRepository, GalleryRepository $galleryRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImageRepository $postImageRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, ReplyRepository $replyRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository, UsersRepository $usersRepository) {
+    ArchivesRepository $archivesRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, TopicsRepository $topicsRepository, ImagesRepository $imagesRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImagesRepository $postImagesRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RepliesRepository $repliesRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository) {
         parent::__construct();
-        $this->archiveRepository = $archiveRepository;
+        $this->archivesRepository = $archivesRepository;
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
         $this->fightsRepository = $fightsRepository;
-        $this->forumRepository = $forumRepository;
-        $this->galleryRepository = $galleryRepository;
+        $this->topicsRepository = $topicsRepository;
+        $this->imagesRepository = $imagesRepository;
         $this->goalsRepository = $goalsRepository;
         $this->linksRepository = $linksRepository;
         $this->tableTypesRepository = $tableTypesRepository;
         $this->playersRepository = $playersRepository;
         $this->playerTypesRepository = $playerTypesRepository;
-        $this->postImageRepository = $postImageRepository;
+        $this->postImagesRepository = $postImagesRepository;
         $this->postsRepository = $postsRepository;
         $this->punishmentsRepository = $punishmentsRepository;
-        $this->replyRepository = $replyRepository;
+        $this->repliesRepository = $repliesRepository;
         $this->roundsRepository = $roundsRepository;
         $this->rulesRepository = $rulesRepository;
         $this->tablesRepository = $tablesRepository;
         $this->teamsRepository = $teamsRepository;
-        $this->usersRepository = $usersRepository;
         $this->default_img = "sahl.png";
         $this->imgFolder = "images";
     }
@@ -138,15 +133,12 @@ abstract class BasePresenter extends Presenter {
 
     protected function createComponentDeleteForm() {
         $form = new Form;
-
         $form->addSubmit('cancel', 'Zrušiť')
              ->setAttribute('class', 'btn btn-large btn-warning')
              ->onClick[] = $this->formCancelled;
-
         $form->addSubmit('delete', 'Odstrániť')
              ->setAttribute('class', 'btn btn-large btn-danger')
              ->onClick[] = $this->submittedDeleteForm;
-
         $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -154,7 +146,6 @@ abstract class BasePresenter extends Presenter {
 
     protected function createComponentSignInForm() {
         $form = new Form;
-
         $form->addText('username', 'Používateľské meno')
              ->setRequired('Zadajte používateľské meno.');
         $form->addPassword('password', 'Heslo')
@@ -162,8 +153,7 @@ abstract class BasePresenter extends Presenter {
         $form->addSubmit('login', 'Administrácia')
              ->setAttribute('class', 'btn btn-success');
         $form->addProtection();
-
-        $form->onSuccess[] = $this->submittedSignInForm;
+        $form->onSuccess[] = [$this, 'submittedSignInForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -173,6 +163,7 @@ abstract class BasePresenter extends Presenter {
 
         try {
             $this->getUser()->login($values->username, $values->password);
+            $this->flashMessage('Vitajte v administrácií SAHL', 'success');
             $this->redirect('Homepage:');
         } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo.');

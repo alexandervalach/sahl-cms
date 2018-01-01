@@ -1,0 +1,63 @@
+{block content}
+
+{control breadCrumb}
+
+<section id="stats">
+
+    <div class="content">
+        <div class="text-center">
+            <h1 n:block="title">Štatistiky</h1>
+        </div>
+
+        <div n:if="$user->loggedIn" style="margin-bottom: 20px">
+            <button type="button" class="btn btn-large btn-danger" data-toggle="modal" data-target="#reset-stats">
+                Vynulovať
+            </button>
+        </div>
+    </div>
+
+    <div class='table-responsive'>
+        <table class='table'>
+            <thead>
+                <tr>
+                    <th>P.č.</th>
+                    <th>Meno a priezvisko</th>
+                    <th>Číslo</th>
+                    <th>Tím</th>
+                    <th>Góly</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$stats as $stat">
+                    {var $current = $stat->goals}
+                    {var $team = $stat->ref('team_id')}
+                    <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
+                    <td>{$stat->lname}</td>
+                    <td>{$stat->num}</td>
+                    <td><a n:href="Teams:view $team">{$team->name}</td>
+                    <td>{$stat->goals}</td>
+                    {var $previous = $stat->goals}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<div n:if="$user->loggedIn" id="reset-stats" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Vynulovať štatistiky?</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    V závislosti od pripojenia to môže trvať viac ako minútu.
+                </p>
+                {control resetForm}
+            </div>
+        </div>
+    </div>
+</div>
+
+{/block}

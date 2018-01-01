@@ -1,0 +1,48 @@
+{block content}
+
+{control breadCrumb}
+
+<section class="content">
+    <div class="text-center">
+        <h1 n:block="title">Kolá</h1>
+    </div>
+
+    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
+        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
+            Pridať
+        </button>
+    </div>
+</section>
+
+<section n:if="$rounds->count()">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Kolá</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$rounds as $round">
+                    <td><a n:href="view $round">{$round->name}</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="modals" n:if="$user->loggedIn">
+    <div id="add" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Pridať kolo</h3>
+                </div>
+                <div class="modal-body">
+                    {control addRoundForm}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

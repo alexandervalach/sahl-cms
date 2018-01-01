@@ -1,0 +1,55 @@
+{block content}
+
+{control breadCrumb}
+
+<section id="archive" class="clearfix primary-content">
+    <div n:if="$user->loggedIn" style="margin-bottom: 20px">
+        <button type="button" class='btn btn-large btn-success' data-target="#edit" data-toggle="modal">
+            Upraviť
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table">
+            <tbody>
+                <tr><td><a n:href="Tables:archView, $archive">Tabuľky</a></td></tr>
+                <tr><td><a n:href="Rounds:archView, $archive">Výsledky</a></td></tr>
+                <tr><td><a n:href="Teams:archView, $archive">Tímy</a></td></tr>
+                <tr><td><a n:href="Players:archView, $archive">Štatistiky</a></td></tr>
+                <tr><td><a n:href="Events:archView, $archive">Rozpis zápasov</a></td></tr>
+                <tr><td><a n:href="Rules:archView, $archive">Pravidlá a smernice</a></td></tr>
+                <tr><td><a n:href="Punishments:archView, $archive->id">Tresty hráčov</a></td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<section id="modals" n:if="$user->loggedIn">
+    <div id="edit" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Upraviť názov archívu</h3>
+                </div>
+                <div class="modal-body">
+                    {control editForm}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="remove" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Odstrániť archív</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Naozaj chcete odstrániť archív aj so všetkými príspevkami?</p>
+                    {control removeForm}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

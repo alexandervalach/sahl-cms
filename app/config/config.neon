@@ -8,7 +8,7 @@ parameters:
 
 
 php:
-	date.timezone: Europe/Prague
+	date.timezone: Europe/Bratislava
 
 
 nette:
@@ -30,22 +30,21 @@ services:
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
 	- App\Model\AlbumsRepository
-	- App\Model\ArchiveRepository
+	- App\Model\ArchivesRepository
 	- App\Model\EventsRepository
-	- App\Model\ForumRepository
 	- App\Model\FightsRepository
-	- App\Model\GalleryRepository
+	- App\Model\ImagesRepository
 	- App\Model\GoalsRepository
 	- App\Model\LinksRepository
 	- App\Model\PlayerTypesRepository
 	- App\Model\PlayersRepository
-	- App\Model\PostImageRepository
+	- App\Model\PostImagesRepository
 	- App\Model\PostsRepository
 	- App\Model\PunishmentsRepository
-	- App\Model\ReplyRepository
+	- App\Model\RepliesRepository
 	- App\Model\RoundsRepository
 	- App\Model\RulesRepository
 	- App\Model\TableTypesRepository
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository
-	- App\Model\UsersRepository
+	- App\Model\TopicsRepository

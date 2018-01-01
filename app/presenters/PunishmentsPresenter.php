@@ -14,15 +14,11 @@ class PunishmentsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $archRow;
 
-    public function actionAll() {
-        
-    }
-
     public function renderAll() {
         $this->template->punishments =
             $this->punishmentsRepository->findByValue('archive_id', null)->order('id DESC');
 
-        $this['breadCrumb']->addLink("Hráči", $this->link("Stats:all"));
+        $this['breadCrumb']->addLink("Hráči", $this->link("Players:all"));
         $this['breadCrumb']->addLink("Tresty hráčov");
 
         if ($this->user->isLoggedIn()) {
@@ -55,48 +51,50 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function renderArchView($id) {
-        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
         $this['breadCrumb']->addLink("Tresty hráčov");
 
         $this->template->archive = $this->archRow;
         $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', $id);
     }
 
-    protected function createComponentEditPunishmentForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('text', 'Dôvod');
         $form->addText('round', 'Kolá');
         $form->addCheckbox('condition', ' Podmienka');
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedEditPunishmentForm;
+        $form->addSubmit('edit', 'Upraviť')
+             ->setAttribute('class', 'btn btn-large btn-success');
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     protected function createComponentAddForm() {
         $players = $this->playersRepository->getPlayersByValue('num !=', 0);
+
         $form = new Form;
         $form->addSelect('player_id', 'Hráč', $players)
                 ->setRequired();
         $form->addText('text', 'Dôvod');
         $form->addText('round', 'Kolá');
         $form->addCheckbox('condition', ' Podmienka');
-        $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedAddForm;
+        $form->addSubmit('add', 'Pridať');
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedEditPunishmentForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditPunishmentForm(Form $form, $values) {
         $this->punishmentRow->update($values);
+        $this->flashMessage('Trest bol pridaný', 'success');
         $this->redirect('all');
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddForm(Form $form, $values) {
         $this->punishmentsRepository->insert($values);
+        $this->flashMessage('Trest bol upravený', 'success');
         $this->redirect('all');
     }
 

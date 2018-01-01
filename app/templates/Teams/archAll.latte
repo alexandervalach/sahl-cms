@@ -1,0 +1,22 @@
+{block content}
+
+{control breadCrumb}
+
+<section class='table-responsive'>
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>P.č.</th>
+                <th>Názov</th>
+            </tr>
+        </thead>
+        <tbody n:foreach='$teams as $team'>
+            <tr>
+                <td>{$iterator->counter}.</td>
+                <td>{$team->name}</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+{/block}

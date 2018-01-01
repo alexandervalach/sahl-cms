@@ -16,10 +16,6 @@ class TablesPresenter extends BasePresenter {
     /** @var string */
     private $error = "Row not found!";
 
-    public function actionAll() {
-        
-    }
-
     public function renderAll() {
         $table_types = $this->tableTypesRepository->findByValue('visible', 1);
         $table_rows = array();
@@ -34,7 +30,7 @@ class TablesPresenter extends BasePresenter {
         $this->template->table_types = $table_types;
         $this['breadCrumb']->addLink("Tabuľky");
 
-        if ($this->user->isLoggedIn()) {
+        if ($this->user->loggedIn) {
             $this->getComponent("addForm");
         }
     }
@@ -49,7 +45,7 @@ class TablesPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->template->team = $this->tableRow;
-        $this->getComponent('editTableRowForm')->setDefaults($this->tableRow);
+        $this->getComponent('editForm')->setDefaults($this->tableRow);
     }
 
     public function actionDelete($id) {
@@ -89,20 +85,19 @@ class TablesPresenter extends BasePresenter {
     }
 
     protected function createComponentAddForm() {
-        $form = new Form;
         $teams = $this->teamsRepository->getTeams();
         $table_types = $this->tableTypesRepository->getTypes();
 
+        $form = new Form;
         $form->addSelect('team_id', 'Mužstvo', $teams);
         $form->addSelect('type', 'Tabuľka', $table_types);
         $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedAddForm;
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditTableRowForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('win', 'Výhry');
         $form->addText('tram', 'Remízy');
@@ -110,31 +105,29 @@ class TablesPresenter extends BasePresenter {
         $form->addText('score1', 'Skóre 1');
         $form->addText('score2', 'Skóre 2');
         $form->addText('points', 'Body');
-        $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedEditTableRowForm;
+        $form->addSubmit('edit', 'Upraviť')
+             ->setAttribute('class', 'btn btn-large btn-success');
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddForm(Form $form, $values) {
         $this->tablesRepository->insert($values);
-        $this->flashMessage('Záznam pridaný do tabuliek', 'success');
+        $this->flashMessage('Záznam bol pridaný', 'success');
         $this->redirect('all');
     }
 
-    public function submittedEditTableRowForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditForm(Form $form, $values) {
         $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
         $this->tableRow->update($values);
+        $this->flashMessage('Záznam bol upravený', 'success');
         $this->redirect('all');
     }
 
     public function submittedDeleteForm() {
-        $this->userIsLogged();
         $this->tableRow->delete();
-        $this->flashMessage('Záznam odstránený z tabuľky', 'success');
+        $this->flashMessage('Záznam bol odstránený', 'success');
         $this->redirect('all');
     }
 

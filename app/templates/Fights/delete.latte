@@ -1,11 +1,10 @@
 {block content}
 
+{control breadCrumb}
+
 <section class="content text-center">
 	<h1 n:block="title">Odstrániť zápas</h1>
-	<p class='delete text-warning'>
-	    Naozaj chcete zmazať zápas 
-	    <mark>{$fight->ref( 'teams', 'team1_id' )->name}</mark> vs. 
-	    <mark>{$fight->ref( 'teams', 'team2_id' )->name}</mark>?
-	</p>
 	{control deleteForm}
 </section>
+
+{/block}

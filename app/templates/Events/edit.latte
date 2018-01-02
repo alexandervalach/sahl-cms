@@ -2,8 +2,8 @@
 
 {control breadCrumb}
 
-<section class="content text-center">
-	<h1 n:block='title'>Úprava udalosti</h1>
+<section class="content">
+	<h1 n:block='title' class="text-center">Upraviť rozpis zápasov</h1>
 	{control editForm}
 </section>
 
@@ -12,7 +12,5 @@
 {block scripts}
     {include #parent}
     <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">
-        CKEDITOR.replace('ckeditor');
-    </script>
+    <script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
 {/block}

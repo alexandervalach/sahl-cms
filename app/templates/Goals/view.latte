@@ -2,50 +2,55 @@
 
 {control breadCrumb}
 
-<div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
-    <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#addGoal">
-        Pridať góly hráčom
-    </button>
-</div>
+<section class="content">
+    <div class="text-center">
+        <h1 n:block="title">Zobrazenie gólov</h1>
+    </div>
+    <div n:if="$user->loggedIn" class="clearfix">
+        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add-goal">
+            Pridať góly hráčom
+        </button>
+    </div>
+</section>
 
-<section id="goals" class="table-responsive">
+<section id="goals" class="table-responsive text-center">
     <table class="table">
         <caption class="text-center">
             <h1>{$team1->name} : {$team2->name}</h1>
         </caption>
         <thead>
             <tr>
-                <th>&nbsp;</th>
-                <th>Hráč</th>
-                <th>Počet gólov</th>
-                <th>Domáci</th>
-                <th colspan="2">&nbsp;</th>
+                <th class="text-center">Hráč</th>
+                <th class="text-center">Počet gólov</th>
+                <th class="text-center">Domáci/Hostia</th>
+                <th n:if="$user->loggedIn" class="text-center" colspan="2"></th>
             </tr>
         </thead>
         <tbody>
             <tr n:foreach="$goals as $goal">
                 {var $player = $goal->ref('players', 'player_id')}
-                <td>{$iterator->counter}.</td>
                 <td>{$player->lname}</td>
                 <td>{$goal->goals}</td>
                 <td>{if $goal->home == 1}DOMÁCI{else}HOSTIA{/if}</td>
+                {if $user->loggedIn}
                 <td>
-                    <a n:href="edit, $goal" class="text-success">
-                        <i class="glyphicon glyphicon-pencil"></i>
+                    <a n:href="Goals:edit $goal" class="text-success">
+                        <span class="glyphicon glyphicon-pencil"></span>
                     </a>
                 </td>
                 <td>
-                    <a n:href="delete, $goal" class="text-danger">
-                        <i class="glyphicon glyphicon-trash"></i>
+                    <a n:href="Goals:remove $goal" class="text-danger">
+                        <span class="glyphicon glyphicon-trash"></span>
                     </a>
                 </td>
+                {/if}
             </tr>
         </tbody>
     </table>
 </section>
 
-<section id="modals" n:if="$user->loggedIn">
-    <div id="addGoal" class="modal fade" role="dialog">
+<section n:if="$user->loggedIn">
+    <div id="add-goal" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

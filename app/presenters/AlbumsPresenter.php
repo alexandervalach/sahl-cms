@@ -14,8 +14,11 @@ class AlbumsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $albumRow;
 
+    /** @var ActiveRow */
+    private $imgRow;
+
     /** @var string */
-    private $error = "Album not found.";
+    private $error = "Album not found";
 
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
@@ -49,6 +52,22 @@ class AlbumsPresenter extends BasePresenter {
             $this->getComponent('editForm')->setDefaults($this->albumRow);
             $this->getComponent('removeForm');
         }
+    }
+
+    public function actionSetImg($album_id, $id) {
+        $this->userIsLogged();
+        $this->albumRow = $this->albumsRepository->findById($album_id);
+        $this->imgRow = $this->imagesRepository->findById($id);
+        $this->submittedSetImg();
+    }
+
+    public function actionRemoveImg($id) {
+        $this->userIsLogged();
+        $this->imgRow = $this->imagesRepository->findById($id);
+        if (!$this->imgRow) {
+            throw new BadRequestException("Image not found");
+        }
+        $this->submittedRemoveImg();
     }
 
     protected function createComponentAddForm() {
@@ -118,6 +137,25 @@ class AlbumsPresenter extends BasePresenter {
 
         $this->albumRow->delete();
         $this->flashMessage('Album bol odstránený', 'success');
+        $this->redirect('all');
+    }
+
+    public function submittedRemoveImg() {
+        $album = $this->imgRow->album_id;
+        try {
+            FileSystem::delete($this->imgFolder . '/' . $this->imgRow->name);
+            $this->imgRow->delete();
+            $this->flashMessage('Obrázok bol odstránený', 'success');
+        } catch (IOException $e) {
+            $this->flashMessage('Nastala chyba, skúste znovu', 'danger');
+        }
+        $this->redirect('Albums:view', $album);
+    }
+
+    protected function submittedSetImg() {
+        $data['thumbnail'] = $this->imgRow->name;
+        $this->albumRow->update($data);
+        $this->flashMessage('Miniatúra bola nastavená', 'success');
         $this->redirect('all');
     }
 

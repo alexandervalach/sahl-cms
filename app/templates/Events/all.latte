@@ -7,7 +7,7 @@
         <h1 n:block="title">Rozpis zápasov</h1>
     </div>
 
-    <div n:if="$user->loggedIn" style="margin-bottom: 20px">
+    <div n:if="$user->loggedIn" style="margin-top: 20px">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať
         </button>
@@ -16,15 +16,15 @@
 
 
 <section id="events">
-    <article n:foreach="$events as $event" class="content" style="margin-bottom: 20px">
+    <article n:foreach="$events as $event" class="content" style="margin-top: 20px">
         <main>
             {$event->event|noescape}
         </main>
         <footer n:if="$user->loggedIn">
-            <a n:href="edit, $event" class="btn btn-large btn-success">
+            <a n:href="edit $event" class="btn btn-large btn-success">
                 Upraviť
-            </a>&nbsp;
-            <a n:href="remove, $event" class="btn btn-large btn-danger">    
+            </a>
+            <a n:href="remove $event" class="btn btn-large btn-danger">    
                 Odstrániť
             </a>
         </footer>

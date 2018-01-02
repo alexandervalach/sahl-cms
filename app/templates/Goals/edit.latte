@@ -1,14 +1,11 @@
 {block content}
 
-<h1 n:block="title">{$player->lname}</h1>
+{control breadCrumb}
 
-<p>
-    <a n:href="Goal:view#nav, $goal->fight_id" class='btn btn-large btn-default'>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        Zápasy
-    </a>
-</p>
-
-<section>
-    {control editForm}
+<section class="content">
+	<h1 n:block="title" class="text-center">{$player->lname}</h1>
+	{control editForm}
 </section>
+
+{/block}
+

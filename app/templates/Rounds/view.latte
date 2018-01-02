@@ -7,29 +7,29 @@
         <h1 n:block="title">{$round->name}</h1>
     </div>
     <div n:if="$user->loggedIn" class="clearfix">
+        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add-fight">
+            Pridať zápas
+        </button>
         <button type="button" class='btn btn-large btn-success' data-toggle="modal" data-target="#edit">
             Upraviť
         </button>
         <button type="button" class='btn btn-large btn-danger' data-toggle="modal" data-target="#remove">
             Odstrániť
         </button>
-        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add-fight">
-            Pridať zápas
-        </button>
     </div>
 </section>
 
 <div id="fights">
     <section n:foreach="$fights as $fight" class="content text-center">
-        <div n:if="$user->loggedIn" class="clearfix">
+        <div n:if="$user->loggedIn" class="clearfix text-left">
             <a class="btn btn-large btn-success" n:href="Fights:edit $fight">
                 Upraviť zápas
             </a>
-            <a class="btn btn-large btn-default" n:href="Goals:view $fight">
-                Zobraziť góly
-            </a>
             <a class="btn btn-large btn-danger" n:href="Fights:delete $fight">
                 Odstrániť
+            </a>
+            <a class="btn btn-large btn-default" n:href="Goals:view $fight">
+                Zobraziť góly
             </a>
         </div>
 

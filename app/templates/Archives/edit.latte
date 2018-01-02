@@ -1,12 +1,10 @@
 {block content}
 
-<h1 n:block='title'>Upraviť {$archive->title}</h1>
+{control breadCrumb}
 
-<section class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<p>
-	    <a n:href="all" class='btn btn-default'>
-	        <span class="glyphicon glyphicon-arrow-left"></span> Archív
-	    </a>
-	</p>
+<section class="content">
+	<h1 n:block="title">Upraviť {$archive->title}</h1>
 	{control editForm}
 </section>
+
+ {/block}

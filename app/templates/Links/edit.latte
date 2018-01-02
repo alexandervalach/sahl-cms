@@ -1,12 +1,8 @@
 {block content}
 
-<h1 n:block='title'>Uprav link</h1>
+{control breadCrumb}
 
-<p>
-    <a n:href="all#nav" class='btn btn-large btn-default'>
-        <span class="glyphicon glyphicon-arrow-left"></span>
-        Linky
-    </a>
-</p>
-
-{control editLinkForm}
+<section class="content">
+	<h1 n:block="title">Upraviť link</h1>
+	{control editForm}
+</section>

@@ -14,17 +14,18 @@ class LinksPresenter extends BasePresenter {
     private $linkRow;
 
     /** @var string */
-    private $error = "Link not found!";
+    private $error = "Link not found";
 
-    /** @var string */
-    private $storage = 'images/';
+    public function renderAll() {
+        $this->template->all_links = $this->linksRepository->findAll();
+    }
 
-    public function actionCreate() {
+    public function actionAdd() {
         $this->userIsLogged();
     }
 
-    public function renderCreate() {
-        $this->getComponent('addLinkForm');
+    public function renderAdd() {
+        $this->getComponent('addForm');
     }
 
     public function actionDelete($id) {
@@ -36,7 +37,7 @@ class LinksPresenter extends BasePresenter {
         if (!$this->linkRow) {
             throw new BadRequestException($this->error);
         }
-        $this->template->link = $this->linkRow;
+        $this->template->delete_link = $this->linkRow;
         $this->getComponent('deleteForm');
     }
 
@@ -49,10 +50,10 @@ class LinksPresenter extends BasePresenter {
         if (!$this->linkRow) {
             throw new BadRequestException($this->error);
         }
-        $this->getComponent('editLinkForm')->setDefaults($this->linkRow);
+        $this->getComponent('editForm')->setDefaults($this->linkRow);
     }
 
-    protected function createComponentAddLinkForm() {
+    protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('title', 'Text:');
         $form->addText('anchor', 'URL adresa:')
@@ -60,13 +61,12 @@ class LinksPresenter extends BasePresenter {
         $form->addUpload('image', 'Obrázok:');
         $form->addCheckbox('sponsor', ' Sponzor');
         $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedAddLinkForm;
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentEditLinkForm() {
+    protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('title', 'Text:')
                 ->setRequired("Text linku je povinný údaj");
@@ -74,46 +74,41 @@ class LinksPresenter extends BasePresenter {
                 ->setRequired("URL adresa je povinné pole.");
         $form->addCheckbox('sponsor', ' Sponzor');
         $form->addSubmit('save', 'Uložiť');
-
-        $form->onSuccess[] = $this->submittedEditLinkForm;
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedDeleteForm() {
-        $link = $this->linkRow;
-
-        if ($link->image) {
-            $image = new FileSystem;
-            $image->delete($this->storage . $link->image);
+        if ($this->linkRow->image) {
+            FileSystem::delete($this->imgFolder . '/' . $this->linkRow->image);
         }
-
-        $link->delete();
-        $this->redirect('all#nav');
+        $this->linkRow->delete();
+        $this->redirect('all');
     }
 
-    public function submittedAddLinkForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddForm(Form $form, $values) {
         $img = $values->image;
 
         if ($img->isOk() && $img->isImage()) {
             $name = $img->getSanitizedName();
-            $img->move($this->storage . $name);
-            $values->image = $name;
+            $img->move($this->imgFolder . '/' . $name);
+            $values['image'] = $name;
         }
 
         $this->linksRepository->insert($values);
-        $this->redirect('all#nav');
+        $this->flashMessage('Link bol pridaný', 'success');
+        $this->redirect('all');
     }
 
-    public function submittedEditLinkForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedEditForm(Form $form, $values) {
         $this->linkRow->update($values);
-        $this->redirect('all#nav');
+        $this->flashMessage('Link bol upravený', 'success');
+        $this->redirect('all');
     }
 
     public function formCancelled() {
-        $this->redirect('all#nav');
+        $this->redirect('all');
     }
 
 }

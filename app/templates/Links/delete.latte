@@ -1,12 +1,10 @@
 {block content}
 
-<h1 n:block="title">Odstrániť link</h1>
+{control breadCrumb}
 
-{if $link}
-    <p class='delete text-warning'>
-        Naozaj chceš zodstrániť link <mark>{$link->title}</mark>?
-    </p>
-    {control deleteForm}
-{else}
-    <p>Link nenájdený.</p>
-{/if}
+<section class="content">
+	<h1 n:block="title" class="text-center">Odstrániť link</h1>
+	{control deleteForm}
+</section>
+
+{/block}

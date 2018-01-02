@@ -7,7 +7,7 @@
         <h1 n:block="title">{$album->name}</h1>
     </div>
 
-    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
+    <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 20px">
         <a n:href="Images:add, $album" class='btn btn-large btn-primary'>
             Pridať obrázky
         </a>
@@ -19,16 +19,16 @@
         </button>
     </div>
 
-    <figure n:foreach="$imgs as $img" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin: 10px auto;">
+    <figure n:foreach="$imgs as $img" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 20px;">
         <a href="{$baseUrl}/{$imgFolder}/{$img->name}" class="lightbox-trigger" target="_blank">
             <img n:if="$img->name" src="{$basePath}/{$imgFolder}/{$img->name}" 
                 class="img img-responsive" alt="{$img->name}" />
         </a>
-        <div n:if="$user->loggedIn" class="text-center" style="margin: 10px 0;">
-            <a n:href="Images:delete, $img" class="btn btn-large btn-danger">
+        <div n:if="$user->loggedIn" class="text-center" style="margin: 5px 0;">
+            <a n:href="Albums:removeImg, $img" class="btn btn-large btn-danger">
                 Odstrániť
             </a>
-            <a n:href="Images:thumbnail, $album, $img" class="btn btn-large btn-primary" 
+            <a n:href="Albums:setImg, $img->album_id, $img" class="btn btn-large btn-primary" 
                 title="Nastaví obrázok ako miniatúru albumu">
                 Miniatúra
             </a>

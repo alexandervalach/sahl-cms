@@ -28,8 +28,8 @@ class GoalsPresenter extends BasePresenter {
     private $error = "Player not found!";
 
     public function actionView($id) {
-        $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
+        $this->roundRow = $this->roundsRepository->findById($this->fightRow->round_id);
     }
 
     public function renderView($id) {
@@ -38,7 +38,11 @@ class GoalsPresenter extends BasePresenter {
                                                        ->order('home DESC, goals DESC');
         $this->template->team1 = $this->fightRow->ref('teams', 'team1_id');
         $this->template->team2 = $this->fightRow->ref('teams', 'team2_id');
-        
+   
+        $this['breadCrumb']->addLink('Kolá', $this->link('Rounds:all'));
+        $this['breadCrumb']->addLink($this->roundRow->name, $this->link('Rounds:view', $this->roundRow));
+        $this['breadCrumb']->addLink('Zápas');
+
         if ($this->user->isloggedIn()) {
             $this->getComponent('addForm');
         }
@@ -59,28 +63,21 @@ class GoalsPresenter extends BasePresenter {
         $this->getComponent('editForm')->setDefaults($this->goalRow);
     }
 
-    public function actionDelete($id) {
+    public function actionRemove($id) {
         $this->userIsLogged();
         $this->goalRow = $this->goalsRepository->findById($id);
         $this->fightRow = $this->goalRow->ref('fights', 'fight_id');
-    }
-
-    public function renderDelete($id) {
-        if (!$this->goalRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->goal = $this->goalRow;
-        $this->getComponent('deleteForm');
+        $this->submittedRemove();
     }
 
     protected function createComponentAddForm() {
         $players = $this->teamPlayersHelper($this->fightRow);
         $form = new Form;
-        $form->addSelect('player_id', 'Hráči', $players)
-                ->setRequired();
+        $form->addSelect('player_id', 'Hráči', $players);
         $form->addText('goals', 'Počet gólov')
-                ->setDefaultValue(1)
-                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+             ->setRequired()
+             ->setDefaultValue(1)
+             ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, 'submittedAddForm'];
@@ -91,6 +88,7 @@ class GoalsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('goals', 'Počet gólov')
+             ->setRequired()
              ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
@@ -126,14 +124,14 @@ class GoalsPresenter extends BasePresenter {
         $this->redirect('view', $this->fightRow);
     }
 
-    public function submittedDeleteForm() {
+    public function submittedRemove() {
         $player = $this->playersRepository->findById($this->goalRow->player_id);
         $numOfGoals = $player->goals - $this->goalRow->goals;
         $goals = array('goals' => $numOfGoals);
         $player->update($goals);
 
         $this->goalRow->delete();
-        $this->flashMessage("Góly boli odpočítané", 'success');
+        $this->flashMessage('Góly boli odpočítané', 'success');
         $this->redirect('view', $this->fightRow);
     }
 

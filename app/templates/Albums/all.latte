@@ -3,16 +3,12 @@
 {control breadCrumb}
 
 <section class="content clearfix">
-    <div class="clearfix text-center">
-        <h1 n:block="title">Galéria</h1>
-    </div>
-
+    <h1 n:block="title">Galéria</h1>
     <div n:if="$user->loggedIn" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px">
         <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add">
             Pridať
         </button>
     </div>
-
     <figure n:foreach="$albums as $album" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 20px">
         <a n:href="view $album">
             {if $album->thumbnail && file_exists($imgFolder . "/" . $album->thumbnail)}                
@@ -27,7 +23,6 @@
             {$album->name}
         </figcaption>
     </figure>
-
 </section>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">

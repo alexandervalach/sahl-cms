@@ -72,16 +72,57 @@ class RoundsPresenter extends BasePresenter {
         }
     }
 
-    public function actionArchView($id) {
-        $this->archRow = $this->archiveRepository->findById($id);
+    public function actionArchAll($id) {
+        $this->archRow = $this->archivesRepository->findById($id);
     }
 
-    public function renderArchView($id) {
+    public function renderArchAll($id) {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
         $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
         $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
         $this['breadCrumb']->addLink("Kolá");
+    }
+
+    public function actionArchView($archive_id, $id) {
+        $this->archRow = $this->archivesRepository->findById($archive_id);
+        $this->roundRow = $this->roundsRepository->findById($id);
+    }
+
+    public function renderArchView($archive_id, $id) {
+        $i = 0;
+        $fight_data = array();
+        $fights = $this->roundRow->related('fights');
+
+        foreach ($fights as $fight) {
+            $fight_data[$i]['goals'] = $fight->related('goals')->order('goals DESC');
+            $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
+            $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
+            $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
+            $fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
+
+            if ($fight->score1 > $fight->score2) {
+                $fight_data[$i]['state_1'] = 'text-success';
+                $fight_data[$i]['state_2'] = 'text-danger';
+            } else if ($fight->score1 < $fight->score2) {
+                $fight_data[$i]['state_1'] = 'text-danger';
+                $fight_data[$i]['state_2'] = 'text-success';
+            } else {
+                $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
+            } 
+            $i++;
+        }
+
+        $this->template->fights = $fights;
+        $this->template->fight_data = $fight_data;
+        $this->template->i = 0;
+        $this->template->round = $this->roundRow;
+        $this->template->archive = $this->archRow;
+
+        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
+        $this['breadCrumb']->addLink($this->roundRow->name, $this->link("Rounds:archAll", $this->archRow));
+        $this['breadCrumb']->addLink("Zápasy");
     }
 
     protected function createComponentAddForm() {

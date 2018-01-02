@@ -1,13 +1,10 @@
 {block content}
 
-<h1 n:block="title">Odstráň trest</h1>
+{control breadCrumb}
 
-{if $punishment}
-    <p class="delete text-warnig">
-        Naozaj chceš odstrániť trest hráča 
-        <mark>{$punishment->ref('players','player_id')->lname}</mark>?
-    </p>
-    {control deleteForm}
-{else}
-    <p class="text-danger">Nemôžem nájsť vhodný trest.</p>
-{/if}
+<section class="content">
+	<h1 n:block="title">Odstrániť trest</h1>
+	{control deleteForm}
+</section>
+
+{/block}

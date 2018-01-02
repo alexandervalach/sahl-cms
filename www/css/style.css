@@ -104,8 +104,18 @@ main table {
     margin-top: -0.8em;
 }
 
-div < input#frm-addForm-url {
-    display: none;
+.content h1 {
+    text-align: center;
+    font-size: 2em;
+    margin: 0.2em;
+}
+
+.content ul {
+    padding: 0;
+}
+
+main table caption {
+    text-align: center;
 }
 
 #lightbox {

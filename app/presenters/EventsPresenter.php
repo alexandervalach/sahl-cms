@@ -52,15 +52,15 @@ class EventsPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-        $this->archRow = $this->archiveRepository->findById($id);
+        $this->archRow = $this->archivesRepository->findById($id);
     }
 
     public function renderArchView($id) {
         $this->template->archive = $this->archRow;
         $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
         
-        $this['breadCrumb']->addLink("Archívy", $this->link("Archive:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Archívy", $this->link("Archives:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
         $this['breadCrumb']->addLink("Zápasy");
     }
 

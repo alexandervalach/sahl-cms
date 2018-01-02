@@ -36,7 +36,7 @@ class RulesPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-        $this->archRow = $this->archiveRepository->findById($id);
+        $this->archRow = $this->archivesRepository->findById($id);
     }
 
     public function renderArchView($id) {

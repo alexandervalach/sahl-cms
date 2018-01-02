@@ -2,42 +2,36 @@
 
 {control breadCrumb}
 
-<section class="clearfix">
-    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 30px">
+<section class="content">
+    <h1 n:block="title">Tresty hráčov</h1>
+    <div n:if="$user->loggedIn">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať
         </button>
     </div>
-    
-    <div n:foreach="$punishments as $punishment" class="content">
-        {var $player = $punishment->ref('players', 'player_id')}
-        {var $team = $player->ref('teams', 'team_id')}
-
-        <strong>
-            {$player->lname} ({$player->num}), 
-            <a n:href="Teams:view, $team">{$team->name}</a>
-        </strong>
-        <ul style="padding: 0">
-            <li>Stop na {$punishment->round}</li>
-            <li>{$punishment->text}</li>
-            <li>{if $punishment->condition == 1}Podmienka{/if}</li>
-        </ul>
-    </div>
 </section>
+    
+<div n:foreach="$punishments as $punishment" class="content">
+    {var $player = $punishment->ref('players', 'player_id')}
+    {var $team = $player->ref('teams', 'team_id')}
+
+    {$player->lname} ({$player->num}), 
+    <a n:href="Teams:view, $team">{$team->name}</a>
+    <ul>
+        <li>Stop na {$punishment->round}</li>
+        <li>{$punishment->text}</li>
+        <li n:if="$punishment->condition">Podmienka</li>
+    </ul>
+</div>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Pridať pravidlo</h3>
+                <h3 class="modal-title">Pridať trest</h3>
             </div>
             <div class="modal-body">
-                <div class="alert alert-info">
-                    <strong>
-                        TIP: Pri kopírovaní textu, použite skratku Ctrl+Shift+V na prilepenie.
-                    </strong>
-                </div>
                 {control addForm}
             </div>
         </div>

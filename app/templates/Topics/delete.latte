@@ -1,13 +1,10 @@
 {block content}
 
-<h3 n:block="title">Odstráň príspevok</h3>
+{control breadCrumb}
 
-{if $forum}
-    <p class='delete text-warning'>
-        Naozaj chceš zmazať príspevok, ktorý napísal <mark>{$forum->author}</mark> z 
-        <mark>{$forum->created_at|date:'j.m.Y - h:i'}</mark>
-    </p>
+<section class="content">
+	<h1 n:block="title" class="text-center">Odstrániť príspevok</h1>
     {control deleteForm}
-{else}
-    <p>Príspevok nenájdený.</p>
-{/if}
+</section>
+
+{/block}

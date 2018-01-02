@@ -20,7 +20,7 @@ class PlayerTypesPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->types = $this->playerTypesRepository->findByValue('NOT id', array(1, 2));
+        $this->template->types = $this->playerTypesRepository->findAll();
     }
 
     public function actionEdit($id) {
@@ -60,28 +60,24 @@ class PlayerTypesPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('type', 'Typ hráča')
-                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
-                ->setRequired();
-        $form->addText('abbr', 'Skratka')
-                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 20 znakov.', 20);
+             ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
+             ->setRequired();
+        $form->addText('abbr', 'Skratka');
         $form->addSubmit('save', 'Uložiť');
-
         FormHelper::setBootstrapFormRenderer($form);
-        $form->onSuccess[] = $this->submittedAddForm;
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         return $form;
     }
 
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('type', 'Typ hráča')
-                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
-                ->setRequired();
-        $form->addText('abbr', 'Skratka')
-                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 20 znakov.', 20);
+             ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
+             ->setRequired();
+        $form->addText('abbr', 'Skratka');
         $form->addSubmit('save', 'Uložiť');
-
         FormHelper::setBootstrapFormRenderer($form);
-        $form->onSuccess[] = $this->submittedEditForm;
+        $form->onSuccess[] = [$this, 'submittedEditForm'];
         return $form;
     }
 
@@ -98,11 +94,13 @@ class PlayerTypesPresenter extends BasePresenter {
 
     public function submittedAddForm(Form $form, $values) {
         $this->playerTypesRepository->insert($values);
+        $this->flashMessage('Typ hráča bol pridaný', 'success');
         $this->redirect('all');
     }
 
     public function submittedEditForm(Form $form, $values) {
         $this->playerTypeRow->update($values);
+        $this->flashMessage('Typ hráča bol upravený', 'success');
         $this->redirect('all');
     }
 
@@ -115,6 +113,7 @@ class PlayerTypesPresenter extends BasePresenter {
         }
         
         $this->playerTypeRow->delete();
+        $this->flashMessage('Typ hráča bol odstránený', 'success');
         $this->redirect('all');
     }
 

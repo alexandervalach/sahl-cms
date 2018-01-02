@@ -2,10 +2,16 @@
 
 {control breadCrumb}
 
-<section id="rules" class="content">
+<section class="content">
+	<h1 n:block="title">Pravidlá a smernice</h1>
+</section>
+
+<section class="content">
     <article n:foreach="$rules as $rule">
         <main>
             {$rule->rule|noescape}
         </main>
     </article>
 </section>
+
+{/block}

@@ -3,10 +3,7 @@
 {control breadCrumb}
 
 <section class="content">
-    <div class="text-center">
-        <h1 n:block="title">Tímy</h1>
-    </div>
-
+    <h1 n:block="title">Tímy</h1>
     <div n:if="$user->loggedIn">
         <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal">
             Pridať
@@ -18,8 +15,8 @@
     <table class='table'>
         <thead>
             <tr>
-                <th width="5%">P.č.</th>
-                <th width="95%">Názov</th>
+                <th>P.č.</th>
+                <th>Názov</th>
             </tr>
         </thead>
         <tbody n:foreach='$teams as $team'>

@@ -1,8 +1,10 @@
 {block content}
 
-<h1 n:block="title">Odstráň hráča</h1>
+{control breadCrumb}
 
-<p class='delete text-warning'>
-    Naozaj chceš odstrániť hráča <span class="text-uppercase">{$player->lname}</span>?
-</p>
-{control deleteForm}
+<section class="content">
+	<h1 n:block="title">Odstráňiť hráča</h1>
+	{control deleteForm}
+</section>
+
+{/block}

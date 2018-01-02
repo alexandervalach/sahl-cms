@@ -3,10 +3,8 @@
 {control breadCrumb}
 
 <section class="content">
-    <div class="text-center">
-        <h1 n:block="title">Zobrazenie gólov</h1>
-    </div>
-    <div n:if="$user->loggedIn" class="clearfix">
+    <h1 n:block="title">Zobrazenie gólov</h1>
+    <div n:if="$user->loggedIn">
         <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add-goal">
             Pridať góly hráčom
         </button>
@@ -15,7 +13,7 @@
 
 <section id="goals" class="table-responsive text-center">
     <table class="table">
-        <caption class="text-center">
+        <caption>
             <h1>{$team1->name} : {$team2->name}</h1>
         </caption>
         <thead>

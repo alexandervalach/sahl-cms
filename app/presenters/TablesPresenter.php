@@ -13,8 +13,11 @@ class TablesPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $tableRow;
 
+    /** @var ActiveRow */
+    private $archRow;
+
     /** @var string */
-    private $error = "Row not found!";
+    private $error = "Table row not found";
 
     public function renderAll() {
         $table_types = $this->tableTypesRepository->findByValue('visible', 1);
@@ -31,53 +34,36 @@ class TablesPresenter extends BasePresenter {
         $this['breadCrumb']->addLink("Tabuľky");
     }
 
-    public function actionEdit($id) {
-        $this->userIsLogged();
-        $this->tableRow = $this->tablesRepository->findById($id);
-    }
-
-    public function renderEdit($id) {
-        if (!$this->tableRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->team = $this->tableRow;
-        $this->getComponent('editForm')->setDefaults($this->tableRow);
-    }
-
-    public function actionDelete($id) {
-        $this->userIsLogged();
-        $this->tableRow = $this->tablesRepository->findById($id);
-    }
-
-    public function renderDelete($id) {
-        if (!$this->tableRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->table = $this->tableRow;
-        $this->getComponent('deleteForm');
-    }
-
     public function actionAddToSidebar($id) {
         $this->userIsLogged();
         $this->tableRow = $this->tablesRepository->findById($id);
-    }
-
-    public function renderAddToSidebar($id) {
         if (!$this->tableRow) {
             throw new BadRequestException($this->error);
         }
-        $this->getComponent('addToSidebarForm');
+        $this->submittedSetVisible();
     }
 
-    public function actionArchView($id) {
-
+    public function actionArchAll($id) {
+        $this->archRow = $this->archivesRepository->findById($id);
     }
 
-    public function renderArchView($id) {
-        $this->template->basic = $this->tablesRepository->findByValue('type', 2)->where('archive_id', $id)->order('points DESC')->order('score1 - score2 DESC');
-        $this->template->playoff = $this->tablesRepository->findByValue('type', 1)->where('archive_id', $id)->order('points DESC')->order('score1 - score2 DESC');
-        $this->template->options = $this->optionsRepository->findByValue('visible', 1);
-        $this->template->archive = $this->archiveRepository->findById($id);
+    public function renderArchAll($id) {
+        $table_types = $this->tableTypesRepository->findByValue('visible', 1);
+        $table_rows = array();
+
+        foreach ($table_types as $type) {
+            $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
+                                                              ->where('type = ?', $type)
+                                                              ->order('points DESC');
+        }
+        
+        $this->template->tables = $table_rows;
+        $this->template->table_types = $table_types;
+        $this->template->archive = $this->archRow;
+
+        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
+        $this['breadCrumb']->addLink("Tabuľky");
     }
 
     protected function createComponentEditForm() {
@@ -105,6 +91,12 @@ class TablesPresenter extends BasePresenter {
     public function submittedDeleteForm() {
         $this->tableRow->delete();
         $this->flashMessage('Záznam bol odstránený', 'success');
+        $this->redirect('all');
+    }
+
+    public function submittedSetVisible() {
+        $this->tableRow->update(array('visible' => 1));
+        $this->flashMessage('Tabuľka bola pridaná na domovskú stránku', 'success');
         $this->redirect('all');
     }
 

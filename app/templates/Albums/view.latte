@@ -3,9 +3,7 @@
 {control breadCrumb}
 
 <section class="content clearfix">
-    <div class="text-center">
-        <h1 n:block="title">{$album->name}</h1>
-    </div>
+    <h1 n:block="title">{$album->name}</h1>
 
     <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 20px">
         <a n:href="Images:add, $album" class='btn btn-large btn-primary'>

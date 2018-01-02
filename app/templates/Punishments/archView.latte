@@ -2,18 +2,19 @@
 
 {control breadCrumb}
 
-<section id="punishments">
-    <div n:foreach="$punishments as $punishment" class="content">
-        {var $player = $punishment->ref('players', 'player_id')}
-        {var $team = $player->ref('teams', 'team_id')}
-
-        <strong>
-            {$player->lname} ({$player->num}), {$team->name}
-        </strong>
-        <ul style="padding: 0">
-            <li>Stop na {$punishment->round}</li>
-            <li>{$punishment->text}</li>
-            <li>{if $punishment->condition == 1}Podmienka{/if}</li>
-        </ul>
-    </div>
+<section class="content">
+    <h1 n:block="title">Tresty hráčov</h1>
 </section>
+
+<div n:foreach="$punishments as $punishment" class="content">
+    {var $player = $punishment->ref('players', 'player_id')}
+    {var $team = $player->ref('teams', 'team_id')}
+    {$player->lname} ({$player->num}), {$team->name}
+    <ul>
+        <li>Stop na {$punishment->round}</li>
+        <li>{$punishment->text}</li>
+        <li n:if="$punishment->condition">Podmienka</li>
+    </ul>
+</div>
+
+{/block}

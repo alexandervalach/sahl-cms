@@ -1,13 +1,10 @@
 {block content}
 
-<h1 n:block>Upraviť trest hráča {$player->lname}</h1>
+{control breadCrumb}
 
-<p n:if="$user->loggedIn">
-    <a n:href="all#nav" class="btn btn-large btn-default">
-        <span class="glyphicon glyphicon-arrow-left"></span> Tresty hráčov
-    </a>
-</p>
+<section class="content">
+	<h1 n:block="title">Upraviť trest hráča</h1>
+    {control editForm}
+</section>
 
-<div>
-    {control editPunishmentForm}
-</div>
+{/block}

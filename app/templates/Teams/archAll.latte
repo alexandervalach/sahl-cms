@@ -2,16 +2,20 @@
 
 {control breadCrumb}
 
-<section class='table-responsive'>
-    <table class='table'>
+<section class="content">
+    <h1 n:block="title">Tímy</h1>
+</section>
+
+<section class="table-responsive">
+    <table class="table">
         <thead>
             <tr>
                 <th>P.č.</th>
                 <th>Názov</th>
             </tr>
         </thead>
-        <tbody n:foreach='$teams as $team'>
-            <tr>
+        <tbody>
+            <tr n:foreach="$teams as $team">
                 <td>{$iterator->counter}.</td>
                 <td>{$team->name}</td>
             </tr>

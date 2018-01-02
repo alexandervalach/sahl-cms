@@ -1,16 +1,8 @@
 {block content}
 
-<div class="row">
-    <header>
-        <h1 n:block="title">{$type->type}</h1>
-    </header>
+{control breadCrumb}
 
-    <main class="table-responsive col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <p>
-            <a n:href="all#nav" class="btn btn-default">
-                <span class="glyphicon glyphicon-arrow-left"></span> Typy hráčov
-            </a>
-        </p>
-        {control editForm}
-    </main>
-</div>
+<section class="content">
+    <h1 n:block="title">Upraviť typ hráča</h1>
+    {control editForm}
+</section>

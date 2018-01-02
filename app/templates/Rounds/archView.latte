@@ -2,17 +2,41 @@
 
 {control breadCrumb}
 
-<section id="rounds">
-    <div class="table-responsive">
-        <table class="table">
-            <caption class="text-center">Kolá</caption>
-            <tbody>
-                <tr n:foreach="$rounds as $round">
-                    <td>
-                        <a n:href="Fights:archView, $archive, $round">{$round->name}</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+<section class="content">
+    <h1 n:block="title">{$round->name}</h1>
 </section>
+
+<section n:foreach="$fights as $fight" class="content text-center">
+    <header class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
+            <h2>
+                {$fight_data[$i]['team_1']->name}<br />
+                {$fight->score1}
+            </h2>
+            <ul n:if="$fight_data[$i]['home_goals'] != NULL" style="padding: 0">
+                <li><h4>Domáci</h4></li>
+                <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
+                    {var $player = $goal->ref('players', 'player_id')}
+                    {$goal->goals}x {$player->lname}
+                </li>
+            </ul>
+        </div>
+        
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_2']}">
+            <h2>
+                {$fight_data[$i]['team_2']->name}<br />
+                {$fight->score2}
+            </h2>
+            <ul n:if="$fight_data[$i]['guest_goals'] != NULL" style="padding: 0">
+                <li><h4>Hostia</h4></li>
+                <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
+                    {var $player = $goal->ref('players', 'player_id')}
+                    {$goal->goals}x {$player->lname}
+                </li>
+            </ul>
+        </div>
+    </header>
+    {var $i = $i + 1}
+</section>
+
+{/block}

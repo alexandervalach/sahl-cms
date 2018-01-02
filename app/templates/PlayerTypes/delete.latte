@@ -1,15 +1,8 @@
 {block content}
 
-<div class="row">
-    <header>
-        <h1 n:block="title">Odstráň typ hráča</h1>
-    </header>
+{control breadCrumb}
 
-    <main>
-        <p class='delete text-warning'>
-            Naozaj chceš odstrániť typ hráča <span class="text-uppercase">{$type->type}</span>?
-        </p>
-        {control removeForm}
-    </main>
-
-</div>
+<section class="content">
+    <h1 n:block="title">Odstrániť typ hráča</h1>        
+    {control removeForm}
+</section>

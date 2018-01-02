@@ -38,7 +38,7 @@ class PlayersPresenter extends BasePresenter {
     }
 
     public function actionArchAll($id) {
-        $this->archRow = $this->archiveRepository->findById($id);
+        $this->archRow = $this->archivesRepository->findById($id);
     }
 
     public function renderArchAll($id) {
@@ -51,7 +51,7 @@ class PlayersPresenter extends BasePresenter {
         $this->template->current = 0;
         $this->template->previous = 0;
 
-        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
+        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
         $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
         $this['breadCrumb']->addLink("Štatistiky");
     }

@@ -33,7 +33,7 @@ class PunishmentsPresenter extends BasePresenter {
 
     public function renderEdit($id) {
         $this->template->player = $this->punishmentRow->ref('players', 'player_id');
-        $this->getComponent('editPunishmentForm')->setDefaults($this->punishmentRow);
+        $this->getComponent('editForm')->setDefaults($this->punishmentRow);
     }
 
     public function actionDelete($id) {
@@ -47,7 +47,7 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function actionArchView($id) {
-        $this->archRow = $this->archiveRepository->findById($id);
+        $this->archRow = $this->archivesRepository->findById($id);
     }
 
     public function renderArchView($id) {
@@ -86,7 +86,7 @@ class PunishmentsPresenter extends BasePresenter {
         return $form;
     }
 
-    public function submittedEditPunishmentForm(Form $form, $values) {
+    public function submittedEditForm(Form $form, $values) {
         $this->punishmentRow->update($values);
         $this->flashMessage('Trest bol pridaný', 'success');
         $this->redirect('all');

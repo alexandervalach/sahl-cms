@@ -7,6 +7,7 @@ use Nette\Application\UI\Form;
 use Nette\Application\BadRequetsException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
+use Nette\IOException;
 
 class TeamsPresenter extends BasePresenter {
 
@@ -55,16 +56,29 @@ class TeamsPresenter extends BasePresenter {
         }   
     }
 
+    public function actionArchAll($id) {
+        $this->archRow = $this->archivesRepository->findById($id);
+    }
+
+    public function renderArchAll($id) {
+        $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
+        $this->template->archive = $this->archRow;
+
+        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
+        $this['breadCrumb']->addLink("Tímy");
+    }
+
     public function actionArchView($id) {
-        $this->archRow = $this->archiveRepository->findById($id);
+        $this->archRow = $this->archivesRepository->findById($id);
     }
 
     public function renderArchView($id) {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
 
-        $this['breadCrumb']->addLink("Archív", $this->link("Archive:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
+        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
+        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
         $this['breadCrumb']->addLink("Tímy");
     }
 
@@ -137,9 +151,15 @@ class TeamsPresenter extends BasePresenter {
         foreach ($players as $player) {
             $player->delete();
         }
-        FileSystem::delete($this->imgFolder . '/' . $this->teamRow->image);
+
+        try {
+            FileSystem::delete($this->imgFolder . '/' . $this->teamRow->image);
+            $this->flashMessage('Tím bol odstránený', 'success');
+        } catch(IOException $e) {
+            $this->flashMessage('Tím bol odstránený, ale nepodarilo sa odtrániť obrázok tímu', 'danger');
+        }
+        
         $this->teamRow->delete();
-        $this->flashMessage('Tím bol odstránený', 'success');
         $this->redirect('all');
     }
 

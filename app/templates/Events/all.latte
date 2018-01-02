@@ -3,33 +3,27 @@
 {control breadCrumb}
 
 <section class="content">
-    <div class="text-center">
-        <h1 n:block="title">Rozpis zápasov</h1>
-    </div>
-
-    <div n:if="$user->loggedIn" style="margin-top: 20px">
+    <h1 n:block="title">Rozpis zápasov</h1>
+    <div n:if="$user->loggedIn">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať
         </button>
     </div>
 </section>
 
-
-<section id="events">
-    <article n:foreach="$events as $event" class="content" style="margin-top: 20px">
-        <main>
-            {$event->event|noescape}
-        </main>
-        <footer n:if="$user->loggedIn">
-            <a n:href="edit $event" class="btn btn-large btn-success">
-                Upraviť
-            </a>
-            <a n:href="remove $event" class="btn btn-large btn-danger">    
-                Odstrániť
-            </a>
-        </footer>
-    </article>
-</section>
+<article n:foreach="$events as $event" class="content">
+    <main>
+        {$event->event|noescape}
+    </main>
+    <footer n:if="$user->loggedIn">
+        <a n:href="edit $event" class="btn btn-large btn-success">
+            Upraviť
+        </a>
+        <a n:href="remove $event" class="btn btn-large btn-danger">    
+            Odstrániť
+        </a>
+    </footer>
+</article>
 
 <div n:if="$user->loggedIn">
     <div id="add" class="modal fade" role="dialog">

@@ -6,8 +6,7 @@
     <div class="text-center">
         <h1 n:block="title">Kolá</h1>
     </div>
-
-    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 20px">
+    <div n:if="$user->loggedIn" class="clearfix">
         <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
             Pridať
         </button>
@@ -31,7 +30,7 @@
     </div>
 </section>
 
-<section id="modals" n:if="$user->loggedIn">
+<section n:if="$user->loggedIn">
     <div id="add" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -46,3 +45,5 @@
         </div>
     </div>
 </section>
+
+{/block}

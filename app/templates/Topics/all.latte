@@ -3,10 +3,7 @@
 {control breadCrumb}
 
 <section class="content">
-    <div class="text-center">
-        <h1 n:block="title">Fórum</h1>
-    </div>
-
+    <h1 n:block="title">Fórum</h1>
     <div class="clearfix">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_topic">
             {$addBtnLbl}
@@ -14,34 +11,31 @@
     </div>
 </section>
 
-<section id="forum">
-    <article n:foreach="$topics as $topic" class="content">
-        <header class="clearfix">
-            <div class="text-center">
-                <a n:href="Replies:add, $topic" class="ajax">
-                    <h3>{$topic->title}</h3>
-                </a>
-            </div>
-        </header>
+<article n:foreach="$topics as $topic" class="content">
+    <header class="clearfix">
+        <div class="text-center">
+            <a n:href="Replies:add, $topic" class="ajax">
+                <h3>{$topic->title}</h3>
+            </a>
+        </div>
+    </header>
 
-        <main class="clearfix">
-            {$topic->message|noescape}
-        </main>
+    <main class="clearfix" style="margin-top: 10px">
+        {$topic->message|noescape}
+    </main>
 
-        <footer class="clearfix">
-            <div class="pull-left">
-                <span class="glyphicon glyphicon-user"></span> {$topic->author},
-                <time datetime="{$topic->created_at|date:'d.m.Y'}" pubdate>
-                    <small>{$topic->created_at|date:'d.m.Y'}</small>
-                </time>
-            </div>
-        </footer>
-    </article>
-</section>
+    <footer class="clearfix">
+        <div class="pull-left">
+            <span class="glyphicon glyphicon-user"></span> {$topic->author},
+            <time datetime="{$topic->created_at|date:'d.m.Y'}" pubdate>
+                <small>{$topic->created_at|date:'d.m.Y'}</small>
+            </time>
+        </div>
+    </footer>
+</article>
 
 <div id="add_topic" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -51,7 +45,6 @@
                 {control addForm}
             </div>
         </div>
-        
     </div>
 </div>
 

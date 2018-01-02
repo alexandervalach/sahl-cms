@@ -1,5 +1,10 @@
 {block content}
 
-<h1>{$player->lname}</h1>
+{control breadCrumb}
 
-{control editPlayerForm}
+<section class="content">
+	<h1 n:block="title">Upraviť hráča</h1>
+	{control editForm}
+</section>
+
+{/block}

@@ -2,8 +2,12 @@
 
 {control breadCrumb}
 
-<section id="fights">
-    <article n:foreach="$fights as $fight" class="content" style="margin-top: 20px;">
+<section class="content">
+    <h1 n:block="title">Zápasy</h1>
+</section>
+
+<section>
+    <article n:foreach="$fights as $fight" class="content">
         {var $team1 = $fight->ref('teams', 'team1_id')}
         {var $team2 = $fight->ref('teams', 'team2_id')}
         <header>  

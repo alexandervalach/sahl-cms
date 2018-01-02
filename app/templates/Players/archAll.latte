@@ -2,7 +2,11 @@
 
 {control breadCrumb}
 
-<section id="stats" style="margin-top: 20px">
+<section class="content">
+    <h1 n:block="title">Štatistiky</h1>
+</section>
+
+<section>
     <div class='table-responsive'>
         <table class='table'>
             <thead>
@@ -12,7 +16,6 @@
                     <th>Číslo</th>
                     <th>Tím</th>
                     <th>Góly</th>
-                    <th n:if="$user->loggedIn" colspan="2">&nbsp;</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,16 +26,6 @@
                     <td>{$stat->num}</td>
                     <td>{$stat->ref('team_id')->name}</td>
                     <td>{$stat->goals}</td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="Player:edit, $stat->id" class="text-success">
-                            <span class='glyphicon glyphicon-pencil'></span>
-                        </a>
-                    </td>
-                    <td n:if="$user->loggedIn">
-                        <a n:href="Player:delete, $stat->id" class="text-danger">
-                            <span class='glyphicon glyphicon-trash'></span>
-                        </a>
-                    </td>
                     {var $previous = $stat->goals}
                 </tr>
             </tbody>

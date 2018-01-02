@@ -3,9 +3,7 @@
 {control breadCrumb}
 
 <section class="content">
-    <div class="text-center">
-        <h1 n:block="title">Linky</h1>
-    </div>
+    <h1 n:block="title">Linky</h1>
     <div n:if="$user->loggedIn">
         <a n:href="add" class='btn btn-large btn-primary'>
             Pridať
@@ -15,7 +13,7 @@
 
 <div class="table-responsive" n:if="$all_links->count()">
     <table class="table">
-        <caption class="text-center">Navštívte aj tieto stránky</caption>
+        <caption>Navštívte aj tieto stránky</caption>
         <tbody>
             <tr n:foreach="$all_links as $link">
                 <td>

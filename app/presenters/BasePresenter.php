@@ -158,15 +158,13 @@ abstract class BasePresenter extends Presenter {
         return $form;
     }
 
-    public function submittedSignInForm(Form $form) {
-        $values = $form->values;
-
+    public function submittedSignInForm(Form $form, $values) {
         try {
             $this->getUser()->login($values->username, $values->password);
             $this->flashMessage('Vitajte v administrácií SAHL', 'success');
             $this->redirect('Homepage:');
         } catch (AuthenticationException $e) {
-            $form->addError('Nesprávne meno alebo heslo.');
+            $form->addError('Nesprávne meno alebo heslo');
         }
     }
 

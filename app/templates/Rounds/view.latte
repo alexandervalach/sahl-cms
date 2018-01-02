@@ -13,6 +13,9 @@
         <button type="button" class='btn btn-large btn-danger' data-toggle="modal" data-target="#remove">
             Odstrániť
         </button>
+        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add-fight">
+            Pridať zápas
+        </button>
     </div>
 </section>
 
@@ -70,7 +73,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Upraviť zápas</h3>
+                    <h3 class="modal-title">Upraviť kolo</h3>
                 </div>
                 <div class="modal-body">
                     {control editForm}
@@ -84,10 +87,24 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Odstrániť zápas</h3>
+                    <h3 class="modal-title">Odstrániť kolo</h3>
                 </div>
                 <div class="modal-body">
                     {control removeForm}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="add-fight" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Pridať zápas</h3>
+                </div>
+                <div class="modal-body">
+                    {control addFightForm}
                 </div>
             </div>
         </div>

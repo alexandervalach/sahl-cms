@@ -17,33 +17,31 @@ class SignPresenter extends BasePresenter {
      */
     protected function createComponentSignInForm() {
         $form = new Form;
-        $form->addText('username', 'Používateľské meno:')
+        $form->addText('username', 'Používateľské meno')
              ->setRequired('Zadajte používateľské meno.');
-
-        $form->addPassword('password', 'Heslo:')
-             ->setRequired('Zadaj heslo.');
-
-        $form->addSubmit('login', 'Prihlásiť');
-
-        $form->onSuccess[] = $this->submittedSignInForm;
+        $form->addPassword('password', 'Heslo')
+             ->setRequired('Zadajte heslo.');
+        $form->addSubmit('login', 'Administrácia')
+             ->setAttribute('class', 'btn btn-success');
+        $form->addProtection();
+        $form->onSuccess[] = [$this, 'submittedSignInForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedSignInForm(Form $form) {
-        $values = $form->values;
-
+    public function submittedSignInForm(Form $form, $values) {
         try {
             $this->getUser()->login($values->username, $values->password);
+            $this->flashMessage('Vitajte v administrácii SAHL', 'success');
             $this->redirect('Homepage:');
         } catch (AuthenticationException $e) {
-            $form->addError('Nesprávne meno alebo heslo.');
+            $form->addError('Nesprávne meno alebo heslo');
         }
     }
 
     public function actionOut() {
         $this->getUser()->logout();
-        $this->flashMessage('Boli ste odhlásený.', 'success');
+        $this->flashMessage('Boli ste odhlásený', 'success');
         $this->redirect('Homepage:');
     }
 

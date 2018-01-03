@@ -33,7 +33,7 @@ class SignPresenter extends BasePresenter {
         try {
             $this->getUser()->login($values->username, $values->password);
             $this->flashMessage('Vitajte v administrácii SAHL', 'success');
-            $this->redirect('Homepage:');
+            $this->redirect('Posts:all');
         } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo');
         }
@@ -42,7 +42,7 @@ class SignPresenter extends BasePresenter {
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený', 'success');
-        $this->redirect('Homepage:');
+        $this->redirect('Posts:all');
     }
 
 }

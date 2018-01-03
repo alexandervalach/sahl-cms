@@ -20,7 +20,7 @@
 </section>
 
 <section n:foreach="$fights as $fight" class="content text-center">
-    <div n:if="$user->loggedIn" class="clearfix text-left">
+    <div n:if="$user->loggedIn" class="clearfix text-left" style="margin-bottom: 20px">
         <a class="btn btn-large btn-success" n:href="Fights:edit $fight">
             Upraviť zápas
         </a>
@@ -32,7 +32,7 @@
         </a>
     </div>
 
-    <header class="row">
+    <div class="row">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
             <div class="clearfix">
                 <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_1']->logo}" width="10%" 
@@ -45,7 +45,7 @@
                 <li>Domáci</li>
                 <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
                     {var $player = $goal->ref('players', 'player_id')}
-                    {$goal->goals}x {$player->lname}
+                    {$player->lname} {if $goal->goals > 1}{$goal->goals}{/if}
                 </li>
             </ul>
         </div>
@@ -62,11 +62,11 @@
                 <li>Hostia</li>
                 <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
                     {var $player = $goal->ref('players', 'player_id')}
-                    {$goal->goals}x {$player->lname}
+                    {$player->lname} {if $goal->goals > 1}{$goal->goals}{/if}
                 </li>
             </ul>
         </div>
-    </header>
+    </div>
     {var $i = $i + 1}
 </section>
 

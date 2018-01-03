@@ -68,8 +68,7 @@ class EventsPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addTextArea('event', 'Rozpis zápasov')
-             ->setAttribute('id', 'ckeditor')
-             ->setRequired("Rozpis zápasov je povinné pole.");
+             ->setAttribute('id', 'ckeditor');
         $form->addSubmit('add', 'Pridať');
         $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
@@ -79,8 +78,7 @@ class EventsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addTextArea('event', 'Rozpis zápasov')
-             ->setAttribute('id', 'ckeditor')
-             ->setRequired('Rozpis zápasov je povinné pole.');
+             ->setAttribute('id', 'ckeditor');
         $form->addSubmit('edit', 'Upraviť')
              ->setAttribute('class', 'btn btn-large btn-success');
         $form->onSuccess[] = [$this, 'submittedEditForm'];

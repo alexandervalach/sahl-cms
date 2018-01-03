@@ -48,13 +48,13 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function renderArchAll($id) {
-        $table_types = $this->tableTypesRepository->findByValue('visible', 1);
+        $table_types = $this->tableTypesRepository->findAll();
         $table_rows = array();
 
         foreach ($table_types as $type) {
-            $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
+            $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', $this->archRow)
                                                               ->where('type = ?', $type)
-                                                              ->order('points DESC');
+                                                              ->order('points DESC, (score1 - score2) DESC');
         }
         
         $this->template->tables = $table_rows;

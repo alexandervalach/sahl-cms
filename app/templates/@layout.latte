@@ -26,7 +26,7 @@
                     {include 'teams.latte'}
                 </div>
                 <main role='main' class='col-md-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8'>
-                    <div class="col-xs-12 colcol-md-12 col-lg-12" style="margin-bottom: 20px;">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom: 20px;">
                         <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                             <span n:if="$flash->type == 'success'" class="glyphicon glyphicon-ok"></span>&nbsp;

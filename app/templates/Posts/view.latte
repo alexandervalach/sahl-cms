@@ -22,7 +22,7 @@
             <h1 n:block="title">{$post->title}</h1>
         </header>
 
-        <main>
+        <main style="margin-top: 20px">
             {$post->content|noescape}
         </main>
 
@@ -38,13 +38,12 @@
     
     <div id="post-images" class="clearfix">
         <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
-            {var $img_path = $imgFolder . "/" . $img->name}
-            {if file_exists($img_path)}
+            {if file_exists($imgFolder . "/" . $img->name)}
                 <img src="{$basePath}/{$imgFolder}/{$img->name}" 
                     class='img img-responsive' />
             {else}
                 <img src="{$basePath}/{$imgFolder}/{$default_img}" 
-                   alt="{$img_path}" class='img img-responsive' />
+                   alt="SAHL" class='img-responsive' />
             {/if}
             <figcaption n:if="$user->loggedIn" class="text-center">
                 <a n:href="removeImg, $img->post_id, $img" class='btn btn-large btn-danger'>

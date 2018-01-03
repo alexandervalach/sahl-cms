@@ -22,17 +22,15 @@
             <h1 n:block="title">{$post->title}</h1>
         </header>
 
-        <main style="margin-top: 20px">
+        <main style="margin-top: 30px">
             {$post->content|noescape}
         </main>
 
         <footer class="clearfix">
-            <div class="pull-right">
-                Aktualizované:
-                <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
-                    {$post->created_at|date:'d.m.Y'}
-                </time>
-            </div>
+            Aktualizované:
+            <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
+                {$post->created_at|date:'d.m.Y'}
+            </time>
         </footer>
     </article>
     
@@ -40,7 +38,7 @@
         <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
             {if file_exists($imgFolder . "/" . $img->name)}
                 <img src="{$basePath}/{$imgFolder}/{$img->name}" 
-                    class='img img-responsive' />
+                    class='img-responsive' />
             {else}
                 <img src="{$basePath}/{$imgFolder}/{$default_img}" 
                    alt="SAHL" class='img-responsive' />
@@ -57,7 +55,7 @@
     </div>
 </section>
 
-<section id="modals" n:if="$user->loggedIn">
+<section n:if="$user->loggedIn">
 
     <div id="edit" class="modal fade" role="dialog">
         <div class="modal-dialog">

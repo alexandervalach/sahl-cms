@@ -162,7 +162,7 @@ abstract class BasePresenter extends Presenter {
         try {
             $this->getUser()->login($values->username, $values->password);
             $this->flashMessage('Vitajte v administrácií SAHL', 'success');
-            $this->redirect('Homepage:');
+            $this->redirect('Posts:all');
         } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo');
         }
@@ -171,18 +171,18 @@ abstract class BasePresenter extends Presenter {
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený.', 'success');
-        $this->redirect('Homepage:');
+        $this->redirect('Posts:all');
     }
 
     protected function userIsLogged() {
         if (!$this->user->isLoggedIn()) {
-            $this->redirect('Homepage:');
+            $this->redirect('Posts:all');
         }
     }
 
     protected function createComponentBreadCrumb() {
         $breadCrumb = new BreadCrumb();
-        $breadCrumb->addLink('Domov', $this->link('Homepage:'));
+        $breadCrumb->addLink('Domov', $this->link('Posts:all'));
         return $breadCrumb;
     }
 

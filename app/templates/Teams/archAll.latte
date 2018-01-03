@@ -6,7 +6,7 @@
     <h1 n:block="title">Tímy</h1>
 </section>
 
-<section class="table-responsive">
+<div n:if="$teams->count()" class="table-responsive">
     <table class="table">
         <thead>
             <tr>
@@ -21,6 +21,6 @@
             </tr>
         </tbody>
     </table>
-</section>
+</div>
 
 {/block}

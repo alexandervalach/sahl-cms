@@ -3,9 +3,11 @@
 {control breadCrumb}
 
 <section class="content">
-    <div class="text-center">
-        <h1 n:block="title">{$team->name}</h1>
-    </div>
+    <h1>
+        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="10%" 
+            n:if="file_exists($imgFolder . '/' . $team->logo)" />
+        {block title}{$team->name}{/block}
+    </h1>
 
     <div n:if="$user->loggedIn" style="margin-top: 20px">
         <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">

@@ -6,16 +6,18 @@
     <h1 n:block="title">Kolá</h1>
 </section>
 
-<div class="table-responsive">
-    <table class="table">
-        <tbody>
-            <tr n:foreach="$rounds as $round">
-                <td>
-                    <a n:href="archView, $round->archive_id, $round">{$round->name}</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+{if $rounds->count()}
+    <div class="table-responsive">
+        <table class="table">
+            <tbody>
+                <tr n:foreach="$rounds as $round">
+                    <td>
+                        <a n:href="archView, $round->archive_id, $round">{$round->name}</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{/if}
 
 {/block}

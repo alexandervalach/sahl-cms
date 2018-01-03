@@ -21,8 +21,9 @@ class TeamsPresenter extends BasePresenter {
     private $error = "Team not found";
 
     public function renderAll() {
-        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order("name ASC"); 
-        $this['breadCrumb']->addLink("Tímy");
+        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order('name'); 
+        $this['breadCrumb']->addLink('Hráči');
+        $this['breadCrumb']->addLink('Tímy');
 
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
@@ -46,6 +47,7 @@ class TeamsPresenter extends BasePresenter {
         $this->template->imgFolder = $this->imgFolder;
         $this->template->i = 0;
         $this->template->j = 0;
+        $this['breadCrumb']->addLink('Hráči');
         $this['breadCrumb']->addLink("Tímy", $this->link("Teams:all"));
         $this['breadCrumb']->addLink($this->teamRow->name);
 

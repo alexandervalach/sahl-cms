@@ -2,11 +2,10 @@
 
 namespace App;
 
-use Nette,
-	Nette\Application\Routers\RouteList,
-	Nette\Application\Routers\Route,
-	Nette\Application\Routers\SimpleRouter;
-
+use Nette;
+use Nette\Application\Routers\RouteList;
+use Nette\Application\Routers\Route;
+use Nette\Application\Routers\SimpleRouter;
 
 /**
  * Router factory.
@@ -20,7 +19,7 @@ class RouterFactory
 	public function createRouter()
 	{
 		$router = new RouteList();
-		$router[] = new Route('<presenter>/<action>[/<id>][/<param>]', 'Homepage:default');
+		$router[] = new Route('<presenter>/<action>[/<id>][/<param>]', 'Posts:all');
 		return $router;
 	}
 

@@ -25,19 +25,6 @@ class ArchivesPresenter extends BasePresenter {
 		}
 	}
 
-	public function actionEdit($id) {
-		$this->userIsLogged();
-		$this->archiveRow = $this->archivesRepository->findById($id);
-	}
-
-	public function renderEdit($id) {
-		if(!$this->archiveRow) {
-			throw new BadRequestException($this->error);
-		}
-		$this->template->archive = $this->archiveRow;
-		$this->getComponent('editForm')->setDefaults($this->archiveRow);
-	}
-
 	public function actionView($id) {
 		$this->archiveRow = $this->archivesRepository->findById($id);
 	}

@@ -11,7 +11,7 @@
     </div>
 </section>
 
-<div class='table-responsive'>
+<div n:if="$stats->count()" class='table-responsive'>
     <table class='table'>
         <thead>
             <tr>
@@ -29,7 +29,13 @@
                 <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
                 <td>{$stat->lname}</td>
                 <td>{$stat->num}</td>
-                <td><a n:href="Teams:view $team">{$team->name}</td>
+                <td>
+                    <a n:href="Teams:view $team">
+                        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="5%" 
+                            n:if="file_exists($imgFolder . '/' . $team->logo)" />
+                        {$team->name}
+                    </a>
+                </td>
                 <td>{$stat->goals}</td>
                 {var $previous = $stat->goals}
             </tr>

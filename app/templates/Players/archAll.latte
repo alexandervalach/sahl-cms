@@ -6,7 +6,7 @@
     <h1 n:block="title">Štatistiky</h1>
 </section>
 
-<section>
+<section n:if="$stats->count()">
     <div class='table-responsive'>
         <table class='table'>
             <thead>

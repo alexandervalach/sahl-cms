@@ -19,54 +19,58 @@
     </div>
 </section>
 
-<div id="fights">
-    <section n:foreach="$fights as $fight" class="content text-center">
-        <div n:if="$user->loggedIn" class="clearfix text-left">
-            <a class="btn btn-large btn-success" n:href="Fights:edit $fight">
-                Upraviť zápas
-            </a>
-            <a class="btn btn-large btn-danger" n:href="Fights:delete $fight">
-                Odstrániť
-            </a>
-            <a class="btn btn-large btn-default" n:href="Goals:view $fight">
-                Zobraziť góly
-            </a>
+<section n:foreach="$fights as $fight" class="content text-center">
+    <div n:if="$user->loggedIn" class="clearfix text-left">
+        <a class="btn btn-large btn-success" n:href="Fights:edit $fight">
+            Upraviť zápas
+        </a>
+        <a class="btn btn-large btn-danger" n:href="Fights:delete $fight">
+            Odstrániť
+        </a>
+        <a class="btn btn-large btn-default" n:href="Goals:view $fight">
+            Zobraziť góly
+        </a>
+    </div>
+
+    <header class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
+            <div class="clearfix">
+                <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_1']->logo}" width="10%" 
+                    n:if="file_exists($imgFolder . '/' . $fight_data[$i]['team_1']->logo)" />
+                {$fight_data[$i]['team_1']->name}
+            </div>
+            <div class="clearfix">{$fight->score1}</div>
+
+            <ul n:if="$fight_data[$i]['home_goals'] != NULL" class="clearfix">
+                <li>Domáci</li>
+                <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
+                    {var $player = $goal->ref('players', 'player_id')}
+                    {$goal->goals}x {$player->lname}
+                </li>
+            </ul>
         </div>
-
-        <header class="row">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
-                <h2>
-                    {$fight_data[$i]['team_1']->name}<br />
-                    {$fight->score1}
-                </h2>
-                <ul n:if="$fight_data[$i]['home_goals'] != NULL" style="padding: 0">
-                    <li><h4>Domáci</h4></li>
-                    <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
-                        {var $player = $goal->ref('players', 'player_id')}
-                        {$goal->goals}x {$player->lname}
-                    </li>
-                </ul>
+        
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_2']}">
+            <div class="clearfix">
+                <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_2']->logo}" width="10%" 
+                    n:if="file_exists($imgFolder . '/' . $fight_data[$i]['team_2']->logo)" />
+                {$fight_data[$i]['team_2']->name}
             </div>
-            
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_2']}">
-                <h2>
-                    {$fight_data[$i]['team_2']->name}<br />
-                    {$fight->score2}
-                </h2>
-                <ul n:if="$fight_data[$i]['guest_goals'] != NULL" style="padding: 0">
-                    <li><h4>Hostia</h4></li>
-                    <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
-                        {var $player = $goal->ref('players', 'player_id')}
-                        {$goal->goals}x {$player->lname}
-                    </li>
-                </ul>
-            </div>
-        </header>
-        {var $i = $i + 1}
-    </section>
-</div>
+            <div class="clearfix">{$fight->score2}</div>
 
- <section n:if="$user->loggedIn" id="modals">
+            <ul n:if="$fight_data[$i]['guest_goals'] != NULL">
+                <li>Hostia</li>
+                <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
+                    {var $player = $goal->ref('players', 'player_id')}
+                    {$goal->goals}x {$player->lname}
+                </li>
+            </ul>
+        </div>
+    </header>
+    {var $i = $i + 1}
+</section>
+
+ <section n:if="$user->loggedIn">
 
     <div id="edit" class="modal fade" role="dialog">
         <div class="modal-dialog">

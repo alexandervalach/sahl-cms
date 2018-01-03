@@ -7,11 +7,11 @@
 </section>
 
 <section class="content">
-    <article n:foreach="$rules as $rule">
-        <main>
-            {$rule->rule|noescape}
-        </main>
-    </article>
+	{if $rules->count()}
+	    <article n:foreach="$rules as $rule">
+	    	{$rule->rule|noescape}
+	    </article>
+    {/if}
 </section>
 
 {/block}

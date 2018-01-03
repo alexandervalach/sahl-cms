@@ -19,11 +19,12 @@ class EventsPresenter extends BasePresenter {
     private $error = "Event not found!";
 
     public function renderAll() {
-        if ($this->user->loggedIn) {
-            $this->getComponent("addForm");
-        }
         $this->template->events = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
         $this['breadCrumb']->addLink("Zápasy");
+        $this['breadCrumb']->addLink("Rozpis zápasov");
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent("addForm");
+        }
     }
 
     public function actionEdit($id) {
@@ -51,11 +52,11 @@ class EventsPresenter extends BasePresenter {
         $this->getComponent('removeForm');
     }
 
-    public function actionArchView($id) {
+    public function actionArchAll($id) {
         $this->archRow = $this->archivesRepository->findById($id);
     }
 
-    public function renderArchView($id) {
+    public function renderArchAll($id) {
         $this->template->archive = $this->archRow;
         $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
         

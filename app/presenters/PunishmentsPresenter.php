@@ -46,11 +46,11 @@ class PunishmentsPresenter extends BasePresenter {
         $this->getComponent('deleteForm');
     }
 
-    public function actionArchView($id) {
+    public function actionArchAll($id) {
         $this->archRow = $this->archivesRepository->findById($id);
     }
 
-    public function renderArchView($id) {
+    public function renderArchAll($id) {
         $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
         $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
         $this['breadCrumb']->addLink("Tresty hráčov");

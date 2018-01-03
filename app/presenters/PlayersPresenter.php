@@ -30,6 +30,7 @@ class PlayersPresenter extends BasePresenter {
         $this->template->current = 0;
         $this->template->previous = 0;
 
+        $this['breadCrumb']->addLink("Hráči");
         $this['breadCrumb']->addLink("Štatistiky");
         
         if ($this->user->isLoggedIn()) {

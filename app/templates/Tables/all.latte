@@ -6,7 +6,7 @@
     <h1 n:block="title">Tabuľky</h1>
 </section>
 
-<div n:foreach="$table_types as $type" class='table-responsive'>
+<div n:foreach="$table_types as $type" n:if="$tables[$type->name]->count()" class='table-responsive'>
     <table class='table'>
         <caption>
             <h3 class="text-center">{$type->name}</h3>
@@ -16,8 +16,8 @@
                 <th>P.č.</th>
                 <th>Tím</th>
                 <th><span class="glyphicon glyphicon-thumbs-up"></span></th>
-                <th><span class="glyphicon glyphicon-thumbs-down"></span></th>
                 <th>Remízy</th>
+                <th><span class="glyphicon glyphicon-thumbs-down"></span></th>
                 <th>Skóre</th>
                 <th>Rozdiel</th>
                 <th>Body</th>
@@ -26,8 +26,14 @@
         <tbody>
             <tr n:foreach="$tables[$type->name] as $row" class="{$iterator->first ? 'first'}">
                 {var $team = $row->ref('teams','team_id')}
-                <td>{$iterator->counter}</td>
-                <td><a n:href="Teams:view $team">{$team->name}</a></td>
+                <td>{$iterator->counter}.</td>
+                <td>
+                    <a n:href="Teams:view $team">
+                        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="10%" 
+                            n:if="file_exists($imgFolder . '/' . $team->logo)" />
+                        {$team->name}
+                    </a>
+                </td>
                 <td>{$row->win}</td>
                 <td>{$row->lost}</td>
                 <td>{$row->tram}</td>

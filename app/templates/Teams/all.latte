@@ -23,7 +23,11 @@
             <tr>
                 <td>{$iterator->counter}.</td>
                 <td>
-                    <a n:href='view, $team'>{$team->name}</a>
+                    <a n:href='view $team'>
+                    <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="5%" 
+                        n:if="file_exists($imgFolder . '/' . $team->logo)" />
+                        {$team->name}
+                    </a>
                 </td>
             </tr>
         </tbody>

@@ -20,6 +20,7 @@ class RoundsPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', null);
+        $this['breadCrumb']->addLink("Zápasy");
         $this['breadCrumb']->addLink("Kolá");
 
         if ($this->user->loggedIn) {

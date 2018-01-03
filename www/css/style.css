@@ -234,6 +234,15 @@ ol.breadcrumb a {
     color: #e5e5e5;
 }
 
+nav a {
+    color: white;
+}
+
+nav ul li a:focus,
+nav ul li a:hover {
+    background-color: red;
+}
+
 #post-images figure {
     margin-top: 20px;
 }
@@ -277,15 +286,6 @@ main figure img {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     -o-border-radius: 4px;
-}
-
-nav a {
-    color: white;
-}
-
-nav ul li a:focus,
-nav ul li a:hover {
-    background-color: red;
 }
 
 ul {

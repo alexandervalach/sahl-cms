@@ -1,10 +1,6 @@
-<section id="teams" class="text-center">
-    {foreach $n_teams as $n_team}
-        {if $n_team->logo != NULL}
-            <a n:href="Teams:view, $n_team" title="{$n_team->name}">
-                <img src="{$basePath}/{$imgFolder}/{$n_team->logo}" 
-                    width="{40/$teams_count}%" alt="{$n_team->name} Logo" />
-            </a>
-        {/if}
-    {/foreach}
+<section id="teams" class="text-center container-fluid hidden-xs">
+    <a n:foreach="$side_teams as $side_team" n:href="Teams:view $side_team" title="{$side_team->name}">
+        <img src="{$basePath}/{$imgFolder}/{$side_team->logo}" 
+            width="{40/$teams_count}%" alt="{$side_team->name} Logo" />
+    </a>
 </section>

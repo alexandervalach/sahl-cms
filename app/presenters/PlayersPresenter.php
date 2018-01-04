@@ -23,8 +23,8 @@ class PlayersPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->stats = $this->playersRepository->findByValue('archive_id', null)
-                                      ->where('lname != ?', ' ')
-                                      ->order('goals DESC, lname DESC');
+                                      ->where('name != ?', ' ')
+                                      ->order('goals DESC, name DESC');
         $this->template->i = 0;
         $this->template->j = 0;
         $this->template->current = 0;
@@ -44,8 +44,8 @@ class PlayersPresenter extends BasePresenter {
 
     public function renderArchAll($id) {
         $this->template->stats = $this->playersRepository->findByValue('archive_id', $id)
-                                      ->where('lname != ?', ' ')
-                                      ->order('goals DESC, lname DESC');
+                                      ->where('name != ?', ' ')
+                                      ->order('goals DESC, name DESC');
         $this->template->archive = $this->archRow;
         $this->template->i = 0;
         $this->template->j = 0;
@@ -112,7 +112,7 @@ class PlayersPresenter extends BasePresenter {
         $types = $this->playerTypesRepository->getTypes();
         
         $form = new Form;
-        $form->addText('lname', 'Meno a priezvisko:');
+        $form->addText('name', 'Meno a priezvisko:');
         $form->addText('born', 'Dátum narodenia:');
         $form->addText('num', 'Číslo:');
         $form->addSelect('type_id', 'Typ hráča', $types);
@@ -127,7 +127,7 @@ class PlayersPresenter extends BasePresenter {
         $types = $this->playerTypesRepository->getTypes();
         
         $form = new Form;
-        $form->addText('lname', 'Meno a priezvisko:');
+        $form->addText('name', 'Meno a priezvisko:');
         $form->addText('born', 'Dátum narodenia:');
         $form->addText('num', 'Číslo:');
         $form->addText('goals', 'Góly:');

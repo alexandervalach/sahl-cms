@@ -4,17 +4,18 @@
 
 <section class="content">
     <h1 n:block="title">Tresty hráčov</h1>
-</section>
 
-<div n:foreach="$punishments as $punishment" class="content">
-    {var $player = $punishment->ref('players', 'player_id')}
-    {var $team = $player->ref('teams', 'team_id')}
-    {$player->lname} ({$player->num}), {$team->name}
-    <ul>
-        <li>Stop na {$punishment->round}</li>
-        <li>{$punishment->text}</li>
-        <li n:if="$punishment->condition">Podmienka</li>
-    </ul>
-</div>
+	<div n:foreach="$punishments as $punishment">
+	    {var $player = $punishment->ref('players', 'player_id')}
+	    {var $team = $player->ref('teams', 'team_id')}
+	    {$player->lname} ({$player->num}), {$team->name}
+	    <ul>
+	        <li>Stop na {$punishment->round}</li>
+	        <li>{$punishment->text}</li>
+	        <li n:if="$punishment->condition">Podmienka</li>
+	    </ul>
+	</div>
+
+</section>
 
 {/block}

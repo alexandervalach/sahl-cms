@@ -95,6 +95,9 @@ abstract class BasePresenter extends Presenter {
     /** @var string */
     protected $default_img;
 
+    /** @var string */
+    protected $current_season;
+
     public function __construct(
     ArchivesRepository $archivesRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, TopicsRepository $topicsRepository, ImagesRepository $imagesRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImagesRepository $postImagesRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RepliesRepository $repliesRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository) {
         parent::__construct();
@@ -125,10 +128,11 @@ abstract class BasePresenter extends Presenter {
         $this->template->links = $this->linksRepository->findByValue('sponsor', 0)->order('title');
         $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = $this->imgFolder;
+        $this->template->default_img = $this->default_img;
 
-        $n_teams = $this->teamsRepository->findByValue('archive_id', NULL)->order('id');
-        $this->template->n_teams = $n_teams;
-        $this->template->teams_count = $n_teams->count();
+        $side_teams = $this->teamsRepository->findByValue('archive_id', NULL)->where('logo NOT', null);
+        $this->template->side_teams = $side_teams;
+        $this->template->teams_count = $side_teams->count();
     }
 
     protected function createComponentDeleteForm() {
@@ -147,9 +151,9 @@ abstract class BasePresenter extends Presenter {
     protected function createComponentSignInForm() {
         $form = new Form;
         $form->addText('username', 'Používateľské meno')
-             ->setRequired('Zadajte používateľské meno.');
+             ->setRequired('Zadajte používateľské meno');
         $form->addPassword('password', 'Heslo')
-             ->setRequired('Zadajte heslo.');
+             ->setRequired('Zadajte heslo');
         $form->addSubmit('login', 'Administrácia')
              ->setAttribute('class', 'btn btn-success');
         $form->addProtection();
@@ -170,7 +174,7 @@ abstract class BasePresenter extends Presenter {
 
     public function actionOut() {
         $this->getUser()->logout();
-        $this->flashMessage('Boli ste odhlásený.', 'success');
+        $this->flashMessage('Boli ste odhlásený', 'success');
         $this->redirect('Posts:all');
     }
 
@@ -182,7 +186,7 @@ abstract class BasePresenter extends Presenter {
 
     protected function createComponentBreadCrumb() {
         $breadCrumb = new BreadCrumb();
-        $breadCrumb->addLink('Domov', $this->link('Posts:all'));
+        $breadCrumb->addLink("SAHL", $this->link('Posts:all'));
         return $breadCrumb;
     }
 

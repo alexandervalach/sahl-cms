@@ -1,32 +1,44 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1 n:block="title">Tresty hráčov</h1>
-    <div n:if="$user->loggedIn">
-        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
-            Pridať
-        </button>
-    </div>
-</section>
-    
-<div n:foreach="$punishments as $punishment" class="content">
-    {var $player = $punishment->ref('players', 'player_id')}
-    {var $team = $player->ref('teams', 'team_id')}
 
-    {$player->lname} ({$player->num}), 
-    <a n:href="Teams:view, $team">
-        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="5%" 
-            n:if="file_exists($imgFolder . '/' . $team->logo)" />
-        {$team->name}
-    </a>
-    <ul>
-        <li>Stop na {$punishment->round}</li>
-        <li>{$punishment->text}</li>
-        <li n:if="$punishment->condition">Podmienka</li>
-    </ul>
-</div>
+    <div class="clearfix">
+
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+
+        <div n:if="$user->loggedIn" class="pull-right">
+            <button type="button" class="btn btn-large btn-primary" 
+                data-toggle="modal" data-target="#add" title="Pridať trest hráčovi">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+
+    </div>
+
+    <div class="clearfix">
+        <h1 n:block="title">Tresty hráčov</h1>
+    </div>
+    
+    <div n:foreach="$punishments as $punishment">
+        {var $player = $punishment->ref('players', 'player_id')}
+        {var $team = $player->ref('teams', 'team_id')}
+
+        {$player->name} ({$player->num}), 
+        <a n:href="Teams:view, $team">
+            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="5%" 
+                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+            {$team->name}
+        </a>
+        <ul>
+            <li>Stop na {$punishment->round}</li>
+            <li>{$punishment->text}</li>
+            <li n:if="$punishment->condition">Podmienka</li>
+        </ul>
+    </div>
+
+</section>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -41,3 +53,5 @@
         </div>
     </div>
 </div>
+
+{/block}

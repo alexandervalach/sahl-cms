@@ -6,31 +6,30 @@
     <h1 n:block="title">Štatistiky</h1>
 </section>
 
-<section n:if="$stats->count()">
-    <div class='table-responsive'>
-        <table class='table'>
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Meno a priezvisko</th>
-                    <th>Číslo</th>
-                    <th>Tím</th>
-                    <th>Góly</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr n:foreach="$stats as $stat">
-                    {var $current = $stat->goals}
-                    <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}{var $j = $j + 1}</td>
-                    <td>{$stat->lname}</td>
-                    <td>{$stat->num}</td>
-                    <td>{$stat->ref('team_id')->name}</td>
-                    <td>{$stat->goals}</td>
-                    {var $previous = $stat->goals}
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</section>
+<div n:if="$stats->count()" class='table-responsive'>
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Meno a priezvisko</th>
+                <th>Číslo</th>
+                <th>Tím</th>
+                <th>Góly</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr n:foreach="$stats as $stat">
+                {var $current = $stat->goals}
+                <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}</td>
+                <td>{$stat->lname}</td>
+                <td>{$stat->num}</td>
+                <td>{$stat->ref('team_id')->name}</td>
+                <td>{$stat->goals}</td>
+                {var $j = $j + 1}
+                {var $previous = $stat->goals}
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 {/block}

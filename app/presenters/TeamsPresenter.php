@@ -21,7 +21,8 @@ class TeamsPresenter extends BasePresenter {
     private $error = "Team not found";
 
     public function renderAll() {
-        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)->order('name'); 
+        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)
+                                                       ->where('logo NOT', null);
         $this['breadCrumb']->addLink('Hráči');
         $this['breadCrumb']->addLink('Tímy');
 
@@ -166,7 +167,8 @@ class TeamsPresenter extends BasePresenter {
     }
 
     public function submittedAddForm(Form $form, $values) {
-        $this->teamsRepository->insert($values);
+        $team = $this->teamsRepository->insert($values);
+        $this->tablesRepository->insert(array('team_id' =>  $team));
         $this->flashMessage('Tím bol pridaný', 'success');
         $this->redirect('all');
     }

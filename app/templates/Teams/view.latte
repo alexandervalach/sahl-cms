@@ -1,57 +1,75 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1>
-        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="10%" 
-            n:if="file_exists($imgFolder . '/' . $team->logo)" />
-        {block title}{$team->name}{/block}
-    </h1>
+    
+    <div class="clearfix">
+        
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+        
+        <div n:if="$user->loggedIn" class="pull-right">
 
-    <div n:if="$user->loggedIn" style="margin-top: 20px">
-        <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
-            Upraviť
-        </button>
-        <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
-            Odstrániť
-        </button>
-        <button type="button" class="btn btn-large btn-primary" data-target="#upload" data-toggle="modal">
-            Nastaviť obrázok    
-        </button>
+            <button type="button" class="btn btn-large btn-success" 
+                data-target="#edit" data-toggle="modal">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </button>
+            
+            <button type="button" class="btn btn-large btn-primary" 
+                data-target="#upload" data-toggle="modal">
+                <span class="glyphicon glyphicon-upload"></span>
+            </button>
+            
+            <button type="button" class="btn btn-large btn-danger" 
+                data-target="#remove" data-toggle="modal">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+
+        </div>
+
     </div>
 
-    {if ($team->image) and (file_exists($imgFolder . '/' . $team->image))}
-        <figure class="clearfix" style="margin-top: 20px">
-            <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
-                alt="{$team->name}" style="margin: 0 auto" />
-        </figure>
-    {/if}
+    <div class="clearfix">
+        <h1>
+            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="10%" 
+                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+            {block title}{$team->name}{/block}
+        </h1>
+    </div>
+
+    <figure class="clearfix" n:if="$team->image and file_exists($imgFolder . '/' . $team->image)">
+        <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
+            alt="{$team->name}" style="margin: 0 auto" />
+    </figure>
+
 </section>
 
 <section n:if="$players->count()" id="players">
+    
     <div class='table-responsive'>
         <table class='table'>
+            
             <thead>
                 <tr>
                     <th>&nbsp;</th>
-                    <th>Meno a priezvisko</th>
+                    <th>Meno</th>
                     <th>Rok narodenia</th>
                     <th>Číslo dresu</th>
                 </tr>
             </thead>
+            
             <tbody>
                 {foreach $players as $player}
                     {var $type = $player->ref('playerTypes', 'type_id')}
-                    {if $player->trans}<tr class="borrowed-player">{else}<tr>{/if}
-                        {if $player->lname}
+                    <tr {if $player->trans}class="borrowed-player"{/if}>
+                        {if $player->name}
                             <td>{$iterator->counter}.</td>
                             <td>
-                                {$player->lname}{if $type->abbr} - {$type->abbr}{/if}
+                                {$player->name} {if $type->abbr}- {$type->abbr}{/if}
                             </td>
                             <td>
                                 <time datetime="{$player->born}" pubdate>
-                                    {date('Y', strtotime($player->born))}
+                                    {$player->born|date:'Y'}
                                 </time>
                             </td>
                             <td>{$player->num}</td>
@@ -64,20 +82,24 @@
 
                 <tr n:foreach="$goalies as $goalie">
                     <td>{$iterator->counter + $i}.</td>
-                    <td>{$goalie->lname}</td>
+                    <td>{$goalie->name}</td>
                     <td>
                         <time datetime="{$goalie->born}" pubdate>
-                            {date('Y', strtotime($goalie->born))}
+                            {$player->born|date:'Y'}
                         </time>
                     </td>
                     <td>Brankár, {$goalie->num}</td>
                 </tr>
+
             </tbody>
+
         </table>
     </div>
+
 </section>
 
 {if $user->loggedIn}
+
     <div id="edit" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -119,6 +141,7 @@
             </div>
         </div>
     </div>
+
 {/if}
 
 {/block}

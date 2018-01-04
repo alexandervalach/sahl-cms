@@ -1,34 +1,37 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <div class="text-center">
-        <h1 n:block="title">Kolá</h1>
+    <div class="clearfix">
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+
+        <div n:if="$user->loggedIn" class="pull-right">
+            <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
     </div>
-    <div n:if="$user->loggedIn" class="clearfix">
-        <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add">
-            Pridať
-        </button>
+
+    <div class="clearfix">
+        <h1 n:block="title">Kolá</h1>
     </div>
 </section>
 
-{if $rounds->count()}
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Kolá</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr n:foreach="$rounds as $round">
-                    <td><a n:href="view $round">{$round->name}</a></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-{/if}
+<div class="table-responsive" n:if="$rounds->count()">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Kolá</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr n:foreach="$rounds as $round">
+                <td><a n:href="view $round">{$round->name}</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 <section n:if="$user->loggedIn">
     <div id="add" class="modal fade" role="dialog">

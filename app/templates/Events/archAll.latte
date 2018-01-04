@@ -4,10 +4,7 @@
 
 <section class="content">
 	<h1 n:block="title">Rozpis zápasov</h1>
-</section>
-
-<section>
-    <div n:foreach="$events as $event" class="content">
+    <div n:foreach="$events as $event">
         {$event->event|noescape}
     </div>
 </section>

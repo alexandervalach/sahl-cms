@@ -1,37 +1,38 @@
 {block content}
 
-{control breadCrumb}
 
-<section class="content">
-    <h1 n:block="title">Tímy</h1>
-    <div n:if="$user->loggedIn">
-        <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal">
-            Pridať
-        </button>
+<section class="content clearfix">
+    
+    <div class="clearfix">
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+        <div n:if="$user->loggedIn" class="pull-right">
+            <button type="button" class="btn btn-large btn-primary" 
+                data-target="#add" data-toggle="modal">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
     </div>
-</section>
 
-<section n:if="$teams->count()" class='table-responsive'>
-    <table class='table'>
-        <thead>
-            <tr>
-                <th>P.č.</th>
-                <th>Názov</th>
-            </tr>
-        </thead>
-        <tbody n:foreach='$teams as $team'>
-            <tr>
-                <td>{$iterator->counter}.</td>
-                <td>
-                    <a n:href='view $team'>
-                    <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="5%" 
-                        n:if="file_exists($imgFolder . '/' . $team->logo)" />
-                        {$team->name}
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="clearfix">
+        <h1 n:block="title">Tímy</h1>
+    </div>
+
+    <div id="teams">
+        <figure n:foreach="$teams as $team" class="col-xs-12 col-sm-12 col-md-4 col-lg-4" style="margin-bottom: 2em">
+            <figcaption class="text-center" style="margin-bottom: 0.5em">
+                <strong>{$team->name}</strong>
+            </figcaption>
+            <div style="height: 200px">
+                <a n:href='view $team'>
+                    <img src="{$basePath}/{$imgFolder}/{$team->logo}" class="img-responsive" 
+                        n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" style="margin: 0 auto;" />
+                </a>
+            </div>
+        </figure>
+    </div>
+
 </section>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">

@@ -4,14 +4,10 @@
 
 <section class="content">
 	<h1 n:block="title">Pravidlá a smernice</h1>
-</section>
 
-<section class="content">
-	{if $rules->count()}
-	    <article n:foreach="$rules as $rule">
-	    	{$rule->rule|noescape}
-	    </article>
-    {/if}
+	<article n:foreach="$rules as $rule">
+	    {$rule->rule|noescape}
+	</article>
 </section>
 
 {/block}

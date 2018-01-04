@@ -1,15 +1,28 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content clearfix">
-    <h1 n:block="title">Galéria</h1>
-    <div n:if="$user->loggedIn" class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="margin-top: 20px">
-        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add">
-            Pridať
-        </button>
+   
+    <div class="clearfix">
+
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+
+        <div n:if="$user->loggedIn" class="pull-right">
+            <button type="button" class='btn btn-large btn-primary' 
+                data-toggle="modal" data-target="#add" title="Pridať album">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+
     </div>
-    <figure n:foreach="$albums as $album" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 20px">
+
+    <div class="clearfix"> 
+        <h1 n:block="title">Galéria</h1>
+    </div>
+
+    <figure n:foreach="$albums as $album" 
+        class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 2em">
         <a n:href="view $album">
             {if $album->thumbnail && file_exists($imgFolder . "/" . $album->thumbnail)}                
                 <img src="{$basePath}/{$imgFolder}/{$album->thumbnail}" 
@@ -19,10 +32,11 @@
                     class="img img-responsive" alt="Logo SAHL ako miniatúra" />
             {/if}
         </a>
-        <figcaption class="text-center" style="margin: 5px 0;">
+        <figcaption class="text-center" style="margin: 0.5em 0;">
             {$album->name}
         </figcaption>
     </figure>
+
 </section>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">

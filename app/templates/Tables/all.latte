@@ -2,14 +2,14 @@
 
 {control breadCrumb}
 
-<section class="content" class="text-center">
+<section class="content">
     <h1 n:block="title">Tabuľky</h1>
 </section>
 
 <div n:foreach="$table_types as $type" n:if="$tables[$type->name]->count()" class='table-responsive'>
     <table class='table'>
         <caption>
-            <h3 class="text-center">{$type->name}</h3>
+            <h2 class="text-center">{$type->name}</h2>
         </caption>
         <thead>
             <tr>
@@ -24,13 +24,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr n:foreach="$tables[$type->name] as $row" class="{$iterator->first ? 'first'}">
+            <tr n:foreach="$tables[$type->name] as $row" {if $iterator->first}class="first"{/if}>
                 {var $team = $row->ref('teams','team_id')}
                 <td>{$iterator->counter}.</td>
                 <td>
                     <a n:href="Teams:view $team">
-                        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="10%" 
-                            n:if="file_exists($imgFolder . '/' . $team->logo)" />
+                        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="30px" 
+                            n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
                         {$team->name}
                     </a>
                 </td>

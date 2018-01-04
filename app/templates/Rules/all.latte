@@ -1,17 +1,30 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1 n:block="title">Pravidlá a smernice</h1>
-    <div n:if="$user->loggedIn">
-        <button type="button" class="btn btn-large btn-success" data-toggle="modal" data-target="#edit">
-            Upraviť
-        </button>
+
+    <div class="clearfix">
+        
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+
+        <div n:if="$user->loggedIn" class="pull-right">
+            <button type="button" class="btn btn-large btn-success" 
+                data-toggle="modal" data-target="#edit" title="Upraviť pravidlá a smernice">
+                <span class="glyphicon glyphicon-edit"></span>
+            </button>
+        </div>
+
     </div>
-    <div style="margin-top: 20px">
+    
+    <div class="clearfix">
+        <h1 n:block="title">Pravidlá a smernice</h1>
+    </div>
+
+    <div>
         {$rule->rule|noescape}
     </div>
+
 </section>
 
 <div n:if="$user->loggedIn" id="edit" class="modal fade" role="dialog">

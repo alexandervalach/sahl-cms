@@ -4,18 +4,15 @@ namespace App\Model;
 
 class PlayersRepository extends Repository {
 
-    public function getPlayersByValue($key, $value) {
-        $players = $this->findByValue($key, $value)->where('archive_id', null)->order('lname ASC');
-        if ($players == null) {
-            return null;
-        }
-
-        $list = array();
+    public function getNonEmptyPlayers() {
+        $players = $this->select('id, name, num')
+                        ->where('archive_id', null)
+                        ->where('num != ?', 0)
+                        ->order('name');
+        $list = NULL;
 
         foreach ($players as $player) {
-            if ($player->num > 0) {
-                $list[$player->id] = $player->lname . ' - ' . $player->num;
-            }
+            $list[$player->id] = $player->name . ' - ' . $player->num;
         }
         return $list;
     }

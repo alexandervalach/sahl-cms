@@ -1,10 +1,10 @@
 $(document).ready(function() {
     $('.lightbox-trigger').on('click', function(e) {
         e.preventDefault();
-        var imgHref = $(this).attr('href');
+        var imgHref = $(this).attr('src');
         var len = $('#lightbox').length;
         var total = $('section').children('figure').length - 3;
-        var parent = $('section figure a[href="' + imgHref + '"]').parent();
+        var parent = $(this).parent();
         var index = parent.index() + 1;
 
         if (len > 0) {
@@ -21,13 +21,13 @@ $(document).ready(function() {
 
         $('#show-prev').bind('click', function() {
             var imgHref = $('#picture img').attr('src');
-            var parent = $('a[href="' + imgHref + '"]').parent();
+            var parent = $('img[src="' + imgHref + '"]').parent();
             var prevParent = parent.prev();
-            var prev = prevParent.find('a').attr('href');
+            var prev = prevParent.find('img').attr('src');
             var i = 0;
 
             if (typeof prev == "undefined") {
-                prev = $('section').find('figure:last-child a').attr('href');
+                prev = $('section').find('figure:last-child img').attr('src');
                 index = total;
             } else {
                 index = prevParent.index() + 1;
@@ -42,12 +42,12 @@ $(document).ready(function() {
 
         $('#show-next').bind('click', function() {
             var imgHref = $('#picture img').attr('src');
-            var parent = $('a[href="' + imgHref + '"]').parent();
+            var parent = $('img[src="' + imgHref + '"]').parent();
             var nextParent = parent.next();
-            var next = nextParent.find('a').attr('href');
+            var next = nextParent.find('img').attr('src');
 
             if (typeof next == "undefined") {
-                next = $('section').find('figure:first-child a').attr('href');
+                next = $('section').find('figure:first-child img').attr('src');
                 index = 1;
             } else {
                 index = nextParent.index() + 1;

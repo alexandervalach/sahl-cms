@@ -1,38 +1,48 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1 n:block="title">Fórum</h1>
+    
     <div class="clearfix">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add_topic">
-            {$addBtnLbl}
-        </button>
-    </div>
-</section>
-
-<article n:foreach="$topics as $topic" class="content">
-    <header class="clearfix">
-        <div class="text-center">
-            <a n:href="Replies:add, $topic" class="ajax">
-                <h3>{$topic->title}</h3>
-            </a>
-        </div>
-    </header>
-
-    <main class="clearfix" style="margin-top: 10px">
-        {$topic->message|noescape}
-    </main>
-
-    <footer class="clearfix">
         <div class="pull-left">
-            <span class="glyphicon glyphicon-user"></span> {$topic->author},
-            <time datetime="{$topic->created_at|date:'d.m.Y'}" pubdate>
-                <small>{$topic->created_at|date:'d.m.Y'}</small>
-            </time>
+            {control breadCrumb}
         </div>
-    </footer>
-</article>
+
+        <div class="pull-right">
+            <button type="button" class="btn btn-primary" 
+                data-toggle="modal" data-target="#add_topic" title="Založiť novú diskusiu vo fóre">
+                {$addBtnLbl}
+            </button>
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <h1 n:block="title">Fórum</h1>
+    </div>
+
+    <article n:foreach="$topics as $topic">
+
+        <header class="clearfix">
+            <a n:href="Replies:add $topic">
+                <h2 class="text-center">{$topic->title}</h2>
+            </a>
+        </header>
+
+        <main class="clearfix">
+            {$topic->message|noescape}
+        </main>
+
+        <footer class="clearfix">
+            <div class="pull-left">
+                <span class="glyphicon glyphicon-user"></span> {$topic->author},
+                <time datetime="{$topic->created_at|date:'d.m.Y'}" pubdate>
+                    <small>{$topic->created_at|date:'d.m.Y'}</small>
+                </time>
+            </div>
+        </footer>
+
+    </article>
+
+</section>
 
 <div id="add_topic" class="modal fade" role="dialog">
     <div class="modal-dialog">

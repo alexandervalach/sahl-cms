@@ -1,17 +1,27 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1 n:block="title">Zobrazenie gólov</h1>
-    <div n:if="$user->loggedIn">
-        <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add-goal">
-            Pridať góly hráčom
-        </button>
+
+    <div class="clearfix">
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+
+        <div n:if="$user->loggedIn" class="pull-right">
+            <button type="button" class='btn btn-large btn-primary' 
+                data-toggle="modal" data-target="#add-goal" title="Pridať góly hráčom">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
     </div>
+
+    <div class="cleafix">
+        <h1 n:block="title">Zobrazenie gólov</h1>
+    </div>
+
 </section>
 
-<section n:if="$goals->count()" class="table-responsive text-center">
+<div n:if="$goals->count()" class="table-responsive text-center">
     <table class="table">
         <caption>
             <h1>{$team1->name} : {$team2->name}</h1>
@@ -45,7 +55,7 @@
             </tr>
         </tbody>
     </table>
-</section>
+</div>
 
 <section n:if="$user->loggedIn">
     <div id="add-goal" class="modal fade" role="dialog">

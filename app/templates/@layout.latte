@@ -16,35 +16,42 @@
         <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.3/themes/smoothness/jquery-ui.css" />
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
     </head>
-    <body class="row">
-        <div class="row" id="header">
-            {include 'navigation.latte'}
-        </div>
-        <div id="main" class="row">
-            <div class="row" id="primary">
-                <div class="row hidden-xs">
-                    {include 'teams.latte'}
+    <body>
+        {include 'navigation.latte'}
+
+        <div id="main" class="container-fluid">
+
+            {include 'teams.latte'}
+            
+            <div class="clearfix">
+                <div class="col-md-2 col-lg-2 hidden-xs col-sm-1">
+                    <!-- -->
                 </div>
-                <main role='main' class='col-md-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8'>
-                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom: 20px;">
-                        <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <span n:if="$flash->type == 'success'" class="glyphicon glyphicon-ok"></span>&nbsp;
+                
+                <main class='col-xs-12 col-sm-12 col-md-8 col-lg-8' style="padding: 0">
+                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <span n:if="$flash->type == 'success'" class="glyphicon glyphicon-ok"></span>&nbsp;
+                        <span n:if="$flash->type == 'danger'" class="glyphicon glyphicon-remove"></span>&nbsp;
                         {$flash->message}
-                        </div>
-                        {include content}
                     </div>
+                    {include content}
                 </main>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hidden-xs">
-                    {include 'teams.latte'}
-                </div>
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <button type="button" id="scroll-to-top">
-                        <i class="glyphicon glyphicon-menu-up"></i>
-                    </button>
+                
+                <div class="col-md-2 col-lg-2 hidden-xs col-sm-1">
+                    <!-- -->
                 </div>
             </div>
+            
+            {include 'teams.latte'}
+            
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <button type="button" id="scroll-to-top">
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                </button>
+            </div>
         </div>
+
         {include 'footer.latte'}
     </body>
 </html>

@@ -6,41 +6,39 @@
     <h1 n:block="title">Tabuľky</h1>
 </section>
 
-{foreach $table_types as $type}
-    <div n:if="$tables[$type->name]->count()" class='table-responsive'>
-        <table class='table'>
-            <caption>
-                <h2>{$type->name}</h2>
-            </caption>
-            <thead>
-                <tr>
-                    <th>P.č.</th>
-                    <th>Tím</th>
-                    <th><span class="glyphicon glyphicon-thumbs-up"></span></th>
-                    <th>Remízy</th>
-                    <th><span class="glyphicon glyphicon-thumbs-down"></span></th>
-                    <th>Skóre</th>
-                    <th>Rozdiel</th>
-                    <th>Body</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr n:foreach="$tables[$type->name] as $row" class="{$iterator->first ? 'first'}">
-                    {var $team = $row->ref('teams','team_id')}
-                    <td>{$iterator->counter}.</td>
-                    <td>{$team->name}</td>
-                    <td>{$row->win}</td>
-                    <td>{$row->tram}</td>
-                    <td>{$row->lost}</td>
-                    <td>{$row->score1}:{$row->score2}</td>
-                    <td>{$diff = $row->score1 - $row->score2}</td>
-                    <td>
-                        <strong class="text-danger">{$row->points}</strong>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-{/foreach}
+<div n:foreach="$table_types as $type" n:if="$tables[$type->name]->count()" class='table-responsive'>
+    <table class='table'>
+        <caption>
+            <h2>{$type->name}</h2>
+        </caption>
+        <thead>
+            <tr>
+                <th>P.č.</th>
+                <th>Tím</th>
+                <th><span class="glyphicon glyphicon-thumbs-up"></span></th>
+                <th>Remízy</th>
+                <th><span class="glyphicon glyphicon-thumbs-down"></span></th>
+                <th>Skóre</th>
+                <th>Rozdiel</th>
+                <th>Body</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr n:foreach="$tables[$type->name] as $row" {if $iterator->first}class="first"{/if}">
+                {var $team = $row->ref('teams','team_id')}
+                <td>{$iterator->counter}.</td>
+                <td>{$team->name}</td>
+                <td>{$row->win}</td>
+                <td>{$row->tram}</td>
+                <td>{$row->lost}</td>
+                <td>{$row->score1}:{$row->score2}</td>
+                <td>{$diff = $row->score1 - $row->score2}</td>
+                <td>
+                    <strong class="text-danger">{$row->points}</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
 {/block}

@@ -1,40 +1,51 @@
 {block content}
 
-{control breadCrumb}
-
 <article class="content">
-    <h1 n:block="title">{$topic->title}</h1> 
 
-    <main class="clearfix" style="margin-top: 20px;">
-        {$topic->message|noescape}
-    </main>
-    
-    <footer class="clearfix">
-        <div class="clearfix">
-            {$topic->author}
+    <div class="clearfix">
+        <div class="pull-left">
+            {control breadCrumb}
         </div>
-        <div class="clearfix" style="margin-top: 20px;">
-            <button type="button" class="btn btn-large btn-primary" data-toggle="modal" 
-                data-target="#react">
+
+        <div class="pull-right">
+            <button type="button" class="btn btn-large btn-primary" 
+                data-toggle="modal" data-target="#react">
                 Reagovať
             </button>
         </div>
+    </div>
+
+    <header class="clearfix">
+        <h1 n:block="title">{$topic->title}</h1> 
+    </header>
+
+    <main class="clearfix" style="margin-top: 1.5em;">
+        {$topic->message|noescape}
+    </main>
+    
+    <footer>
+        <div class="clearfix">
+            {$topic->author}
+        </div>
     </footer>
+
 </article>
 
-<article n:foreach="$replies as $reply" class="content" style="padding: 20px">
-    <header>
-        <strong>{$reply->author}</strong>
-        <div n:if="$user->loggedIn" class="pull-right">
-            <a n:href="delete $reply" class="text-success">
-                <span class="glyphicon glyphicon-remove"></span>
-            </a>
-        </div>
-    </header>
-    <main>
-        {$reply->content}
-    </main>
-</article>
+<section class="content reply">
+    <article n:foreach="$replies as $reply">
+        <header>
+            <strong>{$reply->author}</strong>
+            <div n:if="$user->loggedIn" class="pull-right">
+                <a n:href="delete $reply" class="text-danger">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </div>
+        </header>
+        <main>
+            {$reply->content}
+        </main>
+    </article>
+</section>
 
 <div id="react" class="modal fade" role="dialog">
     <div class="modal-dialog">

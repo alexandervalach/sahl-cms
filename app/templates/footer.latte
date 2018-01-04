@@ -1,56 +1,61 @@
-<footer class='row text-center'>
-    <section class="col-md-2">
-        <!-- -->
-    </section>
-    <section id="links" class="col-md-3">
-        <h3>Navštívte aj tieto stránky</h3>
-        <p n:foreach="$links as $link">
-            <a href='{$link->anchor}' target="_blank">{$link->title}</a>
-        </p>
-        <p>
-            <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
-                SAHL na Facebooku
-            </a>
-        </p>
-    </section>
+<footer class='container-fluid text-center'>
+    <div class="row">
+        <section class="col-md-2 col-lg-2 col-sm-1 hidden-xs">
+            <!-- -->
+        </section>
+        <section id="links" class="col-md-3 col-lg-3">
+            <h3>Navštívte aj tieto stránky</h3>
+            <p n:foreach="$links as $link">
+                <a href='{$link->anchor}' target="_blank">{$link->title}</a>
+            </p>
+            <p>
+                <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
+                    SAHL na Facebooku
+                </a>
+            </p>
+        </section>
 
-    <section id="sponsors" class="col-md-2">
-        <h3>Sponzori</h3>
+        <section id="sponsors" class="col-md-2 col-lg-2">
+            <h3>Sponzori</h3>
             <figure n:foreach="$sponsors as $sponsor" style="margin: 20px 0">
-                {var $imgPath = $imgFolder . '/' . $sponsor->image}
                 <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                    {if file_exists($imgPath)}
-                        <img class="img img-responsive" alt="{$sponsor->title}"
+                    {if file_exists($imgFolder . '/' . $sponsor->image)}
+                        <img class="img img-responsive" alt="Logo sponzora {$sponsor->title}"
                              src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
                     {else}
                         {$sponsor->title}
                     {/if}
                 </a>
             </figure>
-    </section>
+        </section>
 
-    <section id="copyright" class="col-md-3">
-        <div id="authors"> 
-            <h3>Autori</h3>
-            <p>Alexander Valach</p>
-            <p>Tomáš Hudák</p>
-            <p>Michal Tarabík</p>
-            <p>2014 - {date('Y')}</p> 
-            <p>Postavené na <a target="_blank" href="https://nette.org/">Nette</a></p>
-        </div>
+        <section class="col-lg-3 col-md-3">
+            <div id="authors"> 
+                <h3>Autori</h3>
+                <p>Alexander Valach</p>
+                <p>Tomáš Hudák</p>
+                <p>Michal Tarabík</p>
+                <p>2014 - {date('Y')}</p> 
+                <p>Postavené na <a target="_blank" href="https://nette.org/">Nette</a></p>
+            </div>
 
-        {if !$user->loggedIn}
-            <div>
-                <h2><span class="glyphicon glyphicon-user"></span></h2>
-                <div class="col-md-8 col-md-offset-2">
-                    {control signInForm}
+            {if !$user->loggedIn}
+                <div>
+                    <h2><span class="glyphicon glyphicon-user"></span></h2>
+                    <div class="col-md-8 col-md-offset-2">
+                        {control signInForm}
+                    </div>
                 </div>
-            </div>
-        {else}
-            <div>
-                <a n:href="Sign:out" class="btn btn-success btn-large">Odhlásiť</a>
-            </div>
-        {/if}
-    </section>
+            {else}
+                <div>
+                    <a n:href="Sign:out" class="btn btn-success btn-large">Odhlásiť</a>
+                </div>
+            {/if}
+        </section>
+
+        <section class="col-md-2 col-lg-2 col-sm-1 hidden-xs">
+            <!-- -->
+        </section>
+    </div>
 </footer>
 

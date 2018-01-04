@@ -15,8 +15,8 @@ class PunishmentsPresenter extends BasePresenter {
     private $archRow;
 
     public function renderAll() {
-        $this->template->punishments =
-            $this->punishmentsRepository->findByValue('archive_id', null)->order('id DESC');
+        $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', null)
+                                                                   ->order('id DESC');
 
         $this['breadCrumb']->addLink("Hráči", $this->link("Players:all"));
         $this['breadCrumb']->addLink("Tresty hráčov");
@@ -72,11 +72,10 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     protected function createComponentAddForm() {
-        $players = $this->playersRepository->getPlayersByValue('num !=', 0);
+        $players = $this->playersRepository->getNonEmptyPlayers();
 
         $form = new Form;
-        $form->addSelect('player_id', 'Hráč', $players)
-                ->setRequired();
+        $form->addSelect('player_id', 'Hráč', $players);
         $form->addText('text', 'Dôvod');
         $form->addText('round', 'Kolá');
         $form->addCheckbox('condition', ' Podmienka');

@@ -30,7 +30,7 @@
                     </a>
                 </td>
                 <td>
-                    <a n:if="$iterator->counter != 1" n:href="delete $type" class="text-danger">
+                    <a n:if="!$iterator->first" n:href="delete $type" class="text-danger">
                         <span class="glyphicon glyphicon-trash"></span>
                     </a>
                 </td>

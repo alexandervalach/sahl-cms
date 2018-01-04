@@ -2,82 +2,84 @@
 
 {control breadCrumb}
 
-<section class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 clearfix">
-        <div class="alert alert-info">
-            Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
-            na amatérskej úrovni, samozrejme v rámci pravidiel.
-            Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
-        </div>
+<div class="content">
+    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
+    na amatérskej úrovni, samozrejme v rámci pravidiel.
+    Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 content" style="padding: 0;">
+    <article n:foreach="$posts as $post" class="clearfix">
+        <a n:href="Posts:view $post">
+            <figure class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
+                {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
+                    <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img-responsive" />
+                {else}
+                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img-responsive" />
+                {/if}
+            </figure>
+            <main class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
+                {$post->title}
+            </main>
+        </a>
+    </article>
+</div>
+
+<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5" style="padding: 0;">
+
+    <div n:if="$sideFights->count()" class="table-responsive">
+        <table class='table'>
+            <caption>
+                <h2 class="text-center">
+                    <a n:href="Rounds:view $sideRound">{$sideRound->name}</a>
+                </h2>
+            </caption>
+            <tbody>
+                <tr n:foreach="$sideFights as $fight">
+                    {var $team1 = $fight->ref('teams', 'team1_id');}
+                    {var $team2 = $fight->ref('teams', 'team2_id');}
+                    <td>
+                        <img src="{$basePath}/{$imgFolder}/{$team1->logo}" width="20px" 
+                            n:if="$team1->logo and file_exists($imgFolder . '/' . $team1->logo)"/> 
+                        {$team1->name}
+                    </td>
+                    <td>
+                        <img src="{$basePath}/{$imgFolder}/{$team2->logo}" width="20px"
+                            n:if="$team2->logo and file_exists($imgFolder . '/' . $team2->logo)" />
+                        {$team2->name}
+                    </td>
+                    <td>{$fight->score1}</td>
+                    <td>:</td>
+                    <td>{$fight->score2}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
-        <article n:foreach="$posts as $post" class="clearfix content" style="margin-bottom: 20px">
-            <a n:href="Posts:view $post">
-                <figure class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                    {if file_exists($imgFolder . "/" . $post->thumbnail)}
-                        <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img-responsive" />
-                    {else}
-                        <img src='{$basePath}/{$imgFolder}/{$default}' class="img-responsive" />
-                    {/if}
-                </figure>
-                <main class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-                    {$post->title}
-                </main>
-            </a>
-        </article>
+    <div n:foreach="$side_table_types as $type" class='table-responsive'>
+        <table class='table leaderboard'>
+            <caption>
+                <h2>
+                    <a n:href="Tables:all">{$type->name}</a>
+                </h2>
+            </caption>
+            <tbody>
+                <tr n:foreach="$side_tables[$type->name] as $row" {if $iterator->first}class="first"{/if}>
+                    {var $team = $row->ref('teams', 'team_id')}
+                    <td>{$iterator->counter}.</td>
+                    <td>
+                        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="20px"
+                            n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                        {$team->name}
+                    </td>
+                    <td>
+                        <strong class="text-danger">{$row->points}</strong>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="col-xs-12 col-sm-12 col-md-5 col-lg-5">
-        <div n:if="$sideFights->count()" class="table-responsive">
-            <table class='table'>
-                <caption>
-                    <h2 class="text-center">
-                        <a n:href="Rounds:view $sideRound">{$sideRound->name}</a>
-                    </h2>
-                </caption>
-                <tbody>
-                    <tr n:foreach="$sideFights as $fight">
-                        {var $team1 = $fight->ref('teams', 'team1_id');}
-                        {var $team2 = $fight->ref('teams', 'team2_id');}
-                        <td>
-                            <img src="{$basePath}/{$imgFolder}/{$team1->logo}" width="20px" /> 
-                            {$team1->name}
-                        </td>
-                        <td>
-                            <img src="{$basePath}/{$imgFolder}/{$team2->logo}" width="20px" />
-                            {$team2->name}
-                        </td>
-                        <td>{$fight->score1}</td>
-                        <td>:</td>
-                        <td>{$fight->score2}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div n:foreach="$side_table_types as $type" class='table-responsive'>
-            <table class='table'>
-                <caption>
-                    <h2 class="text-center">
-                        <a n:href="Tables:all">{$type->name}</a>
-                    </h2>
-                </caption>
-                <tbody>
-                    <tr n:foreach="$side_tables[$type->name] as $row">
-                        {var $team = $row->ref('teams', 'team_id')}
-                        <td>{$iterator->counter}.</td>
-                        <td>
-                            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="20px" />
-                            {$team->name}
-                        </td>
-                        <td>{$row->points}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </div>
-</section>
+</div>  
 
 {/block}

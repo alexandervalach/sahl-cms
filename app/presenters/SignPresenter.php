@@ -18,11 +18,11 @@ class SignPresenter extends BasePresenter {
     protected function createComponentSignInForm() {
         $form = new Form;
         $form->addText('username', 'Používateľské meno')
-             ->setRequired('Zadajte používateľské meno.');
+             ->setRequired('Zadajte používateľské meno');
         $form->addPassword('password', 'Heslo')
-             ->setRequired('Zadajte heslo.');
+             ->setRequired('Zadajte heslo');
         $form->addSubmit('login', 'Administrácia')
-             ->setAttribute('class', 'btn btn-success');
+             ->setAttribute('class', 'btn btn-large btn-success');
         $form->addProtection();
         $form->onSuccess[] = [$this, 'submittedSignInForm'];
         FormHelper::setBootstrapFormRenderer($form);

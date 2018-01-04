@@ -1,29 +1,37 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1 n:block="title">{$archive->title}</h1>
-    <div n:if="$user->loggedIn">
-        <button type="button" class='btn btn-large btn-success' data-target="#edit" data-toggle="modal">
-            Upraviť
-        </button>
-    </div>
-</section>
 
-<div class="table-responsive">
-    <table class="table">
-        <tbody>
-            <tr><td><a n:href="Tables:archAll, $archive">Tabuľky</a></td></tr>
-            <tr><td><a n:href="Rounds:archAll, $archive">Kolá</a></td></tr>
-            <tr><td><a n:href="Teams:archAll, $archive">Tímy</a></td></tr>
-            <tr><td><a n:href="Players:archAll, $archive">Štatistiky</a></td></tr>
-            <tr><td><a n:href="Events:archAll, $archive">Rozpis zápasov</a></td></tr>
-            <tr><td><a n:href="Rules:archView, $archive">Pravidlá a smernice</a></td></tr>
-            <tr><td><a n:href="Punishments:archAll, $archive->id">Tresty hráčov</a></td></tr>
-        </tbody>
-    </table>
-</div>
+    <div class="clearfix">
+
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+
+        <div n:if="$user->loggedIn" class="pull-right">
+            <button type="button" class='btn btn-large btn-success' 
+                data-target="#edit" data-toggle="modal" title="Upraviť archív">
+                <span class="glyphicon glyphicon-edit"></span>
+            </button>
+        </div>
+    
+    </div>
+
+    <div class="clearfix">
+        <h1 n:block="title">{$archive->title}</h1>
+    </div>
+
+    <ul>
+        <li><a n:href="Tables:archAll $archive">Tabuľky</a></li>
+        <li><a n:href="Rounds:archAll $archive">Kolá</a></li>
+        <li><a n:href="Teams:archAll $archive">Tímy</a></li>
+        <li><a n:href="Players:archAll $archive">Štatistiky</a></li>
+        <li><a n:href="Events:archAll $archive">Rozpis zápasov</a></li>
+        <li><a n:href="Rules:archView $archive">Pravidlá a smernice</a></li>
+        <li><a n:href="Punishments:archAll $archive">Tresty hráčov</a></li>
+    </ul>
+
+</section>
 
 <section n:if="$user->loggedIn">
     <div id="edit" class="modal fade" role="dialog">

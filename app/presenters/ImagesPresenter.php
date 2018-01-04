@@ -63,42 +63,4 @@ class ImagesPresenter extends BasePresenter {
         }
     }
 
-    public function submittedAddImagesForm(Form $form, $values) {
-        $imgData = array();
-
-        foreach ($values['images'] as $img) {
-            $name = strtolower($img->getSanitizedName());
-
-            if ($img->isOk() AND $img->isImage()) {
-                $img->move($this->imgFolder . '/' . $name);
-            }
-
-            $imgData['name'] = $name;
-            $imgData['album_id'] = $this->albumRow;
-            $this->imagesRepository->insert($imgData);
-        }
-
-        $this->redirect('Albums:view', $this->albumRow);
-    }
-
-    protected function createComponentAddImagesForm() {
-        $form = new Form;
-        $form->addMultiUpload('images', "Nahrať obrázok");
-        $form->addSubmit('upload', 'Nahrať');
-        $form->onSuccess[] = [$this, 'submittedAddImagesForm'];
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
-    public function submittedDeleteForm() {
-        FileSystem::delete($this->imgFolder . '/' . $this->imagesRow->name);
-        $this->imagesRow->delete();
-        $this->flashMessage('Obrázok odstránený.', 'success');
-        $this->redirect('Albums:view', $this->imagesRow->album_id);
-    }
-
-    public function formCancelled() {
-        $this->redirect('Albums:view', $this->imagesRow->album_id);
-    }
-
 }

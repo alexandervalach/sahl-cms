@@ -110,6 +110,15 @@ class AlbumsPresenter extends BasePresenter {
         return $form;
     }
 
+    protected function createComponentAddImgForm() {
+        $form = new Form;
+        $form->addMultiUpload('images', "Nahrať obrázok");
+        $form->addSubmit('upload', 'Nahrať');
+        $form->onSuccess[] = [$this, 'submittedAddImgForm'];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
     public function submittedAddForm(Form $form, $values) {
         $this->albumsRepository->insert($values);
         $this->flashMessage('Album bol pridaný', 'success');
@@ -152,11 +161,33 @@ class AlbumsPresenter extends BasePresenter {
         $this->redirect('Albums:view', $album);
     }
 
-    protected function submittedSetImg() {
+    public function submittedSetImg() {
         $data['thumbnail'] = $this->imgRow->name;
         $this->albumRow->update($data);
         $this->flashMessage('Miniatúra bola nastavená', 'success');
         $this->redirect('all');
+    }
+
+    public function submittedAddImgForm(Form $form, $values) {
+        $data = array();
+
+        foreach ($values['images'] as $img) {
+            $name = strtolower($img->getSanitizedName());
+            $data['name'] = $name;
+            $data['album_id'] = $this->albumRow;
+
+            try {
+                if ($img->isOk() AND $img->isImage()) {
+                    $img->move($this->imgFolder . '/' . $name);
+                }
+                $this->imagesRepository->insert($data);
+            } catch (IOException $e) {
+                $this->flashMessage('Obrázok ' . $name . ' sa nepodarilo nahrať', 'danger');
+            }
+        }
+
+        $this->flashMessage('Obrázky boli pridané', 'success');
+        $this->redirect('Albums:view', $this->albumRow);
     }
 
 }

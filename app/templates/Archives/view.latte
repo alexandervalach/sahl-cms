@@ -2,13 +2,9 @@
 
 <section class="content">
 
-    <div class="clearfix">
+    <div class="clearfix" n:if="$user->loggedIn">
 
-        <div class="pull-left">
-            {control breadCrumb}
-        </div>
-
-        <div n:if="$user->loggedIn" class="pull-right">
+        <div class="pull-right">
             <button type="button" class='btn btn-large btn-success' 
                 data-target="#edit" data-toggle="modal" title="Upraviť archív">
                 <span class="glyphicon glyphicon-edit"></span>

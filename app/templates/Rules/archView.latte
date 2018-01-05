@@ -1,9 +1,16 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-	<h1 n:block="title">Pravidlá a smernice</h1>
+	
+	<div class="clearfix hidden-xs">
+		<div class="pull-left">
+			{control breadCrumb}
+		</div>
+	</div>
+
+	<div class="clearfix">
+		<h1 n:block="title">Pravidlá a smernice</h1>
+	</div>
 
 	<article n:foreach="$rules as $rule">
 	    {$rule->rule|noescape}

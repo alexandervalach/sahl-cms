@@ -154,9 +154,8 @@ abstract class BasePresenter extends Presenter {
              ->setRequired('Zadajte používateľské meno');
         $form->addPassword('password', 'Heslo')
              ->setRequired('Zadajte heslo');
-        $form->addSubmit('login', 'Administrácia')
-             ->setAttribute('class', 'btn btn-success');
-        $form->addProtection();
+        $form->addSubmit('login', 'Prihlásiť');
+        $form->addProtection("Platnosť formulára vypršala, skúste znovu");
         $form->onSuccess[] = [$this, 'submittedSignInForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

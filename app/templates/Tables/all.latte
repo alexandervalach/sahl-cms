@@ -1,9 +1,11 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1 n:block="title">Tabuľky</h1>
+
+    <div class="clearfix">
+        <h1 n:block="title">Tabuľky</h1>
+    </div>
+
 </section>
 
 <div n:foreach="$table_types as $type" n:if="$tables[$type->name]->count()" class='table-responsive'>

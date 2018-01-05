@@ -2,13 +2,9 @@
 
 <section class="content">
 
-    <div class="clearfix">
+    <div n:if="$user->loggedIn" class="clearfix">
 
-        <div class="pull-left">
-            {control breadCrumb}
-        </div>
-
-        <div n:if="$user->loggedIn" class="pull-right">
+        <div class="pull-right">
             <button type="button" class="btn btn-large btn-primary" 
                 data-toggle="modal" data-target="#add" title="Pridať trest hráčovi">
                 <span class="glyphicon glyphicon-plus"></span>
@@ -21,20 +17,21 @@
         <h1 n:block="title">Tresty hráčov</h1>
     </div>
     
-    <div n:foreach="$punishments as $punishment">
+    <div n:foreach="$punishments as $punishment" style="margin-top: 2em" class="text-center">
         {var $player = $punishment->ref('players', 'player_id')}
         {var $team = $player->ref('teams', 'team_id')}
 
-        {$player->name} ({$player->num}), 
-        <a n:href="Teams:view, $team">
-            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="5%" 
+        <h2>{$player->name} ({$player->num})</h2> 
+        <h3>
+            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="40px" 
                 n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
             {$team->name}
-        </a>
+        </h3>
+        
         <ul>
-            <li>Stop na {$punishment->round}</li>
-            <li>{$punishment->text}</li>
-            <li n:if="$punishment->condition">Podmienka</li>
+            <li><strong>Stop na: </strong>{$punishment->round}</li>
+            <li><strong>Dôvod: </strong>{$punishment->text}</li>
+            <li n:if="$punishment->condition"><strong>Podmienečne</strong></li>
         </ul>
     </div>
 

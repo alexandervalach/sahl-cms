@@ -2,13 +2,9 @@
 
 <section class="content">
 
-    <div class="clearfix">
-        
-        <div class="pull-left">
-            {control breadCrumb}
-        </div>
+    <div class="clearfix" n:if="$user->loggedIn">
 
-        <div class="pull-right" n:if="$user->loggedIn">
+        <div class="pull-right">
         
             <button type="button" class='btn btn-large btn-success' 
                 data-target="#edit" data-toggle="modal" title="Upraviť článok">
@@ -16,7 +12,7 @@
             </button>
             
             <button type="button" class='btn btn-large btn-primary' 
-                data-target="#upload" data-toggle="modal" title="Nahrať obrázky k články">
+                data-target="#upload" data-toggle="modal" title="Nahrať obrázky k článku">
                 <span class="glyphicon glyphicon-upload"></span>
             </button>
 
@@ -29,45 +25,38 @@
 
     </div>
 
-    <article style="margin-top: 20px">
-
+    <article style="margin-top: 2em">
+        
         <header>
             <h1 n:block="title">{$post->title}</h1>
         </header>
 
-        <main style="margin-top: 30px">
+        <main>
             {$post->content|noescape}
         </main>
 
-        <footer class="clearfix">
-            Aktualizované:
-            <time datetime="{$post->created_at|date:'d.m.Y'}" pubdate>
-                {$post->created_at|date:'d.m.Y'}
-            </time>
-        </footer>
     </article>
     
-    <div id="post-images" class="clearfix">
+    <hr />
+
+    <div id="post-images" n:if="$images->count()" class="clearfix" style="margin-top: 3em">
 
         <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6'>
-            <figcaption n:if="$user->loggedIn" class="text-right">
+
+            <img n:if="file_exists($imgFolder . '/' . $img->name) or $user->loggedIn"
+                src="{$basePath}/{$imgFolder}/{$img->name}" 
+                class='img img-responsive' alt="{$img->name}" />
+
+            <figcaption n:if="$user->loggedIn" class="text-center" style="margin-top: 1em">
                 <a n:href="setImg, $img->post_id, $img" class='btn btn-large btn-primary' 
                     title="Nastaviť obrázok ako miniatúru článku">
                     <span class="glyphicon glyphicon-picture"></span>
                 </a>
                 <a n:href="removeImg, $img->post_id, $img" class='btn btn-large btn-danger' 
                     title="Odstrániť obrázok">
-                    <span class="glyphicon glyphicon-remove"></span>
+                    <span class="glyphicon glyphicon-trash"></span>
                 </a>
             </figcaption>
-
-            {if file_exists($imgFolder . "/" . $img->name)}
-                <img src="{$basePath}/{$imgFolder}/{$img->name}" 
-                    class='img-responsive' />
-            {else}
-                <img src="{$basePath}/{$imgFolder}/{$default_img}" 
-                   alt="SAHL" class='img-responsive' />
-            {/if}
 
         </figure>
 

@@ -1,12 +1,21 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-	<h1 n:block="title">Rozpis zápasov</h1>
-    <div n:foreach="$events as $event">
+	
+	<div class="clearfix hidden-xs">
+		<div class="pull-left">
+			{control breadCrumb}
+		</div>
+	</div>
+
+	<div class="clearfix">
+		<h1 n:block="title">Rozpis zápasov</h1>
+    </div>
+
+    <div n:foreach="$events as $event" style="margin-top: 3em">
         {$event->event|noescape}
     </div>
+
 </section>
 
 {/block}

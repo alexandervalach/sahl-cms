@@ -1,6 +1,6 @@
-<section id="teams" class="text-center container-fluid hidden-xs">
+<section id="teams" class="text-center container-fluid hidden-xs" style="margin-top: 1em; margin-bottom: 1em">
     <a n:foreach="$side_teams as $side_team" n:href="Teams:view $side_team" title="{$side_team->name}">
         <img src="{$basePath}/{$imgFolder}/{$side_team->logo}" 
-            width="{40/$teams_count}%" alt="{$side_team->name} Logo" />
+            width="4%" alt="{$side_team->name} Logo" style="margin-left: 0.5em; margin-right: 0.5em" />
     </a>
 </section>

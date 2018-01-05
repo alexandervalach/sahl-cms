@@ -2,13 +2,9 @@
 
 <section class="content">
 
-    <div class="clearfix">
+    <div n:if="$user->loggedIn" class="clearfix">
 
-        <div class="pull-left">
-            {control breadCrumb}
-        </div>
-
-        <div n:if="$user->loggedIn" class="pull-right">
+        <div class="pull-right">
             <button type="button" class="btn btn-large btn-danger" 
                 data-toggle="modal" data-target="#reset-stats" title="Vynulovať štatistiky">
                 <span class="glyphicon glyphicon-erase"></span>

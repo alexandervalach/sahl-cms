@@ -1,10 +1,10 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
 
-    <h1 n:block="title">{$round->name}</h1>
+    <div class="clearfix">
+        <h1 n:block="title">{$round->name}</h1>
+    </div>
 
     <div n:foreach="$fights as $fight" class="text-center">
         <div class="row">
@@ -17,7 +17,7 @@
                     <li><h4>Domáci</h4></li>
                     <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
                         {var $player = $goal->ref('players', 'player_id')}
-                        {$player->lname} {if $goal->goals > 1}{$goal->goals}{/if}
+                        {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
                     </li>
                 </ul>
             </div>
@@ -31,7 +31,7 @@
                     <li><h4>Hostia</h4></li>
                     <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
                         {var $player = $goal->ref('players', 'player_id')}
-                        {$player->lname} {if $goal->goals > 1}{$goal->goals}{/if}
+                        {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
                     </li>
                 </ul>
             </div>

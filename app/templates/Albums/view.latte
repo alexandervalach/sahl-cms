@@ -2,13 +2,9 @@
 
 <section class="content clearfix">
 
-    <div class="clearfix">
+    <div class="clearfix" n:if="$user->loggedIn">
 
-        <div class="pull-left">
-            {control breadCrumb}
-        </div>
-
-        <div n:if="$user->loggedIn" class="pull-right">
+        <div class="pull-right">
             
             <button type="button" class='btn btn-large btn-success' 
                 data-toggle="modal" data-target="#edit" title="Upraviť album">
@@ -34,21 +30,24 @@
     </div>
 
     <section id="pictures">
-        <figure n:foreach="$imgs as $img" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" n:if="file_exists($imgFolder . '/' . $img->name) or $user->loggedIn">
-            <div n:if="$user->loggedIn" class="text-right">
-
-                <a n:href="Albums:setImg, $img->album_id, $img" class="btn btn-large btn-primary" 
-                    title="Nastaví obrázok ako miniatúru albumu">
-                    <span class="glyphicon glyphicon-picture"></span>
-                </a>
-                <a n:href="Albums:removeImg, $img" class="btn btn-large btn-danger">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a>
-
-            </div>
+        <figure n:foreach="$imgs as $img" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" 
+            n:if="file_exists($imgFolder . '/' . $img->name) or $user->loggedIn">
             
             <img src="{$basePath}/{$imgFolder}/{$img->name}" 
                 class="img img-responsive lightbox-trigger" alt="{$img->name}" />
+
+            <figcaption n:if="$user->loggedIn" class="text-center" style="margin-top: 1em">
+
+                <a n:href="Albums:setImg, $img->album_id, $img" class="btn btn-primary" 
+                    title="Nastaví obrázok ako miniatúru albumu">
+                    <span class="glyphicon glyphicon-picture"></span>
+                </a>
+                <a n:href="Albums:removeImg, $img" class="btn btn-danger"
+                    title="Odstrániť obrázok">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+
+            </figcaption>
 
         </figure>
     </section>

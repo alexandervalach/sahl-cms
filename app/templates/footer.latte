@@ -1,61 +1,60 @@
 <footer class='container-fluid text-center'>
-    <div class="row">
-        <section class="col-md-2 col-lg-2 col-sm-1 hidden-xs">
-            <!-- -->
-        </section>
-        <section id="links" class="col-md-3 col-lg-3">
-            <h3>Navštívte aj tieto stránky</h3>
-            <p n:foreach="$links as $link">
-                <a href='{$link->anchor}' target="_blank">{$link->title}</a>
-            </p>
-            <p>
-                <a href="https://www.facebook.com/Spi%C5%A1sk%C3%A1-amat%C3%A9rska-hokejov%C3%A1-liga-SAHL-240921932729618/?fref=ts">
-                    SAHL na Facebooku
-                </a>
-            </p>
-        </section>
 
-        <section id="sponsors" class="col-md-2 col-lg-2">
-            <h3>Sponzori</h3>
-            <figure n:foreach="$sponsors as $sponsor" style="margin: 20px 0">
-                <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                    {if file_exists($imgFolder . '/' . $sponsor->image)}
-                        <img class="img img-responsive" alt="Logo sponzora {$sponsor->title}"
-                             src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
-                    {else}
-                        {$sponsor->title}
-                    {/if}
-                </a>
-            </figure>
-        </section>
+    <section class="clerfix" style="margin-top: 2em">
+        <h2>Navštívte aj tieto stránky</h2>
+        <p n:foreach="$links as $link">
+            <a href='{$link->anchor}' target="_blank">{$link->title}</a>
+        </p>
+    </section>
 
-        <section class="col-lg-3 col-md-3">
-            <div id="authors"> 
-                <h3>Autori</h3>
-                <p>Alexander Valach</p>
-                <p>Tomáš Hudák</p>
-                <p>Michal Tarabík</p>
-                <p>2014 - {date('Y')}</p> 
-                <p>Postavené na <a target="_blank" href="https://nette.org/">Nette</a></p>
-            </div>
+    <section n:if="!$user->loggedIn" class="clearfix" style="margin-top: 2em">
 
-            {if !$user->loggedIn}
-                <div>
-                    <h2><span class="glyphicon glyphicon-user"></span></h2>
-                    <div class="col-md-8 col-md-offset-2">
-                        {control signInForm}
-                    </div>
-                </div>
-            {else}
-                <div>
-                    <a n:href="Sign:out" class="btn btn-success btn-large">Odhlásiť</a>
-                </div>
-            {/if}
-        </section>
+        <button type="button" class="btn btn-warning btn-large" 
+            data-target="#sign-in" data-toggle="modal" title="Prihlásenie do administrácie">
+            Administrácia
+        </button>
 
-        <section class="col-md-2 col-lg-2 col-sm-1 hidden-xs">
-            <!-- -->
-        </section>
-    </div>
+    </section>
+
+    <section class="clearfix" style="margin-top: 2em">
+        <h2>Na vylepšení stránky stále pracujú</h2>
+            
+        <div style="margin-top: 2em">
+            <ul class="col-md-4 col-lg-4">
+                <li><strong>Návrh dizajnu</strong></li>
+                <li>Tomáš Hudák</li>
+            </ul>
+
+            <ul class="col-md-4 col-lg-4">
+                <li><strong>Pozadie stránky</strong></li>
+                <li>Michal Tarabík</li>
+            </ul>
+
+            <ul>
+                <li><strong>Dokopy dal</strong></li>
+                <li>Alexander Valach</li>
+            </ul>
+         </div>
+    
+        <div class="clearfix" style="margin-top: 2em">
+            &copy; 2014 - {date('Y')}, Postavené na <a target="_blank" href="https://nette.org/">Nette</a>
+        </div>
+
+    </section>
+
 </footer>
+
+<div n:if="!$user->loggedIn" id="sign-in" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Prihlásenie do administrácie</h4>
+            </div>
+            <div class="modal-body">
+                {control signInForm}
+            </div>
+        </div>
+    </div>
+</div>
 

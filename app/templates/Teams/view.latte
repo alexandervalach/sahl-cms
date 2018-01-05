@@ -2,13 +2,9 @@
 
 <section class="content">
     
-    <div class="clearfix">
+    <div n:if="$user->loggedIn" class="clearfix">
         
-        <div class="pull-left">
-            {control breadCrumb}
-        </div>
-        
-        <div n:if="$user->loggedIn" class="pull-right">
+        <div class="pull-right">
 
             <button type="button" class="btn btn-large btn-success" 
                 data-target="#edit" data-toggle="modal">
@@ -37,8 +33,9 @@
         </h1>
     </div>
 
-    <figure class="clearfix" n:if="$team->image and file_exists($imgFolder . '/' . $team->image)">
-        <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
+    <figure n:if="$team->image and file_exists($imgFolder . '/' . $team->image)" 
+        style="margin-top: 2em; margin-bottom: 2em">
+        <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
             alt="{$team->name}" style="margin: 0 auto" />
     </figure>
 

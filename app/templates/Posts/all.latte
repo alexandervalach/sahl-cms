@@ -1,85 +1,139 @@
 {block content}
 
-{control breadCrumb}
-
 <div class="content">
     Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
     na amatérskej úrovni, samozrejme v rámci pravidiel.
     Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
 </div>
 
-<div class="col-xs-12 col-sm-12 col-md-7 col-lg-7 content" style="padding: 0;">
-    <article n:foreach="$posts as $post" class="clearfix">
-        <a n:href="Posts:view $post">
-            <figure class="col-xs-5 col-sm-5 col-md-5 col-lg-5">
-                {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
-                    <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img-responsive" />
-                {else}
-                    <img src='{$basePath}/{$imgFolder}/{$default}' class="img-responsive" />
-                {/if}
+<aside class="container-fluid" style="padding: 0; margin-bottom: 1em">
+
+    <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6" n:if="$sideFights->count()">
+        <div class="table-responsive">
+            <table class='table'>
+                <caption>
+                    <h2 class="text-center">
+                        <a n:href="Rounds:view $sideRound">{$sideRound->name}</a>
+                    </h2>
+                </caption>
+                <tbody>
+                    <tr n:foreach="$sideFights as $fight">
+                        {var $team1 = $fight->ref('teams', 'team1_id');}
+                        {var $team2 = $fight->ref('teams', 'team2_id');}
+                        <td>
+                            <img src="{$basePath}/{$imgFolder}/{$team1->logo}" width="20px" 
+                                n:if="$team1->logo and file_exists($imgFolder . '/' . $team1->logo)"/> 
+                            {$team1->name}
+                        </td>
+                        <td>
+                            <img src="{$basePath}/{$imgFolder}/{$team2->logo}" width="20px"
+                                n:if="$team2->logo and file_exists($imgFolder . '/' . $team2->logo)" />
+                            {$team2->name}
+                        </td>
+                        <td>{$fight->score1}</td>
+                        <td>:</td>
+                        <td>{$fight->score2}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section n:foreach="$side_table_types as $type">
+
+        <div class='table-responsive'>
+            <table class='table leaderboard'>
+                <caption>
+                    <h2>
+                        <a n:href="Tables:all">{$type->name}</a>
+                    </h2>
+                </caption>
+                <tbody>
+                    <tr n:foreach="$side_tables[$type->name] as $row" {if $iterator->first}class="first"{/if}>
+                        {var $team = $row->ref('teams', 'team_id')}
+                        <td>{$iterator->counter}.</td>
+                        <td>
+                            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="20px"
+                                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                            {$team->name}
+                        </td>
+                        <td>
+                            <strong class="text-danger">{$row->points}</strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</aside>
+
+<div class="content container-fluid">
+    
+    <div class="clearfix">
+        <div class="pull-right">
+            <button type="button" class="btn btn-primary" 
+                data-target="#add" data-toggle="modal">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+    </div>
+
+    <article n:foreach="$posts as $post" class="clearfix" style="padding: 1.5em 2em;">
+        
+        <header class="clearfix">
+            <a n:href="Posts:view $post">
+                <h2>{$post->title}</h2>
+            </a>
+        </header>
+
+        <main class="clearfix" style="margin-top: 1.5em">
+                
+            <figure class="col-xs-12 col-sm-12 col-md-5 col-lg-5" style="padding-bottom: 1.5em">
+                <a n:href="Posts:view $post">
+                    {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
+                        <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img img-responsive" />
+                    {else}
+                        <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
+                    {/if}
+                </a>
             </figure>
-            <main class="col-xs-7 col-sm-7 col-md-7 col-lg-7">
-                {$post->title}
-            </main>
-        </a>
+
+            <div class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
+
+                {$post->content|noescape|truncate:600}
+
+            </div>
+
+        </main>
+
+        <hr />
+
     </article>
+
 </div>
 
-<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5" style="padding: 0;">
-
-    <div n:if="$sideFights->count()" class="table-responsive">
-        <table class='table'>
-            <caption>
-                <h2 class="text-center">
-                    <a n:href="Rounds:view $sideRound">{$sideRound->name}</a>
-                </h2>
-            </caption>
-            <tbody>
-                <tr n:foreach="$sideFights as $fight">
-                    {var $team1 = $fight->ref('teams', 'team1_id');}
-                    {var $team2 = $fight->ref('teams', 'team2_id');}
-                    <td>
-                        <img src="{$basePath}/{$imgFolder}/{$team1->logo}" width="20px" 
-                            n:if="$team1->logo and file_exists($imgFolder . '/' . $team1->logo)"/> 
-                        {$team1->name}
-                    </td>
-                    <td>
-                        <img src="{$basePath}/{$imgFolder}/{$team2->logo}" width="20px"
-                            n:if="$team2->logo and file_exists($imgFolder . '/' . $team2->logo)" />
-                        {$team2->name}
-                    </td>
-                    <td>{$fight->score1}</td>
-                    <td>:</td>
-                    <td>{$fight->score2}</td>
-                </tr>
-            </tbody>
-        </table>
+<div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Vytvoriť nový príspevok</h4>
+            </div>
+            <div class="modal-body">
+                {control addForm}
+            </div>
+        </div>
     </div>
+</div>
 
-    <div n:foreach="$side_table_types as $type" class='table-responsive'>
-        <table class='table leaderboard'>
-            <caption>
-                <h2>
-                    <a n:href="Tables:all">{$type->name}</a>
-                </h2>
-            </caption>
-            <tbody>
-                <tr n:foreach="$side_tables[$type->name] as $row" {if $iterator->first}class="first"{/if}>
-                    {var $team = $row->ref('teams', 'team_id')}
-                    <td>{$iterator->counter}.</td>
-                    <td>
-                        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="20px"
-                            n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
-                        {$team->name}
-                    </td>
-                    <td>
-                        <strong class="text-danger">{$row->points}</strong>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+{/block}
 
-</div>  
-
+{block scripts}
+    {include #parent}
+    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+    <script type="text/javascript">
+        CKEDITOR.replace('ckeditor');
+    </script>
 {/block}

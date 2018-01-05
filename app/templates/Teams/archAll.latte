@@ -1,9 +1,18 @@
 {block content}
 
-{control breadCrumb}
 
 <section class="content">
-    <h1 n:block="title">Tímy</h1>
+    
+    <div class="clearfix hidden-xs">
+        <div class="pull-left">
+            {control breadCrumb}
+        </div>
+    </div>
+
+    <div class="clearfix">
+        <h1 n:block="title">Tímy</h1>
+    </div>
+
 </section>
 
 <div n:if="$teams->count()" class="table-responsive">

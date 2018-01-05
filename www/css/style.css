@@ -8,10 +8,21 @@ body {
     box-sizing : border-box;
 }
 
+#main hr {
+    background: #286090; 
+    height: 2px; 
+    border: 0;
+}
+
 article header h2, 
 aside table h2 {
     font-size: 1.6em;
     line-height: 2em;
+    text-align: center;
+}
+
+article h2 {
+    text-align: center;
 }
 
 article h2 a {
@@ -24,12 +35,18 @@ article h2 a:focus {
     color: #337ab7;
 }
 
-main h1 {
+article footer {
+    background-color: transparent;
+    color: #000;
+}
+
+#main h1 {
     text-transform: uppercase;
     font-weight: bold;
     text-align: center;
-    line-height: 2.5em;
+    line-height: 2em;
     font-size: 2em;
+    margin-bottom: 1.5em;
 }
 
 main a:focus,
@@ -38,9 +55,9 @@ main a:hover {
 }
 
 table th {
+    background-color: #337ab7;
     font-weight: bold;
     color: #fff;
-    background-color: #337ab7;
 }
 
 table tr {
@@ -73,7 +90,7 @@ div.table-responsive .table {
     margin-top: 2em;
 }
 
-main div.table-responsive {
+#main div.table-responsive {
     margin-bottom: 0;
 }
 
@@ -170,24 +187,39 @@ main div.table-responsive {
     max-width: 100%;
 }
 
-body > footer {
+footer {
     background-color: #286090;
     color: #fff;
-    padding: 2em;
+    padding: 1em;
 }
 
-body > footer a {
+footer a {
     transition: color ease 0.4s;
     -webkit-transition: color ease 0.4s;
     -moz-transition: color ease 0.4s;
     -o-transition: color ease 0.4s;
-    color: #ffffff;
+    color: #fff;
 }
 
-body > footer a:hover,
-body > footer a:focus {
-    color: #cccccc;
+#main h2, 
+footer h2 {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.5em;
+    line-height: 1.5em;
+    text-transform: uppercase;
+    margin-bottom: 1em;
+}
+
+footer a:hover,
+footer a:focus {
+    color: #ff9800;
     text-decoration: none;
+}
+
+ol.breadcrumb {
+    background-color: inherit;
+    margin: 0;
 }
 
 ol.breadcrumb a {
@@ -208,24 +240,20 @@ ol.breadcrumb > .active {
     color: #000;
 }
 
-ol.breadcrumb li {
-    font-size: 1.1em;
-}
-
 nav.navbar {
     background-color: #286090;
     margin-bottom: 0;
-    border-bottom: none;
     border-radius: 0;
-    height: 51px;
+    height: 50px;
+    border: none;
 }
 
-nav ul.nav > li > a,
-nav div.navbar-header a {
+.navbar ul.nav > li > a,
+.navbar div.navbar-header a {
+    transition : background-color 0.5s ease;
     -webkit-transition : background-color 0.5s ease;
     -moz-transition : background-color 0.5s ease;
     -o-transition : background-color 0.5s ease;
-    transition : background-color 0.5s ease;
     background-color: #286090;
     color: #fff;
     line-height: 1em;
@@ -234,12 +262,17 @@ nav div.navbar-header a {
     height: 50px;
 }
 
-nav ul.nav li > a:hover,
-nav ul.nav > li > a:focus,
-nav div.navbar-header a:focus,
-nav div.navbar-header a:hover {
+.navbar ul.nav li > a:hover,
+.navbar ul.nav > li > a:focus,
+.navbar div.navbar-header a:focus,
+.navbar div.navbar-header a:hover {
     background-color: #5b94c5;
     color: #e5e5e5;
+}
+
+.navbar div.navbar-header button:focus,
+.navbar div.navbar-header button:focus {
+
 }
 
 #main {
@@ -256,32 +289,12 @@ nav div.navbar-header a:hover {
     padding: 0;
 }
 
-.content:last-of-type {
-    margin-bottom: 0;
-}
-
-.content button,
-.content a.btn {
-    margin-top: 0.5em;
-}
-
 .content {
-    background-color: #fcfcfc;
-    padding: 2em;
-    margin-bottom: 2em;
-    margin-top: -5px;
-    border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-}
-
-ol.breadcrumb {
-    padding: 2em 2em 0 2em;
-    background-color: #fcfcfc;
-    margin: 0;
-    border-radius: 4px 4px 0 0;
-    -webkit-border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
+    background-color: #fff;
+    padding: 3em;
+    border-radius: 6px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
 }
 
 main figure img {
@@ -290,7 +303,8 @@ main figure img {
     border-radius: 6px;
 }
 
-main ul {
+#main ul,
+footer ul {
     padding: 0;
     list-style: none;
 }

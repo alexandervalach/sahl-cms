@@ -1,21 +1,33 @@
 {block content}
 
-{control breadCrumb}
-
 <section class="content">
-    <h1 n:block="title">Tresty hráčov</h1>
-
-	<div n:foreach="$punishments as $punishment">
-	    {var $player = $punishment->ref('players', 'player_id')}
-	    {var $team = $player->ref('teams', 'team_id')}
-	    {$player->lname} ({$player->num}), {$team->name}
-	    <ul>
-	        <li>Stop na {$punishment->round}</li>
-	        <li>{$punishment->text}</li>
-	        <li n:if="$punishment->condition">Podmienka</li>
-	    </ul>
+	
+	<div class="clearfix hidden-xs">
+		<div class="pull-left">
+			{control breadCrumb}
+		</div>
 	</div>
 
+	<div class="clearfix">
+    	<h1 n:block="title">Tresty hráčov</h1>
+    </div>
+
+    <div n:foreach="$punishments as $punishment" style="margin-top: 3em">
+        {var $player = $punishment->ref('players', 'player_id')}
+        {var $team = $player->ref('teams', 'team_id')}
+
+        <h2>{$player->name} ({$player->num})</h2> 
+        <a n:href="Teams:view, $team">
+            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="40px" 
+                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+            {$team->name}
+        </a>
+        <ul>
+            <li><strong>Stop na:</strong>{$punishment->round}</li>
+            <li><strong>Dôvod:</strong>{$punishment->text}</li>
+            <li n:if="$punishment->condition"><strong>Podmienečne</strong></li>
+        </ul>
+    </div>
 </section>
 
 {/block}

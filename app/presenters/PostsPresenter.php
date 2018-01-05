@@ -60,7 +60,7 @@ class PostsPresenter extends BasePresenter {
         }
 
         $this->template->post = $this->postRow;
-        $this->template->images = $this->postRow->related('images')->order('id DESC');
+        $this->template->images = $this->postRow->related('postImages')->order('id DESC');
         $this->template->imgFolder = $this->imgFolder;
         $this->template->default_img = $this->default_img;
 
@@ -157,7 +157,7 @@ class PostsPresenter extends BasePresenter {
     }
 
     public function submittedRemoveForm() {
-        $imgs = $this->postRow->related('images');
+        $imgs = $this->postRow->related('postImages');
         
         foreach ($imgs as $img) {
             FileSystem::delete($this->imgFolder . '/' .$img->name);

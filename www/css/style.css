@@ -351,11 +351,20 @@ table.leaderboard tr:nth-child(9) {
     margin-top: 2em;
 }
 
-@media screen and (min-width: 300px) and (max-width: 720px) {
+#side-fights {
+    padding-left: 0;
+}
+
+@media screen and (min-width: 280px) and (max-width: 720px) {
 
     #main {
         background-image: none;
         background-color: #fff;
+    }
+
+    #side-fights {
+        padding: 0;
+        margin-bottom: 2em;
     }
 
 }

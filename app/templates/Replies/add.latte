@@ -34,6 +34,7 @@
 
 <section class="content reply">
     <article n:foreach="$replies as $reply">
+        <hr />
         <header>
             <strong>{$reply->author}</strong>
             <div n:if="$user->loggedIn" class="pull-right">

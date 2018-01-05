@@ -20,8 +20,6 @@ class RoundsPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', null);
-        $this['breadCrumb']->addLink("Zápasy");
-        $this['breadCrumb']->addLink("Kolá");
 
         if ($this->user->loggedIn) {
             $this->getComponent('addForm');
@@ -64,8 +62,6 @@ class RoundsPresenter extends BasePresenter {
         $this->template->fight_data = $fight_data;
         $this->template->i = 0;
         $this->template->round = $this->roundRow;
-        $this['breadCrumb']->addLink("Kolá", $this->link("Rounds:all"));
-        $this['breadCrumb']->addLink($this->roundRow->name);
 
         if ($this->user->loggedIn) {
             $this->getComponent('editForm')->setDefaults($this->roundRow);
@@ -80,9 +76,6 @@ class RoundsPresenter extends BasePresenter {
     public function renderArchAll($id) {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Kolá");
     }
 
     public function actionArchView($archive_id, $id) {
@@ -119,11 +112,6 @@ class RoundsPresenter extends BasePresenter {
         $this->template->i = 0;
         $this->template->round = $this->roundRow;
         $this->template->archive = $this->archRow;
-
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink($this->roundRow->name, $this->link("Rounds:archAll", $this->archRow));
-        $this['breadCrumb']->addLink("Zápasy");
     }
 
     protected function createComponentAddForm() {

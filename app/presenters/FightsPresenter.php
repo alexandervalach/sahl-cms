@@ -68,10 +68,6 @@ class FightsPresenter extends BasePresenter {
                                        ->where('archive_id', $id);
         $this->template->round = $this->roundRow;
         $this->template->archive = $this->roundRow->ref('archive', 'archive_id');
-        $this['breadCrumb']->addLink('Archív', $this->link("Archive:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archive:view", $this->archRow));
-        $this['breadCrumb']->addLink("Kolá", $this->link("Round:archView", $this->archRow));
-        $this['breadCrumb']->addLink($this->roundRow->name);
     }
 
     protected function createComponentAddForm() {

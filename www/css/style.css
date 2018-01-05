@@ -9,7 +9,7 @@ body {
 }
 
 #main hr {
-    background: #286090; 
+    background: #204d74; 
     height: 2px; 
     border: 0;
 }
@@ -25,14 +25,18 @@ article h2 {
     text-align: center;
 }
 
-article h2 a {
-    color: #337ab7;
+article a {
+    transition: color 0.5s ease;
+    -webkit-transition: color 0.5s ease;
+    -moz-transition: color 0.5s ease;
+    -o-transition: color 0.5s ease;
+    color: #204d74;
 }
 
-article h2 a:hover,
-article h2 a:focus {
+article a:hover,
+article a:focus {
     text-decoration: none;
-    color: #337ab7;
+    color: #ff9800;
 }
 
 article footer {
@@ -52,6 +56,7 @@ article footer {
 main a:focus,
 main a:hover {
     text-decoration: none;
+    color: #ff9800;
 }
 
 table th {
@@ -61,7 +66,7 @@ table th {
 }
 
 table tr {
-    background-color: #fcfcfc;
+    background-color: #fff;
 }
 
 table caption {
@@ -82,7 +87,7 @@ table caption a {
 
 table caption a:hover,
 table caption a:focus {
-    color: #e5e5e5;
+    color: #ff9800;
     text-decoration: none;
 }
 
@@ -92,6 +97,7 @@ div.table-responsive .table {
 
 #main div.table-responsive {
     margin-bottom: 0;
+    border: none;
 }
 
 #teams {
@@ -108,12 +114,25 @@ div.table-responsive .table {
     -moz-transition: margin-top 0.4s ease;
     -o-transition: margin-top 0.4s ease;
     transition: margin-top 0.4s ease;
-    margin-top: 0.8em;
+    margin: 1.5em 0;
 }
 
 #teams img:hover,
 #teams img:focus {
-    margin-top: -0.8em;
+    margin-top: -0.5em;
+}
+
+#sponsors img {
+    -webkit-transition: margin-top 0.4s ease;
+    -moz-transition: margin-top 0.4s ease;
+    -o-transition: margin-top 0.4s ease;
+    transition: margin-top 0.4s ease;
+    margin-top: 0.5em;
+}
+
+#sponsors img:hover,
+#sponsors img:focus {
+    margin-top: -0.5em;
 }
 
 #lightbox {
@@ -190,14 +209,14 @@ div.table-responsive .table {
 footer {
     background-color: #286090;
     color: #fff;
-    padding: 1em;
+    padding: 2em;
 }
 
 footer a {
-    transition: color ease 0.4s;
-    -webkit-transition: color ease 0.4s;
-    -moz-transition: color ease 0.4s;
-    -o-transition: color ease 0.4s;
+    transition: color ease 0.5s;
+    -webkit-transition: color ease 0.5s;
+    -moz-transition: color ease 0.5s;
+    -o-transition: color ease 0.5s;
     color: #fff;
 }
 
@@ -215,29 +234,6 @@ footer a:hover,
 footer a:focus {
     color: #ff9800;
     text-decoration: none;
-}
-
-ol.breadcrumb {
-    background-color: inherit;
-    margin: 0;
-}
-
-ol.breadcrumb a {
-    transition: color 0.5s ease;
-    -webkit-transition: color 0.5s ease;
-    -moz-transition: color 0.5s ease;
-    -o-transition: color 0.5s ease;
-    color: #286090;
-    text-decoration: none;
-}
-
-ol.breadcrumb a:hover,
-ol.breadcrumb a:focus {
-    color: #2e6da4;
-}
-
-ol.breadcrumb > .active {
-    color: #000;
 }
 
 nav.navbar {
@@ -342,27 +338,24 @@ table.leaderboard tr:nth-child(9) {
     border-radius: 50px;
 }
 
-#forum article {
-    margin: 2em auto; 
-    padding: 0 2em 2em 2em;
-}
-
-#archive figure {
+#forum article { 
     padding: 2em;
 }
 
-#archive figure a {
-    text-decoration: none;
-}
-
-#pictures {
-    margin-top: 3em;
+#pictures img {
+    cursor: pointer;
 }
 
 #pictures figure {
-    padding: 1em;
+    padding: 1.5em;
+    margin-top: 2em;
 }
 
-#pictures figure div {
-    margin-top: 1em;
+@media screen and (min-width: 300px) and (max-width: 720px) {
+
+    #main {
+        background-image: none;
+        background-color: #fff;
+    }
+
 }

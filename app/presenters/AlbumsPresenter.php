@@ -25,8 +25,6 @@ class AlbumsPresenter extends BasePresenter {
         $this->template->default_img = $this->default_img;
         $this->template->imgFolder = $this->imgFolder;
 
-        $this['breadCrumb']->addLink("Galéria");
-
         if ($this->user->isLoggedIn()) { 
             $this->getComponent('addForm');
         }
@@ -45,9 +43,6 @@ class AlbumsPresenter extends BasePresenter {
         $this->template->imgs = $this->albumRow->related('images');
         $this->template->imgFolder = $this->imgFolder;
 
-        $this['breadCrumb']->addLink('Galéria', $this->link('Albums:all'));
-        $this['breadCrumb']->addLink($this->albumRow->name);
-
         if ($this->user->isLoggedIn()) { 
             $this->getComponent('editForm')->setDefaults($this->albumRow);
             $this->getComponent('removeForm');
@@ -64,9 +59,11 @@ class AlbumsPresenter extends BasePresenter {
     public function actionRemoveImg($id) {
         $this->userIsLogged();
         $this->imgRow = $this->imagesRepository->findById($id);
+        
         if (!$this->imgRow) {
             throw new BadRequestException("Image not found");
         }
+        
         $this->submittedRemoveImg();
     }
 

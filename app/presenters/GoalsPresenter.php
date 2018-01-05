@@ -25,7 +25,7 @@ class GoalsPresenter extends BasePresenter {
     private $team2;
 
     /** @var string */
-    private $error = "Player not found!";
+    private $error = "Player not found";
 
     public function actionView($id) {
         $this->fightRow = $this->fightsRepository->findById($id);
@@ -36,12 +36,8 @@ class GoalsPresenter extends BasePresenter {
         $this->template->fight = $this->fightRow;
         $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow)
                                                        ->order('home DESC, goals DESC');
-        $this->template->team1 = $this->fightRow->ref('teams', 'team1_id');
-        $this->template->team2 = $this->fightRow->ref('teams', 'team2_id');
-   
-        $this['breadCrumb']->addLink('Kolá', $this->link('Rounds:all'));
-        $this['breadCrumb']->addLink($this->roundRow->name, $this->link('Rounds:view', $this->roundRow));
-        $this['breadCrumb']->addLink('Zápas');
+        $this->template->team1 = $this->fightRow->ref('team1_id');
+        $this->template->team2 = $this->fightRow->ref('team2_id');
 
         if ($this->user->isloggedIn()) {
             $this->getComponent('addForm');

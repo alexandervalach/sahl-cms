@@ -23,9 +23,6 @@ class TeamsPresenter extends BasePresenter {
     public function renderAll() {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)
                                                        ->where('logo NOT', null);
-        $this['breadCrumb']->addLink('Hráči');
-        $this['breadCrumb']->addLink('Tímy');
-
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
         }
@@ -48,9 +45,6 @@ class TeamsPresenter extends BasePresenter {
         $this->template->imgFolder = $this->imgFolder;
         $this->template->i = 0;
         $this->template->j = 0;
-        $this['breadCrumb']->addLink('Hráči');
-        $this['breadCrumb']->addLink("Tímy", $this->link("Teams:all"));
-        $this['breadCrumb']->addLink($this->teamRow->name);
 
         if ($this->user->isLoggedIn()) {
             $this->getComponent('editForm')->setDefaults($this->teamRow);
@@ -66,10 +60,6 @@ class TeamsPresenter extends BasePresenter {
     public function renderArchAll($id) {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
-
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Tímy");
     }
 
     public function actionArchView($id) {
@@ -79,10 +69,6 @@ class TeamsPresenter extends BasePresenter {
     public function renderArchView($id) {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
-
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Tímy");
     }
 
     protected function createComponentUploadForm() {
@@ -134,6 +120,7 @@ class TeamsPresenter extends BasePresenter {
     }
 
     public function submittedUploadForm(Form $form, $values) {
+        
         $img = $values->image;
 
         if ($img->isOk() AND $img->isImage()) {
@@ -151,6 +138,7 @@ class TeamsPresenter extends BasePresenter {
 
     public function submittedDeleteForm() {
         $players = $this->teamRow->related('players');
+        
         foreach ($players as $player) {
             $player->delete();
         }

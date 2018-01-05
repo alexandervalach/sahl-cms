@@ -29,9 +29,6 @@ class PlayersPresenter extends BasePresenter {
         $this->template->j = 0;
         $this->template->current = 0;
         $this->template->previous = 0;
-
-        $this['breadCrumb']->addLink("Hráči");
-        $this['breadCrumb']->addLink("Štatistiky");
         
         if ($this->user->isLoggedIn()) {
             $this->getComponent('resetForm');
@@ -51,10 +48,6 @@ class PlayersPresenter extends BasePresenter {
         $this->template->j = 0;
         $this->template->current = 0;
         $this->template->previous = 0;
-
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Štatistiky");
     }
 
     public function actionAdd($id) {

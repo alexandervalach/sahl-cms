@@ -21,7 +21,6 @@ class TopicsPresenter extends BasePresenter {
     public function renderAll() {
         $this->template->topics = $this->topicsRepository->findAll()->order("id DESC");
         $this->template->addBtnLbl = $this->addBtnLbl;
-        $this['breadCrumb']->addLink("Fórum");
 
         if ($this->user->loggedIn) {
             $this->getComponent("addForm");

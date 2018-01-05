@@ -17,15 +17,10 @@ class TableTypesPresenter extends BasePresenter {
 
     public function actionAddToSidebar($type) {
         $this->userIsLogged();
-        $this->optionRow = $this->optionsRepository->findByValue('option', $type)->fetch();
     }
 
     public function renderAddToSidebar($type) {
-        if (!$this->optionRow) {
-            throw new BadRequestException($this->error);
-        }
-        $this->template->option = $this->optionRow;
-        $this->getComponent('addToSidebarForm')->setDefaults($this->optionRow);
+        $this->getComponent('addToSidebarForm');
     }
 
     protected function createComponentAddToSidebarForm() {
@@ -37,10 +32,9 @@ class TableTypesPresenter extends BasePresenter {
         return $form;
     }
 
-    public function submittedAddToSidebarForm(Form $form) {
-        $values = $form->getValues();
+    public function submittedAddToSidebarForm(Form $form, $values) {
         $this->optionRow->update($values);
-        $this->redirect('Tables:all#nav');
+        $this->redirect('Tables:all');
     }
 
 }

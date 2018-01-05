@@ -28,8 +28,6 @@ class RepliesPresenter extends BasePresenter {
         }
         $this->template->topic = $this->topicRow;
         $this->template->replies = $this->topicRow->related('replies');
-        $this['breadCrumb']->addLink("Fórum", $this->link("Topics:all"));
-        $this['breadCrumb']->addLink($this->topicRow->title);
         $this->getComponent('addForm');
     }
 
@@ -73,8 +71,9 @@ class RepliesPresenter extends BasePresenter {
     }
     
     public function submittedDeleteForm() {
+        $topic_id = $this->replyRow->topic_id;
         $this->replyRow->delete();
-        $this->redirect('add', $this->replyRow->topic_id);
+        $this->redirect('add', $topic_id);
     }
 
     public function formCancelled() {

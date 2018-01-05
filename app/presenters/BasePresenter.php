@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-use App\BreadCrumb\BreadCrumb;
 use App\FormHelper;
 use App\Model\AlbumsRepository;
 use App\Model\ArchivesRepository;
@@ -181,12 +180,6 @@ abstract class BasePresenter extends Presenter {
         if (!$this->user->isLoggedIn()) {
             $this->redirect('Posts:all');
         }
-    }
-
-    protected function createComponentBreadCrumb() {
-        $breadCrumb = new BreadCrumb();
-        $breadCrumb->addLink("SAHL", $this->link('Posts:all'));
-        return $breadCrumb;
     }
 
 }

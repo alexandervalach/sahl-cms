@@ -22,8 +22,11 @@
     </main>
     
     <footer>
-        <div class="clearfix">
-            {$topic->author}
+        <div class="pull-left">
+            <span class="glyphicon glyphicon-user"></span> {$topic->author},
+            <time datetime="{$topic->created_at|date:'d.m.Y'}" pubdate>
+                <small>{$topic->created_at|date:'d.m.Y'}</small>
+            </time>
         </div>
     </footer>
 

@@ -18,7 +18,6 @@ class ArchivesPresenter extends BasePresenter {
 	public function renderAll() {
 		$this->template->archive = $this->archivesRepository->findAll();
 		$this->template->default_img = $this->default_img;
-		$this['breadCrumb']->addLink('Archív');
 
 		if ($this->user->isLoggedIn()) {
 			$this->getComponent('addForm');
@@ -35,8 +34,6 @@ class ArchivesPresenter extends BasePresenter {
 		}
 
 		$this->template->archive = $this->archiveRow;
-		$this['breadCrumb']->addLink('Archívy', $this->link('all'));
-		$this['breadCrumb']->addLink($this->archiveRow->title);
 
 		if ($this->user->isLoggedIn()) {
 			$this->getComponent("editForm")->setDefaults($this->archiveRow);
@@ -104,8 +101,7 @@ class ArchivesPresenter extends BasePresenter {
         $this->redirect('all');
 	}
 
-	public function submittedArchiveForm(Form $form) {
-		$values = $form->getValues();
+	public function submittedArchiveForm(Form $form, $values) {
 		$team_id = array();
 		$player_id = array();
 		$arch_id = array( 'archive_id' => $values['archive_id'] );
@@ -129,7 +125,7 @@ class ArchivesPresenter extends BasePresenter {
 
 			$id = $this->teamsRepository->insert($data);
 			if ($id == null) {
-				$this->flashMessage('Nastala chyba počas archivácie tímov', $this->msg_type);
+				$this->flashMessage('Nastala chyba počas archivácie tímov', 'danger');
 				$this->redirect('all');
 			} else {
 				$team_id[$team->id] = $id;
@@ -152,7 +148,7 @@ class ArchivesPresenter extends BasePresenter {
 				$this->playersRepository->insert($data);
 				$player_id[$player->id] = $id;
 			} else {
-				$this->flashMessage('Nastala chyba počas archivácie hráčov', $this->msg_type);
+				$this->flashMessage('Nastala chyba počas archivácie hráčov', 'danger');
 				break;
 			}
 		}
@@ -168,7 +164,7 @@ class ArchivesPresenter extends BasePresenter {
 				$data['team_id'] = $team_id[$table->team_id];
 				$table->update($data);
 			} else {
-				$this->flashMessage('Nastala chyba počas archivácie tabuliek', $this->msg_type);
+				$this->flashMessage('Nastala chyba počas archivácie tabuliek', 'danger');
 				break;
 			}
 		}
@@ -184,7 +180,7 @@ class ArchivesPresenter extends BasePresenter {
 				$data['player_id'] = $player_id[$pun->player_id];
 				$pun->update($data);
 			} else {
-				$this->flashMessage('Nastala chyba počas archivácii trestov hráčov', $this->msg_type);
+				$this->flashMessage('Nastala chyba počas archivácii trestov hráčov', 'danger');
 				break;
 			}
 		}
@@ -202,7 +198,7 @@ class ArchivesPresenter extends BasePresenter {
 				$data['team2_id'] = $team_id[$fight->team2_id];
 				$fight->update($data);
 			} else {
-				$this->flashMessage('Nastala chyba počas archivácie výsledkov zápasov', $this->msg_type);
+				$this->flashMessage('Nastala chyba počas archivácie výsledkov zápasov', 'danger');
 				break;
 			}
 		}
@@ -218,7 +214,7 @@ class ArchivesPresenter extends BasePresenter {
 				$data['player_id'] = $player_id[$goal->player_id];
 				$id = $goal->update($data);
 			} else {
-				$this->flashMessage('Nastala chyba počas archivácie gólov', $this->msg_type);
+				$this->flashMessage('Nastala chyba počas archivácie gólov', 'danger');
 				break;
 			}
 		}

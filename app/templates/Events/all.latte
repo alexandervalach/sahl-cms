@@ -4,10 +4,6 @@
 
     <div class="clearfix">
 
-        <div class="pull-left hidden-xs">
-            {control breadCrumb}
-        </div>
-
         <div n:if="$user->loggedIn" class="pull-right">
             <button type="button" class="btn btn-large btn-primary" 
                 data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
@@ -23,7 +19,11 @@
 
     <article n:foreach="$events as $event" class="clearfix text-center" style="margin-top: 2em">
         
-        <div n:if="$user->loggedIn" class="clearfix">
+        <div class="clearfix">
+            {$event->event|noescape}
+        </div>
+
+        <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 1em">
             <a n:href="edit $event" class="btn btn-large btn-success">
                 <span class="glyphicon glyphicon-edit"></span>
             </a>
@@ -31,11 +31,9 @@
                 <span class="glyphicon glyphicon-trash"></span>
             </a>
         </div>
-        
-        <div class="clearfix">
-            {$event->event|noescape}
-        </div>
 
+        <hr />
+        
     </article>
 
 </section>

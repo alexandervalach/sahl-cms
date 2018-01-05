@@ -23,11 +23,9 @@
             {include 'teams.latte'}
             
             <div class="clearfix">
-                <div class="col-md-2 col-lg-2 hidden-xs col-sm-1">
-                    <!-- -->
-                </div>
                 
-                <main class='col-xs-12 col-sm-12 col-md-8 col-lg-8' style="padding: 0">
+                <main class='col-sm-offset-1 col-md-offset-2 col-lg-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8' 
+                    style="padding: 0">
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                         <span n:if="$flash->type == 'success'" class="glyphicon glyphicon-ok"></span>&nbsp;
@@ -52,7 +50,8 @@
                 <!-- -->
             </div>
 
-            <section class="col-xs-12 col-sm-10 col-md-8 col-lg-8 content hidden-xs" style="margin: 2em 0">
+            <section id="sponsors" class="col-xs-12 col-sm-10 col-md-8 col-lg-8 content hidden-xs" 
+                style="margin: 2em 0">
                 <h2>Sponzori</h2>
                 <figure n:foreach="$sponsors as $sponsor" style="padding: 3em; height: 200px" 
                     class="col-xs-12 col-sm-12 col-md-4 col-lg-4">

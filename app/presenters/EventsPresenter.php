@@ -16,12 +16,11 @@ class EventsPresenter extends BasePresenter {
     private $archRow; 
 
     /** @var string */
-    private $error = "Event not found!";
+    private $error = "Event not found";
 
     public function renderAll() {
-        $this->template->events = $this->eventsRepository->findByValue('archive_id', null)->order('id DESC');
-        $this['breadCrumb']->addLink("Zápasy");
-        $this['breadCrumb']->addLink("Rozpis zápasov");
+        $this->template->events = $this->eventsRepository->findByValue('archive_id', null)
+                                                         ->order('id DESC');
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
         }
@@ -58,11 +57,8 @@ class EventsPresenter extends BasePresenter {
 
     public function renderArchAll($id) {
         $this->template->archive = $this->archRow;
-        $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)->order('id DESC');
-        
-        $this['breadCrumb']->addLink("Archívy", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Zápasy");
+        $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)
+                                                         ->order('id DESC');
     }
 
     protected function createComponentAddForm() {
@@ -90,10 +86,10 @@ class EventsPresenter extends BasePresenter {
         $form = new Form;
         $form->addSubmit('cancel', 'Zrušiť')
              ->setAttribute('class', 'btn btn-large btn-warning')
-             ->onClick[] = $this->formCancelled;
+             ->onClick[] = [$this, 'formCancelled'];
         $form->addSubmit('delete', 'Odstrániť')
              ->setAttribute('class', 'btn btn-large btn-danger')
-             ->onClick[] = $this->submittedRemoveForm;
+             ->onClick[] = [$this, 'submittedRemoveForm'];
         $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

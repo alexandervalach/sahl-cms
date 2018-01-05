@@ -28,7 +28,6 @@ class RulesPresenter extends BasePresenter {
         }
 
         $this->template->rule = $this->ruleRow;
-        $this['breadCrumb']->addLink("Pravidlá a smernice");
         
         if ($this->user->isLoggedIn()) {
             $this->getComponent('editForm')->setDefaults($this->ruleRow);
@@ -42,9 +41,6 @@ class RulesPresenter extends BasePresenter {
     public function renderArchView($id) {
         $this->template->rules = $this->rulesRepository->findByValue('archive_id', $id);
         $this->template->archive = $this->archRow;
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Pravidlá a smernice");
     }
 
     protected function createComponentEditForm() {

@@ -18,9 +18,6 @@ class PunishmentsPresenter extends BasePresenter {
         $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', null)
                                                                    ->order('id DESC');
 
-        $this['breadCrumb']->addLink("Hráči", $this->link("Players:all"));
-        $this['breadCrumb']->addLink("Tresty hráčov");
-
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
         }
@@ -51,10 +48,6 @@ class PunishmentsPresenter extends BasePresenter {
     }
 
     public function renderArchAll($id) {
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Tresty hráčov");
-
         $this->template->archive = $this->archRow;
         $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', $id);
     }

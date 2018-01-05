@@ -31,15 +31,16 @@ class TablesPresenter extends BasePresenter {
         
         $this->template->tables = $table_rows;
         $this->template->table_types = $table_types;
-        $this['breadCrumb']->addLink("Tabuľky");
     }
 
     public function actionAddToSidebar($id) {
         $this->userIsLogged();
         $this->tableRow = $this->tablesRepository->findById($id);
+
         if (!$this->tableRow) {
             throw new BadRequestException($this->error);
         }
+
         $this->submittedSetVisible();
     }
 
@@ -60,10 +61,6 @@ class TablesPresenter extends BasePresenter {
         $this->template->tables = $table_rows;
         $this->template->table_types = $table_types;
         $this->template->archive = $this->archRow;
-
-        $this['breadCrumb']->addLink("Archív", $this->link("Archives:all"));
-        $this['breadCrumb']->addLink($this->archRow->title, $this->link("Archives:view", $this->archRow));
-        $this['breadCrumb']->addLink("Tabuľky");
     }
 
     protected function createComponentEditForm() {

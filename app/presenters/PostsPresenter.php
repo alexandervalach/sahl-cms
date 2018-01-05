@@ -91,6 +91,8 @@ class PostsPresenter extends BasePresenter {
 
         if (!$this->imgRow) {
             throw new BadRequestException("Image not found");
+        } elseif (!$this->postRow) {
+            throw new BadRequestException("Post not found");
         }
         
         $this->submittedRemoveImgForm();

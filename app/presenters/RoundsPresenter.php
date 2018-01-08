@@ -40,7 +40,6 @@ class RoundsPresenter extends BasePresenter {
         $fights = $this->roundRow->related('fights');
 
         foreach ($fights as $fight) {
-            $fight_data[$i]['goals'] = $fight->related('goals')->order('goals DESC');
             $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
             $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
             $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
@@ -84,12 +83,19 @@ class RoundsPresenter extends BasePresenter {
     }
 
     public function renderArchView($archive_id, $id) {
+        if (!$this->roundRow) {
+            throw new BadRequestException($this->error);
+        } 
+
+        if (!$this->archRow) {
+            throw new BadRequestException("Archive not found");
+        }
+
         $i = 0;
         $fight_data = array();
         $fights = $this->roundRow->related('fights');
 
         foreach ($fights as $fight) {
-            $fight_data[$i]['goals'] = $fight->related('goals')->order('goals DESC');
             $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
             $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
             $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');

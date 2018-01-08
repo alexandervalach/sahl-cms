@@ -48,14 +48,14 @@
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
                 
                 <div class="clearfix">
-                    <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_1']->logo}" width="15%" 
+                    <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_1']->logo}" width="20%" 
                         n:if="$fight_data[$i]['team_1']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_1']->logo)" />
-                    <h2>{$fight_data[$i]['team_1']->name}</h2>
                 </div>
                 
-                <div class="clearfix">
-                    <strong>{$fight->score1}</strong>
-                </div>
+                <h2>
+                    {$fight_data[$i]['team_1']->name}<br />
+                    {$fight->score1}
+                </h2>
 
                 <ul n:if="$fight_data[$i]['home_goals'] != NULL" class="clearfix">
                     <li><strong>Domáci</strong> </li>
@@ -72,14 +72,14 @@
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_2']}">
                 
                 <div class="clearfix">
-                    <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_2']->logo}" width="15%" 
+                    <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_2']->logo}" width="20%" 
                         n:if="$fight_data[$i]['team_2']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_2']->logo)" />
-                    <h2>{$fight_data[$i]['team_2']->name}</h2>
                 </div>
                 
-                <div class="clearfix">
-                    <strong>{$fight->score2}</strong>
-                </div>
+                <h2>
+                    {$fight_data[$i]['team_2']->name}<br />
+                    {$fight->score2}
+                </h2>
 
                 <ul n:if="$fight_data[$i]['guest_goals'] != NULL">
                     <li><strong>Hostia</strong></li>
@@ -97,6 +97,8 @@
 
         {var $i = $i + 1}
     
+        <hr n:if="!$iterator->last" />
+
     </div>
 
 </section>

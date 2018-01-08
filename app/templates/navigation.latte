@@ -3,7 +3,7 @@
     <div class="col-sm-offset-1 col-md-offset-2 col-lg-offset-2 col-xs-12 col-sm-10 col-md-8 col-lg-8">
         
         <div class="navbar-header">
-            <a class="navbar-brand" n:href="Posts:all">SAHL</a>
+            <a class="navbar-brand" n:href="Homepage:all">SAHL</a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" 
                     data-target="#main-nav">
                 <span class="icon-bar"></span>
@@ -34,12 +34,13 @@
                     </a>
                 </li>              
                 <li><a n:href="Tables:all">Tabuľky</a></li>
+                <li><a n:href="Posts:all">Články</a></li>
                 <li><a n:href="Rules:all">Pravidlá a smernice</a></li>
                 <li><a n:href="Albums:all">Galéria</a></li>
                 <li><a n:href="Topics:all">Fórum</a></li>
                 <li><a n:href="Archives:all">Archív</a></li>
                 <li n:if="$user->loggedIn">
-                    <a n:href="Posts:out" title="Odhlásiť">
+                    <a n:href="Homepage:out" title="Odhlásiť">
                         <span class="glyphicon glyphicon-off"></span>
                     </a>
                 </li>

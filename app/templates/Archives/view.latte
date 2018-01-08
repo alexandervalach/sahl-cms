@@ -9,6 +9,10 @@
                 data-target="#edit" data-toggle="modal" title="Upraviť archív">
                 <span class="glyphicon glyphicon-edit"></span>
             </button>
+            <button type="button" class='btn btn-default' 
+                data-toggle="modal" data-target="#archive" title="Archivovať záznamy v sezóne">
+                <span class="glyphicon glyphicon-book"></span>
+            </button>
         </div>
     
     </div>
@@ -53,6 +57,23 @@
                 <div class="modal-body">
                     <p>Naozaj chcete odstrániť archív aj so všetkými príspevkami?</p>
                     {control removeForm}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="archive" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Archivovať záznamy</h3>
+                </div>
+                <div class="modal-body">
+                    <p>
+                    Naozaj chcete archivovať celú sezónu?
+                    Všetky záznamy budú presunuté do archívu.
+                    </p>
+                    {control archiveForm}
                 </div>
             </div>
         </div>

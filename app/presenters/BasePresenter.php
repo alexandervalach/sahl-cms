@@ -94,8 +94,8 @@ abstract class BasePresenter extends Presenter {
     /** @var string */
     protected $default_img;
 
-    /** @var string */
-    protected $current_season;
+    /** @persistent */
+    protected $backlink;
 
     public function __construct(
     ArchivesRepository $archivesRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, TopicsRepository $topicsRepository, ImagesRepository $imagesRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImagesRepository $postImagesRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RepliesRepository $repliesRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository) {
@@ -121,6 +121,12 @@ abstract class BasePresenter extends Presenter {
         $this->teamsRepository = $teamsRepository;
         $this->default_img = "sahl.png";
         $this->imgFolder = "images";
+        $this->backlink = '';
+    }
+
+    protected function startup() {
+        parent::startup();
+        $this->backlink = $this->storeRequest();
     }
 
     public function beforeRender() {
@@ -164,7 +170,8 @@ abstract class BasePresenter extends Presenter {
         try {
             $this->getUser()->login($values->username, $values->password);
             $this->flashMessage('Vitajte v administrácií SAHL', 'success');
-            $this->redirect('Posts:all');
+            $this->restoreRequest($this->backlink);
+            $this->redirect('Homepage:all');
         } catch (AuthenticationException $e) {
             $form->addError('Nesprávne meno alebo heslo');
         }
@@ -173,12 +180,13 @@ abstract class BasePresenter extends Presenter {
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený', 'success');
-        $this->redirect('Posts:all');
+        $this->restoreRequest($this->backlink);
+        $this->redirect('Homepage:all');
     }
 
     protected function userIsLogged() {
         if (!$this->user->isLoggedIn()) {
-            $this->redirect('Posts:all');
+            $this->redirect('Homepage:all');
         }
     }
 

@@ -17,7 +17,7 @@
         <h1 n:block="title">Rozpis zápasov</h1>
     </div>
 
-    <article n:foreach="$events as $event" class="clearfix text-center" style="margin-top: 2em">
+    <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
         
         <div class="clearfix">
             {$event->event|noescape}
@@ -32,7 +32,7 @@
             </a>
         </div>
 
-        <hr />
+        <hr n:if="!$iterator->last" />
         
     </article>
 

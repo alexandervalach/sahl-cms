@@ -30,9 +30,10 @@
         
         <ul>
             <li><strong>Stop na: </strong>{$punishment->round}</li>
-            <li><strong>Dôvod: </strong>{$punishment->text}</li>
+            <li n:if="$punishment->text"><strong>Dôvod: </strong>{$punishment->text}</li>
             <li n:if="$punishment->condition"><strong>Podmienečne</strong></li>
         </ul>
+        <hr n:if="!$iterator->last" />
     </div>
 
 </section>

@@ -138,8 +138,8 @@ class GoalsPresenter extends BasePresenter {
     protected function teamPlayersHelper(ActiveRow $row) {
         $team1 = $this->teamsRepository->findById($row->team1_id);
         $team2 = $this->teamsRepository->findById($row->team2_id);
-        $players1 = $this->playersRepository->getPlayersByValue('team_id', $team1->id);
-        $players2 = $this->playersRepository->getPlayersByValue('team_id', $team2->id);
+        $players1 = $this->teamsRepository->getPlayersForTeam($team1->id);
+        $players2 = $this->teamsRepository->getPlayersForTeam($team2->id);
         $players = array_replace($players1, $players2);
         return $players;
     }

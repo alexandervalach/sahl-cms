@@ -33,7 +33,7 @@
         <tbody>
             <tr n:foreach="$goals as $goal">
                 {var $player = $goal->ref('players', 'player_id')}
-                <td>{$player->lname}</td>
+                <td>{$player->name}</td>
                 <td>{$goal->goals}</td>
                 <td>{if $goal->home == 1}DOMÁCI{else}HOSTIA{/if}</td>
                 {if $user->loggedIn}

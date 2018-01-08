@@ -38,6 +38,7 @@ class ArchivesPresenter extends BasePresenter {
 		if ($this->user->isLoggedIn()) {
 			$this->getComponent("editForm")->setDefaults($this->archiveRow);
 			$this->getComponent("removeForm");
+			$this->getComponent("archiveForm");
 		}
 	}
 
@@ -75,18 +76,21 @@ class ArchivesPresenter extends BasePresenter {
         return $form;
 	}
 
-	protected function createComponentArchiveForm() {
+    protected function createComponentArchiveForm() {
         $form = new Form;
-        $archives = $this->archiveRepository->getArchives();
-        $form->addSelect('archive_id', 'Vyber archív: ', $archives);
-        $form->addSubmit('save', 'Archivovať');
+        $form->addSubmit('archive', 'Archivovať')
+             ->setAttribute('class', 'btn btn-large btn-default');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
+        $form->addProtection();
         $form->onSuccess[] = [$this, 'submittedArchiveForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
-	}
+    }
 
 	public function submittedAddForm(Form $form, $values) {
-		$this->archiveRepository->insert($values);
+		$this->archivesRepository->insert($values);
 		$this->flashMessage("Archív bol pridaný", "success");
 		$this->redirect('all');
 	}
@@ -97,14 +101,14 @@ class ArchivesPresenter extends BasePresenter {
 		$this->redirect('view', $this->archiveRow);
 	}
 
-	public function submittedRemoveForm(Form $form) {
+	public function submittedRemoveForm() {
         $this->redirect('all');
 	}
 
-	public function submittedArchiveForm(Form $form, $values) {
+	public function submittedArchiveForm() {
 		$team_id = array();
 		$player_id = array();
-		$arch_id = array( 'archive_id' => $values['archive_id'] );
+		$arch_id = array( 'archive_id' => $this->archiveRow->id );
 
 		$rounds = $this->roundsRepository->findByValue('archive_id', null);
 		$events = $this->eventsRepository->findByValue('archive_id', null);
@@ -115,48 +119,53 @@ class ArchivesPresenter extends BasePresenter {
 		$this->addToArchive($rules, $arch_id);
 
 		// Vytvoríme duplicitné záznamy tímov s novým archive id
-		$teams = $this->teamsRepository->getAsArray();
-		foreach ($teams as $team) {
-			$data = array (
-				'name' => $team->name,
-				'image' => $team->image,
-				'archive_id' => $values['archive_id']
-			);
+		$teams = $this->teamsRepository->getAsArray($this->archiveRow->id);
 
-			$id = $this->teamsRepository->insert($data);
-			if ($id == null) {
-				$this->flashMessage('Nastala chyba počas archivácie tímov', 'danger');
-				$this->redirect('all');
-			} else {
-				$team_id[$team->id] = $id;
+		if ($teams != null) {
+			foreach ($teams as $team) {
+				$data = array (
+					'name' => $team->name,
+					'image' => $team->image,
+					'archive_id' => $this->archiveRow->id
+				);
+
+				$id = $this->teamsRepository->insert($data);
+				if ($id == null) {
+					$this->flashMessage('Nastala chyba počas archivácie tímov', 'danger');
+					$this->redirect('all');
+				} else {
+					$team_id[$team->id] = $id;
+				}
 			}
 		}
 
 		// Vytvoríme duplicitné záznamy o hráčoch s novým archive_id
 		$data = array();
-		$players = $this->playersRepository->getAsArray();
-		foreach ($players as $player) {
-			if (isset($team_id[$player->team_id])) {
-				$data['team_id'] = $team_id[$player->team_id];
-				$data['type_id'] = $player->type_id;
-				$data['lname'] = $player->lname;
-				$data['num'] = $player->num;
-				$data['born'] = $player->born;
-				$data['goals'] = $player->goals;
-				$data['trans'] = $player->trans;
-				$data['archive_id'] = $values['archive_id'];
-				$this->playersRepository->insert($data);
-				$player_id[$player->id] = $id;
-			} else {
-				$this->flashMessage('Nastala chyba počas archivácie hráčov', 'danger');
-				break;
+		$players = $this->playersRepository->getAsArray($this->archiveRow->id);
+		if ($players != null) {
+			foreach ($players as $player) {
+				if (isset($team_id[$player->team_id])) {
+					$data['team_id'] = $team_id[$player->team_id];
+					$data['type_id'] = $player->type_id;
+					$data['name'] = $player->name;
+					$data['num'] = $player->num;
+					$data['born'] = $player->born;
+					$data['goals'] = $player->goals;
+					$data['trans'] = $player->trans;
+					$data['archive_id'] = $this->archiveRow->id;
+					$this->playersRepository->insert($data);
+					$player_id[$player->id] = $id;
+				} else {
+					$this->flashMessage('Nastala chyba počas archivácie hráčov', 'danger');
+					break;
+				}
 			}
 		}
-		
+
 		$tables = $this->tablesRepository->findByValue('archive_id', null);
 		$data = array ( 
 			'team_id' => null,
-			'archive_id' => $values['archive_id']
+			'archive_id' => $this->archiveRow->id
 		);
 
 		foreach ($tables as $table) {
@@ -172,7 +181,7 @@ class ArchivesPresenter extends BasePresenter {
 		$puns = $this->punishmentsRepository->findByValue('archive_id', null);
 		$data = array (
 			'player_id' => null,
-			'archive_id' => $values['archive_id']
+			'archive_id' => $this->archiveRow->id
 		);
 
 		foreach ($puns as $pun) {
@@ -189,7 +198,7 @@ class ArchivesPresenter extends BasePresenter {
 		$data = array( 
 			'team1_id' => null,
 			'team2_id' => null,
-			'archive_id' => $values['archive_id']
+			'archive_id' => $this->archiveRow->id
 		);
 
 		foreach ($fights as $fight) {
@@ -206,7 +215,7 @@ class ArchivesPresenter extends BasePresenter {
 		$goals = $this->goalsRepository->findByValue('archive_id', null);
 		$data = array(
 			'player_id' => null,
-			'archive_id' =>  $values['archive_id']
+			'archive_id' =>  $this->archiveRow->id
 		);
 
 		foreach ($goals as $goal) {
@@ -220,7 +229,7 @@ class ArchivesPresenter extends BasePresenter {
 		}
 
 		$this->flashMessage('Záznamy boli archivované', 'success');
-		$this->redirect('all');
+		$this->redirect('view', $this->archiveRow);
 	}
 
 	public function formCancelled() {
@@ -228,6 +237,9 @@ class ArchivesPresenter extends BasePresenter {
 	}
 
 	private function addToArchive($items, $arch_id) {
+		if ($items == null) {
+			return ;
+		}
 		foreach ($items as $item) {
 			$item->update($arch_id);
 		}

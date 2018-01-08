@@ -273,15 +273,13 @@ nav.navbar {
 
 #main {
     background-image: url("../images/all.jpg");  
+    background-size: cover;
     -moz-background-size: cover;
     -webkit-background-size: cover;
-    background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-origin: border-box;
-}
-
-#main {
+    background-position: top left;
     padding: 0;
 }
 

@@ -12,4 +12,9 @@ class TeamsRepository extends Repository {
     public function getTeams() {
         return $this->findByValue('archive_id', null)->order('name ASC')->fetchPairs('id', 'name');
     }
+
+    public function getPlayersForTeam($team_id) {
+    	$team = $this->findById($team_id);
+    	return $team->related('players')->fetchPairs('id', 'name');
+    }
 }

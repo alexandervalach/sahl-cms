@@ -101,10 +101,16 @@ abstract class Repository extends Nette\Object {
         return $this->getTable()->select( $data );
     }
 
-    public function getAsArray( $arch_id = null ) {
-        $rows = $this->findAll()->where( 'archive_id', $arch_id );
+    public function getAsArray( $id ) {
+        $check_rows = $this->findByValue( 'archive_id', $id );
+        
+        if ($check_rows->count()) {
+            return null;
+        } 
+
+        $rows = $this->findByValue( 'archive_id', null );
         $data = array();
-        if (!$rows) {
+        if (!$rows->count()) {
             return null;
         } else {
             $i = 0;

@@ -6,7 +6,7 @@
     	<h1 n:block="title">Tresty hráčov</h1>
     </div>
 
-    <div n:foreach="$punishments as $punishment" style="margin-top: 3em">
+    <div n:foreach="$punishments as $punishment" style="margin-top: 3em" class="text-center">
         {var $player = $punishment->ref('players', 'player_id')}
         {var $team = $player->ref('teams', 'team_id')}
 
@@ -17,10 +17,11 @@
             {$team->name}
         </a>
         <ul>
-            <li><strong>Stop na:</strong>{$punishment->round}</li>
-            <li><strong>Dôvod:</strong>{$punishment->text}</li>
+            <li><strong>Stop na:</strong> {$punishment->round}</li>
+            <li n:if="$punishment->text"><strong>Dôvod:</strong> {$punishment->text}</li>
             <li n:if="$punishment->condition"><strong>Podmienečne</strong></li>
         </ul>
+        <hr n:if="!$iterator->last" />
     </div>
 </section>
 

@@ -10,14 +10,6 @@ class ArchivesRepository extends Repository {
      * @return array
      */
     public function getArchives() {
-        $archiveSelection = $this->findAll();
-        if (!$archiveSelection) {
-        	return NULL;
-        }
-        $arhives = array();
-        foreach ($archiveSelection as $arch) {
-            $archives[$arch->id] = $arch->title;
-        }
-        return $archives;
+        return $this->findAll()->fetchPairs('id', 'title');
     }
 }

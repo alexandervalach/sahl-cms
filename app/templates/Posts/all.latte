@@ -1,77 +1,8 @@
 {block content}
 
-<div class="content">
-    Hlavnou myšlienkou vzniku Spišskej amatérskej hokejovej ligy bolo hrať priateľský hokej 
-    na amatérskej úrovni, samozrejme v rámci pravidiel.
-    Po dohode siedmich mužstiev vznikla  <a n:href="Rules:all">SAHL – Pravidlá a Smernice</a>.
-</div>
-
-<aside class="container-fluid" style="padding: 0; margin-bottom: 1em">
-
-    <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6" n:if="$sideFights->count()" id="side-fights">
-        <div class="table-responsive">
-            <table class='table'>
-                <caption>
-                    <h2 class="text-center">
-                        <a n:href="Rounds:view $sideRound">{$sideRound->name}</a>
-                    </h2>
-                </caption>
-                <tbody>
-                    <tr n:foreach="$sideFights as $fight">
-                        {var $team1 = $fight->ref('teams', 'team1_id');}
-                        {var $team2 = $fight->ref('teams', 'team2_id');}
-                        <td>
-                            <img src="{$basePath}/{$imgFolder}/{$team1->logo}" width="20px" 
-                                n:if="$team1->logo and file_exists($imgFolder . '/' . $team1->logo)"/> 
-                            {$team1->name}
-                        </td>
-                        <td>
-                            <img src="{$basePath}/{$imgFolder}/{$team2->logo}" width="20px"
-                                n:if="$team2->logo and file_exists($imgFolder . '/' . $team2->logo)" />
-                            {$team2->name}
-                        </td>
-                        <td>{$fight->score1}</td>
-                        <td>:</td>
-                        <td>{$fight->score2}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section n:foreach="$side_table_types as $type">
-
-        <div class='table-responsive'>
-            <table class='table leaderboard'>
-                <caption>
-                    <h2>
-                        <a n:href="Tables:all">{$type->name}</a>
-                    </h2>
-                </caption>
-                <tbody>
-                    <tr n:foreach="$side_tables[$type->name] as $row" {if $iterator->first}class="first"{/if}>
-                        {var $team = $row->ref('teams', 'team_id')}
-                        <td>{$iterator->counter}.</td>
-                        <td>
-                            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="20px"
-                                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
-                            {$team->name}
-                        </td>
-                        <td>
-                            <strong class="text-danger">{$row->points}</strong>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </section>
-
-</aside>
-
 <div class="content container-fluid">
     
-    <div class="clearfix">
+    <div class="clearfix" n:if="$user->loggedIn">
         <div class="pull-right">
             <button type="button" class="btn btn-primary" 
                 data-target="#add" data-toggle="modal">
@@ -80,7 +11,7 @@
         </div>
     </div>
 
-    <article n:foreach="$posts as $post" class="clearfix" style="padding: 1.5em 2em;">
+    <article n:foreach="$posts as $post" class="clearfix" style="padding: 3em;">
         
         <header class="clearfix">
             <a n:href="Posts:view $post">
@@ -108,7 +39,7 @@
 
         </main>
 
-        <hr />
+        <hr n:if="!$iterator->last" />
 
     </article>
 

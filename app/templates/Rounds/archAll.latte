@@ -10,11 +10,14 @@
 
 <div class="table-responsive" n:if="$rounds->count()">
     <table class="table">
+        <thead>
+            <tr>
+                <th>Kolá</th>
+            </tr>
+        </thead>
         <tbody>
             <tr n:foreach="$rounds as $round">
-                <td>
-                    <a n:href="archView, $round->archive_id, $round">{$round->name}</a>
-                </td>
+                <td><a n:href="archView $round->archive_id, $round">{$round->name}</a></td>
             </tr>
         </tbody>
     </table>

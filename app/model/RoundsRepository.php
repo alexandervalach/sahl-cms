@@ -14,5 +14,14 @@ class RoundsRepository extends Repository {
         }
         return null;
     }
+
+    public function archive( $arch_id ) {
+    	$rounds = $this->findByValue('archive_id', null);
+    	if (!$rounds->count()) {
+    		foreach ($rounds as $round) {
+				$round->update($arch_id);
+			}
+    	}
+    }
     
 }

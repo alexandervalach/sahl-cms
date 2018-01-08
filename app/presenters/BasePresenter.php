@@ -173,14 +173,14 @@ abstract class BasePresenter extends Presenter {
             $this->restoreRequest($this->backlink);
             $this->redirect('Homepage:all');
         } catch (AuthenticationException $e) {
-            $form->addError('Nesprávne meno alebo heslo');
+            $this->flashMessage('Nesprávne meno alebo heslo', 'danger');
+            $this->redirect('Homepage:all');
         }
     }
 
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený', 'success');
-        $this->restoreRequest($this->backlink);
         $this->redirect('Homepage:all');
     }
 

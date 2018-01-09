@@ -6,6 +6,7 @@ body {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing : border-box;
+    background-color: #204d74;
 }
 
 #main hr {
@@ -34,7 +35,11 @@ article a {
 }
 
 article a:hover,
-article a:focus {
+article a:focus,
+article a:target,
+main a:focus,
+main a:hover,
+main a:target {
     text-decoration: none;
     color: #ff9800;
 }
@@ -50,13 +55,7 @@ article footer {
     text-align: center;
     line-height: 2em;
     font-size: 2em;
-    margin-bottom: 1.5em;
-}
-
-main a:focus,
-main a:hover {
-    text-decoration: none;
-    color: #ff9800;
+    margin-bottom: 1em;
 }
 
 table th {
@@ -86,7 +85,8 @@ table caption a {
 }
 
 table caption a:hover,
-table caption a:focus {
+table caption a:focus,
+table caption a:target {
     color: #ff9800;
     text-decoration: none;
 }
@@ -101,8 +101,7 @@ div.table-responsive .table {
 }
 
 #teams {
-    padding-top: 1.5em;
-    padding-bottom: 1.5em;
+    padding: 1em 0;
 }
 
 #teams a {
@@ -110,16 +109,26 @@ div.table-responsive .table {
 }
 
 #teams img {
+    transition: margin-top 0.4s ease;
     -webkit-transition: margin-top 0.4s ease;
     -moz-transition: margin-top 0.4s ease;
     -o-transition: margin-top 0.4s ease;
-    transition: margin-top 0.4s ease;
-    margin: 1.5em 0;
+    margin: 2em 0;
 }
 
 #teams img:hover,
-#teams img:focus {
-    margin-top: -0.5em;
+#teams img:focus,
+#teams img:target {
+    margin-top: 0em;
+}
+
+section#sponsors {
+    margin: 2em 0;
+}
+
+section#sponsors > figure {
+    padding: 3em;
+    height: 20em;
 }
 
 #sponsors img {
@@ -127,12 +136,13 @@ div.table-responsive .table {
     -moz-transition: margin-top 0.4s ease;
     -o-transition: margin-top 0.4s ease;
     transition: margin-top 0.4s ease;
-    margin-top: 0.5em;
+    margin: 2em 0;
 }
 
 #sponsors img:hover,
-#sponsors img:focus {
-    margin-top: -0.5em;
+#sponsors img:focus,
+#sponsors img:target {
+    margin-top: 1em;
 }
 
 #lightbox {
@@ -165,10 +175,13 @@ div.table-responsive .table {
 
 #lightbox div#show-prev span:hover,
 #lightbox div#show-prev span:focus, 
+#lightbox div#show-prev span:target, 
 #lightbox div#show-next span:hover,
 #lightbox div#show-next span:focus,
+#lightbox div#show-next span:target,
 #lightbox #close:hover, 
-#lightbox #close:focus {
+#lightbox #close:focus,
+#lightbox #close:target {
     color: #898989;
 }
 
@@ -231,7 +244,8 @@ footer h2 {
 }
 
 footer a:hover,
-footer a:focus {
+footer a:focus,
+footer a:target {
     color: #ff9800;
     text-decoration: none;
 }
@@ -240,35 +254,68 @@ nav.navbar {
     background-color: #286090;
     margin-bottom: 0;
     border-radius: 0;
-    height: 50px;
+    height: 4em;
     border: none;
 }
 
 .navbar ul.nav > li > a,
-.navbar div.navbar-header a {
+.navbar div.navbar-header a,
+nav.navbar-default .navbar-nav > .open > a {
     transition : background-color 0.5s ease;
     -webkit-transition : background-color 0.5s ease;
     -moz-transition : background-color 0.5s ease;
     -o-transition : background-color 0.5s ease;
     background-color: #286090;
     color: #fff;
-    line-height: 1em;
+    line-height: 2em;
     font-size: 1em;
     text-align: center;
-    height: 50px;
+    height: 4em;
 }
 
 .navbar ul.nav li > a:hover,
 .navbar ul.nav > li > a:focus,
+.navbar ul.nav > li > a:target,
 .navbar div.navbar-header a:focus,
-.navbar div.navbar-header a:hover {
-    background-color: #5b94c5;
+.navbar div.navbar-header a:hover,
+.navbar div.navbar-header a:target,
+nav.navbar-default .navbar-nav > .open > a:hover,
+nav.navbar-default .navbar-nav > .open > a:focus,
+nav.navbar-default .navbar-nav > .open > a:target {
+    background-color: #204d74;
     color: #e5e5e5;
 }
 
-.navbar div.navbar-header button:focus,
-.navbar div.navbar-header button:focus {
+nav.navbar-default .navbar-nav > .open .dropdown-menu {
+    background-color: #5b94c5;
+}
 
+nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a {
+    transition: background-color 0.5s ease;
+    -webkit-transition: background-color 0.5s ease;
+    -moz-transition: background-color 0.5s ease;
+    -o-transition: background-color 0.5s ease;
+    color: #fff;
+}
+
+nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:hover,
+nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:focus,
+nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
+    color: #fff;
+    background-color: #204d74;
+}
+
+.navbar div.navbar-header button {
+    transition: background-color 0.5s ease;
+    -webkit-transition: background-color 0.5s ease;
+    -moz-transition: background-color 0.5s ease;
+    -o-transition: background-color 0.5s ease;
+}
+
+.navbar div.navbar-header button:hover,
+.navbar div.navbar-header button:focus,
+.navbar div.navbar-header button:target {
+    background-color: #204d74;
 }
 
 #main {

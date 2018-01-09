@@ -50,11 +50,9 @@
                 <!-- -->
             </div>
 
-            <section id="sponsors" class="col-xs-12 col-sm-10 col-md-8 col-lg-8 content hidden-xs" 
-                style="margin: 2em 0">
+            <section id="sponsors" class="col-xs-12 col-sm-10 col-md-8 col-lg-8 content hidden-xs">
                 <h2>Sponzori</h2>
-                <figure n:foreach="$sponsors as $sponsor" style="padding: 3em; height: 200px" 
-                    class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                <figure n:foreach="$sponsors as $sponsor" class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
                     
                     <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
                         <img class="img img-responsive" alt="Logo sponzora {$sponsor->title}"

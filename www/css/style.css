@@ -102,6 +102,10 @@ div.table-responsive .table {
 
 #teams {
     padding: 1em 0;
+    margin: 1em 0;
+    width: 100%;
+    clear: both;
+    text-align: center;
 }
 
 #teams a {
@@ -113,13 +117,13 @@ div.table-responsive .table {
     -webkit-transition: margin-top 0.4s ease;
     -moz-transition: margin-top 0.4s ease;
     -o-transition: margin-top 0.4s ease;
-    margin: 2em 0;
+    margin: 2em 1em 2em 1em;
 }
 
 #teams img:hover,
 #teams img:focus,
 #teams img:target {
-    margin-top: 0em;
+    margin-top: 0.5em;
 }
 
 section#sponsors {
@@ -400,7 +404,7 @@ table.leaderboard tr:nth-child(9) {
     padding-left: 0;
 }
 
-@media screen and (min-width: 280px) and (max-width: 720px) {
+@media screen and (min-width: 280px) and (max-width: 800px) {
 
     #main {
         background-image: none;

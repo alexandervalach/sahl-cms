@@ -26,7 +26,7 @@ class TablesPresenter extends BasePresenter {
         foreach ($table_types as $type) {
             $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
                                                               ->where('type = ?', $type)
-                                                              ->order('points DESC');
+                                                              ->order('points DESC, (score1 - score2) DESC');
         }
         
         $this->template->tables = $table_rows;

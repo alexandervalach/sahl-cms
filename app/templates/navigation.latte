@@ -1,7 +1,6 @@
 <nav class="navbar navbar-default clearfix">
 
-    <div class="col-sm-offset-1 col-md-offset-2 col-lg-offset-2 col-xs-12 col-sm-10 col-md-8 col-lg-8">
-        
+    <div>        
         <div class="navbar-header">
             <a class="navbar-brand" n:href="Homepage:all">SAHL</a>
             <button type="button" class="navbar-toggle" data-toggle="collapse" 
@@ -39,11 +38,23 @@
                 <li><a n:href="Albums:all">Galéria</a></li>
                 <li><a n:href="Topics:all">Fórum</a></li>
                 <li><a n:href="Archives:all">Archív</a></li>
-                <li n:if="$user->loggedIn">
-                    <a n:href="Homepage:out" title="Odhlásiť">
-                        <span class="glyphicon glyphicon-off"></span>
-                    </a>
-                </li>
+                {if $user->loggedIn}
+                    <li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Nastavenia <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a n:href="PlayerTypes:all">Typy hráčov</a></li>
+                            <li><a n:href="TableTypes:all">Typy tabuliek</a></li>
+                            <li><a href="#">Archivovať sezónu</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a n:href="Homepage:out" title="Odhlásiť">
+                            <span class="glyphicon glyphicon-off"></span>
+                        </a>
+                    </li>
+                {/if}
             </ul>
         </div>
     </div>

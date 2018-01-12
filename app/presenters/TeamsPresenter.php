@@ -37,10 +37,12 @@ class TeamsPresenter extends BasePresenter {
             throw new BadRequetsException($this->error);
         }
 
+        $goalie = $this->playerTypesRepository->findByValue('name', 'Brankár')->fetch();
+
         $this->template->players = $this->playersRepository->findByValue('team_id', $id)
-                                        ->where('type_id != ?', 2)->where('archive_id', null);
+                                        ->where('type_id != ?', $goalie)->where('archive_id', null);
         $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
-                                        ->where('type_id', 2)->where('archive_id', null);
+                                        ->where('type_id', $goalie)->where('archive_id', null);
         $this->template->team = $this->teamRow;
         $this->template->imgFolder = $this->imgFolder;
         $this->template->i = 0;

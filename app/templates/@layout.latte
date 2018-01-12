@@ -22,23 +22,23 @@
 
             {include 'teams.latte'}
             
-            <div class="clearfix">
-                
-                <main class='col-sm-offset-1 col-md-offset-2 col-lg-offset-2 col-xs-12 col-sm-12 col-md-8 col-lg-8' 
-                    style="padding: 0">
-                    <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        <span n:if="$flash->type == 'success'" class="glyphicon glyphicon-ok"></span>&nbsp;
-                        <span n:if="$flash->type == 'danger'" class="glyphicon glyphicon-remove"></span>&nbsp;
-                        {$flash->message}
-                    </div>
-                    {include content}
-                </main>
-                
-                <div class="col-md-2 col-lg-2 hidden-xs col-sm-1">
-                    <!-- -->
+            <main class="col-md-11 col-lg-8">
+                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    {if $flash->type == 'success'}
+                        {var $state = "ok"}
+                    {elseif $flash->type == 'danger'}
+                        {var $state = "remove"}
+                    {elseif $flash->type == 'warning'}
+                        {var $state = "warning"}
+                    {/if}
+
+                    <span class="glyphicon glyphicon-{$state}"></span>&nbsp;
+                    {$flash->message}
                 </div>
-            </div>
+                {include content}
+            </main>
+                
             
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <button type="button" id="scroll-to-top">
@@ -46,26 +46,7 @@
                 </button>
             </div>
 
-            <div class="col-md-2 col-lg-2 hidden-xs col-sm-1">
-                <!-- -->
-            </div>
-
-            <section id="sponsors" class="col-xs-12 col-sm-10 col-md-8 col-lg-8 content hidden-xs">
-                <h2>Sponzori</h2>
-                <figure n:foreach="$sponsors as $sponsor" class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                    
-                    <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                        <img class="img img-responsive" alt="Logo sponzora {$sponsor->title}"
-                             src="{$basePath}/{$imgFolder}/{$sponsor->image}" 
-                             n:if="file_exists($imgFolder . '/' . $sponsor->image)" />
-                    </a>
-
-                </figure>
-            </section>
-
-            <div class="col-md-2 col-lg-2 hidden-xs col-sm-1">
-                <!-- -->
-            </div>
+            {include 'sponsors.latte'}
 
         </div>
 

@@ -15,6 +15,7 @@ class HomepagePresenter extends BasePresenter {
 
     public function renderAll() {
         $posts = $this->postsRepository->findAll()->order('id DESC')->limit(3);
+        $side_tables = array();
 
         if ($this->side_table_types == null) {
             $this->side_table_types = $this->tableTypesRepository->findByValue('visible = ?', 1);

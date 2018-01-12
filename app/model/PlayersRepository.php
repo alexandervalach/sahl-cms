@@ -11,4 +11,5 @@ class PlayersRepository extends Repository {
                         ->order('name')
                         ->fetchPairs('id', 'name');
     }
+
 }

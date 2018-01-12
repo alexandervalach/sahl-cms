@@ -21,6 +21,7 @@ class PlayerTypesPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->types = $this->playerTypesRepository->findAll();
+        $this->getComponent('addForm');
     }
 
     public function actionEdit($id) {
@@ -59,7 +60,7 @@ class PlayerTypesPresenter extends BasePresenter {
 
     protected function createComponentAddForm() {
         $form = new Form;
-        $form->addText('type', 'Typ hráča')
+        $form->addText('name', 'Typ hráča')
              ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
              ->setRequired();
         $form->addText('abbr', 'Skratka');
@@ -71,7 +72,7 @@ class PlayerTypesPresenter extends BasePresenter {
 
     protected function createComponentEditForm() {
         $form = new Form;
-        $form->addText('type', 'Typ hráča')
+        $form->addText('name', 'Typ hráča')
              ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50)
              ->setRequired();
         $form->addText('abbr', 'Skratka');

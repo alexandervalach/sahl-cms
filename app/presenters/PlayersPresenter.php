@@ -22,9 +22,9 @@ class PlayersPresenter extends BasePresenter {
     private $error = "Player not found";
 
     public function renderAll() {
-        $this->template->stats = $this->playersRepository->findByValue('archive_id', null)
-                                      ->where('name != ?', ' ')
-                                      ->order('goals DESC, name DESC');
+        $this->template->players = $this->playersRepository->findByValue('archive_id', null)
+                                        ->where('name != ?', ' ')
+                                        ->order('goals DESC, name DESC');
         $this->template->i = 0;
         $this->template->j = 0;
         $this->template->current = 0;
@@ -33,6 +33,27 @@ class PlayersPresenter extends BasePresenter {
         if ($this->user->isLoggedIn()) {
             $this->getComponent('resetForm');
         }
+    }
+
+    public function actionView($id) {
+        $this->playerRow = $this->playersRepository->findById($id);
+        $this->teamRow = $this->teamsRepository->findById($this->playerRow->team_id);
+    }
+
+    public function renderView($id) {
+        if (!$this->playerRow) {
+            throw new BadRequestException($this->error);
+        }
+
+        if (!$this->teamRow) {
+            throw new BadRequestException("Team not found");
+        }
+
+        $this->template->player = $this->playerRow;
+        $this->template->team = $this->teamRow;
+        $this->template->imgFolder = $this->imgFolder;
+        $this->template->goals_count = $this->goalsRepository->getPlayerGoalsCount($id); 
+        $this->template->type = $this->playerTypesRepository->findById($this->playerRow->type_id);
     }
 
     public function actionArchAll($id) {

@@ -1,0 +1,45 @@
+{block content}
+
+<section class="content">
+	<div class="clearfix">
+		<h1>
+			{block title}{$player->name}{/block}, {$player->num}
+		</h1>
+		<h2>
+			<a n:href="Teams:view $team">
+				<img src="{$basePath}/{$imgFolder}/{$team->logo}" 
+				n:if="$team->logo && file_exists($imgFolder . '/' . $team->logo)" /> 
+			</a>
+		</h2>
+	</div>
+
+	<div class="clearfix">
+		<img n:if="$player->photo && file_exists($imgFolder . '/' . $player->photo)"
+			src="{$basePath}/{$imgFolder}/{$player->photo}" />
+	</div>
+
+	<div class="clearfix table-responsive">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td>Funkcia</td>
+					<td>{$type->name}</td>
+				</tr>
+				<tr>
+					<td>Počet inkasovaných gólov</td>
+					<td>{$player->goals}</td>
+				</tr>
+				<tr>
+					<td>Dátum narodenia </td>
+					<td>{$player->born}</td>
+				</tr>
+				<tr n:if="$player->trans">
+					<td colspan="2">Prestupový hráč</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</section>
+
+{/block}

@@ -17,7 +17,7 @@
 
 </section>
 
-<div n:if="$stats->count()" class='table-responsive'>
+<div n:if="$players->count()" class='table-responsive'>
     <table class='table'>
         <thead>
             <tr>
@@ -29,12 +29,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr n:foreach="$stats as $stat" class="{if $i == 0}first{/if}">
-                {var $current = $stat->goals}
-                {var $team = $stat->ref('team_id')}
+            <tr n:foreach="$players as $player" class="{if $i == 0}first{/if}">
+                {var $current = $player->goals}
+                {var $team = $player->ref('team_id')}
                 <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}</td>
-                <td>{$stat->name}</td>
-                <td>{$stat->num}</td>
+                <td><a n:href="view $player">{$player->name}</a></td>
+                <td>{$player->num}</td>
                 <td>
                     <a n:href="Teams:view $team">
                         <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="30px" 
@@ -42,9 +42,9 @@
                         {$team->name}
                     </a>
                 </td>
-                <td>{$stat->goals}</td>
+                <td>{$player->goals}</td>
                 {var $j = $j + 1}
-                {var $previous = $stat->goals}
+                {var $previous = $player->goals}
             </tr>
         </tbody>
     </table>

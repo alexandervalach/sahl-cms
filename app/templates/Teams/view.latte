@@ -61,7 +61,9 @@
                         {if $player->name}
                             <td>{$iterator->counter}.</td>
                             <td>
-                                {$player->name} {if $type->abbr}- {$type->abbr}{/if}
+                                <a n:href="Players:view $player">
+                                    {$player->name} {if $type->abbr}- {$type->abbr}{/if}
+                                </a>
                             </td>
                             <td>
                                 <time datetime="{$player->born}" pubdate>
@@ -78,7 +80,11 @@
 
                 <tr n:foreach="$goalies as $goalie" {if $player->trans}class="borrowed-player"{/if}>
                     <td>{$iterator->counter + $i}.</td>
-                    <td>{$goalie->name}</td>
+                    <td>
+                        <a n:href="Players:view $player">
+                            {$goalie->name}
+                        </a>
+                    </td>
                     <td>
                         <time datetime="{$goalie->born}" pubdate>
                             {$player->born|date:'Y'}

@@ -10,31 +10,57 @@ use Nette\Database\Table\ActiveRow;
 class TableTypesPresenter extends BasePresenter {
 
     /** @var ActiveRow */
-    private $optionRow;
+    private $tableTypeRow;
 
     /** @var string */
     private $error;
 
-    public function actionAddToSidebar($type) {
+    public function renderAll() {
         $this->userIsLogged();
+        $this->template->types = $this->tableTypesRepository->findAll();
+        $this->getComponent('addForm');
     }
 
-    public function renderAddToSidebar($type) {
-        $this->getComponent('addToSidebarForm');
+    public function actionShow($id) {
+        $this->userIsLogged();
+        $this->tableTypeRow = $this->tableTypesRepository->findById($id);
+        $this->submittedShowTable();
     }
 
-    protected function createComponentAddToSidebarForm() {
+    public function submittedShowTable() {
+        $this->tableTypeRow->update( array('visible' => 1) );
+        $this->flashMessage('Tabuľka je viditeľná', 'success');
+        $this->redirect('all');
+    }
+
+    public function actionHide($id) {
+        $this->userIsLogged();
+        $this->tableTypeRow = $this->tableTypesRepository->findById($id);
+        $this->submittedHideTable();
+    }
+
+    public function submittedHideTable() {
+        $this->tableTypeRow->update( array('visible' => 0) );
+        $this->flashMessage('Tabuľka je skrytá pre verejnosť', 'success');
+        $this->redirect('all');
+    }
+
+    protected function createComponentAddForm() {
         $form = new Form;
-        $form->addCheckbox('visible', ' Zobraziť na bočnom paneli.');
+        $form->addText('name', 'Názov')
+             ->setRequired()
+             ->setAttribute('placeholder', 'Play Off');
+        $form->addCheckbox('visible', ' Chcem, aby sa tabuľka zobrazila na stránke');
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = $this->submittedAddToSidebarForm;
+        $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedAddToSidebarForm(Form $form, $values) {
-        $this->optionRow->update($values);
-        $this->redirect('Tables:all');
+    public function submittedAddForm(Form $form, $values) {
+        $this->tableTypesRepository->insert($values);
+        $this->flashMessage('Typ tabuľky bol pridaný', 'success');
+        $this->redirect('all');
     }
 
 }

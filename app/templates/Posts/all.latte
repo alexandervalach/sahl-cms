@@ -1,3 +1,9 @@
+{**
+ * @param string   $basePath web base path
+ * @param string   $imgFolder images folder path
+ * @param array    $posts list of posts
+*}
+
 {block content}
 
 <div class="content container-fluid">
@@ -23,16 +29,16 @@
             </a>
         </header>
 
-        <main class="clearfix" style="margin-top: 1.5em">
+        <main class="clearfix">
                 
-            <figure class="col-md-5 col-lg-5" style="padding-bottom: 1.5em">
-                <a n:href="view $post">
-                    {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
-                        <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img img-responsive" />
-                    {else}
-                        <img src='{$basePath}/{$imgFolder}/{$default}' class="img img-responsive" />
-                    {/if}
-                </a>
+            <figure class="col-md-5 col-lg-5">
+                {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
+                    <img src="{$basePath}/{$imgFolder}/{$post->thumbnail}" class="img img-responsive"
+                        alt="Miniatúra článku" />
+                {else}
+                    <img src="{$basePath}/{$imgFolder}/{$default}" class="img img-responsive"
+                        alt="Logo sahl" />
+                {/if}
             </figure>
 
             <div class="hidden-xs col-md-7 col-lg-7">
@@ -55,7 +61,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Vytvoriť nový príspevok</h4>
+                <h3 class="modal-title">Vytvoriť nový príspevok</h3>
             </div>
             <div class="modal-body">
                 {control addForm}
@@ -69,7 +75,5 @@
 {block scripts}
     {include #parent}
     <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">
-        CKEDITOR.replace('ckeditor');
-    </script>
+    <script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
 {/block}

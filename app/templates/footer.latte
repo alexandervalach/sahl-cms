@@ -1,25 +1,29 @@
+{**
+ * @param string    $basePath web base path
+*}
+
 <footer class='container-fluid text-center'>
 
-    <section class="clerfix" style="margin-top: 2em">
+    <section>
         <h2>Navštívte aj tieto stránky</h2>
         <p n:foreach="$links as $link">
             <a href='{$link->anchor}' target="_blank">{$link->title}</a>
         </p>
     </section>
 
-    <section n:if="!$user->loggedIn" class="clearfix" style="margin-top: 2em">
+    <section n:if="!$user->loggedIn">
 
-        <button type="button" class="btn btn-warning btn-large" 
+        <button type="button" class="btn btn-info btn-large" 
             data-target="#sign-in" data-toggle="modal" title="Prihlásenie do administrácie">
             Administrácia
         </button>
 
     </section>
 
-    <section class="clearfix" style="margin-top: 2em">
+    <section id="authors">
         <h2>Na vylepšení stránky stále pracujú</h2>
             
-        <div style="margin-top: 2em">
+        <div>
             <ul class="col-md-4 col-lg-4">
                 <li><strong>Návrh dizajnu</strong></li>
                 <li>Tomáš Hudák</li>
@@ -31,13 +35,19 @@
             </ul>
 
             <ul>
-                <li><strong>Dokopy dal</strong></li>
-                <li>Alexander Valach</li>
+                <li><strong>Systém vytvoril a udržiava</strong></li>
+                <li>
+                    <a href="https://www.linkedin.com/in/alexander-valach-351019107" 
+                        target="_blank" title="Profil autora">
+                        Alexander Valach
+                    </a>
+                </li>
             </ul>
          </div>
     
-        <div class="clearfix" style="margin-top: 2em">
-            &copy; 2014 - {date('Y')}, Postavené na <a target="_blank" href="https://nette.org/">Nette</a>
+        <div>
+            &copy; 2014 - {date('Y')}, Postavené na 
+            <a target="_blank" href="https://nette.org/" title="Stránka frameworku">Nette</a>
         </div>
 
     </section>
@@ -49,7 +59,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Prihlásenie do administrácie</h4>
+                <h3 class="modal-title">Prihlásenie do administrácie</h3>
             </div>
             <div class="modal-body">
                 {control signInForm}

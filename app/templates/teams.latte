@@ -1,3 +1,9 @@
+{**
+ * @param string	$basePath web base path
+ * @param string 	$imgFolder images folder path
+ * @param array		$side_team teams
+*}
+
 <section id="teams" class="container-fluid hidden-xs">
     <a n:foreach="$side_teams as $side_team" n:href="Teams:view $side_team" title="{$side_team->name}">
         <img src="{$basePath}/{$imgFolder}/{$side_team->logo}" 

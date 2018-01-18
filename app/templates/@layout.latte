@@ -4,7 +4,7 @@
 *}
 
 <!DOCTYPE html>
-<html>
+<html lang="sk">
     <head>
         <meta http-equiv="content-type" content="text/html" charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,7 +30,7 @@
                     {elseif $flash->type == 'danger'}
                         {var $state = "remove"}
                     {elseif $flash->type == 'warning'}
-                        {var $state = "warning"}
+                        {var $state = "warning-sign"}
                     {/if}
 
                     <span class="glyphicon glyphicon-{$state}"></span>&nbsp;
@@ -40,9 +40,10 @@
             </main>
                 
             
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div>
                 <button type="button" id="scroll-to-top">
-                    <i class="glyphicon glyphicon-menu-up"></i>
+                    <span class="sr-only">Späť na vrch stránky</span>
+                    <span class="glyphicon glyphicon-menu-up"></span>
                 </button>
             </div>
 

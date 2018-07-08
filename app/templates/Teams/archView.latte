@@ -16,7 +16,6 @@
             <tr>
                 <th>&nbsp;</th>
                 <th>Meno a priezvisko</th>
-                <th>Dátum narodenia</th>
                 <th>Číslo dresu</th>
             </tr>
         </thead>
@@ -29,14 +28,9 @@
                         <td>
                             {$player->lname}{if $type->abbr} - {$type->abbr}{/if}
                         </td>
-                        <td>
-                            <time datetime="{$player->born}" pubdate>{$player->born}</time>
-                        </td>
                         <td>{$player->num}</td>
                     {else}
-                        {for $j = 0; $j < 4; $j++}
-                            <td>&nbsp;</td>
-                        {/for}
+                        {for $j = 0; $j < 3; $j++}<td>&nbsp;</td>{/for}
                     {/if}
                 </tr>
                 {var $i = $iterator->counter}
@@ -48,9 +42,6 @@
                 <tr>
                     <td>{$i}.</td>
                     <td>{$goalie->lname}</td>
-                    <td>
-                        <time datetime="{$goalie->born}" pubdate>{$goalie->born}</time>
-                    </td>
                     <td>Brankár, {$goalie->num}</td>  
                 </tr>
             {/foreach}

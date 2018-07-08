@@ -16,7 +16,7 @@
 
 </section>
 
-<div n:if="$types->count()" class="table-responsive">
+<div n:if="$typesCount" class="table-responsive">
     <table class="table">
         <thead>
             <tr>
@@ -27,7 +27,7 @@
         </thead>
         <tbody>
             <tr n:foreach="$types as $type">
-                <td>{$type->name}</td>
+                <td>{$type->type}</td>
                 <td>{$type->abbr}</td>
                 <td>
                     <a n:if="$iterator->counter > 2" n:href="edit $type" class="text-success">
@@ -35,7 +35,7 @@
                     </a>
                 </td>
                 <td>
-                    <a n:if="$iterator->counter > 2" n:href="delete $type" class="text-danger">
+                    <a n:if="$iterator->counter > 2" n:href="remove $type" class="text-danger">
                         <span class="glyphicon glyphicon-trash"></span>
                     </a>
                 </td>

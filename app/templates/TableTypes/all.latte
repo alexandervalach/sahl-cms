@@ -5,7 +5,7 @@
     <div class="clearfix">
         <div class="pull-right">
             <button type="button" class="btn btn-primary" data-target="#add" data-toggle="modal"
-            	title="Pridať typ tabuľky">
+                title="Pridať typ tabuľky">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
         </div>
@@ -39,14 +39,14 @@
                     </a>
                 </td>
                 <td>
-                	{if !$type->visible}
-	                	<a n:href="show $type" class="text-success">
-	                        <span class="glyphicon glyphicon-eye-open"></span>
-	                    </a>
+                    {if !$type->visible}
+                        <a n:href="show $type" class="text-success">
+                            <span class="glyphicon glyphicon-eye-close"></span>
+                        </a>
                     {else}
-						<a n:href="hide $type" class="text-success">
-	                        <span class="glyphicon glyphicon-eye-close"></span>
-	                    </a>
+                        <a n:href="hide $type" class="text-success">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
                     {/if}
                 </td>
             </tr>

@@ -38,13 +38,13 @@
         <header>
             <strong>{$reply->author}</strong>
             <div n:if="$user->loggedIn" class="pull-right">
-                <a n:href="delete $reply" class="text-danger">
-                    <span class="glyphicon glyphicon-remove"></span>
+                <a n:href="remove $reply" class="{$btnDanger}">
+                    <span class="glyphicon glyphicon-trash"></span>
                 </a>
             </div>
         </header>
         <main>
-            {$reply->content}
+            {$reply->text}
         </main>
     </article>
 </section>

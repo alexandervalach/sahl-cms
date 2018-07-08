@@ -18,8 +18,11 @@ class Container
 	use Nette\SmartObject;
 
 	const TAGS = 'tags';
+
 	const TYPES = 'types';
+
 	const SERVICES = 'services';
+
 	const ALIASES = 'aliases';
 
 	/** @var array  user parameters */
@@ -203,6 +206,7 @@ class Container
 			if (count($names = $this->meta[self::TYPES][$type][true]) === 1) {
 				return $this->getService($names[0]);
 			}
+			natsort($names);
 			throw new MissingServiceException("Multiple services of type $type found: " . implode(', ', $names) . '.');
 
 		} elseif ($throw) {

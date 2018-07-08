@@ -1,11 +1,14 @@
 {block content}
 
 <section class="content">
-    <h1 n:block="title">Linky</h1>
-    <div n:if="$user->loggedIn">
-        <a n:href="add" class='btn btn-large btn-primary'>
-            Pridať
-        </a>
+    <div class="clearfix pull-right">
+        <button type="button" class="{$btnPrimary}" 
+            data-target="#add" data-toggle="modal" title="Nový link/sponzor">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </div>
+    <div class="clearfix">
+        <h1 n:block="title">Správa odkazov a sponzorov</h1>
     </div>
 </section>
 
@@ -17,19 +20,34 @@
                 <td>
                     <a href="{$link->anchor}" target="_blank">{$link->title}</a>
                 </td>
-                {if $user->loggedIn}
-                    <td>
-                        <a n:href="edit $link" class="text-success text-center">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a n:href="delete $link" class="text-danger text-center">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
-                {/if}
+                <td class="text-center">
+                    {if $link->sponsor}SPONZOR{else}ODKAZ{/if}
+                </td>
+                <td>
+                    <a n:href="edit $link" class="text-success text-center">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                </td>
+                <td>
+                    <a n:href="remove $link" class="text-danger text-center">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </td>
             </tr>
         </tbody>
     </table>
+</div>
+
+<div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Nový odkaz/sponzor</h3>
+            </div>
+            <div class="modal-body">
+                {control addForm}
+            </div>
+        </div>
+    </div>
 </div>

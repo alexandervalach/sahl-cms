@@ -7,10 +7,10 @@
  */
 class AdminerDisableJush
 {
-
-	function head() {
+	public function head()
+	{
 		?>
-<script type="text/javascript">
+<script<?php echo nonce();?> type="text/javascript">
 (function(){
 	var origBodyLoad = bodyLoad,
 		tags = document.getElementsByTagName('textarea');
@@ -25,5 +25,4 @@ class AdminerDisableJush
 </script>
 <?php
 	}
-
 }

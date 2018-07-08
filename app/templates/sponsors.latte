@@ -5,14 +5,16 @@
 *}
 
 <section id="sponsors" class="col-md-11 col-lg-8 content hidden-xs">
-    <h2>Sponzori</h2>
-    <figure n:foreach="$sponsors as $sponsor" class="col-md-4 col-lg-4">
-        
-        <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-            <img class="img img-responsive" alt="Logo {$sponsor->title}"
-                 src="{$basePath}/{$imgFolder}/{$sponsor->image}" 
-                 n:if="file_exists($imgFolder . '/' . $sponsor->image)" />
-        </a>
-
-    </figure>
+    <header class="clearfix">
+    	<h2>Sponzori</h2>
+    </header>
+    <main>
+	    <figure n:foreach="$sponsors as $sponsor" class="col-md-4 col-lg-4">
+	        <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
+	            <img class="img img-responsive" alt="Logo {$sponsor->title}"
+	                 src="{$basePath}/{$imgFolder}/{$sponsor->image}" 
+	                 n:if="file_exists($imgFolder . '/' . $sponsor->image)" />
+	        </a>
+	    </figure>
+    </main>
 </section>

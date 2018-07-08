@@ -14,7 +14,7 @@ use Nette\Database\Table\ActiveRow;
  * @author
  */
 
-abstract class Repository extends Nette\Object {
+abstract class Repository {
     
     /** @var Context */
     protected $database;

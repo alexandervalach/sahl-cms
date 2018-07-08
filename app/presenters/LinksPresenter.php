@@ -7,38 +7,34 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
+use Tracy\Debugger;
 
 class LinksPresenter extends BasePresenter {
+
+    const LINK_NOT_FOUND = "Link not found";
 
     /** @var ActiveRow */
     private $linkRow;
 
-    /** @var string */
-    private $error = "Link not found";
-
-    public function renderAll() {
-        $this->template->all_links = $this->linksRepository->findAll();
-    }
-
-    public function actionAdd() {
+    public function actionAll() {
         $this->userIsLogged();
     }
 
-    public function renderAdd() {
-        $this->getComponent('addForm');
+    public function renderAll() {
+        $this->template->all_links = $this->linksRepository->findAll();
+        $this->getComponent(self::ADD_FORM);
     }
 
-    public function actionDelete($id) {
+    public function actionRemove($id) {
         $this->userIsLogged();
         $this->linkRow = $this->linksRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderRemove($id) {
         if (!$this->linkRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::LINK_NOT_FOUND);
         }
-        $this->template->delete_link = $this->linkRow;
-        $this->getComponent('deleteForm');
+        $this->getComponent(self::REMOVE_FORM);
     }
 
     public function actionEdit($id) {
@@ -48,62 +44,72 @@ class LinksPresenter extends BasePresenter {
 
     public function renderEdit($id) {
         if (!$this->linkRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::LINK_NOT_FOUND);
         }
-        $this->getComponent('editForm')->setDefaults($this->linkRow);
+        $this->getComponent(self::EDIT_FORM)->setDefaults($this->linkRow);
     }
 
     protected function createComponentAddForm() {
         $form = new Form;
-        $form->addText('title', 'Text:');
+        $form->addText('title', 'Názov:');
         $form->addText('anchor', 'URL adresa:')
-                ->setRequired("URL adresa je povinné pole.");
+             ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
         $form->addUpload('image', 'Obrázok:');
         $form->addCheckbox('sponsor', ' Sponzor');
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     protected function createComponentEditForm() {
         $form = new Form;
-        $form->addText('title', 'Text:')
+        $form->addText('title', 'Názov:')
                 ->setRequired("Text linku je povinný údaj");
         $form->addText('anchor', 'URL adresa:')
                 ->setRequired("URL adresa je povinné pole.");
-        $form->addCheckbox('sponsor', ' Sponzor');
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedDeleteForm() {
-        if ($this->linkRow->image) {
-            FileSystem::delete($this->imgFolder . '/' . $this->linkRow->image);
+    public function submittedAddForm(Form $form, $values) {
+        $img = $values['image'];
+
+        $name = strtolower($img->getSanitizedName());
+        dump($this->wwwFolder);
+        try {
+            if ($img->isOk() AND $img->isImage()) {
+                $img->move($this->wwwDir . "/" . self::IMG_FOLDER . "/" . $name);
+            }
+            $this->linksRepository->insert($values);
+            $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
+        } catch (IOException $e) {
+            $this->flashMessage('Obrázok ' . $name . ' sa nepodarilo nahrať', self::DANGER);
+        }
+
+        $this->redirect('all');
+    }
+
+    public function submittedRemoveForm() {
+        $image = $this->linkRow->image;
+        if ($image) {
+            try {
+                FileSystem::delete($this->wwwFolder . "/" . self::IMG_FOLDER . "/" . $image);
+            } catch (IOException $e) {
+                $this->flashMessage('Obrázok ' . $image . ' sa nepodarilo odstrániť', self::DANGER);    
+            }
         }
         $this->linkRow->delete();
+        $this->flashMessage('Odkaz bol odstránený', self::SUCCESS);
         $this->redirect('all');
     }
 
-    public function submittedAddForm(Form $form, $values) {
-        $img = $values->image;
-
-        if ($img->isOk() && $img->isImage()) {
-            $name = $img->getSanitizedName();
-            $img->move($this->imgFolder . '/' . $name);
-            $values['image'] = $name;
-        }
-
-        $this->linksRepository->insert($values);
-        $this->flashMessage('Link bol pridaný', 'success');
-        $this->redirect('all');
-    }
 
     public function submittedEditForm(Form $form, $values) {
         $this->linkRow->update($values);
-        $this->flashMessage('Link bol upravený', 'success');
+        $this->flashMessage('Odkaz bol upravený', self::SUCCESS);
         $this->redirect('all');
     }
 

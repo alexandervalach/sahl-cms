@@ -9,14 +9,13 @@ use Nette\Application\BadRequestException;
 
 class RepliesPresenter extends BasePresenter {
 
+    const REPLY_NOT_FOUND = 'Reply not found';
+
     /** @var ActiveRow */
     private $topicRow;
 
     /** @var ActiveRow */
     private $replyRow;
-
-    /** @var string */
-    private $error = "Reply not found";
 
     public function actionAdd($id) {
         $this->topicRow = $this->topicsRepository->findById($id);
@@ -24,22 +23,22 @@ class RepliesPresenter extends BasePresenter {
 
     public function renderAdd($id) {
         if (!$this->topicRow) {
-            throw new BadRequestException("Topic not found");
+            throw new BadRequestException(self::TOPIC_NOT_FOUND);
         }
         $this->template->topic = $this->topicRow;
         $this->template->replies = $this->topicRow->related('replies');
-        $this->getComponent('addForm');
+        $this->getComponent(self::ADD_FORM);
     }
 
-    public function actionDelete($id) {
+    public function actionRemove($id) {
         $this->replyRow = $this->repliesRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderRemove($id) {
         if (!$this->replyRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::REPLY_NOT_FOUND);
         }
-        $this->getComponent('deleteForm');
+        $this->getComponent(self::REMOVE_FORM);
         $this->template->reply = $this->replyRow;
     }
 
@@ -49,28 +48,30 @@ class RepliesPresenter extends BasePresenter {
              ->setRequired("Meno je povinné pole")
              ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
         $form->addText('url', 'Nevypĺňať')
-             ->setAttribute('class', 'url-address')
+             ->setAttribute('style', 'display: none')
              ->setOmitted();
-        $form->addTextArea('content', 'Text')
+        $form->addTextArea('text', 'Text')
              ->setAttribute('class', 'form-control');
         $form->addSubmit('add', 'Reagovať');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedAddForm(Form $form, $values) {
-        if (isset($_POST['url']) && $_POST['url'] == '') {
+        $url = filter_input(INPUT_POST, 'url');
+
+        if (isset($url) && $url == '') {
             $values['topic_id'] = $this->topicRow;
             $this->repliesRepository->insert($values);
-            $this->flashMessage('Ďakujeme, vaša odpoveď bola pridaná.', 'success');
+            $this->flashMessage('Ďakujeme, vaša odpoveď bola pridaná.', self::SUCCESS);
         } else {
-            $this->flashMessage('Opa, vyplnili ste aj políčko Nevypĺňať', 'success');
+            $this->flashMessage('Opa, vyplnili ste aj políčko Nevypĺňať', self::SUCCESS);
         }
         $this->redirect('add', $this->topicRow);
     }
     
-    public function submittedDeleteForm() {
+    public function submittedRemoveForm() {
         $topic_id = $this->replyRow->topic_id;
         $this->replyRow->delete();
         $this->redirect('add', $topic_id);

@@ -10,7 +10,7 @@
     
     <div class="clearfix" n:if="$user->loggedIn">
         <div class="pull-right">
-            <button type="button" class="btn btn-primary" 
+            <button type="button" class="{$btnPrimary}" 
                 data-target="#add" data-toggle="modal">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
@@ -34,9 +34,9 @@
             <figure class="col-md-5 col-lg-5">
                 {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
                     <img src="{$basePath}/{$imgFolder}/{$post->thumbnail}" class="img img-responsive"
-                        alt="Miniatúra článku" />
+                        alt="Miniatúra článku {$post->title}" />
                 {else}
-                    <img src="{$basePath}/{$imgFolder}/{$default}" class="img img-responsive"
+                    <img src="{$basePath}/{$imgFolder}/{$defaultImg}" class="img img-responsive"
                         alt="Logo sahl" />
                 {/if}
             </figure>

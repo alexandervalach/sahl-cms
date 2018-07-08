@@ -9,34 +9,31 @@ use Nette\Application\BadRequestException;
 
 class TopicsPresenter extends BasePresenter {
 
+    const ADD_BTN_LABEL = 'Pridať príspevok';
+    const TOPIC_NOT_FOUND = 'Topic not found';
+
     /** @var ActiveRow */
     private $topicRow;
 
-    /** @var string */
-    private $addBtnLbl = "Pridať príspevok";
-
-    /** @var string */
-    private $error = "Topic not found!";
-
     public function renderAll() {
         $this->template->topics = $this->topicsRepository->findAll()->order("id DESC");
-        $this->template->addBtnLbl = $this->addBtnLbl;
+        $this->template->addBtnLbl = self::ADD_BTN_LABEL;
 
         if ($this->user->loggedIn) {
-            $this->getComponent("addForm");
+            $this->getComponent(self::ADD_FORM);
         }
     }
 
     public function actionDelete($id) {
         $this->userIsLogged();
-        $this->forumRow = $this->forumRepository->findById($id);
+        $this->forumRow = $this->topicsRepository->findById($id);
     }
 
     public function renderDelete($id) {
         if (!$this->topicRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::TOPIC_NOT_FOUND);
         }
-        $this->getComponent('deleteForm');
+        $this->getComponent(self::REMOVE_FORM);
         $this->template->topic = $this->topicRow;
     }
 
@@ -47,26 +44,29 @@ class TopicsPresenter extends BasePresenter {
         $form->addText('author', 'Meno:')
              ->setRequired("Meno je povinné pole.");
         $form->addText('url', 'Nevypĺňať')
+             ->setAttribute('style', 'display: none')
              ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
              ->setAttribute('class', 'form-control');
-        $form->addSubmit('add', $this->addBtnLbl);
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+        $form->addSubmit('add', self::ADD_BTN_LABEL);
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedDeleteForm() {
+    public function submittedRemoveForm() {
         $this->forumRow->delete();
-        $this->flashMessage('Téme bola odstránená', 'success');
+        $this->flashMessage('Téme bola odstránená', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedAddForm(Form $form, $values) {
-        if (isset($_POST['url']) && $_POST['url'] == '') {
+        $url = filter_input(INPUT_POST, 'url');
+        
+        if (isset($url) && $url == '') {
             $values['created_at'] = date('Y-m-d H:i:s');
-            $this->forumRepository->insert($values);
-            $this->flashMessage('Téme bola vytvorená', 'success');
+            $this->topicsRepository->insert($values);
+            $this->flashMessage('Téme bola vytvorená', self::SUCCESS);
         }
         $this->redirect('all');
     }

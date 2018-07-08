@@ -11,22 +11,19 @@ use Nette\IOException;
 
 class AlbumsPresenter extends BasePresenter {
 
+    const ALBUM_NOT_FOUND = 'Album not found';
+
     /** @var ActiveRow */
     private $albumRow;
 
     /** @var ActiveRow */
     private $imgRow;
 
-    /** @var string */
-    private $error = "Album not found";
-
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
-        $this->template->default_img = $this->default_img;
-        $this->template->imgFolder = $this->imgFolder;
 
         if ($this->user->isLoggedIn()) { 
-            $this->getComponent('addForm');
+            $this->getComponent(self::ADD_FORM);
         }
     }
 
@@ -36,16 +33,15 @@ class AlbumsPresenter extends BasePresenter {
 
     public function renderView($id) {
         if (!$this->albumRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::ALBUM_NOT_FOUND);
         }
 
         $this->template->album = $this->albumRow;
         $this->template->imgs = $this->albumRow->related('images');
-        $this->template->imgFolder = $this->imgFolder;
 
         if ($this->user->isLoggedIn()) { 
-            $this->getComponent('editForm')->setDefaults($this->albumRow);
-            $this->getComponent('removeForm');
+            $this->getComponent(self::EDIT_FORM)->setDefaults($this->albumRow);
+            $this->getComponent(self::REMOVE_FORM);
         }
     }
 
@@ -56,12 +52,17 @@ class AlbumsPresenter extends BasePresenter {
         $this->submittedSetImg();
     }
 
+
+    /**
+     * @param integer $id
+     * @return void
+     */
     public function actionRemoveImg($id) {
         $this->userIsLogged();
         $this->imgRow = $this->imagesRepository->findById($id);
         
         if (!$this->imgRow) {
-            throw new BadRequestException("Image not found");
+            throw new BadRequestException(self::IMG_NOT_FOUND);
         }
         
         $this->submittedRemoveImg();
@@ -73,9 +74,9 @@ class AlbumsPresenter extends BasePresenter {
              ->setRequired("Názov je povinné pole.");
         $form->addSubmit('add', 'Pridať');
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('class', self::BTN_WARNING)
              ->setAttribute('data-dismiss', 'modal');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -85,11 +86,11 @@ class AlbumsPresenter extends BasePresenter {
         $form->addText('name', 'Názov')
              ->setRequired("Názov je povinné pole");
         $form->addSubmit('edit', 'Upraviť')
-             ->setAttribute('class', 'btn btn-large btn-success');
+             ->setAttribute('class', self::BTN_SUCCESS);
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('class', self::BTN_WARNING)
              ->setAttribute('data-dismiss', 'modal');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -97,12 +98,12 @@ class AlbumsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-             ->setAttribute('class', 'btn btn-large btn-danger');
+             ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('class', self::BTN_WARNING)
              ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
-        $form->onSuccess[] = [$this, 'submittedRemoveForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -111,20 +112,20 @@ class AlbumsPresenter extends BasePresenter {
         $form = new Form;
         $form->addMultiUpload('images', "Nahrať obrázok");
         $form->addSubmit('upload', 'Nahrať');
-        $form->onSuccess[] = [$this, 'submittedAddImgForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_IMG_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedAddForm(Form $form, $values) {
         $this->albumsRepository->insert($values);
-        $this->flashMessage('Album bol pridaný', 'success');
+        $this->flashMessage('Album bol pridaný', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedEditForm(Form $form, $values) {
         $this->albumRow->update($values);
-        $this->flashMessage('Album bol upravený', 'success');
+        $this->flashMessage('Album bol upravený', self::SUCCESS);
         $this->redirect('view', $this->albumRow);
     }
 
@@ -133,27 +134,27 @@ class AlbumsPresenter extends BasePresenter {
         
         foreach ($imgs as $img) {
             try {
-                FileSystem::delete($this->imgFolder . '/' . $img->name);
+                FileSystem::delete($this->imageDir . $img->name);
             } catch(IOException $e) {
-                $this->flashMessage('Nastala chyba, skúste znovu', 'danger');
+                $this->flashMessage('Nastala chyba, skúste znovu', self::DANGER);
                 $this->redirect('all');       
             }
             $img->delete();
         }
 
         $this->albumRow->delete();
-        $this->flashMessage('Album bol odstránený', 'success');
+        $this->flashMessage('Album bol odstránený', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedRemoveImg() {
         $album = $this->imgRow->album_id;
         try {
-            FileSystem::delete($this->imgFolder . '/' . $this->imgRow->name);
+            FileSystem::delete($this->imageDir . $this->imgRow->name);
             $this->imgRow->delete();
-            $this->flashMessage('Obrázok bol odstránený', 'success');
+            $this->flashMessage('Obrázok bol odstránený', self::SUCCESS);
         } catch (IOException $e) {
-            $this->flashMessage('Nastala chyba, skúste znovu', 'danger');
+            $this->flashMessage('Obrázok sa nepodarilo odstrániť', self::DANGER);
         }
         $this->redirect('Albums:view', $album);
     }
@@ -161,10 +162,15 @@ class AlbumsPresenter extends BasePresenter {
     public function submittedSetImg() {
         $data['thumbnail'] = $this->imgRow->name;
         $this->albumRow->update($data);
-        $this->flashMessage('Miniatúra bola nastavená', 'success');
+        $this->flashMessage('Miniatúra bola nastavená', self::SUCCESS);
         $this->redirect('all');
     }
 
+    /**
+     * @param Form $form
+     * @param array $values
+     * @throws Nette\IOException
+     */
     public function submittedAddImgForm(Form $form, $values) {
         $data = array();
 
@@ -175,15 +181,15 @@ class AlbumsPresenter extends BasePresenter {
 
             try {
                 if ($img->isOk() AND $img->isImage()) {
-                    $img->move($this->imgFolder . '/' . $name);
+                    $img->move($this->imageDir . $name);
                 }
                 $this->imagesRepository->insert($data);
             } catch (IOException $e) {
-                $this->flashMessage('Obrázok ' . $name . ' sa nepodarilo nahrať', 'danger');
+                $this->flashMessage($e->getMessage(), self::DANGER);
             }
         }
 
-        $this->flashMessage('Obrázky boli pridané', 'success');
+        $this->flashMessage('Obrázky boli pridané', self::SUCCESS);
         $this->redirect('Albums:view', $this->albumRow);
     }
 

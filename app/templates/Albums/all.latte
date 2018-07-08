@@ -5,7 +5,7 @@
     <div class="clearfix" n:if="$user->loggedIn">
 
         <div class="pull-right">
-            <button type="button" class='btn btn-large btn-primary' 
+            <button type="button" class='{$btnPrimary}' 
                 data-toggle="modal" data-target="#add" title="Pridať album">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
@@ -22,10 +22,10 @@
         <a n:href="view $album">
             {if $album->thumbnail && file_exists($imgFolder . "/" . $album->thumbnail)}                
                 <img src="{$basePath}/{$imgFolder}/{$album->thumbnail}" 
-                    class="img img-responsive" alt="Miniatúra albumu {$album->name}" />
+                    class="img img-responsive" alt="Album {$album->name}" />
             {else}
-                <img src="{$basePath}/{$imgFolder}/{$default_img}" 
-                    class="img img-responsive" alt="Logo SAHL ako miniatúra" />
+                <img src="{$basePath}/{$imgFolder}/{$defaultImg}" 
+                    class="img img-responsive" alt="Logo SAHL" />
             {/if}
         </a>
         <figcaption class="text-center" style="margin: 1em;">

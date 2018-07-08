@@ -11,20 +11,21 @@ use Nette\IOException;
 
 class TeamsPresenter extends BasePresenter {
 
+    const TEAM_NOT_FOUND = 'Team not found';
+    const ADD_PLAYER_FORM = 'addPlayerForm';
+    const SUBMITTED_ADD_PLAYER_FORM = 'submittedAddPlayerForm';
+
     /** @var ActiveRow */
     private $teamRow;
 
     /** @var ActiveRow */
     private $archRow;
 
-    /** @var string */
-    private $error = "Team not found";
-
     public function renderAll() {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)
                                                        ->where('logo NOT', null);
         if ($this->user->isLoggedIn()) {
-            $this->getComponent("addForm");
+            $this->getComponent(self::ADD_FORM);
         }
     }
 
@@ -34,24 +35,27 @@ class TeamsPresenter extends BasePresenter {
 
     public function renderView($id) {
         if (!$this->teamRow) {
-            throw new BadRequetsException($this->error);
+            throw new BadRequetsException(self::TEAM_NOT_FOUND);
         }
 
-        $goalie = $this->playerTypesRepository->findByValue('name', 'Brankár')->fetch();
+        $goalie = $this->playerTypesRepository->findByValue('type', self::GOALIE)->fetch();
 
         $this->template->players = $this->playersRepository->findByValue('team_id', $id)
-                                        ->where('type_id != ?', $goalie)->where('archive_id', null);
+                                        ->where('type_id != ?', $goalie)->where('archive_id', null)
+                                        ;
         $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
                                         ->where('type_id', $goalie)->where('archive_id', null);
         $this->template->team = $this->teamRow;
-        $this->template->imgFolder = $this->imgFolder;
         $this->template->i = 0;
         $this->template->j = 0;
+        $this->template->goalie_title = self::GOALIE;
+        $this->template->addPlayerForm = self::ADD_PLAYER_FORM;
 
         if ($this->user->isLoggedIn()) {
-            $this->getComponent('editForm')->setDefaults($this->teamRow);
-            $this->getComponent('uploadForm');
-            $this->getComponent('deleteForm');
+            $this->getComponent(self::EDIT_FORM)->setDefaults($this->teamRow);
+            $this->getComponent(self::UPLOAD_FORM);
+            $this->getComponent(self::REMOVE_FORM);
+            $this->getComponent(self::ADD_PLAYER_FORM);
         }   
     }
 
@@ -77,7 +81,7 @@ class TeamsPresenter extends BasePresenter {
         $form = new Form;
         $form->addUpload('image', 'Nahrajte obrázok');
         $form->addSubmit('upload', 'Nastaviť obrázok');
-        $form->onSuccess[] = [$this, 'submittedUploadForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_UPLOAD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -88,7 +92,7 @@ class TeamsPresenter extends BasePresenter {
              ->setRequired('Názov tímu je povinné pole.')
              ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
         $form->addSubmit('save', 'Pridať');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -103,42 +107,54 @@ class TeamsPresenter extends BasePresenter {
         $form->addSubmit('cancel', 'Zrušiť')
              ->setAttribute('class', 'btn btn-large btn-warning')
              ->setAttribute('data-dismiss', 'modal');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    protected function createComponentDeleteForm() {
+    protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('delete', 'Odstrániť')
              ->setAttribute('class', 'btn btn-large btn-danger');
         $form->addSubmit('cancel', 'Zrušiť')
              ->setAttribute('class', 'btn btn-large btn-warning')
              ->setAttribute('data-dismiss', 'modal');
-        $form->addProtection();
-        $form->onSuccess[] = [$this, 'submittedDeleteForm'];
+        $form->addProtection(self::CSRF_TOKEN_EXPIRED);
+        $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
+    protected function createComponentAddPlayerForm() {
+        $types = $this->playerTypesRepository->getTypes();
+        $form = new Form;
+        $form->addText('name', 'Meno a priezvisko');
+        $form->addText('num', 'Číslo');
+        $form->addSelect('type_id', 'Typ hráča', $types);
+        $form->addCheckbox('trans', ' Prestupový hráč');
+        $form->addSubmit('add', 'Pridať');
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_PLAYER_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedUploadForm(Form $form, $values) {
-        
         $img = $values->image;
 
         if ($img->isOk() AND $img->isImage()) {
             $img_name = $img->getSanitizedName();
-            $img->move($this->imgFolder . '/' . $img_name);
+            $img->move(__DIR__ . self::IMG_FOLDER . '/' . $img_name);
             $data = array('image' => $img_name);
             $this->teamRow->update($data);
-            $this->flashMessage('Obrázok bol pridaný', 'success');
+            $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);
         } else {
-            $this->flashMessage('Nastala chyba. Skúste znova', 'danger');
+            $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
         }
 
         $this->redirect('view', $this->teamRow);
     }
 
-    public function submittedDeleteForm() {
+    public function submittedRemoveForm() {
         $players = $this->teamRow->related('players');
         
         foreach ($players as $player) {
@@ -146,10 +162,11 @@ class TeamsPresenter extends BasePresenter {
         }
 
         try {
-            FileSystem::delete($this->imgFolder . '/' . $this->teamRow->image);
+            FileSystem::delete(__DIR__ . self::IMG_FOLDER . '/' . $this->teamRow->image);
             $this->flashMessage('Tím bol odstránený', 'success');
         } catch(IOException $e) {
-            $this->flashMessage('Tím bol odstránený, ale nepodarilo sa odtrániť obrázok tímu', 'danger');
+            $this->flashMessage('Tím bol odstránený', self::SUCCESS);
+            $this->flashMessage('Nepodarilo sa odstrániť foto tímu', self::DANGER);
         }
         
         $this->teamRow->delete();
@@ -159,13 +176,13 @@ class TeamsPresenter extends BasePresenter {
     public function submittedAddForm(Form $form, $values) {
         $team = $this->teamsRepository->insert($values);
         $this->tablesRepository->insert(array('team_id' =>  $team));
-        $this->flashMessage('Tím bol pridaný', 'success');
+        $this->flashMessage('Tím bol pridaný', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedEditForm(Form $form, $values) {
         $this->teamRow->update($values);
-        $this->flashMessage('Tím bol upravený', 'success');
+        $this->flashMessage('Tím bol upravený', self::SUCCESS);
         $this->redirect('view', $this->teamRow);
     }
 

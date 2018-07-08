@@ -9,18 +9,18 @@ use Nette\Database\Table\ActiveRow;
 
 class ArchivesPresenter extends BasePresenter {
 
+	const ARCHIVE_NOT_FOUND = 'Archive not found';
+	const ARCHIVE_FORM = 'archiveForm';
+	const SUBMITTED_ARCHIVE_FORM = 'submittedArchiveForm';
+
 	/** @var ActiveRow */
 	private $archiveRow;
 
-	/** @var string */
-	private $error = "Archive not found";
-
 	public function renderAll() {
 		$this->template->archive = $this->archivesRepository->findAll();
-		$this->template->default_img = $this->default_img;
 
 		if ($this->user->isLoggedIn()) {
-			$this->getComponent('addForm');
+			$this->getComponent(self::ADD_FORM);
 		}
 	}
 
@@ -30,15 +30,15 @@ class ArchivesPresenter extends BasePresenter {
 
 	public function renderView($id) {
 		if(!$this->archiveRow) {
-			throw new BadRequestException($this->error);
+			throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
 		}
 
 		$this->template->archive = $this->archiveRow;
 
 		if ($this->user->isLoggedIn()) {
-			$this->getComponent("editForm")->setDefaults($this->archiveRow);
-			$this->getComponent("removeForm");
-			$this->getComponent("archiveForm");
+			$this->getComponent(self::EDIT_FORM)->setDefaults($this->archiveRow);
+			$this->getComponent(self::REMOVE_FORM);
+			$this->getComponent(self::ARCHIVE_FORM);
 		}
 	}
 
@@ -47,7 +47,7 @@ class ArchivesPresenter extends BasePresenter {
 		$form->addText('title', 'Názov')
 		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
 		$form->addSubmit('add', 'Pridať');
-		$form->onSuccess[] = [$this, 'submittedAddForm'];
+		$form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
 		FormHelper::setBootstrapFormRenderer($form);
 		return $form;
 	}
@@ -57,8 +57,8 @@ class ArchivesPresenter extends BasePresenter {
 		$form->addText('title', 'Názov')
 		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
 		$form->addSubmit('edit', 'Upraviť')
-			 ->setAttribute('class', 'btn btn-large btn-success');
-		$form->onSuccess[] = [$this, 'submittedEditForm'];
+			 ->setAttribute('class', self::BTN_SUCCESS);
+		$form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
 		FormHelper::setBootstrapFormRenderer($form);
 		return $form;
 	}
@@ -66,12 +66,12 @@ class ArchivesPresenter extends BasePresenter {
 	protected function createComponentRemoveForm() {
 		$form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-             ->setAttribute('class', 'btn btn-large btn-danger');
+             ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('class', self::BTN_WARNING)
              ->setAttribute('data-dismiss', 'modal');
-        $form->onSuccess[] = [$this, 'submittedRemoveForm'];
-        $form->addProtection();
+        $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
+        $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
 	}
@@ -79,25 +79,25 @@ class ArchivesPresenter extends BasePresenter {
     protected function createComponentArchiveForm() {
         $form = new Form;
         $form->addSubmit('archive', 'Archivovať')
-             ->setAttribute('class', 'btn btn-large btn-default');
+             ->setAttribute('class', self::BTN_DEFAULT);
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('class', self::BTN_WARNING)
              ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
-        $form->onSuccess[] = [$this, 'submittedArchiveForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_ARCHIVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
 	public function submittedAddForm(Form $form, $values) {
 		$this->archivesRepository->insert($values);
-		$this->flashMessage("Archív bol pridaný", "success");
+		$this->flashMessage("Archív bol pridaný", self::SUCCESS);
 		$this->redirect('all');
 	}
 
 	public function submittedEditForm(Form $form, $values) {
 		$this->archiveRow->update($values);
-		$this->flashMessage("Archív bol upravený", "success");
+		$this->flashMessage("Archív bol upravený", self::SUCCESS);
 		$this->redirect('view', $this->archiveRow);
 	}
 
@@ -111,11 +111,11 @@ class ArchivesPresenter extends BasePresenter {
 		$arch_id = array( 'archive_id' => $this->archiveRow->id );
 
 		$this->roundsRepository->archive( $this->archiveRow->id );
-		$this->flashMessage('Kolá boli archivované', 'success');
+		$this->flashMessage('Kolá boli archivované', self::SUCCESS);
 		$this->eventsRepository->archive( $this->archiveRow->id );
-		$this->flashMessage('Rozpis zápasov bol archivovaný', 'success');
+		$this->flashMessage('Rozpis zápasov bol archivovaný', self::SUCCESS);
 		$this->rulesRepository->archive( $this->archiveRow->id );
-		$this->flashMessage('Pravidlá a smernice boli archivované', 'success');
+		$this->flashMessage('Pravidlá a smernice boli archivované', self::SUCCESS);
 
 		// Vytvoríme duplicitné záznamy tímov s novým archive id
 		$teams = $this->teamsRepository->getAsArray($this->archiveRow->id);
@@ -130,13 +130,13 @@ class ArchivesPresenter extends BasePresenter {
 
 				$id = $this->teamsRepository->insert($data);
 				if ($id == null) {
-					$this->flashMessage('Nastala chyba počas archivácie tímov', 'danger');
+					$this->flashMessage('Nastala chyba počas archivácie tímov', self::DANGER);
 					$this->redirect('all');
 				} else {
 					$team_id[$team->id] = $id;
 				}
 			}
-			$this->flashMessage('Tímy boli archivované', 'success');
+			$this->flashMessage('Tímy boli archivované', self::SUCCESS);
 		}
 
 		// Vytvoríme duplicitné záznamy o hráčoch s novým archive_id
@@ -157,11 +157,11 @@ class ArchivesPresenter extends BasePresenter {
 					$this->playersRepository->insert($data);
 					$player_id[$player->id] = $id;
 				} else {
-					$this->flashMessage('Nastala chyba počas archivácie hráčov', 'danger');
+					$this->flashMessage('Nastala chyba počas archivácie hráčov', self::DANGER);
 					break;
 				}
 			}
-			$this->flashMessage('Hráči boli archivovaní', 'success');
+			$this->flashMessage('Hráči boli archivovaní', self::SUCCESS);
 
 		}
 
@@ -179,12 +179,12 @@ class ArchivesPresenter extends BasePresenter {
 					$data['team_id'] = $team_id[$table->team_id];
 					$table->update($data);
 				} else {
-					$this->flashMessage('Nastala chyba počas archivácie tabuliek', 'danger');
+					$this->flashMessage('Nastala chyba počas archivácie tabuliek', self::DANGER);
 					break;
 				}
 			}
 
-			$this->flashMessage('Tabuľky boli archivované', 'success');
+			$this->flashMessage('Tabuľky boli archivované', self::SUCCESS);
 		}
 
 		$puns = $this->punishmentsRepository->findByValue('archive_id', null);
@@ -202,12 +202,12 @@ class ArchivesPresenter extends BasePresenter {
 					$data['player_id'] = $player_id[$pun->player_id];
 					$pun->update($data);
 				} else {
-					$this->flashMessage('Nastala chyba počas archivácie trestov hráčov', 'danger');
+					$this->flashMessage('Nastala chyba počas archivácie trestov hráčov', self::DANGER);
 					break;
 				}
 			}
 
-			$this->flashMessage('Tresty boli archivované', 'success');
+			$this->flashMessage('Tresty boli archivované', self::SUCCESS);
 
 		}
 
@@ -227,12 +227,12 @@ class ArchivesPresenter extends BasePresenter {
 					$data['team2_id'] = $team_id[$fight->team2_id];
 					$fight->update($data);
 				} else {
-					$this->flashMessage('Nastala chyba počas archivácie výsledkov zápasov', 'danger');
+					$this->flashMessage('Počas archivácie výsledkov zápasov nastala chyba', self::DANGER);
 					break;
 				}
 			}
 
-			$this->flashMessage('Zápasy boli archivované', 'success');
+			$this->flashMessage('Zápasy boli archivované', self::SUCCESS);
 
 		}
 
@@ -250,18 +250,15 @@ class ArchivesPresenter extends BasePresenter {
 					$data['player_id'] = $player_id[$goal->player_id];
 					$id = $goal->update($data);
 				} else {
-					$this->flashMessage('Nastala chyba počas archivácie gólov', 'danger');
+					$this->flashMessage('Nastala chyba počas archivácie gólov', self::DANGER);
 					break;
 				}
 			}
 
-			$this->flashMessage('Góly boli archivované', 'success');
+			$this->flashMessage('Góly boli archivované', self::SUCCESS);
 		}
 
 		$this->redirect('view', $this->archiveRow);
 	}
 
-	public function formCancelled() {
-		$this->redirect('all');
-	}
 }

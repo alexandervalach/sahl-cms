@@ -15,14 +15,11 @@ class RoundsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $archRow;
 
-    /** @var string */
-    private $error = "Round not found";
-
     public function renderAll() {
         $this->template->rounds = $this->roundsRepository->findByValue('archive_id', null);
 
         if ($this->user->loggedIn) {
-            $this->getComponent('addForm');
+            $this->getComponent(self::ADD_FORM);
         }
     }
 
@@ -32,7 +29,7 @@ class RoundsPresenter extends BasePresenter {
 
     public function renderView($id) {
         if (!$this->roundRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::ROUND_NOT_FOUND);
         }
 
         $i = 0;
@@ -63,8 +60,8 @@ class RoundsPresenter extends BasePresenter {
         $this->template->round = $this->roundRow;
 
         if ($this->user->loggedIn) {
-            $this->getComponent('editForm')->setDefaults($this->roundRow);
-            $this->getComponent('removeForm');
+            $this->getComponent(self::EDIT_FORM)->setDefaults($this->roundRow);
+            $this->getComponent(self::REMOVE_FORM);
         }
     }
 
@@ -180,19 +177,19 @@ class RoundsPresenter extends BasePresenter {
         $this->updateTableRows($values, $type);
         $this->updateTablePoints($values, $type);
         $this->updateTableGoals($values, $type);
-        $this->flashMessage('Zápas bol pridaný', 'success');
+        $this->flashMessage('Zápas bol pridaný', self::SUCCESS);
         $this->redirect('Rounds:view', $this->roundRow);
     }
 
     public function submittedAddForm(Form $form, $values) {
         $this->roundsRepository->insert($values);
-        $this->flashMessage('Kolo bolo pridané', 'success');
+        $this->flashMessage('Kolo bolo pridané', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedEditForm(Form $form, $values) {
         $this->roundRow->update($values);
-        $this->flashMessage('Kolo bolo upravené', 'success');
+        $this->flashMessage('Kolo bolo upravené', self::SUCCESS);
         $this->redirect('view', $this->roundRow);
     }
 
@@ -202,7 +199,7 @@ class RoundsPresenter extends BasePresenter {
             $fight->delete();
         }
         $this->roundRow->delete();
-        $this->flashMessage('Kolo bolo odstránené', 'success');
+        $this->flashMessage('Kolo bolo odstránené', self::SUCCESS);
         $this->redirect('all');
     }
 

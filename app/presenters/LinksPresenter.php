@@ -77,10 +77,9 @@ class LinksPresenter extends BasePresenter {
         $img = $values['image'];
 
         $name = strtolower($img->getSanitizedName());
-        dump($this->wwwFolder);
         try {
             if ($img->isOk() AND $img->isImage()) {
-                $img->move($this->wwwDir . "/" . self::IMG_FOLDER . "/" . $name);
+                $img->move($this->imageDir . "/" . $name);
             }
             $this->linksRepository->insert($values);
             $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
@@ -95,7 +94,7 @@ class LinksPresenter extends BasePresenter {
         $image = $this->linkRow->image;
         if ($image) {
             try {
-                FileSystem::delete($this->wwwFolder . "/" . self::IMG_FOLDER . "/" . $image);
+                FileSystem::delete($this->imageDir . $image);
             } catch (IOException $e) {
                 $this->flashMessage('Obrázok ' . $image . ' sa nepodarilo odstrániť', self::DANGER);
             }

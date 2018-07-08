@@ -10,7 +10,6 @@ use Nette\Application\BadRequestException;
 class TopicsPresenter extends BasePresenter {
 
     const ADD_BTN_LABEL = 'Pridať príspevok';
-    const TOPIC_NOT_FOUND = 'Topic not found';
 
     /** @var ActiveRow */
     private $topicRow;

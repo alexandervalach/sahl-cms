@@ -21,9 +21,12 @@ class HomepagePresenter extends BasePresenter {
             }
         }
 
-        $this->template->sideRound = $this->roundsRepository->getLatestRound();
-        $this->template->sideFights = $this->roundsRepository->getLatestFights();
-
+        $sideFights = $this->roundsRepository->getLatestFights();
+        $sideRound = $this->roundsRepository->getLatestRound();
+        $this->template->sideRound = $sideRound;
+        $this->template->sideFights = $sideFights;
+        $this->template->sideFightsCount = $sideFights->count();
+        
         $this->template->sideTableTypes = $this->sideTableTypes;
         $this->template->sideTables = $sideTables;
 

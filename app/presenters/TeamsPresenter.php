@@ -143,7 +143,7 @@ class TeamsPresenter extends BasePresenter {
 
         if ($img->isOk() AND $img->isImage()) {
             $img_name = $img->getSanitizedName();
-            $img->move(__DIR__ . self::IMG_FOLDER . '/' . $img_name);
+            $img->move($this->imageDir . $img_name);
             $data = array('image' => $img_name);
             $this->teamRow->update($data);
             $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);
@@ -162,7 +162,7 @@ class TeamsPresenter extends BasePresenter {
         }
 
         try {
-            FileSystem::delete(__DIR__ . self::IMG_FOLDER . '/' . $this->teamRow->image);
+            FileSystem::delete($this->imageDir . $this->teamRow->image);
             $this->flashMessage('Tím bol odstránený', 'success');
         } catch (IOException $e) {
             $this->flashMessage('Tím bol odstránený', self::SUCCESS);

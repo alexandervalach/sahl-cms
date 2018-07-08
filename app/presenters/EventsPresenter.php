@@ -66,7 +66,7 @@ class EventsPresenter extends BasePresenter {
         $form = new Form;
         $form->addTextArea('event', 'Rozpis zápasov')
                 ->setAttribute('id', 'ckeditor');
-        $form->addSubmit('add', 'Pridať');
+        $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, self::ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -76,8 +76,7 @@ class EventsPresenter extends BasePresenter {
         $form = new Form;
         $form->addTextArea('event', 'Rozpis zápasov')
                 ->setAttribute('id', 'ckeditor');
-        $form->addSubmit('edit', 'Upraviť')
-                ->setAttribute('class', self::BTN_SUCCESS);
+        $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

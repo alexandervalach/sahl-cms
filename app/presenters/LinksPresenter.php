@@ -10,7 +10,7 @@ use Nette\Utils\FileSystem;
 
 class LinksPresenter extends BasePresenter {
 
-    const LINK_NOT_FOUND = "Link not found";
+    const LINK_NOT_FOUND = 'Link not found';
 
     /** @var ActiveRow */
     private $linkRow;

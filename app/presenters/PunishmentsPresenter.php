@@ -19,7 +19,7 @@ class PunishmentsPresenter extends BasePresenter {
                 ->order('id DESC');
 
         if ($this->user->isLoggedIn()) {
-            $this->getComponent("addForm");
+            $this->getComponent(self::ADD_FORM);
         }
     }
 
@@ -30,17 +30,17 @@ class PunishmentsPresenter extends BasePresenter {
 
     public function renderEdit($id) {
         $this->template->player = $this->punishmentRow->ref('players', 'player_id');
-        $this->getComponent('editForm')->setDefaults($this->punishmentRow);
+        $this->getComponent(self::EDIT_FORM)->setDefaults($this->punishmentRow);
     }
 
-    public function actionDelete($id) {
+    public function actionRemove($id) {
         $this->userIsLogged();
         $this->punishmentRow = $this->punishmentsRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderRemove($id) {
         $this->template->punishment = $this->punishmentRow;
-        $this->getComponent('deleteForm');
+        $this->getComponent(self::REMOVE_FORM);
     }
 
     public function actionArchAll($id) {
@@ -52,47 +52,48 @@ class PunishmentsPresenter extends BasePresenter {
         $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', $id);
     }
 
+    /**
+     * @return Nette\Application\UI\Form;
+     */
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('text', 'Dôvod');
         $form->addText('round', 'Kolá');
         $form->addCheckbox('condition', ' Podmienka');
-        $form->addSubmit('edit', 'Upraviť')
-                ->setAttribute('class', 'btn btn-large btn-success');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     protected function createComponentAddForm() {
         $players = $this->playersRepository->getNonEmptyPlayers();
-
         $form = new Form;
         $form->addSelect('player_id', 'Hráč', $players);
         $form->addText('text', 'Dôvod');
         $form->addText('round', 'Kolá');
         $form->addCheckbox('condition', ' Podmienka');
-        $form->addSubmit('add', 'Pridať');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedEditForm(Form $form, $values) {
         $this->punishmentRow->update($values);
-        $this->flashMessage('Trest bol pridaný', 'success');
+        $this->flashMessage('Trest bol upravený', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedAddForm(Form $form, $values) {
         $this->punishmentsRepository->insert($values);
-        $this->flashMessage('Trest bol upravený', 'success');
+        $this->flashMessage('Trest bol pridaný', self::SUCCESS);
         $this->redirect('all');
     }
 
-    public function submittedDeleteForm() {
+    public function submittedRemoveForm() {
         $this->punishmentRow->delete();
-        $this->flashMessage('Trest bol odstránený', 'success');
+        $this->flashMessage('Trest bol odstránený', self::SUCCESS);
         $this->redirect('all');
     }
 

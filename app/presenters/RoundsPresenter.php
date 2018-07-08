@@ -84,37 +84,35 @@ class RoundsPresenter extends BasePresenter {
 
     public function renderArchView($archive_id, $id) {
         if (!$this->roundRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::ROUND_NOT_FOUND);
         }
-
         if (!$this->archRow) {
-            throw new BadRequestException("Archive not found");
+            throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
         }
-
         $i = 0;
-        $fight_data = array();
+        $fightData = array();
         $fights = $this->roundRow->related('fights');
 
         foreach ($fights as $fight) {
-            $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
-            $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
-            $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
-            $fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
+            $fightData[$i]['team_1'] = $fight->ref('teams', 'team1_id');
+            $fightData[$i]['team_2'] = $fight->ref('teams', 'team2_id');
+            $fightData[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
+            $fightData[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
 
             if ($fight->score1 > $fight->score2) {
-                $fight_data[$i]['state_1'] = 'text-success';
-                $fight_data[$i]['state_2'] = 'text-danger';
+                $fightData[$i]['state_1'] = 'text-success';
+                $fightData[$i]['state_2'] = 'text-danger';
             } else if ($fight->score1 < $fight->score2) {
-                $fight_data[$i]['state_1'] = 'text-danger';
-                $fight_data[$i]['state_2'] = 'text-success';
+                $fightData[$i]['state_1'] = 'text-danger';
+                $fightData[$i]['state_2'] = 'text-success';
             } else {
-                $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
+                $fightData[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
             }
             $i++;
         }
 
         $this->template->fights = $fights;
-        $this->template->fight_data = $fight_data;
+        $this->template->fightData = $fightData;
         $this->template->i = 0;
         $this->template->round = $this->roundRow;
         $this->template->archive = $this->archRow;
@@ -123,9 +121,9 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::FILLED, "Opa, zabudli ste vyplniť názov kola");
-        $form->addSubmit('add', 'Pridať');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+                ->addRule(Form::FILLED, 'Ešte treba vyplniť názov kola');
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -133,11 +131,10 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::MAX_LENGTH, "Dĺžka názvu môže byť len 50 znakov", 50)
-                ->setRequired("Názov je povinné pole");
-        $form->addSubmit('edit', 'Upraviť')
-                ->setAttribute('class', 'btn btn-large btn-success');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+                ->addRule(Form::MAX_LENGTH, 'Dĺžka názvu môže byť len 50 znakov', 50)
+                ->addRule(Form::FILLED, 'Názov je povinné pole');
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -145,11 +142,11 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-                ->setAttribute('class', 'btn btn-large btn-danger');
+                ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', 'btn btn-large btn-warning')
+                ->setAttribute('class', self::BTN_WARNING)
                 ->setAttribute('data-dismiss', 'modal');
-        $form->onSuccess[] = [$this, 'submittedRemoveForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -175,11 +172,8 @@ class RoundsPresenter extends BasePresenter {
         }
         $values['round_id'] = $this->roundRow;
 
-        if ($values['type']) {
-            $type = 1;
-        } else {
-            $type = 2;
-        }
+        if ($values['type']) { $type = 1; } 
+        else { $type = 2; }
         unset($values['type']);
 
         $this->fightsRepository->insert($values);
@@ -204,11 +198,9 @@ class RoundsPresenter extends BasePresenter {
 
     public function submittedRemoveForm() {
         $fights = $this->roundRow->related('fights');
-
         foreach ($fights as $fight) {
             $fight->delete();
         }
-
         $this->roundRow->delete();
         $this->flashMessage('Kolo bolo odstránené', 'success');
         $this->redirect('all');

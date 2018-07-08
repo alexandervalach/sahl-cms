@@ -15,22 +15,17 @@ class RulesPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $archRow;
 
-    /** @var string */
-    private $error = "Rule not found";
-
     public function actionAll() {
         $this->ruleRow = $this->rulesRepository->findByValue('archive_id', null)->fetch();
     }
 
     public function renderAll() {
         if (!$this->ruleRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::RULE_NOT_FOUND);
         }
-
         $this->template->rule = $this->ruleRow;
-
         if ($this->user->isLoggedIn()) {
-            $this->getComponent('editForm')->setDefaults($this->ruleRow);
+            $this->getComponent(self::EDIT_FORM)->setDefaults($this->ruleRow);
         }
     }
 
@@ -46,22 +41,16 @@ class RulesPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addTextArea('rule', 'Text')
-                ->setAttribute('id', 'ckeditor')
-                ->setRequired("Text je povinné pole.");
-        $form->addSubmit('save', 'Uložiť')
-                ->setAttribute('class', 'btn btn-large btn-success');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+                ->setAttribute('id', 'ckeditor');
+        $form->addSubmit('save', 'Uložiť');
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
     public function submittedEditForm(Form $form, $values) {
-        $this->flashMessage('Pravidlá a smernice boli upravené', 'success');
         $this->ruleRow->update($values);
-        $this->redirect('all');
-    }
-
-    public function formCancelled() {
+        $this->flashMessage('Pravidlá a smernice boli upravené', self::SUCCESS);
         $this->redirect('all');
     }
 

@@ -9,6 +9,8 @@ use Nette\Database\Table\ActiveRow;
 
 class FightsPresenter extends BasePresenter {
 
+    const FIGHT_NOT_FOUND = 'Fight not found';
+
     /** @var ActiveRow */
     private $roundRow;
 
@@ -17,9 +19,6 @@ class FightsPresenter extends BasePresenter {
 
     /** @var ActiveRow */
     private $archRow;
-
-    /** @var string */
-    private $error = "Fight not found";
 
     /** @var ActiveRow */
     private $team1;
@@ -35,21 +34,21 @@ class FightsPresenter extends BasePresenter {
 
     public function renderEdit($id) {
         if (!$this->fightRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::FIGHT_NOT_FOUND);
         }
         $this->template->round = $this->roundRow;
         $this->getComponent('editForm')->setDefaults($this->fightRow);
     }
 
-    public function actionDelete($id) {
+    public function actionRemove($id) {
         $this->userIsLogged();
         $this->fightRow = $this->fightsRepository->findById($id);
         $this->roundRow = $this->fightRow->ref('rounds', 'round_id');
     }
 
-    public function renderDelete($id) {
+    public function renderRemove($id) {
         if (!$this->fightRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::FIGHT_NOT_FOUND);
         }
         $this->template->fight = $this->fightRow;
     }
@@ -79,7 +78,7 @@ class FightsPresenter extends BasePresenter {
         $form->addText('score2', 'Skóre 2');
         $form->addCheckbox('type', ' Označiť zápas ako Play Off');
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = [$this, 'submittedAddForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -92,7 +91,7 @@ class FightsPresenter extends BasePresenter {
         $form->addSelect('team2_id', 'Tím 2', $teams);
         $form->addText('score2', 'Skóre 2');
         $form->addSubmit('save', 'Uložiť');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -129,7 +128,7 @@ class FightsPresenter extends BasePresenter {
         $this->redirect('Rounds:view', $this->roundRow);
     }
 
-    public function submittedDeleteForm() {
+    public function submittedRemoveForm() {
         $this->fightRow->delete();
         $this->flashMessage('Zápas bol odstránený', 'success');
         $this->redirect('Rounds:view', $this->roundRow);

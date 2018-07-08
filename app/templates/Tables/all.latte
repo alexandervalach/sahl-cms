@@ -8,7 +8,7 @@
 
 </section>
 
-<div n:foreach="$table_types as $type" n:if="$tables[$type->name]->count()" class='table-responsive'>
+<div n:foreach="$tableTypes as $type" n:if="$tables[$type->name]->count()" class='table-responsive'>
     <table class='table'>
         <caption>
             <h2 class="text-center">{$type->name}</h2>

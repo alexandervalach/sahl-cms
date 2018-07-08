@@ -28,7 +28,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Security\AuthenticationException;
 
 /**
- * Base presenter for all application presenters.
+ * Base class for all application presenters.
  */
 abstract class BasePresenter extends Presenter {
 
@@ -56,6 +56,10 @@ abstract class BasePresenter extends Presenter {
     const CSRF_TOKEN_EXPIRED = 'Platnosť formulára vypršala. Odošlite ho, prosím, znovu.';
     const IMG_NOT_FOUND = 'Image not found';
     const TOPIC_NOT_FOUND = 'Topic not found';
+    const PLAYER_NOT_FOUND = 'Player not found';
+    const ROUND_NOT_FOUND = 'Round not found';
+    const ARCHIVE_NOT_FOUND = 'Archive not found';
+    const RULE_NOT_FOUND = 'Rule not found';
 
     /** @var AlbumsRepository */
     protected $albumsRepository;
@@ -155,12 +159,14 @@ abstract class BasePresenter extends Presenter {
     }
 
     public function beforeRender() {
-        $this->template->links = $this->linksRepository->findByValue('sponsor', 0)->order('title');
+        $this->template->links = $this->linksRepository->findByValue('sponsor', 0)
+                ->order('title');
         $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = self::IMG_FOLDER;
         $this->template->defaultImg = self::DEFAULT_IMG;
 
-        $sideTeams = $this->teamsRepository->findByValue('archive_id', NULL)->where('logo NOT', null);
+        $sideTeams = $this->teamsRepository->findByValue('archive_id', NULL)
+                ->where('logo NOT', null);
         $this->template->sideTeams = $sideTeams;
         $this->template->teamsCount = $sideTeams->count();
         $this->template->addForm = self::ADD_FORM;
@@ -172,14 +178,15 @@ abstract class BasePresenter extends Presenter {
         $this->template->btnDanger = self::BTN_DANGER;
         $this->template->btnPrimary = self::BTN_PRIMARY;
         $this->template->btnInfo = self::BTN_INFO;
+        $this->template->btnDefault = self::BTN_DEFAULT;
     }
 
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('delete', 'Odstrániť')
-                ->setAttribute('class', 'btn btn-large btn-danger');
+                ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', 'btn btn-large btn-warning')
+                ->setAttribute('class', self::BTN_WARNING)
                 ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -222,11 +229,6 @@ abstract class BasePresenter extends Presenter {
         if (!$this->user->isLoggedIn()) {
             $this->redirect('Homepage:all');
         }
-    }
-
-    protected function wwwFolder() {
-        $this->wwwFolder = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT');
-        return $this->wwwFolder;
     }
 
 }

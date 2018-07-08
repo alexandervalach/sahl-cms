@@ -24,12 +24,12 @@ class TopicsPresenter extends BasePresenter {
         }
     }
 
-    public function actionDelete($id) {
+    public function actionRemove($id) {
         $this->userIsLogged();
         $this->forumRow = $this->topicsRepository->findById($id);
     }
 
-    public function renderDelete($id) {
+    public function renderRemove($id) {
         if (!$this->topicRow) {
             throw new BadRequestException(self::TOPIC_NOT_FOUND);
         }

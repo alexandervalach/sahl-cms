@@ -30,14 +30,14 @@
                         {var $team2 = $fight->ref('teams', 'team2_id');}
                         <td>
                             <img src="{$basePath}/{$imgFolder}/{$team1->logo}" 
-                                width="20px" alt="Logo {$team1->name}"
-                                n:if="$team1->logo and file_exists($imgFolder . '/' . $team1->logo)" /> 
+                                 width="20px" alt="Logo {$team1->name}"
+                                 n:if="$team1->logo and file_exists($imgFolder . '/' . $team1->logo)" /> 
                             {$team1->name}
                         </td>
                         <td>
                             <img src="{$basePath}/{$imgFolder}/{$team2->logo}"
-                                width="20px" alt="Logo {$team2->name}"
-                                n:if="$team2->logo and file_exists($imgFolder . '/' . $team2->logo)" />
+                                 width="20px" alt="Logo {$team2->name}"
+                                 n:if="$team2->logo and file_exists($imgFolder . '/' . $team2->logo)" />
                             {$team2->name}
                         </td>
                         <td>{$fight->score1}</td>
@@ -64,8 +64,8 @@
                         <td>{$iterator->counter}.</td>
                         <td>
                             <img src="{$basePath}/{$imgFolder}/{$team->logo}"
-                                width="20px" alt="Logo {$team->name}"
-                                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                                 width="20px" alt="Logo {$team->name}"
+                                 n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
                             {$team->name}
                         </td>
                         <td>
@@ -83,7 +83,7 @@
 <div class="content container-fluid">
 
     <article n:foreach="$posts as $post" class="clearfix">
-        
+
         <header class="clearfix">
             <a n:href="Posts:view $post">
                 <h2>{$post->title}</h2>
@@ -91,14 +91,14 @@
         </header>
 
         <main class="clearfix">
-                
+
             <figure class="col-md-5 col-lg-5">
                 {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
                     <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' 
-                        class="img img-responsive" />
+                         class="img img-responsive" />
                 {else}
                     <img src='{$basePath}/{$imgFolder}/{$defaultImg}' 
-                        class="img img-responsive" />
+                         class="img img-responsive" />
                 {/if}
             </figure>
 
@@ -121,7 +121,7 @@
 {/block}
 
 {block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
+{include #parent}
+<script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
 {/block}

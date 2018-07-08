@@ -5,8 +5,8 @@
     <div class="clearfix">
 
         <div n:if="$user->loggedIn" class="pull-right">
-            <button type="button" class="btn btn-large btn-primary" 
-                data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
+            <button type="button" class="{$btnPrimary}" 
+                    data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
         </div>
@@ -18,7 +18,7 @@
     </div>
 
     <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
-        
+
         <div class="clearfix">
             {$event->event|noescape}
         </div>
@@ -33,7 +33,7 @@
         </div>
 
         <hr n:if="!$iterator->last" />
-        
+
     </article>
 
 </section>
@@ -57,7 +57,7 @@
 {/block}
 
 {block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
+{include #parent}
+<script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
 {/block}

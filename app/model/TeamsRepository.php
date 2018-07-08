@@ -3,8 +3,9 @@
 namespace App\Model;
 
 class TeamsRepository extends Repository {
+
     /**
-     * Loop trought all teams and store them in array. 
+     * Loop trough all teams and store them in array. 
      * Accessible index $team->id. 
      * Value is $team->name.
      * @return array
@@ -14,7 +15,8 @@ class TeamsRepository extends Repository {
     }
 
     public function getPlayersForTeam($team_id) {
-    	$team = $this->findById($team_id);
-    	return $team->related('players')->fetchPairs('id', 'name');
+        $team = $this->findById($team_id);
+        return $team->related('players')->fetchPairs('id', 'name');
     }
+
 }

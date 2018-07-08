@@ -2,12 +2,6 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
-use Nette\Application\UI\Form;
-use Nette\Application\BadRequestException;
-use Nette\Database\Table\ActiveRow;
-use Nette\Utils\FileSystem;
-
 class HomepagePresenter extends BasePresenter {
 
     /** @var array */
@@ -20,10 +14,10 @@ class HomepagePresenter extends BasePresenter {
         if ($this->sideTableTypes == null) {
             $this->sideTableTypes = $this->tableTypesRepository->findByValue('visible = ?', 1);
 
-            foreach($this->sideTableTypes as $type) {
+            foreach ($this->sideTableTypes as $type) {
                 $sideTables[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
-                                                                   ->where('type = ?', $type)
-                                                                   ->order('points DESC, (score1 - score2) DESC');
+                        ->where('type = ?', $type)
+                        ->order('points DESC, (score1 - score2) DESC');
             }
         }
 

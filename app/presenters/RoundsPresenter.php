@@ -53,7 +53,7 @@ class RoundsPresenter extends BasePresenter {
                 $fight_data[$i]['state_2'] = 'text-success';
             } else {
                 $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
-            } 
+            }
             $i++;
         }
 
@@ -85,7 +85,7 @@ class RoundsPresenter extends BasePresenter {
     public function renderArchView($archive_id, $id) {
         if (!$this->roundRow) {
             throw new BadRequestException($this->error);
-        } 
+        }
 
         if (!$this->archRow) {
             throw new BadRequestException("Archive not found");
@@ -109,7 +109,7 @@ class RoundsPresenter extends BasePresenter {
                 $fight_data[$i]['state_2'] = 'text-success';
             } else {
                 $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
-            } 
+            }
             $i++;
         }
 
@@ -123,7 +123,7 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-             ->addRule(Form::FILLED, "Opa, zabudli ste vyplniť názov kola");
+                ->addRule(Form::FILLED, "Opa, zabudli ste vyplniť názov kola");
         $form->addSubmit('add', 'Pridať');
         $form->onSuccess[] = [$this, 'submittedAddForm'];
         FormHelper::setBootstrapFormRenderer($form);
@@ -133,10 +133,10 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-             ->addRule(Form::MAX_LENGTH, "Dĺžka názvu môže byť len 50 znakov", 50)
-             ->setRequired("Názov je povinné pole");
+                ->addRule(Form::MAX_LENGTH, "Dĺžka názvu môže byť len 50 znakov", 50)
+                ->setRequired("Názov je povinné pole");
         $form->addSubmit('edit', 'Upraviť')
-             ->setAttribute('class', 'btn btn-large btn-success');
+                ->setAttribute('class', 'btn btn-large btn-success');
         $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -145,10 +145,10 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-             ->setAttribute('class', 'btn btn-large btn-danger');
+                ->setAttribute('class', 'btn btn-large btn-danger');
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
-             ->setAttribute('data-dismiss', 'modal');
+                ->setAttribute('class', 'btn btn-large btn-warning')
+                ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, 'submittedRemoveForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -224,7 +224,7 @@ class RoundsPresenter extends BasePresenter {
         } elseif ($values['score1'] < $values['score2']) {
             $state1 = 'lost';
             $state2 = 'win';
-        } 
+        }
         $this->tablesRepository->incTabVal($values['team1_id'], $type, $state1, $value);
         $this->tablesRepository->incTabVal($values['team2_id'], $type, $state2, $value);
         $this->tablesRepository->updateFights($values['team1_id'], $type);
@@ -250,4 +250,5 @@ class RoundsPresenter extends BasePresenter {
         $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);
         $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score2', $values['score1']);
     }
+
 }

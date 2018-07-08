@@ -3,12 +3,13 @@
 namespace App\Presenters;
 
 use App\FormHelper;
-use App\Model\TablesRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 
 class TablesPresenter extends BasePresenter {
+
+    const TABLE_NOT_FOUND = 'Table not found';
 
     /** @var ActiveRow */
     private $tableRow;
@@ -16,21 +17,18 @@ class TablesPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $archRow;
 
-    /** @var string */
-    private $error = "Table row not found";
-
     public function renderAll() {
-        $table_types = $this->tableTypesRepository->findByValue('visible', 1);
-        $table_rows = array();
+        $tableTypes = $this->tableTypesRepository->findByValue('visible', 1);
+        $tableRows = array();
 
-        foreach ($table_types as $type) {
-            $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
-                                                              ->where('type = ?', $type)
-                                                              ->order('points DESC, (score1 - score2) DESC');
+        foreach ($tableTypes as $type) {
+            $tableRows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
+                    ->where('type = ?', $type)
+                    ->order('points DESC, (score1 - score2) DESC');
         }
-        
-        $this->template->tables = $table_rows;
-        $this->template->table_types = $table_types;
+
+        $this->template->tables = $tableRows;
+        $this->template->tableTypes = $tableTypes;
     }
 
     public function actionAddToSidebar($id) {
@@ -38,7 +36,7 @@ class TablesPresenter extends BasePresenter {
         $this->tableRow = $this->tablesRepository->findById($id);
 
         if (!$this->tableRow) {
-            throw new BadRequestException($this->error);
+            throw new BadRequestException(self::TABLE_ROW_NOT_FOUND);
         }
 
         $this->submittedSetVisible();
@@ -49,17 +47,18 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function renderArchAll($id) {
-        $table_types = $this->tableTypesRepository->findAll();
-        $table_rows = array();
+        $tableTypes = $this->tableTypesRepository->findAll();
+        $tableRows = array();
 
-        foreach ($table_types as $type) {
-            $table_rows[$type->name] = $this->tablesRepository->findByValue('archive_id', $this->archRow)
-                                                              ->where('type = ?', $type)
-                                                              ->order('points DESC, (score1 - score2) DESC');
+        foreach ($tableTypes as $type) {
+            $tableRows[$type->name] = $this->tablesRepository
+                    ->findByValue('archive_id', $this->archRow)
+                    ->where('type = ?', $type)
+                    ->order('points DESC, (score1 - score2) DESC');
         }
-        
-        $this->template->tables = $table_rows;
-        $this->template->table_types = $table_types;
+
+        $this->template->tables = $tableRows;
+        $this->template->tableTypes = $tableTypes;
         $this->template->archive = $this->archRow;
     }
 
@@ -71,9 +70,8 @@ class TablesPresenter extends BasePresenter {
         $form->addText('score1', 'Skóre 1');
         $form->addText('score2', 'Skóre 2');
         $form->addText('points', 'Body');
-        $form->addSubmit('edit', 'Upraviť')
-             ->setAttribute('class', 'btn btn-large btn-success');
-        $form->onSuccess[] = [$this, 'submittedEditForm'];
+        $form->addSubmit('edit', 'Upraviť');
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
@@ -81,19 +79,19 @@ class TablesPresenter extends BasePresenter {
     public function submittedEditForm(Form $form, $values) {
         $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
         $this->tableRow->update($values);
-        $this->flashMessage('Záznam bol upravený', 'success');
+        $this->flashMessage('Záznam bol upravený', self::SUCCESS);
         $this->redirect('all');
     }
 
-    public function submittedDeleteForm() {
+    public function submittedRemoveForm() {
         $this->tableRow->delete();
-        $this->flashMessage('Záznam bol odstránený', 'success');
+        $this->flashMessage('Záznam bol odstránený', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedSetVisible() {
         $this->tableRow->update(array('visible' => 1));
-        $this->flashMessage('Tabuľka bola pridaná na domovskú stránku', 'success');
+        $this->flashMessage('Tabuľka bola pridaná na domovskú stránku', self::SUCCESS);
         $this->redirect('all');
     }
 

@@ -16,7 +16,7 @@ class PunishmentsPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', null)
-                                                                   ->order('id DESC');
+                ->order('id DESC');
 
         if ($this->user->isLoggedIn()) {
             $this->getComponent("addForm");
@@ -58,7 +58,7 @@ class PunishmentsPresenter extends BasePresenter {
         $form->addText('round', 'Kolá');
         $form->addCheckbox('condition', ' Podmienka');
         $form->addSubmit('edit', 'Upraviť')
-             ->setAttribute('class', 'btn btn-large btn-success');
+                ->setAttribute('class', 'btn btn-large btn-success');
         $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

@@ -64,8 +64,8 @@ class FightsPresenter extends BasePresenter {
             throw new BadRequestException($this->error);
         }
         $this->template->fights = $this->fightsRepository
-                                       ->findByValue('round_id', $param)
-                                       ->where('archive_id', $id);
+                ->findByValue('round_id', $param)
+                ->where('archive_id', $id);
         $this->template->round = $this->roundRow;
         $this->template->archive = $this->roundRow->ref('archive', 'archive_id');
     }
@@ -145,7 +145,7 @@ class FightsPresenter extends BasePresenter {
         } elseif ($values['score1'] < $values['score2']) {
             $state1 = 'lost';
             $state2 = 'win';
-        } 
+        }
         $this->tablesRepository->incTabVal($values['team1_id'], $type, $state1, $value);
         $this->tablesRepository->incTabVal($values['team2_id'], $type, $state2, $value);
         $this->tablesRepository->updateFights($values['team1_id'], $type);

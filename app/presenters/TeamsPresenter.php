@@ -23,7 +23,7 @@ class TeamsPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)
-                                                       ->where('logo NOT', null);
+                ->where('logo NOT', null);
         if ($this->user->isLoggedIn()) {
             $this->getComponent(self::ADD_FORM);
         }
@@ -41,10 +41,10 @@ class TeamsPresenter extends BasePresenter {
         $goalie = $this->playerTypesRepository->findByValue('type', self::GOALIE)->fetch();
 
         $this->template->players = $this->playersRepository->findByValue('team_id', $id)
-                                        ->where('type_id != ?', $goalie)->where('archive_id', null)
-                                        ;
+                        ->where('type_id != ?', $goalie)->where('archive_id', null)
+        ;
         $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
-                                        ->where('type_id', $goalie)->where('archive_id', null);
+                        ->where('type_id', $goalie)->where('archive_id', null);
         $this->template->team = $this->teamRow;
         $this->template->i = 0;
         $this->template->j = 0;
@@ -56,7 +56,7 @@ class TeamsPresenter extends BasePresenter {
             $this->getComponent(self::UPLOAD_FORM);
             $this->getComponent(self::REMOVE_FORM);
             $this->getComponent(self::ADD_PLAYER_FORM);
-        }   
+        }
     }
 
     public function actionArchAll($id) {
@@ -89,8 +89,8 @@ class TeamsPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('name', 'Tím: ')
-             ->setRequired('Názov tímu je povinné pole.')
-             ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
+                ->setRequired('Názov tímu je povinné pole.')
+                ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
         $form->addSubmit('save', 'Pridať');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -100,13 +100,13 @@ class TeamsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('name', 'Tím: ')
-             ->setRequired('Názov tímu je povinné pole.')
-             ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
+                ->setRequired('Názov tímu je povinné pole.')
+                ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
         $form->addSubmit('save', 'Upraviť')
-             ->setAttribute('class', 'btn btn-large btn-success');
+                ->setAttribute('class', 'btn btn-large btn-success');
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
-             ->setAttribute('data-dismiss', 'modal');
+                ->setAttribute('class', 'btn btn-large btn-warning')
+                ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -115,10 +115,10 @@ class TeamsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('delete', 'Odstrániť')
-             ->setAttribute('class', 'btn btn-large btn-danger');
+                ->setAttribute('class', 'btn btn-large btn-danger');
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', 'btn btn-large btn-warning')
-             ->setAttribute('data-dismiss', 'modal');
+                ->setAttribute('class', 'btn btn-large btn-warning')
+                ->setAttribute('data-dismiss', 'modal');
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -156,7 +156,7 @@ class TeamsPresenter extends BasePresenter {
 
     public function submittedRemoveForm() {
         $players = $this->teamRow->related('players');
-        
+
         foreach ($players as $player) {
             $player->delete();
         }
@@ -164,18 +164,18 @@ class TeamsPresenter extends BasePresenter {
         try {
             FileSystem::delete(__DIR__ . self::IMG_FOLDER . '/' . $this->teamRow->image);
             $this->flashMessage('Tím bol odstránený', 'success');
-        } catch(IOException $e) {
+        } catch (IOException $e) {
             $this->flashMessage('Tím bol odstránený', self::SUCCESS);
             $this->flashMessage('Nepodarilo sa odstrániť foto tímu', self::DANGER);
         }
-        
+
         $this->teamRow->delete();
         $this->redirect('all');
     }
 
     public function submittedAddForm(Form $form, $values) {
         $team = $this->teamsRepository->insert($values);
-        $this->tablesRepository->insert(array('team_id' =>  $team));
+        $this->tablesRepository->insert(array('team_id' => $team));
         $this->flashMessage('Tím bol pridaný', self::SUCCESS);
         $this->redirect('all');
     }

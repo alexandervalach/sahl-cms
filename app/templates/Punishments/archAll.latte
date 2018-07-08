@@ -2,8 +2,8 @@
 
 <section class="content">
 
-	<div class="clearfix">
-    	<h1 n:block="title">Tresty hráčov</h1>
+    <div class="clearfix">
+        <h1 n:block="title">Tresty hráčov</h1>
     </div>
 
     <div n:foreach="$punishments as $punishment" style="margin-top: 3em" class="text-center">
@@ -13,7 +13,7 @@
         <h2>{$player->name} ({$player->num})</h2> 
         <a n:href="Teams:view, $team">
             <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="40px" 
-                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                 n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
             {$team->name}
         </a>
         <ul>

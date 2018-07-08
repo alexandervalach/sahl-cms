@@ -1,12 +1,12 @@
 {block content}
 
 <section class="content">
-    
+
     <div class="clearfix" n:if="$user->loggedIn">
 
         <div class="pull-right">
             <button type="button" class='btn btn-primary' 
-                data-toggle="modal" data-target="#add" title="Vytvoriť nový archív">
+                    data-toggle="modal" data-target="#add" title="Vytvoriť nový archív">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
         </div>
@@ -16,7 +16,7 @@
     <div class="clearfix">
         <h1 n:block="title">Archív</h1>
     </div>
-    
+
     <ul>
         <li n:foreach="$archive as $arch">
             <a n:href="view $arch">{$arch->title}</a>

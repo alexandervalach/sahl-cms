@@ -54,8 +54,8 @@ class PlayerTypesPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('type', 'Typ hráča')
-             ->addRule(Form::FILLED, 'Ešte vyplńte názov')
-             ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
+                ->addRule(Form::FILLED, 'Ešte vyplńte názov')
+                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
         $form->addText('abbr', 'Skratka');
         $form->addSubmit('save', 'Uložiť');
         FormHelper::setBootstrapFormRenderer($form);
@@ -66,8 +66,8 @@ class PlayerTypesPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('type', 'Typ hráča')
-             ->addRule(Form::FILLED, 'Ešte vyplńte názov')
-             ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
+                ->addRule(Form::FILLED, 'Ešte vyplńte názov')
+                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
         $form->addText('abbr', 'Skratka');
         $form->addSubmit('save', 'Uložiť');
         FormHelper::setBootstrapFormRenderer($form);
@@ -78,11 +78,11 @@ class PlayerTypesPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('save', 'Odstrániť')
-             ->setAttribute('class', self::BTN_DANGER)
-             ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
+                        ->setAttribute('class', self::BTN_DANGER)
+                ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', self::BTN_WARNING)
-             ->onClick[] = [$this, 'formCancelled'];
+                        ->setAttribute('class', self::BTN_WARNING)
+                ->onClick[] = [$this, 'formCancelled'];
         return $form;
     }
 
@@ -101,11 +101,11 @@ class PlayerTypesPresenter extends BasePresenter {
     public function submittedRemoveForm() {
         $players = $this->playerTypeRow->related('player');
         $data = array('type_id' => 1);
-        
-        foreach($players as $player) {
+
+        foreach ($players as $player) {
             $player->update($data);
         }
-        
+
         $this->playerTypeRow->delete();
         $this->flashMessage('Typ hráča bol odstránený', self::SUCCESS);
         $this->redirect('all');

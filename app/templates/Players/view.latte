@@ -1,51 +1,51 @@
 {block content}
 
 <section class="content">
-	<div class="clearfix">
-		<h1>
-			{block title}{$player->name}{/block}, {$player->num}
-		</h1>
-		<div class="pull-right">
+    <div class="clearfix">
+        <h1>
+            {block title}{$player->name}{/block}, {$player->num}
+        </h1>
+        <div class="pull-right">
             <button type="button" class="{$btnSuccess}" 
-                data-target="#edit" data-toggle="modal">
+                    data-target="#edit" data-toggle="modal">
                 <span class="glyphicon glyphicon-pencil"></span>
             </button>
-            
+
             <button type="button" class="{$btnDanger}" 
-                data-target="#remove" data-toggle="modal">
+                    data-target="#remove" data-toggle="modal">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>
         </div>
         <h2>
-			<a n:href="Teams:view $team">
-				<img src="{$basePath}/{$imgFolder}/{$team->logo}" 
-				n:if="$team->logo && file_exists($imgFolder . '/' . $team->logo)" /> 
-			</a>
-		</h2>
-	</div>
+            <a n:href="Teams:view $team">
+                <img src="{$basePath}/{$imgFolder}/{$team->logo}" 
+                     n:if="$team->logo && file_exists($imgFolder . '/' . $team->logo)" /> 
+            </a>
+        </h2>
+    </div>
 
-	<div class="clearfix">
-		<img n:if="$player->photo && file_exists($imgFolder . '/' . $player->photo)"
-			src="{$basePath}/{$imgFolder}/{$player->photo}" />
-	</div>
+    <div class="clearfix">
+        <img n:if="$player->photo && file_exists($imgFolder . '/' . $player->photo)"
+             src="{$basePath}/{$imgFolder}/{$player->photo}" />
+    </div>
 
-	<div class="clearfix table-responsive">
-		<table class="table">
-			<tbody>
-				<tr>
-					<td>Funkcia</td>
-					<td>{$type->type}</td>
-				</tr>
-				<tr n:if="$type->type != $goalie_title">
-					<td>Počet inkasovaných gólov</td>
-					<td>{$player->goals}</td>
-				</tr>
-				<tr n:if="$player->trans">
-					<td colspan="2">Prestupový hráč</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+    <div class="clearfix table-responsive">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td>Funkcia</td>
+                    <td>{$type->type}</td>
+                </tr>
+                <tr n:if="$type->type != $goalie_title">
+                    <td>Počet inkasovaných gólov</td>
+                    <td>{$player->goals}</td>
+                </tr>
+                <tr n:if="$player->trans">
+                    <td colspan="2">Prestupový hráč</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
 </section>
 

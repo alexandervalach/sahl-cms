@@ -7,7 +7,6 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
-use Tracy\Debugger;
 
 class LinksPresenter extends BasePresenter {
 
@@ -53,7 +52,7 @@ class LinksPresenter extends BasePresenter {
         $form = new Form;
         $form->addText('title', 'Názov:');
         $form->addText('anchor', 'URL adresa:')
-             ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
+                ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
         $form->addUpload('image', 'Obrázok:');
         $form->addCheckbox('sponsor', ' Sponzor');
         $form->addSubmit('save', 'Uložiť');
@@ -98,14 +97,13 @@ class LinksPresenter extends BasePresenter {
             try {
                 FileSystem::delete($this->wwwFolder . "/" . self::IMG_FOLDER . "/" . $image);
             } catch (IOException $e) {
-                $this->flashMessage('Obrázok ' . $image . ' sa nepodarilo odstrániť', self::DANGER);    
+                $this->flashMessage('Obrázok ' . $image . ' sa nepodarilo odstrániť', self::DANGER);
             }
         }
         $this->linkRow->delete();
         $this->flashMessage('Odkaz bol odstránený', self::SUCCESS);
         $this->redirect('all');
     }
-
 
     public function submittedEditForm(Form $form, $values) {
         $this->linkRow->update($values);

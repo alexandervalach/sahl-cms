@@ -21,16 +21,15 @@ class PlayersPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $archRow;
 
-
     public function renderAll() {
         $this->template->players = $this->playersRepository->findByValue('archive_id', null)
-                                        ->where('name != ?', ' ')
-                                        ->order('goals DESC, name DESC');
+                ->where('name != ?', ' ')
+                ->order('goals DESC, name DESC');
         $this->template->i = 0;
         $this->template->j = 0;
         $this->template->current = 0;
         $this->template->previous = 0;
-        
+
         if ($this->user->isLoggedIn()) {
             $this->getComponent('resetForm');
         }
@@ -53,7 +52,7 @@ class PlayersPresenter extends BasePresenter {
 
         $this->template->player = $this->playerRow;
         $this->template->team = $this->teamRow;
-        $this->template->goals_count = $this->goalsRepository->getPlayerGoalsCount($id); 
+        $this->template->goals_count = $this->goalsRepository->getPlayerGoalsCount($id);
         $this->template->type = $this->playerTypesRepository->findById($this->playerRow->type_id);
 
         if ($this->user->isLoggedIn()) {
@@ -68,8 +67,8 @@ class PlayersPresenter extends BasePresenter {
 
     public function renderArchAll($id) {
         $this->template->stats = $this->playersRepository->findByValue('archive_id', $id)
-                                      ->where('name != ?', ' ')
-                                      ->order('goals DESC, name DESC');
+                ->where('name != ?', ' ')
+                ->order('goals DESC, name DESC');
         $this->template->archive = $this->archRow;
         $this->template->i = 0;
         $this->template->j = 0;
@@ -106,7 +105,7 @@ class PlayersPresenter extends BasePresenter {
 
     protected function createComponentEditForm() {
         $types = $this->playerTypesRepository->getTypes();
-        
+
         $form = new Form;
         $form->addText('name', 'Meno a priezvisko:');
         $form->addText('num', 'Číslo:');
@@ -122,11 +121,11 @@ class PlayersPresenter extends BasePresenter {
     protected function createComponentResetForm() {
         $form = new Form;
         $form->addSubmit('reset', 'Vynulovať')
-             ->setAttribute('class', self::BTN_DANGER)
-             ->onClick[] = $this->submittedResetForm;
+                        ->setAttribute('class', self::BTN_DANGER)
+                ->onClick[] = $this->submittedResetForm;
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', self::BTN_WARNING)
-             ->setAttribute('data-dismiss', 'modal');
+                ->setAttribute('class', self::BTN_WARNING)
+                ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -147,8 +146,8 @@ class PlayersPresenter extends BasePresenter {
 
     public function submittedResetForm() {
         $players = $this->playersRepository
-                        ->findByValue('archive_id', null)
-                        ->where('goals != ?', 0);
+                ->findByValue('archive_id', null)
+                ->where('goals != ?', 0);
         $values = array('goals' => 0);
         foreach ($players as $player) {
             $player->update($values);

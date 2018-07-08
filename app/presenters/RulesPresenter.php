@@ -28,7 +28,7 @@ class RulesPresenter extends BasePresenter {
         }
 
         $this->template->rule = $this->ruleRow;
-        
+
         if ($this->user->isLoggedIn()) {
             $this->getComponent('editForm')->setDefaults($this->ruleRow);
         }
@@ -46,10 +46,10 @@ class RulesPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addTextArea('rule', 'Text')
-             ->setAttribute('id', 'ckeditor')
-             ->setRequired("Text je povinné pole.");
+                ->setAttribute('id', 'ckeditor')
+                ->setRequired("Text je povinné pole.");
         $form->addSubmit('save', 'Uložiť')
-             ->setAttribute('class', 'btn btn-large btn-success');
+                ->setAttribute('class', 'btn btn-large btn-success');
         $form->onSuccess[] = [$this, 'submittedEditForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

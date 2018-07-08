@@ -45,13 +45,13 @@ class RepliesPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('author', 'Meno')
-             ->setRequired("Meno je povinné pole")
-             ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
+                ->setRequired("Meno je povinné pole")
+                ->addRule(Form::MAX_LENGTH, "Maximálna dĺžka mena je 50 znakov", 50);
         $form->addText('url', 'Nevypĺňať')
-             ->setAttribute('style', 'display: none')
-             ->setOmitted();
+                ->setAttribute('style', 'display: none')
+                ->setOmitted();
         $form->addTextArea('text', 'Text')
-             ->setAttribute('class', 'form-control');
+                ->setAttribute('class', 'form-control');
         $form->addSubmit('add', 'Reagovať');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -70,7 +70,7 @@ class RepliesPresenter extends BasePresenter {
         }
         $this->redirect('add', $this->topicRow);
     }
-    
+
     public function submittedRemoveForm() {
         $topic_id = $this->replyRow->topic_id;
         $this->replyRow->delete();

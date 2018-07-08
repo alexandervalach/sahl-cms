@@ -5,22 +5,22 @@
     <div class="clearfix" n:if="$user->loggedIn">
 
         <div class="pull-right">
-            
+
             <button type="button" class='btn btn-large btn-success' 
-                data-toggle="modal" data-target="#edit" title="Upraviť album">
+                    data-toggle="modal" data-target="#edit" title="Upraviť album">
                 <span class="glyphicon glyphicon-edit"></span>
             </button>
 
             <button type="button" class='btn btn-large btn-primary' 
-                data-toggle='modal' data-target='#add-img' title="Pridať obrázky">
+                    data-toggle='modal' data-target='#add-img' title="Pridať obrázky">
                 <span class="glyphicon glyphicon-upload"></span>
             </button>
-            
+
             <button type="button" class='btn btn-large btn-danger' 
-                data-toggle="modal" data-target="#remove" title="Odstrániť album">
+                    data-toggle="modal" data-target="#remove" title="Odstrániť album">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>
-        
+
         </div>
 
     </div>
@@ -31,19 +31,19 @@
 
     <section id="pictures">
         <figure n:foreach="$imgs as $img" class="col-lg-4 col-md-4 col-sm-6 col-xs-12" 
-            n:if="file_exists($imgFolder . '/' . $img->name) or $user->loggedIn">
-            
+                n:if="file_exists($imgFolder . '/' . $img->name) or $user->loggedIn">
+
             <img src="{$basePath}/{$imgFolder}/{$img->name}" 
-                class="img img-responsive lightbox-trigger" alt="{$img->name}" />
+                 class="img img-responsive lightbox-trigger" alt="{$img->name}" />
 
             <figcaption n:if="$user->loggedIn" class="text-center" style="margin-top: 1em">
 
                 <a n:href="Albums:setImg, $img->album_id, $img" class="btn btn-primary" 
-                    title="Nastaví obrázok ako miniatúru albumu">
+                   title="Nastaví obrázok ako miniatúru albumu">
                     <span class="glyphicon glyphicon-picture"></span>
                 </a>
                 <a n:href="Albums:removeImg, $img" class="btn btn-danger"
-                    title="Odstrániť obrázok">
+                   title="Odstrániť obrázok">
                     <span class="glyphicon glyphicon-trash"></span>
                 </a>
 
@@ -122,6 +122,6 @@
 {/block}
 
 {block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/js/gallery.js"></script>
+{include #parent}
+<script type="text/javascript" src="{$basePath}/js/gallery.js"></script>
 {/block}

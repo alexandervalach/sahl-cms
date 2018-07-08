@@ -32,7 +32,7 @@
                 <td>
                     <a n:href="Teams:view $team">
                         <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="30px" 
-                            n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                             n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
                         {$team->name}
                     </a>
                 </td>

@@ -4,19 +4,19 @@ namespace App\Model;
 
 class EventsRepository extends Repository {
 
-	public function archive( $arch_id ) {
-		
-    	$events = $this->findByValue('archive_id', null);
+    public function archive($arch_id) {
 
-    	$this->database->beginTransaction();
+        $events = $this->findByValue('archive_id', null);
 
-    	if (!$events->count()) {
-    		foreach ($events as $event) {
-				$event->update($arch_id);
-			}
-    	}
+        $this->database->beginTransaction();
 
-    	$this->database->commit();
+        if (!$events->count()) {
+            foreach ($events as $event) {
+                $event->update($arch_id);
+            }
+        }
+
+        $this->database->commit();
     }
 
 }

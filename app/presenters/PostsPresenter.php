@@ -53,14 +53,14 @@ class PostsPresenter extends BasePresenter {
 
         $this->imgRow = $this->postImagesRepository->findById($id);
         $this->postRow = $this->postsRepository->findById($post_id);
-        
+
         if (!$this->imgRow) {
             throw new BadRequestException(self::IMAGE_NOT_FOUND);
-        } 
+        }
         if (!$this->postRow) {
             throw new BadRequestException(self::POST_NOT_FOUND);
         }
-        
+
         $this->submittedSetImgForm();
     }
 
@@ -74,16 +74,16 @@ class PostsPresenter extends BasePresenter {
         if (!$this->postRow) {
             throw new BadRequestException(self::POST_NOT_FOUND);
         }
-        
+
         $this->submittedRemoveImgForm();
     }
 
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('title', 'Názov:')
-             ->setRequired("Názov je povinné pole.");
+                ->setRequired("Názov je povinné pole.");
         $form->addTextArea('content', 'Obsah:')
-             ->setAttribute('id', 'ckeditor');
+                ->setAttribute('id', 'ckeditor');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -93,9 +93,9 @@ class PostsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('title', 'Názov:')
-             ->setRequired("Názov je povinné pole.");
+                ->setRequired("Názov je povinné pole.");
         $form->addTextArea('content', 'Obsah:')
-             ->setAttribute('id', 'ckeditor');
+                ->setAttribute('id', 'ckeditor');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -105,10 +105,10 @@ class PostsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('delete', 'Odstrániť')
-             ->setAttribute('class', self::BTN_DANGER);
+                ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', self::BTN_WARNING)
-             ->setAttribute('data-dismiss', 'modal');
+                ->setAttribute('class', self::BTN_WARNING)
+                ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -138,10 +138,10 @@ class PostsPresenter extends BasePresenter {
 
     public function submittedRemoveForm() {
         $imgs = $this->postRow->related('postImages');
-        
+
         foreach ($imgs as $img) {
             try {
-                FileSystem::delete($this->imageDir .$img->name);
+                FileSystem::delete($this->imageDir . $img->name);
                 $img->delete();
             } catch (IOException $e) {
                 $this->flashMessage('Obrázok bol odstránený', self::DANGER);
@@ -166,7 +166,7 @@ class PostsPresenter extends BasePresenter {
             $this->imgRow->delete();
             $this->flashMessage('Obrázok bol odstránený', self::SUCCESS);
         } catch (IOException $e) {
-            $this->flashMessage('Obrázok sa nepodarilo odstrániť', self::DANGER);  
+            $this->flashMessage('Obrázok sa nepodarilo odstrániť', self::DANGER);
         }
         $this->redirect('view', $this->postRow);
     }

@@ -1,10 +1,11 @@
-<?php 
+<?php
 
 namespace App\Model;
 
 class ArchivesRepository extends Repository {
-	/**
-     * Loop trought all archives and store them in array. 
+
+    /**
+     * Loop trough all archives and store them in array. 
      * Accessible index $team->id. 
      * Value is $team->name.
      * @return array
@@ -12,4 +13,5 @@ class ArchivesRepository extends Repository {
     public function getArchives() {
         return $this->findAll()->fetchPairs('id', 'title');
     }
+
 }

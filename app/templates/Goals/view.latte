@@ -4,8 +4,8 @@
 
     <div class="clearfix" n:if="$user->loggedIn">
         <div class="pull-right">
-            <button type="button" class='btn btn-large btn-primary' 
-                data-toggle="modal" data-target="#add-goal" title="Pridať góly hráčom">
+            <button type="button" class='{$btnPrimary}' 
+                    data-toggle="modal" data-target="#add-goal" title="Pridať góly hráčom">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
         </div>
@@ -37,16 +37,16 @@
                 <td>{$goal->goals}</td>
                 <td>{if $goal->home == 1}DOMÁCI{else}HOSTIA{/if}</td>
                 {if $user->loggedIn}
-                <td>
-                    <a n:href="Goals:edit $goal" class="text-success">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                </td>
-                <td>
-                    <a n:href="Goals:remove $goal" class="text-danger">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
+                    <td>
+                        <a n:href="Goals:edit $goal" class="text-success">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a n:href="Goals:remove $goal" class="text-danger">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
                 {/if}
             </tr>
         </tbody>

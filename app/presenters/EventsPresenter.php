@@ -15,12 +15,11 @@ class EventsPresenter extends BasePresenter {
     private $eventRow;
 
     /** @var ActiveRow */
-    private $archRow; 
-
+    private $archRow;
 
     public function renderAll() {
         $this->template->events = $this->eventsRepository->findByValue('archive_id', null)
-                                                         ->order('id DESC');
+                ->order('id DESC');
         if ($this->user->isLoggedIn()) {
             $this->getComponent(self::ADD_FORM);
         }
@@ -60,13 +59,13 @@ class EventsPresenter extends BasePresenter {
     public function renderArchAll($id) {
         $this->template->archive = $this->archRow;
         $this->template->events = $this->eventsRepository->findByValue('archive_id', $id)
-                                                         ->order('id DESC');
+                ->order('id DESC');
     }
 
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addTextArea('event', 'Rozpis zápasov')
-             ->setAttribute('id', 'ckeditor');
+                ->setAttribute('id', 'ckeditor');
         $form->addSubmit('add', 'Pridať');
         $form->onSuccess[] = [$this, self::ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -76,9 +75,9 @@ class EventsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addTextArea('event', 'Rozpis zápasov')
-             ->setAttribute('id', 'ckeditor');
+                ->setAttribute('id', 'ckeditor');
         $form->addSubmit('edit', 'Upraviť')
-             ->setAttribute('class', self::BTN_SUCCESS);
+                ->setAttribute('class', self::BTN_SUCCESS);
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -87,11 +86,11 @@ class EventsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', self::BTN_WARNING)
-             ->onClick[] = [$this, 'formCancelled'];
+                        ->setAttribute('class', self::BTN_WARNING)
+                ->onClick[] = [$this, 'formCancelled'];
         $form->addSubmit('delete', 'Odstrániť')
-             ->setAttribute('class', self::BTN_DANGER)
-             ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
+                        ->setAttribute('class', self::BTN_DANGER)
+                ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
         $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

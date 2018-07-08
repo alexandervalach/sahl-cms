@@ -5,12 +5,12 @@
     <div class="clearfix">
 
         <div class="pull-right">
-            <button type="button" class="btn btn-large btn-primary" 
-                data-toggle="modal" data-target="#react">
+            <button type="button" class="{$btnPrimary}" 
+                    data-toggle="modal" data-target="#react">
                 Reagovať
             </button>
         </div>
-    
+
     </div>
 
     <header class="clearfix">
@@ -20,7 +20,7 @@
     <main class="clearfix" style="margin-top: 1.5em;">
         {$topic->message|noescape}
     </main>
-    
+
     <footer>
         <div class="pull-left">
             <span class="glyphicon glyphicon-user"></span> {$topic->author},

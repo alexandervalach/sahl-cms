@@ -4,7 +4,8 @@
     <h1 n:block="title">Súpiska tímu</h1>
     {if file_exists($imgFolder . "/" . $team->image)}
         <figure>
-            <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" alt="{$team->name}" />
+            <img class="img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
+                 alt="{$team->name}" />
         </figure>
     {/if}
 </section>

@@ -1,23 +1,23 @@
 {block content}
 
 <section class="content">
-    
+
     <div n:if="$user->loggedIn" class="clearfix">
-        
+
         <div class="pull-right">
 
-            <button type="button" class="btn btn-large btn-success" 
-                data-target="#edit" data-toggle="modal">
+            <button type="button" class="{$btnSuccess}" 
+                    data-target="#edit" data-toggle="modal">
                 <span class="glyphicon glyphicon-pencil"></span>
             </button>
-            
-            <button type="button" class="btn btn-large btn-primary" 
-                data-target="#upload" data-toggle="modal">
+
+            <button type="button" class="{$btnPrimary}" 
+                    data-target="#upload" data-toggle="modal">
                 <span class="glyphicon glyphicon-upload"></span>
             </button>
-            
-            <button type="button" class="btn btn-large btn-danger" 
-                data-target="#remove" data-toggle="modal">
+
+            <button type="button" class="{$btnDanger}" 
+                    data-target="#remove" data-toggle="modal">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>
 
@@ -28,23 +28,25 @@
     <div class="clearfix">
         <h1>
             <img src="{$basePath}/{$imgFolder}/{$team->logo}" class="img img-responsive"
-                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" style="display: inline-block"/>
+                 n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" 
+                 style="display: inline-block"/>
             {block title}{$team->name}{/block}
         </h1>
     </div>
 
-    <figure n:if="$team->image and file_exists($imgFolder . '/' . $team->image)" style="margin-top: 1em">
+    <figure n:if="$team->image and file_exists($imgFolder . '/' . $team->image)" 
+            style="margin-top: 1em">
         <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}" 
-            alt="{$team->name}" style="margin: 0 auto" />
+             alt="{$team->name}" style="margin: 0 auto" />
     </figure>
 
 </section>
 
 <section n:if="$players->count()" id="players">
-    
+
     <div class='table-responsive'>
         <table class='table'>
-            
+
             <thead>
                 <tr>
                     <th>&nbsp;</th>
@@ -52,7 +54,7 @@
                     <th>Číslo dresu</th>
                 </tr>
             </thead>
-            
+
             <tbody>
                 {foreach $players as $player}
                     {var $type = $player->ref('playerTypes', 'type_id')}
@@ -66,7 +68,9 @@
                             </td>
                             <td>{$player->num}</td>
                         {else}
-                            <td n:for="$j = 0; $j < 3; $j++">&nbsp;</td>
+                            {for $j = 0; $j < 3; $j++}
+                                <td>&nbsp;</td>
+                            {/for}
                         {/if}
                     </tr>
                     {var $i = $iterator->counter}

@@ -9,256 +9,253 @@ use Nette\Database\Table\ActiveRow;
 
 class ArchivesPresenter extends BasePresenter {
 
-	const ARCHIVE_NOT_FOUND = 'Archive not found';
-	const ARCHIVE_FORM = 'archiveForm';
-	const SUBMITTED_ARCHIVE_FORM = 'submittedArchiveForm';
+    const ARCHIVE_NOT_FOUND = 'Archive not found';
+    const ARCHIVE_FORM = 'archiveForm';
+    const SUBMITTED_ARCHIVE_FORM = 'submittedArchiveForm';
 
-	/** @var ActiveRow */
-	private $archiveRow;
+    /** @var ActiveRow */
+    private $archiveRow;
 
-	public function renderAll() {
-		$this->template->archive = $this->archivesRepository->findAll();
+    public function renderAll() {
+        $this->template->archive = $this->archivesRepository->findAll();
 
-		if ($this->user->isLoggedIn()) {
-			$this->getComponent(self::ADD_FORM);
-		}
-	}
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent(self::ADD_FORM);
+        }
+    }
 
-	public function actionView($id) {
-		$this->archiveRow = $this->archivesRepository->findById($id);
-	}
+    public function actionView($id) {
+        $this->archiveRow = $this->archivesRepository->findById($id);
+    }
 
-	public function renderView($id) {
-		if(!$this->archiveRow) {
-			throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
-		}
+    public function renderView($id) {
+        if (!$this->archiveRow) {
+            throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
+        }
 
-		$this->template->archive = $this->archiveRow;
+        $this->template->archive = $this->archiveRow;
 
-		if ($this->user->isLoggedIn()) {
-			$this->getComponent(self::EDIT_FORM)->setDefaults($this->archiveRow);
-			$this->getComponent(self::REMOVE_FORM);
-			$this->getComponent(self::ARCHIVE_FORM);
-		}
-	}
+        if ($this->user->isLoggedIn()) {
+            $this->getComponent(self::EDIT_FORM)->setDefaults($this->archiveRow);
+            $this->getComponent(self::REMOVE_FORM);
+            $this->getComponent(self::ARCHIVE_FORM);
+        }
+    }
 
-	protected function createComponentAddForm() {
-		$form = new Form;
-		$form->addText('title', 'Názov')
-		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
-		$form->addSubmit('add', 'Pridať');
-		$form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-		FormHelper::setBootstrapFormRenderer($form);
-		return $form;
-	}
+    protected function createComponentAddForm() {
+        $form = new Form;
+        $form->addText('title', 'Názov')
+                ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
+        $form->addSubmit('add', 'Pridať');
+        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
 
-	protected function createComponentEditForm() {
-		$form = new Form;
-		$form->addText('title', 'Názov')
-		     ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
-		$form->addSubmit('edit', 'Upraviť')
-			 ->setAttribute('class', self::BTN_SUCCESS);
-		$form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-		FormHelper::setBootstrapFormRenderer($form);
-		return $form;
-	}
+    protected function createComponentEditForm() {
+        $form = new Form;
+        $form->addText('title', 'Názov')
+                ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
+        $form->addSubmit('edit', 'Upraviť')
+                ->setAttribute('class', self::BTN_SUCCESS);
+        $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
 
-	protected function createComponentRemoveForm() {
-		$form = new Form;
+    protected function createComponentRemoveForm() {
+        $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-             ->setAttribute('class', self::BTN_DANGER);
+                ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', self::BTN_WARNING)
-             ->setAttribute('data-dismiss', 'modal');
+                ->setAttribute('class', self::BTN_WARNING)
+                ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
-	}
+    }
 
     protected function createComponentArchiveForm() {
         $form = new Form;
         $form->addSubmit('archive', 'Archivovať')
-             ->setAttribute('class', self::BTN_DEFAULT);
+                ->setAttribute('class', self::BTN_DEFAULT);
         $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', self::BTN_WARNING)
-             ->setAttribute('data-dismiss', 'modal');
+                ->setAttribute('class', self::BTN_WARNING)
+                ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
         $form->onSuccess[] = [$this, self::SUBMITTED_ARCHIVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-	public function submittedAddForm(Form $form, $values) {
-		$this->archivesRepository->insert($values);
-		$this->flashMessage("Archív bol pridaný", self::SUCCESS);
-		$this->redirect('all');
-	}
-
-	public function submittedEditForm(Form $form, $values) {
-		$this->archiveRow->update($values);
-		$this->flashMessage("Archív bol upravený", self::SUCCESS);
-		$this->redirect('view', $this->archiveRow);
-	}
-
-	public function submittedRemoveForm() {
+    public function submittedAddForm(Form $form, $values) {
+        $this->archivesRepository->insert($values);
+        $this->flashMessage("Archív bol pridaný", self::SUCCESS);
         $this->redirect('all');
-	}
+    }
 
-	public function submittedArchiveForm() {
-		$team_id = array();
-		$player_id = array();
-		$arch_id = array( 'archive_id' => $this->archiveRow->id );
+    public function submittedEditForm(Form $form, $values) {
+        $this->archiveRow->update($values);
+        $this->flashMessage("Archív bol upravený", self::SUCCESS);
+        $this->redirect('view', $this->archiveRow);
+    }
 
-		$this->roundsRepository->archive( $this->archiveRow->id );
-		$this->flashMessage('Kolá boli archivované', self::SUCCESS);
-		$this->eventsRepository->archive( $this->archiveRow->id );
-		$this->flashMessage('Rozpis zápasov bol archivovaný', self::SUCCESS);
-		$this->rulesRepository->archive( $this->archiveRow->id );
-		$this->flashMessage('Pravidlá a smernice boli archivované', self::SUCCESS);
+    public function submittedRemoveForm() {
+        $this->redirect('all');
+    }
 
-		// Vytvoríme duplicitné záznamy tímov s novým archive id
-		$teams = $this->teamsRepository->getAsArray($this->archiveRow->id);
+    public function submittedArchiveForm() {
+        $team_id = array();
+        $player_id = array();
+        $arch_id = array('archive_id' => $this->archiveRow->id);
 
-		if ($teams != null) {
-			foreach ($teams as $team) {
-				$data = array (
-					'name' => $team->name,
-					'image' => $team->image,
-					'archive_id' => $this->archiveRow->id
-				);
+        $this->roundsRepository->archive($this->archiveRow->id);
+        $this->flashMessage('Kolá boli archivované', self::SUCCESS);
+        $this->eventsRepository->archive($this->archiveRow->id);
+        $this->flashMessage('Rozpis zápasov bol archivovaný', self::SUCCESS);
+        $this->rulesRepository->archive($this->archiveRow->id);
+        $this->flashMessage('Pravidlá a smernice boli archivované', self::SUCCESS);
 
-				$id = $this->teamsRepository->insert($data);
-				if ($id == null) {
-					$this->flashMessage('Nastala chyba počas archivácie tímov', self::DANGER);
-					$this->redirect('all');
-				} else {
-					$team_id[$team->id] = $id;
-				}
-			}
-			$this->flashMessage('Tímy boli archivované', self::SUCCESS);
-		}
+        // Vytvoríme duplicitné záznamy tímov s novým archive id
+        $teams = $this->teamsRepository->getAsArray($this->archiveRow->id);
 
-		// Vytvoríme duplicitné záznamy o hráčoch s novým archive_id
-		$data = array();
-		$players = $this->playersRepository->getAsArray($this->archiveRow->id);
-		if ($players != null) {
+        if ($teams != null) {
+            foreach ($teams as $team) {
+                $data = array(
+                    'name' => $team->name,
+                    'image' => $team->image,
+                    'archive_id' => $this->archiveRow->id
+                );
 
-			foreach ($players as $player) {
-				if (isset($team_id[$player->team_id])) {
-					$data['team_id'] = $team_id[$player->team_id];
-					$data['type_id'] = $player->type_id;
-					$data['name'] = $player->name;
-					$data['num'] = $player->num;
-					$data['born'] = $player->born;
-					$data['goals'] = $player->goals;
-					$data['trans'] = $player->trans;
-					$data['archive_id'] = $this->archiveRow->id;
-					$this->playersRepository->insert($data);
-					$player_id[$player->id] = $id;
-				} else {
-					$this->flashMessage('Nastala chyba počas archivácie hráčov', self::DANGER);
-					break;
-				}
-			}
-			$this->flashMessage('Hráči boli archivovaní', self::SUCCESS);
+                $id = $this->teamsRepository->insert($data);
+                if ($id == null) {
+                    $this->flashMessage('Nastala chyba počas archivácie tímov', self::DANGER);
+                    $this->redirect('all');
+                } else {
+                    $team_id[$team->id] = $id;
+                }
+            }
+            $this->flashMessage('Tímy boli archivované', self::SUCCESS);
+        }
 
-		}
+        // Vytvoríme duplicitné záznamy o hráčoch s novým archive_id
+        $data = array();
+        $players = $this->playersRepository->getAsArray($this->archiveRow->id);
+        if ($players != null) {
 
-		$tables = $this->tablesRepository->findByValue('archive_id', null);
+            foreach ($players as $player) {
+                if (isset($team_id[$player->team_id])) {
+                    $data['team_id'] = $team_id[$player->team_id];
+                    $data['type_id'] = $player->type_id;
+                    $data['name'] = $player->name;
+                    $data['num'] = $player->num;
+                    $data['born'] = $player->born;
+                    $data['goals'] = $player->goals;
+                    $data['trans'] = $player->trans;
+                    $data['archive_id'] = $this->archiveRow->id;
+                    $this->playersRepository->insert($data);
+                    $player_id[$player->id] = $id;
+                } else {
+                    $this->flashMessage('Nastala chyba počas archivácie hráčov', self::DANGER);
+                    break;
+                }
+            }
+            $this->flashMessage('Hráči boli archivovaní', self::SUCCESS);
+        }
 
-		if ($tables->count()) {
+        $tables = $this->tablesRepository->findByValue('archive_id', null);
 
-			$data = array ( 
-				'team_id' => null,
-				'archive_id' => $this->archiveRow->id
-			);
+        if ($tables->count()) {
 
-			foreach ($tables as $table) {
-				if (isset($team_id[$table->team_id])) {
-					$data['team_id'] = $team_id[$table->team_id];
-					$table->update($data);
-				} else {
-					$this->flashMessage('Nastala chyba počas archivácie tabuliek', self::DANGER);
-					break;
-				}
-			}
+            $data = array(
+                'team_id' => null,
+                'archive_id' => $this->archiveRow->id
+            );
 
-			$this->flashMessage('Tabuľky boli archivované', self::SUCCESS);
-		}
+            foreach ($tables as $table) {
+                if (isset($team_id[$table->team_id])) {
+                    $data['team_id'] = $team_id[$table->team_id];
+                    $table->update($data);
+                } else {
+                    $this->flashMessage('Nastala chyba počas archivácie tabuliek', self::DANGER);
+                    break;
+                }
+            }
 
-		$puns = $this->punishmentsRepository->findByValue('archive_id', null);
+            $this->flashMessage('Tabuľky boli archivované', self::SUCCESS);
+        }
 
-		if ($puns->count()) {
+        $puns = $this->punishmentsRepository->findByValue('archive_id', null);
 
-			foreach ($puns as $pun) {
+        if ($puns->count()) {
 
-				$data = array (
-					'player_id' => null,
-					'archive_id' => $this->archiveRow->id
-				);
+            foreach ($puns as $pun) {
 
-				if (isset($player_id[$pun->player_id])) {
-					$data['player_id'] = $player_id[$pun->player_id];
-					$pun->update($data);
-				} else {
-					$this->flashMessage('Nastala chyba počas archivácie trestov hráčov', self::DANGER);
-					break;
-				}
-			}
+                $data = array(
+                    'player_id' => null,
+                    'archive_id' => $this->archiveRow->id
+                );
 
-			$this->flashMessage('Tresty boli archivované', self::SUCCESS);
+                if (isset($player_id[$pun->player_id])) {
+                    $data['player_id'] = $player_id[$pun->player_id];
+                    $pun->update($data);
+                } else {
+                    $this->flashMessage('Nastala chyba počas archivácie trestov hráčov', self::DANGER);
+                    break;
+                }
+            }
 
-		}
+            $this->flashMessage('Tresty boli archivované', self::SUCCESS);
+        }
 
-		$fights = $this->fightsRepository->findByValue('archive_id', null);
+        $fights = $this->fightsRepository->findByValue('archive_id', null);
 
-		if ($fights->count()) {
+        if ($fights->count()) {
 
-			$data = array( 
-				'team1_id' => null,
-				'team2_id' => null,
-				'archive_id' => $this->archiveRow->id
-			);
+            $data = array(
+                'team1_id' => null,
+                'team2_id' => null,
+                'archive_id' => $this->archiveRow->id
+            );
 
-			foreach ($fights as $fight) {
-				if (isset($team_id[$fight->team1_id]) && isset($team_id[$fight->team2_id])) {
-					$data['team1_id'] = $team_id[$fight->team1_id];
-					$data['team2_id'] = $team_id[$fight->team2_id];
-					$fight->update($data);
-				} else {
-					$this->flashMessage('Počas archivácie výsledkov zápasov nastala chyba', self::DANGER);
-					break;
-				}
-			}
+            foreach ($fights as $fight) {
+                if (isset($team_id[$fight->team1_id]) && isset($team_id[$fight->team2_id])) {
+                    $data['team1_id'] = $team_id[$fight->team1_id];
+                    $data['team2_id'] = $team_id[$fight->team2_id];
+                    $fight->update($data);
+                } else {
+                    $this->flashMessage('Počas archivácie výsledkov zápasov nastala chyba', self::DANGER);
+                    break;
+                }
+            }
 
-			$this->flashMessage('Zápasy boli archivované', self::SUCCESS);
+            $this->flashMessage('Zápasy boli archivované', self::SUCCESS);
+        }
 
-		}
+        $goals = $this->goalsRepository->findByValue('archive_id', null);
 
-		$goals = $this->goalsRepository->findByValue('archive_id', null);
+        if ($goals->count()) {
 
-		if ($goals->count()) {
+            $data = array(
+                'player_id' => null,
+                'archive_id' => $this->archiveRow->id
+            );
 
-			$data = array(
-				'player_id' => null,
-				'archive_id' =>  $this->archiveRow->id
-			);
+            foreach ($goals as $goal) {
+                if (isset($player_id[$goal->player_id])) {
+                    $data['player_id'] = $player_id[$goal->player_id];
+                    $id = $goal->update($data);
+                } else {
+                    $this->flashMessage('Nastala chyba počas archivácie gólov', self::DANGER);
+                    break;
+                }
+            }
 
-			foreach ($goals as $goal) {
-				if (isset($player_id[$goal->player_id])) {
-					$data['player_id'] = $player_id[$goal->player_id];
-					$id = $goal->update($data);
-				} else {
-					$this->flashMessage('Nastala chyba počas archivácie gólov', self::DANGER);
-					break;
-				}
-			}
+            $this->flashMessage('Góly boli archivované', self::SUCCESS);
+        }
 
-			$this->flashMessage('Góly boli archivované', self::SUCCESS);
-		}
-
-		$this->redirect('view', $this->archiveRow);
-	}
+        $this->redirect('view', $this->archiveRow);
+    }
 
 }

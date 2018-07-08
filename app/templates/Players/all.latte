@@ -4,8 +4,8 @@
 
     <div n:if="$user->loggedIn" class="clearfix">
         <div class="pull-right">
-            <button type="button" class="btn btn-large btn-danger" 
-                data-toggle="modal" data-target="#reset-stats" title="Vynulovať štatistiky">
+            <button type="button" class="{$btnDanger}" 
+                    data-toggle="modal" data-target="#reset-stats" title="Vynulovať štatistiky">
                 <span class="glyphicon glyphicon-erase"></span>
             </button>
         </div>
@@ -38,7 +38,7 @@
                 <td>
                     <a n:href="Teams:view $team">
                         <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="30px" 
-                            n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                             n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
                         {$team->name}
                     </a>
                 </td>

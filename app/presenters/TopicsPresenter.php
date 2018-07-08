@@ -40,14 +40,14 @@ class TopicsPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('title', 'Názov novej témy:')
-             ->addRule(Form::FILLED, 'Názov je povinné pole.');
+                ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
-             ->setRequired("Meno je povinné pole.");
+                ->setRequired("Meno je povinné pole.");
         $form->addText('url', 'Nevypĺňať')
-             ->setAttribute('style', 'display: none')
-             ->setOmitted();
+                ->setAttribute('style', 'display: none')
+                ->setOmitted();
         $form->addTextArea('message', 'Príspevok:')
-             ->setAttribute('class', 'form-control');
+                ->setAttribute('class', 'form-control');
         $form->addSubmit('add', self::ADD_BTN_LABEL);
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -62,7 +62,7 @@ class TopicsPresenter extends BasePresenter {
 
     public function submittedAddForm(Form $form, $values) {
         $url = filter_input(INPUT_POST, 'url');
-        
+
         if (isset($url) && $url == '') {
             $values['created_at'] = date('Y-m-d H:i:s');
             $this->topicsRepository->insert($values);

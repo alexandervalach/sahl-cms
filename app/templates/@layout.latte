@@ -21,7 +21,7 @@
         <div id="main" class="container-fluid">
 
             {include 'teams.latte'}
-            
+
             <main class="col-md-11 col-lg-8">
                 <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
                     <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -38,8 +38,8 @@
                 </div>
                 {include content}
             </main>
-                
-            
+
+
             <div>
                 <button type="button" id="scroll-to-top">
                     <span class="sr-only">Späť na vrch stránky</span>
@@ -56,6 +56,6 @@
 </html>
 
 {block scripts}
-    <script src="{$basePath}/js/main.js"></script>
-    <script src="{$basePath}/js/netteForms.js"></script>
+<script src="{$basePath}/js/main.js"></script>
+<script src="{$basePath}/js/netteForms.js"></script>
 {/block}

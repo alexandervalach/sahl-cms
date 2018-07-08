@@ -1,14 +1,13 @@
 {block content}
 
 <section class="content">
+    <div class="clearfix">
+        <h1 n:block="title">Pravidlá a smernice</h1>
+    </div>
 
-	<div class="clearfix">
-		<h1 n:block="title">Pravidlá a smernice</h1>
-	</div>
-
-	<article n:foreach="$rules as $rule">
-	    {$rule->rule|noescape}
-	</article>
+    <article n:foreach="$rules as $rule">
+        {$rule->rule|noescape}
+    </article>
 </section>
 
 {/block}

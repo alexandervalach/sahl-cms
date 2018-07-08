@@ -1,14 +1,14 @@
 <header role="banner">
-	<div class="clearfix">
-		<div style="width: 50%; margin: 0 auto">
-			{foreach $nav_teams as $nav_team}
-				{if $nav_team->logo != NULL}
-					<a n:href="Player:view, $nav_team->id">
-						<img src="{$basePath}/{$imgFolder}/{$nav_team->logo}" 
-							width="12%" alt="{$nav_team->name} Logo"/>
-					</a>
-				{/if}
-			{/foreach}
-		</div>
-	</div>
+    <div class="clearfix">
+        <div style="width: 50%; margin: 0 auto">
+            {foreach $nav_teams as $nav_team}
+                {if $nav_team->logo != NULL}
+                    <a n:href="Player:view, $nav_team->id">
+                        <img src="{$basePath}/{$imgFolder}/{$nav_team->logo}" 
+                             width="12%" alt="{$nav_team->name} Logo"/>
+                    </a>
+                {/if}
+            {/foreach}
+        </div>
+    </div>
 </header>

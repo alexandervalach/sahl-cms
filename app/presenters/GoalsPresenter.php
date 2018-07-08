@@ -35,7 +35,7 @@ class GoalsPresenter extends BasePresenter {
     public function renderView($id) {
         $this->template->fight = $this->fightRow;
         $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow)
-                                                       ->order('home DESC, goals DESC');
+                ->order('home DESC, goals DESC');
         $this->template->team1 = $this->fightRow->ref('team1_id');
         $this->template->team2 = $this->fightRow->ref('team2_id');
 
@@ -71,9 +71,9 @@ class GoalsPresenter extends BasePresenter {
         $form = new Form;
         $form->addSelect('player_id', 'Hráči', $players);
         $form->addText('goals', 'Počet gólov')
-             ->setRequired()
-             ->setDefaultValue(1)
-             ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+                ->setRequired()
+                ->setDefaultValue(1)
+                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, 'submittedAddForm'];
@@ -84,8 +84,8 @@ class GoalsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('goals', 'Počet gólov')
-             ->setRequired()
-             ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+                ->setRequired()
+                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, 'submittedEditForm'];

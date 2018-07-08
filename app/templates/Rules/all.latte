@@ -5,14 +5,14 @@
     <div n:if="$user->loggedIn" class="clearfix">
 
         <div class="pull-right">
-            <button type="button" class="btn btn-large btn-success" 
-                data-toggle="modal" data-target="#edit" title="Upraviť pravidlá a smernice">
+            <button type="button" class="{$btnSuccess}" 
+                    data-toggle="modal" data-target="#edit" title="Upraviť pravidlá a smernice">
                 <span class="glyphicon glyphicon-edit"></span>
             </button>
         </div>
 
     </div>
-    
+
     <div class="clearfix">
         <h1 n:block="title">Pravidlá a smernice</h1>
     </div>
@@ -40,10 +40,10 @@
 {/block}
 
 {block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">
-        CKEDITOR.replace('ckeditor');
-    </script>
+{include #parent}
+<script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+<script type="text/javascript">
+    CKEDITOR.replace('ckeditor');
+</script>
 {/block}
 

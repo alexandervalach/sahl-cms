@@ -22,7 +22,7 @@ class TablesRepository extends Repository {
             WHERE (`team_id` = ?) AND (`archive_id` IS NULL) AND (`type` = ?)", $value, $teamId, $type);
         return $tableRow;
     }
-    
+
     public function updateFights($teamId, $type) {
         $conn = $this->getConnection();
         $tableRow = $conn->query("UPDATE `tables` SET `counter` = `win` + `tram` + `lost` WHERE (`team_id` = ?) AND (`archive_id` IS NULL) AND (`type` = ?)", $teamId, $type);

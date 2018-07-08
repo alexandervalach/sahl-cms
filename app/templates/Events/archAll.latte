@@ -2,18 +2,18 @@
 
 <section class="content">
 
-	<div class="clearfix">
-		<h1 n:block="title">Rozpis zápasov</h1>
+    <div class="clearfix">
+        <h1 n:block="title">Rozpis zápasov</h1>
     </div>
 
     <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
-        
+
         <div class="clearfix">
             {$event->event|noescape}
         </div>
 
         <hr n:if="!$iterator->last" />
-        
+
     </article>
 
 </section>

@@ -194,6 +194,7 @@ class AlbumsPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @param array $values
+     * @return void
      */
     public function submittedAddImgForm(Form $form, $values) {
         $data = array();
@@ -202,16 +203,15 @@ class AlbumsPresenter extends BasePresenter {
             $name = strtolower($img->getSanitizedName());
             $data = array('name' => $name, 'album_id' => $this->albumRow);
 
-            if ($img->isOk() AND $img->isImage()) {
+            if (!$img->isOk() OR !$img->isImage()) {
                 throw new InvalidArgumentException;
-            }
+            } 
 
-            if ($img->move($this->imageDir . $name)) {
+            if (!$img->move($this->imageDir . $name)) {
                 throw new IOException;
             }
 
             $this->imagesRepository->insert($data);
-            $this->flashMessage('Obrázok bol pridaný', self::DANGER);
         }
 
         $this->flashMessage('Obrázky boli pridané', self::SUCCESS);

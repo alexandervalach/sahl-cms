@@ -109,7 +109,7 @@ class PostsPresenter extends BasePresenter {
         $form->addSubmit('cancel', 'Zrušiť')
                 ->setAttribute('class', self::BTN_WARNING)
                 ->setAttribute('data-dismiss', 'modal');
-        $form->addProtection();
+        $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -177,11 +177,9 @@ class PostsPresenter extends BasePresenter {
 
             if (!$file->isOK() || !$file->isImage()) {
                 throw new InvalidArgumentException;
-                $this->flashMessage('Obrázky neboli pridané', self::DANGER);
-                $this->redirect('view', $this->postRow);
             }
 
-            $img->move($this->imageDir . $name);
+            $file->move($this->imageDir . $name);
             $data = array('name' => $name, 'post_id' => $this->postRow);
             $this->postImagesRepository->insert($data);
         }

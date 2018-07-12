@@ -2,12 +2,13 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
-use Nette\Application\UI\Form;
-use Nette\Application\BadRequetsException;
-use Nette\Database\Table\ActiveRow;
-use Nette\Utils\FileSystem;
-use Nette\IOException;
+use \App\FormHelper;
+use \Nette\Application\UI\Form;
+use \Nette\Application\BadRequetsException;
+use \Nette\Database\Table\ActiveRow;
+use \Nette\Utils\FileSystem;
+use \Nette\IOException;
+use \Nette\Utils\ArrayHash;
 
 class TeamsPresenter extends BasePresenter {
 
@@ -129,16 +130,23 @@ class TeamsPresenter extends BasePresenter {
         $types = $this->playerTypesRepository->getTypes();
         $form = new Form;
         $form->addText('name', 'Meno a priezvisko');
-        $form->addText('num', 'Číslo');
+        $form->addText('num', 'Číslo')->setDefaultValue(0);
         $form->addSelect('type_id', 'Typ hráča', $types);
         $form->addCheckbox('trans', ' Prestupový hráč');
-        $form->addSubmit('add', 'Pridať');
+        $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_PLAYER_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }
 
-    public function submittedUploadForm(Form $form, $values) {
+    public function submittedAddPlayerForm(Form $form, ArrayHash $values) {
+        $values['team_id'] = $this->teamRow;
+        $this->playersRepository->insert($values);
+        $this->flashMessage('Hráč bol pridaný', self::SUCCESS);
+        $this->redirect('view', $this->teamRow);
+    }
+
+    public function submittedUploadForm(Form $form, ArrayHash $values) {
         $img = $values->image;
 
         if ($img->isOk() AND $img->isImage()) {
@@ -173,14 +181,14 @@ class TeamsPresenter extends BasePresenter {
         $this->redirect('all');
     }
 
-    public function submittedAddForm(Form $form, $values) {
+    public function submittedAddForm(Form $form, ArrayHash $values) {
         $team = $this->teamsRepository->insert($values);
         $this->tablesRepository->insert(array('team_id' => $team));
         $this->flashMessage('Tím bol pridaný', self::SUCCESS);
         $this->redirect('all');
     }
 
-    public function submittedEditForm(Form $form, $values) {
+    public function submittedEditForm(Form $form, ArrayHash $values) {
         $this->teamRow->update($values);
         $this->flashMessage('Tím bol upravený', self::SUCCESS);
         $this->redirect('view', $this->teamRow);

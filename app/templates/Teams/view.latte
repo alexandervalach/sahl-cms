@@ -71,7 +71,7 @@
                                     {$player->name} {if $type->abbr}- {$type->abbr}{/if}
                                 </a>
                             </td>
-                            <td>{$player->num}</td>
+                            <td>{if $player->num != 0}{$player->num}{/if}</td>
                         {else}
                             {for $j = 0; $j < 3; $j++}
                                 <td>&nbsp;</td>

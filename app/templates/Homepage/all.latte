@@ -49,7 +49,6 @@
     </section>
 
     <section n:foreach="$sideTableTypes as $type">
-
         <div class='table-responsive'>
             <table class='table leaderboard'>
                 <caption>
@@ -63,8 +62,8 @@
                         <td>{$iterator->counter}.</td>
                         <td>
                             <img src="{$basePath}/{$imgFolder}/{$team->logo}"
-                                 width="20px" alt="Logo {$team->name}"
-                                 n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                                width="20px" alt="Logo {$team->name}"
+                                n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
                             {$team->name}
                         </td>
                         <td>
@@ -74,7 +73,6 @@
                 </tbody>
             </table>
         </div>
-
     </section>
 
 </aside>
@@ -90,7 +88,7 @@
             <figure class="col-md-5 col-lg-5">
                 {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
                     <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' 
-                         class="img img-responsive" />
+                         class="img img-responsive"/>
                 {else}
                     <img src='{$basePath}/{$imgFolder}/{$defaultImg}' 
                          class="img img-responsive" />

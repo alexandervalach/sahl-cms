@@ -131,22 +131,12 @@ section#sponsors {
 }
 
 section#sponsors > figure {
-    padding: 3em;
+    padding: 2em;
     height: 20em;
 }
 
 #sponsors img {
-    -webkit-transition: margin-top 0.4s ease;
-    -moz-transition: margin-top 0.4s ease;
-    -o-transition: margin-top 0.4s ease;
-    transition: margin-top 0.4s ease;
-    margin: 2em 0;
-}
-
-#sponsors img:hover,
-#sponsors img:focus,
-#sponsors img:target {
-    margin-top: 1em;
+    margin: 0.5em 0;
 }
 
 #lightbox {
@@ -358,7 +348,19 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
 }
 
 .content article {
-    padding: 3em;
+    padding: 2em;
+}
+
+.content article main {
+    padding-bottom: 3em;
+}
+
+.content article header {
+    padding-bottom: 1em;
+}
+
+.content article main > figure > img {
+    padding-bottom: 2em;
 }
 
 main figure img {

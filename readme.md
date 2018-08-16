@@ -5,7 +5,7 @@ Pripravíme si čistý ubuntu server 16.04
 
 Potrebné balíky:
 
-    sudo apt-get install apache2 php git libapache2-mod-php
+    sudo apt-get install apache2 php php-xml git libapache2-mod-php mysql-server
 
 Aktivujeme potrebné apache moduly:
 
@@ -14,8 +14,8 @@ Aktivujeme potrebné apache moduly:
 	
 ## Postup pri inštalácii kopírovaním
 Projekt nakopírujeme do `/var/www/sahl` s tým, že všetky súbory sú čitateľné pre 
-používateľa `www-data`, ideálne ak je ich vlastníkom.
-Adresáre `temp` a `log` musia byť pre užívateľa `www-data` aj zapisovateľné.
+používateľa `www-data` (alebo stačí lokálny používateľ), ideálne ak je ich vlastníkom.
+Adresáre `temp` a `log` treba explicitne vytvoriť a musia byť pre užívateľa `www-data` aj zapisovateľné.
 
 ## Postup inštalácie z git repozitára
 Ako používateľ `root` vytvoríme používateľovi `www-data` adresár pre ssh kľúče. 
@@ -29,7 +29,7 @@ bez zmeny (umiestnenie, názov, heslo).
     sudo -u www-data ssh-keygen -t rsa
 
 Verejnú časť RSA kľúča - obsah súboru `id_rsa.pub` vložíme medzi deploy kľúče 
-v danom repozitári.
+v danom repozitári. Aby sme mohli robit git operácie cez SSH a nezadávali stále heslo.
 
 Vytvoríme adresár pre aplikáciu, vlastníkom bude používateľ `www-data`.
 
@@ -47,7 +47,7 @@ Stiahneme aktuálne zdrojáky a zmažeme cache.
     sudo rm -r /var/www/sahl/temp/cache
 
 ## Konfigurácia apache2
-Do `/etc/apache2/sites-available/000-default.conf` pridáme nasledujúci obsah.
+Do `/etc/apache2/sites-available/sahl.conf` pridáme nasledujúci obsah.
 
 ```
 #!apacheconf
@@ -64,6 +64,17 @@ Do `/etc/apache2/sites-available/000-default.conf` pridáme nasledujúci obsah.
 </VirtualHost>
 ```
 
+Načítame a povolíme konfiguráciu sahl
+
+    sudo a2ensite sahl.conf
+    
 Reštartujeme apache
 
     sudo service apache2 restart
+
+Zadáme `sudo nano /etc/hosts` a pridáme nasledujúci riadok, kde X je ľubovoľné nezadané číslo od 0 - 255
+
+    127.0.0.X sahl
+    
+Do prehliadača napíšeme http://sahl/
+Ešte treba pridať databázu stiahnuteľnú cez websupport admin a `config.local.neon` do adresára `app/config`

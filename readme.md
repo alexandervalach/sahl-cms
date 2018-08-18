@@ -38,7 +38,7 @@ Vytvoríme adresár pre aplikáciu, vlastníkom bude používateľ `www-data`.
 
 Vyklonujeme repozitár ako používateľ `www-data`.
 
-    sudo -u www-data -H git clone -b master git@bitbucket.org:alexandervalach/sahl.git /var/www/sahl
+    sudo -u www-data -H git clone -b master git@bitbucket.org:tandie/sahl.git /var/www/sahl
 
 ## Postup aktualizácie z git repozitára
 Stiahneme aktuálne zdrojáky a zmažeme cache.

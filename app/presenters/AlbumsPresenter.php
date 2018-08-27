@@ -205,9 +205,9 @@ class AlbumsPresenter extends BasePresenter {
 
             if (!$img->isOk() OR !$img->isImage()) {
                 throw new InvalidArgumentException;
-            } 
+            }
 
-            if (!$img->move($this->imageDir . $name)) {
+            if (!$img->move($this->imageDir . '/' . $name)) {
                 throw new IOException;
             }
 

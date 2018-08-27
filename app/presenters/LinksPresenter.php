@@ -79,7 +79,7 @@ class LinksPresenter extends BasePresenter {
         $name = strtolower($img->getSanitizedName());
         try {
             if ($img->isOk() AND $img->isImage()) {
-                $img->move($this->imageDir . "/" . $name);
+                $img->move($this->imageDir . '/' . $name);
             }
             $this->linksRepository->insert($values);
             $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);

@@ -151,7 +151,7 @@ class TeamsPresenter extends BasePresenter {
 
         if ($img->isOk() AND $img->isImage()) {
             $img_name = $img->getSanitizedName();
-            $img->move($this->imageDir . $img_name);
+            $img->move($this->imageDir . '/' . $img_name);
             $data = array('image' => $img_name);
             $this->teamRow->update($data);
             $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);

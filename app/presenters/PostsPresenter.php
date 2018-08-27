@@ -179,7 +179,7 @@ class PostsPresenter extends BasePresenter {
                 throw new InvalidArgumentException;
             }
 
-            $file->move($this->imageDir . $name);
+            $file->move($this->imageDir . '/' . $name);
             $data = array('name' => $name, 'post_id' => $this->postRow);
             $this->postImagesRepository->insert($data);
         }

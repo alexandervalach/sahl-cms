@@ -22,7 +22,6 @@ use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
 use App\Model\TopicsRepository;
 use App\Model\TeamsRepository;
-use App\Services\WebDir;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Security\AuthenticationException;
@@ -122,12 +121,12 @@ abstract class BasePresenter extends Presenter {
     protected $webDir;
 
     /** @var string */
-    protected $imageDir;
+    protected $imageDir = 'images';
 
     /** @persistent */
     protected $backlink;
 
-    public function __construct(WebDir $webDir, ArchivesRepository $archivesRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, TopicsRepository $topicsRepository, ImagesRepository $imagesRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImagesRepository $postImagesRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RepliesRepository $repliesRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository) {
+    public function __construct(ArchivesRepository $archivesRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, TopicsRepository $topicsRepository, ImagesRepository $imagesRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImagesRepository $postImagesRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RepliesRepository $repliesRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository) {
         parent::__construct();
         $this->archivesRepository = $archivesRepository;
         $this->albumsRepository = $albumsRepository;
@@ -148,8 +147,6 @@ abstract class BasePresenter extends Presenter {
         $this->rulesRepository = $rulesRepository;
         $this->tablesRepository = $tablesRepository;
         $this->teamsRepository = $teamsRepository;
-        $this->webDir = $webDir;
-        $this->imageDir = $this->webDir->getPath(self::IMG_FOLDER . DIRECTORY_SEPARATOR);
         $this->backlink = '';
     }
 

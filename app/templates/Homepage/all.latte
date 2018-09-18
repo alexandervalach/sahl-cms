@@ -88,7 +88,7 @@
             <figure class="col-md-5 col-lg-5">
                 {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
                     <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' 
-                         class="img img-responsive"/>
+                         class="img img-responsive" />
                 {else}
                     <img src='{$basePath}/{$imgFolder}/{$defaultImg}' 
                          class="img img-responsive" />

@@ -23,6 +23,7 @@ class PlayersPresenter extends BasePresenter {
 
     public function renderAll() {
         $this->template->players = $this->playersRepository->findByValue('archive_id', null)
+                ->where('name NOT LIKE ?', 'voľné miesto%')
                 ->where('name != ?', ' ')
                 ->order('goals DESC, name DESC');
         $this->template->i = 0;

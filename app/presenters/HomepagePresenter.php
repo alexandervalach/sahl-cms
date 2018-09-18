@@ -9,7 +9,7 @@ class HomepagePresenter extends BasePresenter {
 
     public function renderAll() {
         $posts = $this->postsRepository->findAll()->order('id DESC')->limit(3);
-        $sideTables = [];
+        $sideTables = array();
 
         if ($this->sideTableTypes == null) {
             $this->sideTableTypes = $this->tableTypesRepository->findByValue('visible = ?', 1);

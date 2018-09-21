@@ -48,6 +48,10 @@ article footer {
     color: #000;
 }
 
+.overflow-container {
+    overflow-x: auto;
+}
+
 #main h1 {
     text-transform: uppercase;
     font-weight: bold;
@@ -361,10 +365,6 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
 
 .content article main > figure > img {
     padding-bottom: 2em;
-}
-
-.overflow-container {
-    overflow-x: scroll;
 }
 
 main figure img {

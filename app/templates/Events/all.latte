@@ -5,7 +5,7 @@
     <div class="clearfix">
 
         <div n:if="$user->loggedIn" class="pull-right">
-            <button type="button" class="{$btnPrimary}" 
+            <button type="button" class="{$btnPrimary}"
                     data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
                 <span class="glyphicon glyphicon-plus"></span>
             </button>
@@ -27,7 +27,7 @@
             <a n:href="edit $event" class="btn btn-large btn-success">
                 <span class="glyphicon glyphicon-edit"></span>
             </a>
-            <a n:href="remove $event" class="btn btn-large btn-danger">    
+            <a n:href="remove $event" class="btn btn-large btn-danger">
                 <span class="glyphicon glyphicon-trash"></span>
             </a>
         </div>

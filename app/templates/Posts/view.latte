@@ -5,56 +5,56 @@
     <div class="clearfix" n:if="$user->loggedIn">
 
         <div class="pull-right">
-        
-            <button type="button" class='{$btnSuccess}' 
+
+            <button type="button" class='{$btnSuccess}'
                 data-target="#edit" data-toggle="modal" title="Upraviť článok">
                 <span class="glyphicon glyphicon-edit"></span>
             </button>
-            
-            <button type="button" class='{$btnPrimary}' 
+
+            <button type="button" class='{$btnPrimary}'
                 data-target="#upload" data-toggle="modal" title="Nahrať obrázky k článku">
                 <span class="glyphicon glyphicon-upload"></span>
             </button>
 
-            <button type="button" class='{$btnDanger}' 
+            <button type="button" class='{$btnDanger}'
                 data-target="#remove" data-toggle="modal" title="Odstrániť článok">
                 <span class="glyphicon glyphicon-trash"></span>
             </button>
-    
+
         </div>
 
     </div>
 
     <article>
-        
+
         <header>
             <h1 n:block="title">{$post->title}</h1>
         </header>
 
-        <main>
+        <main class="overflow-container">
             {$post->content|noescape}
         </main>
 
     </article>
-    
+
     {var $count = $images->count()}
     <hr n:if="$count" />
 
     <div id="post-images" n:if="$count" class="clearfix">
 
-        <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6' 
+        <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6'
             style="margin-top: 1em">
 
             <img n:if="file_exists($imgFolder . '/' . $img->name) or $user->loggedIn"
-                src="{$basePath}/{$imgFolder}/{$img->name}" 
+                src="{$basePath}/{$imgFolder}/{$img->name}"
                 class='img img-responsive' alt="{$img->name}" />
 
             <figcaption n:if="$user->loggedIn" class="text-center" style="margin-top: 1em">
-                <a n:href="setImg, $img->post_id, $img" class='{$btnPrimary}' 
+                <a n:href="setImg, $img->post_id, $img" class='{$btnPrimary}'
                     title="Nastaviť obrázok ako miniatúru článku">
                     <span class="glyphicon glyphicon-picture"></span>
                 </a>
-                <a n:href="removeImg, $img->post_id, $img" class='{$btnDanger}' 
+                <a n:href="removeImg, $img->post_id, $img" class='{$btnDanger}'
                     title="Odstrániť obrázok">
                     <span class="glyphicon glyphicon-trash"></span>
                 </a>

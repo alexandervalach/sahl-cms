@@ -5,7 +5,7 @@
     <div n:if="$user->loggedIn" class="clearfix">
 
         <div class="pull-right">
-            <button type="button" class="{$btnSuccess}" 
+            <button type="button" class="{$btnSuccess}"
                     data-toggle="modal" data-target="#edit" title="Upraviť pravidlá a smernice">
                 <span class="glyphicon glyphicon-edit"></span>
             </button>
@@ -17,7 +17,7 @@
         <h1 n:block="title">Pravidlá a smernice</h1>
     </div>
 
-    <div>
+    <div class="overflow-container">
         {$rule->rule|noescape}
     </div>
 

@@ -348,12 +348,10 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
 }
 
 .content article {
-    overflow-x: scroll;
     padding: 2em;
 }
 
 .content article main {
-    overflow-x: scroll;
     padding-bottom: 3em;
 }
 
@@ -365,7 +363,7 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
     padding-bottom: 2em;
 }
 
-.content > div {
+.overflow-container {
     overflow-x: scroll;
 }
 

@@ -17,9 +17,9 @@
         <h1 n:block="title">Rozpis zápasov</h1>
     </div>
 
-    <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
-
-        <div class="clearfix">
+    <article n:foreach="$events as $event"
+        class="clearfix text-center" style="padding: 2em">
+        <div class="overflow-container">
             {$event->event|noescape}
         </div>
 

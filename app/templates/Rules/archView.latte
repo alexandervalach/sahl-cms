@@ -5,7 +5,7 @@
         <h1 n:block="title">Pravidlá a smernice</h1>
     </div>
 
-    <article n:foreach="$rules as $rule">
+    <article n:foreach="$rules as $rule" class="overflow-container">
         {$rule->rule|noescape}
     </article>
 </section>

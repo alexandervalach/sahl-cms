@@ -31,6 +31,7 @@ use Nette\Security\AuthenticationException;
  */
 abstract class BasePresenter extends Presenter {
 
+    /* Defined Constants */
     const ADD_FORM = 'addForm';
     const EDIT_FORM = 'editForm';
     const REMOVE_FORM = 'removeForm';
@@ -126,6 +127,9 @@ abstract class BasePresenter extends Presenter {
     /** @persistent */
     protected $backlink;
 
+    /**
+     * Base constructor
+     */
     public function __construct(ArchivesRepository $archivesRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, TopicsRepository $topicsRepository, ImagesRepository $imagesRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImagesRepository $postImagesRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RepliesRepository $repliesRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository) {
         parent::__construct();
         $this->archivesRepository = $archivesRepository;
@@ -150,11 +154,17 @@ abstract class BasePresenter extends Presenter {
         $this->backlink = '';
     }
 
+    /**
+     * Method for saving previous link
+     */
     protected function startup() {
         parent::startup();
         $this->backlink = $this->storeRequest();
     }
 
+    /**
+     * Set before content rendering
+     */
     public function beforeRender() {
         $this->template->links = $this->linksRepository->findByValue('sponsor', 0)
                 ->order('title');
@@ -178,9 +188,13 @@ abstract class BasePresenter extends Presenter {
         $this->template->btnDefault = self::BTN_DEFAULT;
     }
 
+    /**
+     * Component for creating a remove form
+     * @return Nette\Application\UI\Form
+     */
     protected function createComponentRemoveForm() {
         $form = new Form;
-        $form->addSubmit('delete', 'Odstrániť')
+        $form->addSubmit('remove', 'Odstrániť')
                 ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
                 ->setAttribute('class', self::BTN_WARNING)
@@ -190,13 +204,16 @@ abstract class BasePresenter extends Presenter {
         return $form;
     }
 
+    /**
+     * Component for creating a sign in form
+     * @return Nette\Application\UI\Form
+     */
     protected function createComponentSignInForm() {
         $form = new Form;
         $form->addText('username', 'Používateľské meno')
                 ->setRequired('Zadajte používateľské meno');
         $form->addPassword('password', 'Heslo')
                 ->setRequired('Zadajte heslo');
-        $form->addCheckbox('remember', ' Trvalé prihlásenie');
         $form->addSubmit('login', 'Prihlásiť');
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, 'submittedSignInForm'];
@@ -204,6 +221,12 @@ abstract class BasePresenter extends Presenter {
         return $form;
     }
 
+    /**
+     * Checking whether user exists
+     *
+     * @param Nette\Application\UI\Form $form
+     * @param array $values
+     */
     public function submittedSignInForm(Form $form, $values) {
         try {
             $this->getUser()->login($values->username, $values->password);
@@ -216,12 +239,18 @@ abstract class BasePresenter extends Presenter {
         }
     }
 
+    /**
+     * Log out action routing
+     */
     public function actionOut() {
         $this->getUser()->logout();
         $this->flashMessage('Boli ste odhlásený', self::SUCCESS);
         $this->redirect('Homepage:all');
     }
 
+    /**
+     * Checks whether User is logged
+     */
     protected function userIsLogged() {
         if (!$this->user->isLoggedIn()) {
             $this->redirect('Homepage:all');

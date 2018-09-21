@@ -20,6 +20,9 @@ class AlbumsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $imgRow;
 
+    /**
+     * Passes prepared data to template
+     */
     public function renderAll() {
         $this->template->albums = $this->albumsRepository->findAll();
 
@@ -29,16 +32,18 @@ class AlbumsPresenter extends BasePresenter {
     }
 
     /**
-     * @param integer $id
+     * Loads album data
+     *
+     * @param ActiveRow|string $id
      */
     public function actionView($id) {
         $this->albumRow = $this->albumsRepository->findById($id);
     }
 
     /**
-     * @param integer $id
+     * @param string $id
      */
-    public function renderView($id) {
+    public function renderView(string $id) {
         if (!$this->albumRow) {
             throw new BadRequestException(self::ALBUM_NOT_FOUND);
         }
@@ -53,10 +58,10 @@ class AlbumsPresenter extends BasePresenter {
     }
 
     /**
-     * @param integer $album_id
-     * @param integer $id
+     * @param int $album_id
+     * @param ActiveRow|string $id
      */
-    public function actionSetImg($album_id, $id) {
+    public function actionSetImg(int $album_id, $id) {
         $this->userIsLogged();
         $this->albumRow = $this->albumsRepository->findById($album_id);
         $this->imgRow = $this->imagesRepository->findById($id);
@@ -64,7 +69,7 @@ class AlbumsPresenter extends BasePresenter {
     }
 
     /**
-     * @param integer $id
+     * @param ActiveRow|string $id
      */
     public function actionRemoveImg($id) {
         $this->userIsLogged();
@@ -79,7 +84,8 @@ class AlbumsPresenter extends BasePresenter {
      * Creates add album form
      * @return Nette\Application\UI\Form
      */
-    protected function createComponentAddForm() {
+    protected function createComponentAddForm(): Form
+    {
         $form = new Form;
         $form->addText('name', 'Názov')
                 ->setRequired("Názov je povinné pole.");
@@ -142,18 +148,33 @@ class AlbumsPresenter extends BasePresenter {
         return $form;
     }
 
-    public function submittedAddForm(Form $form, $values) {
+    /**
+     * Adds form values to database
+     *
+     * @param Nette\Application\UI\Form $form
+     * @param array $values
+     */
+    public function submittedAddForm(Form $form, array $values) {
         $this->albumsRepository->insert($values);
         $this->flashMessage('Album bol pridaný', self::SUCCESS);
         $this->redirect('all');
     }
 
-    public function submittedEditForm(Form $form, $values) {
+    /**
+     * Submites edited values to database
+     *
+     * @param Nette\Application\UI\Form $form
+     * @param array $values
+     */
+    public function submittedEditForm(Form $form, array $values) {
         $this->albumRow->update($values);
         $this->flashMessage('Album bol upravený', self::SUCCESS);
         $this->redirect('view', $this->albumRow);
     }
 
+    /***
+     * Removes albums and related records from database
+     */
     public function submittedRemoveForm() {
         $imgs = $this->albumRow->related('images');
 
@@ -172,6 +193,9 @@ class AlbumsPresenter extends BasePresenter {
         $this->redirect('all');
     }
 
+    /**
+     * Removes an image from database and filesystem
+     */
     public function submittedRemoveImg() {
         $album = $this->imgRow->album_id;
         try {
@@ -192,9 +216,10 @@ class AlbumsPresenter extends BasePresenter {
     }
 
     /**
-     * @param Form $form
+     * Adds image into database and filesystem
+     *
+     * @param Nette\Application\UI\Form $form
      * @param array $values
-     * @return void
      */
     public function submittedAddImgForm(Form $form, $values) {
         $data = array();

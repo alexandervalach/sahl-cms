@@ -39,14 +39,11 @@ class TopicsPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('title', 'Názov novej témy:')
-                ->addRule(Form::FILLED, 'Názov je povinné pole.');
+            ->addRule(Form::FILLED, 'Názov je povinné pole.');
         $form->addText('author', 'Meno:')
-                ->setRequired("Meno je povinné pole.");
-        $form->addText('url', 'Nevypĺňať')
-                ->setAttribute('style', 'display: none')
-                ->setOmitted();
+            ->setRequired("Meno je povinné pole.");
         $form->addTextArea('message', 'Príspevok:')
-                ->setAttribute('class', 'form-control');
+            ->setAttribute('class', 'form-control');
         $form->addSubmit('add', self::ADD_BTN_LABEL);
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -55,19 +52,28 @@ class TopicsPresenter extends BasePresenter {
 
     public function submittedRemoveForm() {
         $this->forumRow->delete();
-        $this->flashMessage('Téme bola odstránená', self::SUCCESS);
+        $this->flashMessage('Téma bola odstránená', self::SUCCESS);
         $this->redirect('all');
     }
 
     public function submittedAddForm(Form $form, $values) {
-        $url = filter_input(INPUT_POST, 'url');
+        $secret = '6LcniXEUAAAAAF1vYyHLIesVsoqBWg0xceHwT7CD';
+        $verify = file_get_contents(
+            'https://www.google.com/recaptcha/api/siteverify?secret=' .
+            $secret .
+            '&response=' .
+            filter_input(INPUT_POST, 'g-recaptcha-response')
+        );
+        $res = json_decode($verify);
 
-        if (isset($url) && $url == '') {
+        if ($res->success) {
             $values['created_at'] = date('Y-m-d H:i:s');
             $this->topicsRepository->insert($values);
-            $this->flashMessage('Téme bola vytvorená', self::SUCCESS);
+            $this->flashMessage('Téma bola vytvorená', self::SUCCESS);
+        } else {
+            $this->flashMessage('Vyzerá to, že nie ste človek', self::DANGER);
+            $this->redirect('all');
         }
-        $this->redirect('all');
     }
 
     public function formCancelled() {

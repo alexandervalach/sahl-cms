@@ -81,6 +81,7 @@ class LinksPresenter extends BasePresenter {
             if ($img->isOk() AND $img->isImage()) {
                 $img->move($this->imageDir . '/' . $name);
             }
+            $values['image'] = $name;
             $this->linksRepository->insert($values);
             $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
         } catch (IOException $e) {

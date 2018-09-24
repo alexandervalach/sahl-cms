@@ -24,6 +24,4 @@
 /temp/
 /www/images/
 /app/config/
-/nbproject/private/
-/composer.phar
-/nbproject/
+/vendor/

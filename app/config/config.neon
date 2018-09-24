@@ -47,5 +47,4 @@ services:
 	- App\Model\TableTypesRepository
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository
-	- App\Model\TopicsRepository
 	webDir: App\Services\WebDir(%wwwDir%)

@@ -257,7 +257,7 @@ nav.navbar {
 }
 
 nav.navbar > div {
-    margin: 0 15%;
+    margin: 0 20%;
 }
 
 nav.navbar ul.nav > li > a,
@@ -363,8 +363,13 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
     padding-bottom: 1em;
 }
 
-.content article main > figure > img {
+.content article main figure img {
     padding-bottom: 2em;
+}
+
+.image-centered {
+    display: block;
+    margin: 0 auto;
 }
 
 main figure img {

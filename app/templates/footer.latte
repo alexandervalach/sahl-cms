@@ -11,9 +11,9 @@
         </p>
     </section>
 
-    <section n:if="!$user->loggedIn">
+    <section n:if="!$user->loggedIn" class="hidden-xs">
 
-        <button type="button" class="{$btnInfo}" 
+        <button type="button" class="{$btnInfo}"
                 data-target="#sign-in" data-toggle="modal" title="Prihlásenie do administrácie">
             Administrácia
         </button>
@@ -37,7 +37,7 @@
             <ul>
                 <li><strong>Systém vytvoril a udržiava</strong></li>
                 <li>
-                    <a href="https://www.linkedin.com/in/alexander-valach-351019107" 
+                    <a href="https://www.linkedin.com/in/alexander-valach-351019107"
                        target="_blank" title="Profil autora">
                         Alexander Valach
                     </a>
@@ -46,7 +46,7 @@
         </div>
 
         <div>
-            &copy; 2014 - {date('Y')}, Postavené na 
+            &copy; 2014 - {date('Y')}, Postavené na
             <a target="_blank" href="https://nette.org/" title="Stránka frameworku">Nette</a>
         </div>
 

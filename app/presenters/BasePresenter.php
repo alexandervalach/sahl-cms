@@ -20,7 +20,6 @@ use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
 use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
-use App\Model\TopicsRepository;
 use App\Model\TeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
@@ -55,7 +54,6 @@ abstract class BasePresenter extends Presenter {
     const DEFAULT_IMG = 'sahl.png';
     const CSRF_TOKEN_EXPIRED = 'Platnosť formulára vypršala. Odošlite ho, prosím, znovu.';
     const IMG_NOT_FOUND = 'Image not found';
-    const TOPIC_NOT_FOUND = 'Topic not found';
     const PLAYER_NOT_FOUND = 'Player not found';
     const ROUND_NOT_FOUND = 'Round not found';
     const ARCHIVE_NOT_FOUND = 'Archive not found';
@@ -115,9 +113,6 @@ abstract class BasePresenter extends Presenter {
     /** @var TeamsRepository */
     protected $teamsRepository;
 
-    /** @var TopicsRepository */
-    protected $topicsRepository;
-
     /** @var string */
     protected $webDir;
 
@@ -130,13 +125,30 @@ abstract class BasePresenter extends Presenter {
     /**
      * Base constructor
      */
-    public function __construct(ArchivesRepository $archivesRepository, AlbumsRepository $albumsRepository, EventsRepository $eventsRepository, FightsRepository $fightsRepository, TopicsRepository $topicsRepository, ImagesRepository $imagesRepository, GoalsRepository $goalsRepository, LinksRepository $linksRepository, tableTypesRepository $tableTypesRepository, PlayerTypesRepository $playerTypesRepository, PlayersRepository $playersRepository, PostImagesRepository $postImagesRepository, PostsRepository $postsRepository, PunishmentsRepository $punishmentsRepository, RepliesRepository $repliesRepository, RoundsRepository $roundsRepository, RulesRepository $rulesRepository, TablesRepository $tablesRepository, TeamsRepository $teamsRepository) {
+    public function __construct(ArchivesRepository $archivesRepository,
+        AlbumsRepository $albumsRepository,
+        EventsRepository $eventsRepository,
+        FightsRepository $fightsRepository,
+        ImagesRepository $imagesRepository,
+        GoalsRepository $goalsRepository,
+        LinksRepository $linksRepository,
+        tableTypesRepository $tableTypesRepository,
+        PlayerTypesRepository $playerTypesRepository,
+        PlayersRepository $playersRepository,
+        PostImagesRepository $postImagesRepository,
+        PostsRepository $postsRepository,
+        PunishmentsRepository $punishmentsRepository,
+        RepliesRepository $repliesRepository,
+        RoundsRepository $roundsRepository,
+        RulesRepository $rulesRepository,
+        TablesRepository $tablesRepository,
+        TeamsRepository $teamsRepository)
+    {
         parent::__construct();
         $this->archivesRepository = $archivesRepository;
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
         $this->fightsRepository = $fightsRepository;
-        $this->topicsRepository = $topicsRepository;
         $this->imagesRepository = $imagesRepository;
         $this->goalsRepository = $goalsRepository;
         $this->linksRepository = $linksRepository;

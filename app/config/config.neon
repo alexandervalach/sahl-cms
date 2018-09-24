@@ -41,7 +41,6 @@ services:
 	- App\Model\PostImagesRepository
 	- App\Model\PostsRepository
 	- App\Model\PunishmentsRepository
-	- App\Model\RepliesRepository
 	- App\Model\RoundsRepository
 	- App\Model\RulesRepository
 	- App\Model\TableTypesRepository

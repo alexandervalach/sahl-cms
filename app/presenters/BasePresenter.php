@@ -15,7 +15,6 @@ use App\Model\PlayerTypesRepository;
 use App\Model\PostImagesRepository;
 use App\Model\PostsRepository;
 use App\Model\PunishmentsRepository;
-use App\Model\RepliesRepository;
 use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
 use App\Model\TableTypesRepository;
@@ -98,9 +97,6 @@ abstract class BasePresenter extends Presenter {
     /** @var PunishmentsRepository */
     protected $punishmentsRepository;
 
-    /** @var RepliesRepository */
-    protected $repliesRepository;
-
     /** @var RoundsRepository */
     protected $roundsRepository;
 
@@ -138,7 +134,6 @@ abstract class BasePresenter extends Presenter {
         PostImagesRepository $postImagesRepository,
         PostsRepository $postsRepository,
         PunishmentsRepository $punishmentsRepository,
-        RepliesRepository $repliesRepository,
         RoundsRepository $roundsRepository,
         RulesRepository $rulesRepository,
         TablesRepository $tablesRepository,
@@ -158,7 +153,6 @@ abstract class BasePresenter extends Presenter {
         $this->postImagesRepository = $postImagesRepository;
         $this->postsRepository = $postsRepository;
         $this->punishmentsRepository = $punishmentsRepository;
-        $this->repliesRepository = $repliesRepository;
         $this->roundsRepository = $roundsRepository;
         $this->rulesRepository = $rulesRepository;
         $this->tablesRepository = $tablesRepository;

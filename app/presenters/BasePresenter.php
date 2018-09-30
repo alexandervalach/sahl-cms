@@ -20,6 +20,7 @@ use App\Model\RoundsRepository;
 use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
+use App\Model\UsersRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Security\AuthenticationException;
@@ -109,6 +110,9 @@ abstract class BasePresenter extends Presenter {
     /** @var TeamsRepository */
     protected $teamsRepository;
 
+    /** @var UsersRepository */
+    protected $usersRepository;
+
     /** @var string */
     protected $webDir;
 
@@ -137,7 +141,8 @@ abstract class BasePresenter extends Presenter {
         RoundsRepository $roundsRepository,
         RulesRepository $rulesRepository,
         TablesRepository $tablesRepository,
-        TeamsRepository $teamsRepository)
+        TeamsRepository $teamsRepository,
+        UsersRepository $usersRepository)
     {
         parent::__construct();
         $this->archivesRepository = $archivesRepository;
@@ -157,6 +162,7 @@ abstract class BasePresenter extends Presenter {
         $this->rulesRepository = $rulesRepository;
         $this->tablesRepository = $tablesRepository;
         $this->teamsRepository = $teamsRepository;
+        $this->usersRepository = $usersRepository;
         $this->backlink = '';
     }
 
@@ -205,6 +211,7 @@ abstract class BasePresenter extends Presenter {
         $form->addSubmit('cancel', 'Zrušiť')
                 ->setAttribute('class', self::BTN_WARNING)
                 ->setAttribute('data-dismiss', 'modal');
+        $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -220,6 +227,7 @@ abstract class BasePresenter extends Presenter {
                 ->setRequired('Zadajte používateľské meno');
         $form->addPassword('password', 'Heslo')
                 ->setRequired('Zadajte heslo');
+        $form->addCheckbox('remember', ' Zapamätať si ma na 30 dní');
         $form->addSubmit('login', 'Prihlásiť');
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, 'submittedSignInForm'];
@@ -232,14 +240,20 @@ abstract class BasePresenter extends Presenter {
      *
      * @param Nette\Application\UI\Form $form
      * @param array $values
+     * @throws Nette\Security\AuthenticationException
      */
     public function submittedSignInForm(Form $form, $values) {
+        if ($values->remember) {
+            $this->user->setExpiration('30 days', FALSE);
+        } else {
+            $this->user->setExpiration('30 minutes', TRUE);
+        }
+
         try {
-            $this->getUser()->login($values->username, $values->password);
+            $this->user->login($values->username, $values->password);
             $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
-            $this->restoreRequest($this->backlink);
             $this->redirect('Homepage:all');
-        } catch (AuthenticationException $e) {
+        } catch (Nette\Security\AuthenticationException $e) {
             $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
             $this->redirect('Homepage:all');
         }

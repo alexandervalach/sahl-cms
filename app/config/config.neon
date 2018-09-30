@@ -21,14 +21,10 @@ nette:
 		expiration: 30 days
 		autoStart: yes
 
-	security:
-		users:
-			alexander.valach:	WallacH789	#	users'user',	passwords'user'
-			sahl:	MatusLipcak11	#	users'user',	passwords'user'
-
 services:
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
+	authenticator: App\Model\UserManager
 	- App\Model\AlbumsRepository
 	- App\Model\ArchivesRepository
 	- App\Model\EventsRepository
@@ -46,4 +42,4 @@ services:
 	- App\Model\TableTypesRepository
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository
-	webDir: App\Services\WebDir(%wwwDir%)
+	- App\Model\UsersRepository

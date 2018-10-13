@@ -76,6 +76,19 @@ class TablesPresenter extends BasePresenter {
         return $form;
     }
 
+    protected function createComponentResetForm() {
+        $form = new Form;
+        $form->addSubmit('reset', 'Vynulovať')
+             ->setAttribute('class', self::BTN_DANGER)
+             ->onClick[] = $this->submittedResetForm;
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
+        $form->addProtection();
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
     public function submittedEditForm(Form $form, $values) {
         $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
         $this->tableRow->update($values);
@@ -92,6 +105,26 @@ class TablesPresenter extends BasePresenter {
     public function submittedSetVisible() {
         $this->tableRow->update(array('visible' => 1));
         $this->flashMessage('Tabuľka bola pridaná na domovskú stránku', self::SUCCESS);
+        $this->redirect('all');
+    }
+
+    public function submittedResetForm() {
+        $rows = $this->tablesRepository->findByValue('archive_id', null);
+        
+        $values = array(
+            'counter' => 0,
+            'win' => 0,
+            'tram' => 0,
+            'lost' => 0,
+            'score1' => 0,
+            'score2' => 0,
+            'points' => 0
+        );
+        
+        foreach ($rows as $row) {
+            $row->update($values);
+        }
+        
         $this->redirect('all');
     }
 

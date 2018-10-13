@@ -84,7 +84,7 @@ class AlbumsPresenter extends BasePresenter {
      * Creates add album form
      * @return Nette\Application\UI\Form
      */
-    protected function createComponentAddForm(): Form
+    protected function createComponentAddForm()
     {
         $form = new Form;
         $form->addText('name', 'Názov')

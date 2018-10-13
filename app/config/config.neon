@@ -19,7 +19,7 @@ nette:
 
 	session:
 		expiration: 30 days
-		autoStart: yes
+		debugger: true
 
 services:
 	- App\RouterFactory

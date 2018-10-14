@@ -227,7 +227,7 @@ abstract class BasePresenter extends Presenter {
                 ->setRequired('Zadajte používateľské meno');
         $form->addPassword('password', 'Heslo')
                 ->setRequired('Zadajte heslo');
-        $form->addCheckbox('remember', ' Zapamätať si ma na 30 dní');
+        $form->addCheckbox('remember', ' Zapamätať si ma na 7 dní');
         $form->addSubmit('login', 'Prihlásiť');
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, 'submittedSignInForm'];
@@ -244,7 +244,7 @@ abstract class BasePresenter extends Presenter {
      */
     public function submittedSignInForm(Form $form, $values) {
         if ($values->remember) {
-            $this->user->setExpiration('30 days', FALSE);
+            $this->user->setExpiration('7 days', FALSE);
         } else {
             $this->user->setExpiration('30 minutes', TRUE);
         }

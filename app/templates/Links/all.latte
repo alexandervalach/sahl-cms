@@ -12,31 +12,55 @@
     </div>
 </section>
 
-<div class="table-responsive" n:if="$all_links->count()">
-    <table class="table">
-        <caption>Navštívte aj tieto stránky</caption>
-        <tbody>
-            <tr n:foreach="$all_links as $link">
-                <td>
-                    <a href="{$link->anchor}" target="_blank">{$link->title}</a>
-                </td>
-                <td class="text-center">
-                    {if $link->sponsor}SPONZOR{else}ODKAZ{/if}
-                </td>
-                <td>
-                    <a n:href="edit $link" class="text-success text-center">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                </td>
-                <td>
-                    <a n:href="remove $link" class="text-danger text-center">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+{if $sponsors->count()}
+    <div class="table-responsive">
+        <table class="table">
+            <caption>Sponzori</caption>
+            <tbody>
+                <tr n:foreach="$sponsors as $link">
+                    <td>
+                        <a href="{$link->anchor}" target="_blank">{$link->title}</a>
+                    </td>
+                    <td>
+                        <a n:href="edit $link" class="text-success text-center">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a n:href="remove $link" class="text-danger text-center">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{/if}
+
+{if $links->count()}
+    <div class="table-responsive">
+        <table class="table">
+            <caption>Odkazy</caption>
+            <tbody>
+                <tr n:foreach="$links as $link">
+                    <td>
+                        <a href="{$link->anchor}" target="_blank">{$link->title}</a>
+                    </td>
+                    <td>
+                        <a n:href="edit $link" class="text-success text-center">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a n:href="remove $link" class="text-danger text-center">
+                            <span class="glyphicon glyphicon-trash"></span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{/if}
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
     <div class="modal-dialog">

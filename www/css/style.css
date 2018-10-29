@@ -129,18 +129,30 @@ div.table-responsive .table {
     margin-top: 0.5em;
 }
 
-section#sponsors {
+#teams figure {
+    margin-bottom: 2em;
+}
+
+#teams figure figcaption {
+    margin-bottom: 0.5em;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.25em;
+}
+
+#teams figure > div {
+    margin-top: 0.5vh;
+    height: 35vh;
+}
+
+#sponsors {
     width: 60%;
     margin: 2em 20%;
 }
 
-section#sponsors > figure {
-    padding: 2em;
-    height: 20em;
-}
-
-#sponsors img {
-    margin: 0.5em 0;
+#sponsors figure {
+    padding: 2rem;
+    min-height: 20vh;
 }
 
 #lightbox {
@@ -257,7 +269,7 @@ nav.navbar {
 }
 
 nav.navbar > div {
-    margin: 0 20%;
+    margin: 0 19vw;
 }
 
 nav.navbar ul.nav > li > a,

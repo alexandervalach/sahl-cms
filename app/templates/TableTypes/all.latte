@@ -17,42 +17,44 @@
 
 </section>
 
-<div n:if="$types->count()" class="table-responsive">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Názov</th>
-                <th colspan="3"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr n:foreach="$types as $type">
-                <td>{$type->name}</td>
-                <td>
-                    <a n:if="$iterator->counter > 2" n:href="edit $type" class="text-success">
-                        <span class="glyphicon glyphicon-pencil"></span>
-                    </a>
-                </td>
-                <td>
-                    <a n:if="$iterator->counter > 2" n:href="delete $type" class="text-danger">
-                        <span class="glyphicon glyphicon-trash"></span>
-                    </a>
-                </td>
-                <td>
-                    {if !$type->visible}
-                        <a n:href="show $type" class="text-success">
-                            <span class="glyphicon glyphicon-eye-close"></span>
+{if $types->count()}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Názov</th>
+                    <th colspan="3"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr n:foreach="$types as $type">
+                    <td>{$type->name}</td>
+                    <td>
+                        <a n:if="$iterator->counter > 2" n:href="edit $type" class="text-success">
+                            <span class="glyphicon glyphicon-pencil"></span>
                         </a>
-                    {else}
-                        <a n:href="hide $type" class="text-success">
-                            <span class="glyphicon glyphicon-eye-open"></span>
+                    </td>
+                    <td>
+                        <a n:if="$iterator->counter > 2" n:href="delete $type" class="text-danger">
+                            <span class="glyphicon glyphicon-trash"></span>
                         </a>
-                    {/if}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+                    </td>
+                    <td>
+                        {if !$type->visible}
+                            <a n:href="show $type" class="text-success">
+                                <span class="glyphicon glyphicon-eye-close"></span>
+                            </a>
+                        {else}
+                            <a n:href="hide $type" class="text-success">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                            </a>
+                        {/if}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{/if}
 
 <div id="add" class="modal fade" role="dialog">
     <div class="modal-dialog">

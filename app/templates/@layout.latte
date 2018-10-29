@@ -23,19 +23,21 @@
             {include 'teams.latte'}
 
             <main class="col-md-11 col-lg-8">
-                <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    {if $flash->type == 'success'}
-                        {var $state = "ok"}
-                    {elseif $flash->type == 'danger'}
-                        {var $state = "remove"}
-                    {elseif $flash->type == 'warning'}
-                        {var $state = "warning-sign"}
-                    {/if}
+                {foreach $flashes as $flash}
+                    <div class="alert alert-{$flash->type}">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        {if $flash->type == 'success'}
+                            {var $state = "ok"}
+                        {elseif $flash->type == 'danger'}
+                            {var $state = "remove"}
+                        {elseif $flash->type == 'warning'}
+                            {var $state = "warning-sign"}
+                        {/if}
 
-                    <span class="glyphicon glyphicon-{$state}"></span>&nbsp;
-                    {$flash->message}
-                </div>
+                        <span class="glyphicon glyphicon-{$state}"></span>&nbsp;
+                        {$flash->message}
+                    </div>
+                {/foreach}
                 {include content}
             </main>
 

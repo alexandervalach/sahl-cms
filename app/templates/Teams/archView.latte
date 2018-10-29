@@ -10,44 +10,46 @@
     {/if}
 </section>
 
-<div n:if="$players->count()" class='table-responsive'>
-    <table class='table'>
-        <caption>{$team->name}</caption>
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Meno a priezvisko</th>
-                <th>Číslo dresu</th>
-            </tr>
-        </thead>
-        <tbody>
-            {foreach $players as $player}
-                {var $type = $player->ref('playerTypes', 'type_id')}
-                <tr {if $player->trans}class="borrowedPlayer"{/if}>
-                    {if $player->lname}
-                        <td>{$iterator->counter}.</td>
-                        <td>
-                            {$player->lname}{if $type->abbr} - {$type->abbr}{/if}
-                        </td>
-                        <td>{$player->num}</td>
-                    {else}
-                        {for $j = 0; $j < 3; $j++}<td>&nbsp;</td>{/for}
-                    {/if}
-                </tr>
-                {var $i = $iterator->counter}
-            {/foreach}
-            {var $i}
-
-            {foreach $goalies as $goalie}
-                {var $i = $i + 1}
+{if $players->count()}
+    <div class='table-responsive'>
+        <table class='table'>
+            <caption>{$team->name}</caption>
+            <thead>
                 <tr>
-                    <td>{$i}.</td>
-                    <td>{$goalie->lname}</td>
-                    <td>Brankár, {$goalie->num}</td>  
+                    <th>&nbsp;</th>
+                    <th>Meno a priezvisko</th>
+                    <th>Číslo dresu</th>
                 </tr>
-            {/foreach}
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                {foreach $players as $player}
+                    {var $type = $player->ref('playerTypes', 'type_id')}
+                    <tr {if $player->trans}class="borrowedPlayer"{/if}>
+                        {if $player->lname}
+                            <td>{$iterator->counter}.</td>
+                            <td>
+                                {$player->lname}{if $type->abbr} - {$type->abbr}{/if}
+                            </td>
+                            <td>{$player->num}</td>
+                        {else}
+                            {for $j = 0; $j < 3; $j++}<td>&nbsp;</td>{/for}
+                        {/if}
+                    </tr>
+                    {var $i = $iterator->counter}
+                {/foreach}
+                {var $i}
+
+                {foreach $goalies as $goalie}
+                    {var $i = $i + 1}
+                    <tr>
+                        <td>{$i}.</td>
+                        <td>{$goalie->lname}</td>
+                        <td>Brankár, {$goalie->num}</td>  
+                    </tr>
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
+{/if}
 
 {/block}

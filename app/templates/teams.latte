@@ -5,8 +5,9 @@
 *}
 
 <section id="teams" class="container-fluid hidden-xs">
-    <a n:foreach="$sideTeams as $sideTeam" n:href="Teams:view $sideTeam" title="{$sideTeam->name}">
-        <img src="{$basePath}/{$imgFolder}/{$sideTeam->logo}" 
-             width="5%" alt="{$sideTeam->name} logo" />
-    </a>
+	{foreach $sideTeams as $sideTeam}
+	    <a n:href="Teams:view $sideTeam" title="{$sideTeam->name}">
+	        <img src="{$basePath}/{$imgFolder}/{$sideTeam->logo}" width="5%" alt="{$sideTeam->name} logo" />
+	    </a>
+    {/foreach}
 </section>

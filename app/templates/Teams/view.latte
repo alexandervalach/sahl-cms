@@ -2,106 +2,96 @@
 
 <section class="content">
 
-    <div n:if="$user->loggedIn" class="clearfix">
-
-        <div class="pull-right">
-
-            <button type="button" class="{$btnPrimary}"
-                    data-target="#add-player" data-toggle="modal">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-
-            <button type="button" class="{$btnSuccess}"
-                    data-target="#edit" data-toggle="modal">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </button>
-
-            <button type="button" class="{$btnInfo}"
-                    data-target="#upload" data-toggle="modal">
-                <span class="glyphicon glyphicon-upload"></span>
-            </button>
-
-            <button type="button" class="{$btnDanger}"
-                    data-target="#remove" data-toggle="modal">
-                <span class="glyphicon glyphicon-trash"></span>
-            </button>
-
+    {if $user->loggedIn}
+        <div class="clearfix">
+            <div class="pull-right">
+                <button type="button" class="{$btnPrimary}"
+                        data-target="#add-player" data-toggle="modal">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+                <button type="button" class="{$btnSuccess}"
+                        data-target="#edit" data-toggle="modal">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+                <button type="button" class="{$btnInfo}"
+                        data-target="#upload" data-toggle="modal">
+                    <span class="glyphicon glyphicon-upload"></span>
+                </button>
+                <button type="button" class="{$btnDanger}"
+                        data-target="#remove" data-toggle="modal">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </div>
         </div>
-
-    </div>
+    {/if}
 
     <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
         <div class="clearfix">
-            <img src="{$basePath}/{$imgFolder}/{$team->logo}"
-                    class="img img-responsive image-centered"
-                    n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+            {if $team->logo and file_exists($imgFolder . "/" . $team->logo)}
+                <img src="{$basePath}/{$imgFolder}/{$team->logo}"
+                    class="img img-responsive image-centered" />
+            {/if}
         </div>
         <div class="clearfix">
-            <h1>{block title}{$team->name}{/block}</h1>
+            <h1 n:block="title">{$team->name}</h1>
         </div>
     </div>
 
-    <figure n:if="$team->image and file_exists($imgFolder . '/' . $team->image)"
-            style="margin-top: 1em">
-        <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}"
-             alt="{$team->name}" style="margin: 0 auto" />
-    </figure>
-
+    {if $team->image and file_exists($imgFolder . '/' . $team->image)}
+        <figure style="margin-top: 1em">
+            <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$team->image}"
+                 alt="{$team->name}" style="margin: 0 auto" />
+        </figure>
+    {/if}
 </section>
 
-<section n:if="$players->count()" id="players">
-
-    <div class='table-responsive'>
-        <table class='table'>
-
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>Meno</th>
-                    <th>Číslo dresu</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {foreach $players as $player}
-                    {var $type = $player->ref('playerTypes', 'type_id')}
-                    <tr {if $player->trans}class="borrowed-player"{/if}>
-                        {if $player->name}
-                            <td>{$iterator->counter}.</td>
-                            <td>
-                                <a n:href="Players:view $player">
-                                    {$player->name} {if $type->abbr}- {$type->abbr}{/if}
-                                </a>
-                            </td>
-                            <td>{if $player->num != 0}{$player->num}{/if}</td>
-                        {else}
-                            {for $j = 0; $j < 3; $j++}
-                                <td>&nbsp;</td>
-                            {/for}
-                        {/if}
+{if $players->count()}
+    <section id="players">
+        <div class='table-responsive'>
+            <table class='table'>
+                <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Meno</th>
+                        <th>Číslo dresu</th>
                     </tr>
-                    {var $i = $iterator->counter}
-                {/foreach}
-
-                <tr n:foreach="$goalies as $goalie" {if $player->trans}class="borrowed-player"{/if}>
-                    <td>{$iterator->counter + $i}.</td>
-                    <td>
-                        <a n:href="Players:view $goalie">
-                            {$goalie->name}
-                        </a>
-                    </td>
-                    <td>{$goalie_title}, {$goalie->num}</td>
-                </tr>
-
-            </tbody>
-
-        </table>
-    </div>
-
-</section>
+                </thead>
+                <tbody>
+                    {foreach $players as $player}
+                        {var $type = $player->ref('playerTypes', 'type_id')}
+                        <tr {if $player->trans}class="borrowed-player"{/if}>
+                            {if $player->name}
+                                <td>{$iterator->counter}.</td>
+                                <td>
+                                    <a n:href="Players:view $player">
+                                        {$player->name} {if $type->abbr}- {$type->abbr}{/if}
+                                    </a>
+                                </td>
+                                <td>{if $player->num != 0}{$player->num}{/if}</td>
+                            {else}
+                                {for $j = 0; $j < 3; $j++}
+                                    <td>&nbsp;</td>
+                                {/for}
+                            {/if}
+                        </tr>
+                        {var $i = $iterator->counter}
+                    {/foreach}
+                    <tr n:foreach="$goalies as $goalie" {if $player->trans}class="borrowed-player"{/if}>
+                        <td>{$iterator->counter + $i}.</td>
+                        <td>
+                            <a n:href="Players:view $goalie">
+                                {$goalie->name}
+                            </a>
+                        </td>
+                        <td>{$goalie_title}, {$goalie->num}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+{/if}
 
 {if $user->loggedIn}
-
     <div id="add-player" class="modal fade" role="dialog">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -171,7 +161,6 @@
             </div>
         </div>
     </div>
-
 {/if}
 
 {/block}

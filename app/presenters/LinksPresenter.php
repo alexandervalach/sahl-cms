@@ -20,7 +20,8 @@ class LinksPresenter extends BasePresenter {
     }
 
     public function renderAll() {
-        $this->template->all_links = $this->linksRepository->findAll();
+        $this->template->links = $this->linksRepository->findByValue('sponsor', 0);
+        $this->template->sponsors = $this->linksRepository->findByValue('sponsor', 1);
         $this->getComponent(self::ADD_FORM);
     }
 

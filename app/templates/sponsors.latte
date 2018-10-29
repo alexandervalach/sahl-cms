@@ -9,12 +9,17 @@
         <h2>Sponzori</h2>
     </header>
     <main>
-        <figure n:foreach="$sponsors as $sponsor" class="col-md-4 col-lg-4">
-            <a href="{$sponsor->anchor}" target="_blank" title="{$sponsor->title}">
-                <img class="img img-responsive" alt="Logo {$sponsor->title}"
-                     src="{$basePath}/{$imgFolder}/{$sponsor->image}" 
-                     n:if="file_exists($imgFolder . '/' . $sponsor->image)" />
-            </a>
-        </figure>
+        {foreach $sponsors as $sponsor}
+            <div style="width: 100%; display: block">
+                <figure class="col-md-4 col-lg-4">
+                    <a href="{$sponsor->anchor}" target="_blank" title="Prejsť na: {$sponsor->title}">
+                        {if file_exists($imgFolder . '/' . $sponsor->image)}
+                            <img class="img img-responsive" alt="{$sponsor->title} Logo"
+                                 src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
+                        {/if}
+                    </a>
+                </figure>
+            </div>
+        {/foreach}
     </main>
 </section>

@@ -34,7 +34,7 @@ class RoundsPresenter extends BasePresenter {
 
         $i = 0;
         $fight_data = array();
-        $fights = $this->roundRow->related('fights');
+        $fights = $this->roundRow->related('fights')->order('id DESC');
 
         foreach ($fights as $fight) {
             $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
@@ -86,6 +86,7 @@ class RoundsPresenter extends BasePresenter {
         if (!$this->archRow) {
             throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
         }
+
         $i = 0;
         $fightData = array();
         $fights = $this->roundRow->related('fights');
@@ -118,8 +119,12 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::FILLED, 'Ešte treba vyplniť názov kola');
+             ->setAttribute('placeholder', '1.kolo')
+             ->addRule(Form::FILLED, 'Ešte treba vyplniť názov kola');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -128,9 +133,13 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::MAX_LENGTH, 'Dĺžka názvu môže byť len 50 znakov', 50)
-                ->addRule(Form::FILLED, 'Názov je povinné pole');
+             ->setAttribute('placeholder', '1.kolo')
+             ->addRule(Form::MAX_LENGTH, 'Dĺžka názvu môže byť len 50 znakov', 50)
+             ->addRule(Form::FILLED, 'Názov je povinné pole');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -139,10 +148,10 @@ class RoundsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-                ->setAttribute('class', self::BTN_DANGER);
+             ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -152,11 +161,16 @@ class RoundsPresenter extends BasePresenter {
         $teams = $this->teamsRepository->getTeams();
         $form = new Form;
         $form->addSelect('team1_id', 'Tím 1', $teams);
-        $form->addText('score1', 'Skóre 1');
+        $form->addText('score1', 'Skóre tímu 1')
+             ->setAttribute('placeholder', '1');
         $form->addSelect('team2_id', 'Tím 2', $teams);
-        $form->addText('score2', 'Skóre 2');
+        $form->addText('score2', 'Skóre tímu 2')
+             ->setAttribute('placeholder', '0');
         $form->addCheckbox('type', ' Označiť zápas ako Play Off');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, 'submittedAddFightForm'];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -169,8 +183,7 @@ class RoundsPresenter extends BasePresenter {
         }
         $values['round_id'] = $this->roundRow;
 
-        if ($values['type']) { $type = 1; } 
-        else { $type = 2; }
+        $values['type'] ? $type = 1 : $type = 2;
         unset($values['type']);
 
         $this->fightsRepository->insert($values);
@@ -195,9 +208,11 @@ class RoundsPresenter extends BasePresenter {
 
     public function submittedRemoveForm() {
         $fights = $this->roundRow->related('fights');
+        
         foreach ($fights as $fight) {
             $fight->delete();
         }
+
         $this->roundRow->delete();
         $this->flashMessage('Kolo bolo odstránené', self::SUCCESS);
         $this->redirect('all');

@@ -27,30 +27,22 @@
                 </tr>
             </thead>
             <tbody>
-                <tr n:foreach="$types as $type">
-                    <td>{$type->name}</td>
-                    <td>
-                        <a n:if="$iterator->counter > 2" n:href="edit $type" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a n:if="$iterator->counter > 2" n:href="delete $type" class="text-danger">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
-                    <td>
-                        {if !$type->visible}
-                            <a n:href="show $type" class="text-success">
-                                <span class="glyphicon glyphicon-eye-close"></span>
-                            </a>
-                        {else}
-                            <a n:href="hide $type" class="text-success">
-                                <span class="glyphicon glyphicon-eye-open"></span>
-                            </a>
-                        {/if}
-                    </td>
-                </tr>
+                {foreach $types as $type}
+                    <tr>
+                        <td>{$type->name}</td>
+                        <td>
+                            {if !$type->visible}
+                                <a n:href="show $type" class="text-success">
+                                    <span class="glyphicon glyphicon-eye-close"></span>
+                                </a>
+                            {else}
+                                <a n:href="hide $type" class="text-success">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </a>
+                            {/if}
+                        </td>
+                    </tr>
+                {/foreach}
             </tbody>
         </table>
     </div>

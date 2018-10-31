@@ -51,11 +51,14 @@ class LinksPresenter extends BasePresenter {
 
     protected function createComponentAddForm() {
         $form = new Form;
-        $form->addText('title', 'Názov:');
-        $form->addText('anchor', 'URL adresa:')
-                ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
-        $form->addUpload('image', 'Obrázok:');
-        $form->addCheckbox('sponsor', ' Sponzor');
+        $form->addText('title', 'Názov')
+             ->setAttribute('placeholder', 'Mesto Spišská Nová Ves')
+             ->addRule(Form::FILLED, 'Názov je povinné pole');
+        $form->addText('anchor', 'URL adresa')
+             ->setAttribute('placeholder', 'http://www.spisskanovaves.eu')
+             ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
+        $form->addUpload('image', 'Obrázok');
+        $form->addCheckbox('sponsor', ' Označiť ako sponzora');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -64,12 +67,33 @@ class LinksPresenter extends BasePresenter {
 
     protected function createComponentEditForm() {
         $form = new Form;
-        $form->addText('title', 'Názov:')
-                ->setRequired("Text linku je povinný údaj");
-        $form->addText('anchor', 'URL adresa:')
-                ->setRequired("URL adresa je povinné pole.");
+        $form->addText('title', 'Názov')
+             ->setAttribute('placeholder', 'Mesto Spišská Nová Ves')
+             ->addRule(Form::FILLED, 'Názov je povinné pole');
+        $form->addText('anchor', 'URL adresa')
+             ->setAttribute('placeholder', 'http://www.spisskanovaves.eu')
+             ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
         $form->addSubmit('save', 'Uložiť');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
+        FormHelper::setBootstrapFormRenderer($form);
+        return $form;
+    }
+
+    /**
+     * Component for creating a remove form
+     * @return Nette\Application\UI\Form
+     */
+    protected function createComponentRemoveForm() {
+        $form = new Form;
+                $form = new Form;
+        $form->addSubmit('save', 'Odstrániť')
+             ->setAttribute('class', self::BTN_DANGER)
+             ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->onClick[] = [$this, 'formCancelled'];
+        $form->addProtection(self::CSRF_TOKEN_EXPIRED);
+        $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
     }

@@ -207,10 +207,10 @@ abstract class BasePresenter extends Presenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-                ->setAttribute('class', self::BTN_DANGER);
+             ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);

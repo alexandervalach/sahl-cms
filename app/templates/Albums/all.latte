@@ -1,37 +1,38 @@
 {block content}
 
 <section class="content clearfix" id="albums">
-
-    <div class="clearfix" n:if="$user->loggedIn">
-
-        <div class="pull-right">
-            <button type="button" class='{$btnPrimary}' 
-                    data-toggle="modal" data-target="#add" title="Pridať album">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
+    {if $user->loggedIn}
+        <div class="clearfix">
+            <div class="pull-right">
+                <button type="button" class='{$btnPrimary}' 
+                        data-toggle="modal" data-target="#add" title="Pridať album">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
         </div>
-
-    </div>
+    {/if}
 
     <div class="clearfix"> 
         <h1 n:block="title">Galéria</h1>
     </div>
 
-    <figure n:foreach="$albums as $album" 
-            class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 2em">
-        <a n:href="view $album">
-            {if $album->thumbnail && file_exists($imgFolder . "/" . $album->thumbnail)}                
-                <img src="{$basePath}/{$imgFolder}/{$album->thumbnail}" 
-                     class="img img-responsive" alt="Album {$album->name}" />
-            {else}
-                <img src="{$basePath}/{$imgFolder}/{$defaultImg}" 
-                     class="img img-responsive" alt="Logo SAHL" />
-            {/if}
-        </a>
-        <figcaption class="text-center" style="margin: 1em;">
-            <strong>{$album->name}</strong>
-        </figcaption>
-    </figure>
+    {foreach $albums as $album}
+        <figure class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 2em">
+            <a n:href="view $album">
+                {if $album->thumbnail && file_exists($imgFolder . "/" . $album->thumbnail)}                
+                    {var $img = $album->thumbnail} 
+                    {var $text = "Album " . $album->name}
+                {else}
+                    {var $img = $defaultImg}
+                    {var $text = "Logo SAHL"}
+                {/if}
+                <img src="{$basePath}/{$imgFolder}/{$img}" class="img img-responsive" alt="{$text}" />
+            </a>
+            <figcaption class="text-center" style="margin: 1em;">
+                <strong>{$album->name}</strong>
+            </figcaption>
+        </figure>
+    {/foreach}
 
 </section>
 

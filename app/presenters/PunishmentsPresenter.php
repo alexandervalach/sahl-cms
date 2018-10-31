@@ -57,10 +57,15 @@ class PunishmentsPresenter extends BasePresenter {
      */
     protected function createComponentEditForm() {
         $form = new Form;
-        $form->addText('text', 'Dôvod');
-        $form->addText('round', 'Kolá');
+        $form->addText('text', 'Dôvod')
+             ->setAttribute('placeholder', 'Nešportové správanie');
+        $form->addText('round', 'Kolá')
+             ->setAttribute('placeholder', '3. kolo');
         $form->addCheckbox('condition', ' Podmienka');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -70,10 +75,15 @@ class PunishmentsPresenter extends BasePresenter {
         $players = $this->playersRepository->getNonEmptyPlayers();
         $form = new Form;
         $form->addSelect('player_id', 'Hráč', $players);
-        $form->addText('text', 'Dôvod');
-        $form->addText('round', 'Kolá');
+        $form->addText('text', 'Dôvod')
+             ->setAttribute('placeholder', 'Nešportové správanie');
+        $form->addText('round', 'Stop na kolo')
+             ->setAttribute('placeholder', '3. kolo');
         $form->addCheckbox('condition', ' Podmienka');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

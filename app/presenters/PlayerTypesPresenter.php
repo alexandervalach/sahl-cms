@@ -54,10 +54,15 @@ class PlayerTypesPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('type', 'Typ hráča')
-                ->addRule(Form::FILLED, 'Ešte vyplńte názov')
-                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
-        $form->addText('abbr', 'Skratka');
+             ->setAttribute('placeholder', 'Kapitán')
+             ->addRule(Form::FILLED, 'Ešte vyplňte názov')
+             ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
+        $form->addText('abbr', 'Skratka')
+             ->setAttribute('placeholder', 'C');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         FormHelper::setBootstrapFormRenderer($form);
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         return $form;
@@ -66,10 +71,13 @@ class PlayerTypesPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('type', 'Typ hráča')
-                ->addRule(Form::FILLED, 'Ešte vyplńte názov')
-                ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
-        $form->addText('abbr', 'Skratka');
-        $form->addSubmit('save', 'Uložiť');
+             ->setAttribute('placeholder', 'Kapitán')
+             ->addRule(Form::FILLED, 'Ešte vyplňte názov')
+             ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
+        $form->addText('abbr', 'Skratka')
+             ->setAttribute('placeholder', 'C');
+        $form->addSubmit('save', 'Upraviť')
+             ->setAttribute('class', self::BTN_SUCCESS);
         FormHelper::setBootstrapFormRenderer($form);
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         return $form;
@@ -78,11 +86,11 @@ class PlayerTypesPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('save', 'Odstrániť')
-                        ->setAttribute('class', self::BTN_DANGER)
-                ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
+             ->setAttribute('class', self::BTN_DANGER)
+             ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
         $form->addSubmit('cancel', 'Zrušiť')
-                        ->setAttribute('class', self::BTN_WARNING)
-                ->onClick[] = [$this, 'formCancelled'];
+             ->setAttribute('class', self::BTN_WARNING)
+             ->onClick[] = [$this, 'formCancelled'];
         return $form;
     }
 

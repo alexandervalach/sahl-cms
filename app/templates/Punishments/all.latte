@@ -2,40 +2,48 @@
 
 <section class="content">
 
-    <div n:if="$user->loggedIn" class="clearfix">
-
-        <div class="pull-right">
-            <button type="button" class="{$btnPrimary}" 
-                    data-toggle="modal" data-target="#add" title="Pridať trest hráčovi">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
+    {if $user->loggedIn}
+        <div class="clearfix">
+            <div class="pull-right">
+                <button type="button" class="{$btnPrimary}" 
+                        data-toggle="modal" data-target="#add" title="Pridať trest hráčovi">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
         </div>
-
-    </div>
+    {/if}
 
     <div class="clearfix">
         <h1 n:block="title">Tresty hráčov</h1>
     </div>
 
-    <div n:foreach="$punishments as $punishment" style="margin-top: 2em" class="text-center">
-        {var $player = $punishment->ref('players', 'player_id')}
-        {var $team = $player->ref('teams', 'team_id')}
+    {foreach $punishments as $punishment}
+        <div style="margin-top: 2em" class="text-center">
+            {var $player = $punishment->ref('players', 'player_id')}
+            {var $team = $player->ref('teams', 'team_id')}
 
-        <h2>{$player->name} ({$player->num})</h2> 
-        <h3>
-            <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="40px" 
-                 n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
-            {$team->name}
-        </h3>
+            <h2>{$player->name} ({$player->num})</h2> 
+            <h3>
+                {if $team->logo and file_exists($imgFolder . '/' . $team->logo)}
+                    <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="40px" />
+                {/if}
+                {$team->name}
+            </h3>
 
-        <ul>
-            <li><strong>Stop na: </strong>{$punishment->round}</li>
-            <li n:if="$punishment->text"><strong>Dôvod: </strong>{$punishment->text}</li>
-            <li n:if="$punishment->condition"><strong>Podmienečne</strong></li>
-        </ul>
-        <hr n:if="!$iterator->last" />
-    </div>
-
+            <ul>
+                {if !empty($punishment->round) && isset($punishment->round)}
+                    <li><strong>Stop na: </strong>{$punishment->round}</li>
+                {/if}
+                {if $punishment->text}
+                    <li><strong>Dôvod: </strong>{$punishment->text}</li>
+                {/if}
+                {if $punishment->condition}
+                    <li><strong>Podmienečne</strong></li>
+                {/if}
+            </ul>
+            {if !$iterator->last}<hr />{/if}
+        </div>
+    {/foreach}
 </section>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">

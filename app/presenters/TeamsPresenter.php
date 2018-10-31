@@ -50,7 +50,6 @@ class TeamsPresenter extends BasePresenter {
         $this->template->i = 0;
         $this->template->j = 0;
         $this->template->goalie_title = self::GOALIE;
-        $this->template->addPlayerForm = self::ADD_PLAYER_FORM;
 
         if ($this->user->isLoggedIn()) {
             $this->getComponent(self::EDIT_FORM)->setDefaults($this->teamRow);
@@ -82,6 +81,9 @@ class TeamsPresenter extends BasePresenter {
         $form = new Form;
         $form->addUpload('image', 'Nahrajte obrázok');
         $form->addSubmit('upload', 'Nastaviť obrázok');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_UPLOAD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -89,10 +91,14 @@ class TeamsPresenter extends BasePresenter {
 
     protected function createComponentAddForm() {
         $form = new Form;
-        $form->addText('name', 'Tím: ')
-                ->setRequired('Názov tímu je povinné pole.')
-                ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
-        $form->addSubmit('save', 'Pridať');
+        $form->addText('name', 'Názov tímu')
+             ->setAttribute('placeholder', 'SKV Aligators')
+             ->setRequired('Názov tímu je povinné pole.')
+             ->addRule(Form::MAX_LENGTH, "Dĺžka názvu smie byť len 255 znakov.", 255);
+        $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -100,14 +106,15 @@ class TeamsPresenter extends BasePresenter {
 
     protected function createComponentEditForm() {
         $form = new Form;
-        $form->addText('name', 'Tím: ')
-                ->setRequired('Názov tímu je povinné pole.')
-                ->addRule(Form::MAX_LENGTH, "Dĺžka reťazce smie byť len 255 znakov.", 255);
-        $form->addSubmit('save', 'Upraviť')
-                ->setAttribute('class', 'btn btn-large btn-success');
+        $form->addText('name', 'Názov tímu')
+             ->setAttribute('placeholder', 'SKV Aligators')
+             ->setRequired('Názov tímu je povinné pole.')
+             ->addRule(Form::MAX_LENGTH, "Dĺžka názvu smie byť len 255 znakov.", 255);
+        $form->addSubmit('save', 'Uložiť')
+             ->setAttribute('class', 'btn btn-large btn-success');
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', 'btn btn-large btn-warning')
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -116,10 +123,10 @@ class TeamsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('delete', 'Odstrániť')
-                ->setAttribute('class', 'btn btn-large btn-danger');
+             ->setAttribute('class', 'btn btn-large btn-danger');
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', 'btn btn-large btn-warning')
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -129,11 +136,17 @@ class TeamsPresenter extends BasePresenter {
     protected function createComponentAddPlayerForm() {
         $types = $this->playerTypesRepository->getTypes();
         $form = new Form;
-        $form->addText('name', 'Meno a priezvisko');
-        $form->addText('num', 'Číslo')->setDefaultValue(0);
+        $form->addText('name', 'Meno a priezvisko')
+             ->setAttribute('placeholder', 'Zdeno Chára')
+             ->addRule(Form::FILLED, 'Opa, ešte nie je vyplnené Meno a priezvisko hráča');
+        $form->addText('num', 'Číslo')
+             ->setAttribute('placeholder', 14);
         $form->addSelect('type_id', 'Typ hráča', $types);
         $form->addCheckbox('trans', ' Prestupový hráč');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_PLAYER_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

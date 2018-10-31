@@ -17,21 +17,23 @@
         <table class="table">
             <caption>Sponzori</caption>
             <tbody>
-                <tr n:foreach="$sponsors as $link">
-                    <td>
-                        <a href="{$link->anchor}" target="_blank">{$link->title}</a>
-                    </td>
-                    <td>
-                        <a n:href="edit $link" class="text-success text-center">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a n:href="remove $link" class="text-danger text-center">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
-                </tr>
+                {foreach $sponsors as $link}
+                    <tr>
+                        <td>
+                            <a href="{$link->anchor}" target="_blank">{$link->title}</a>
+                        </td>
+                        <td>
+                            <a n:href="edit $link" class="text-success text-center">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a n:href="remove $link" class="text-danger text-center">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
             </tbody>
         </table>
     </div>
@@ -42,27 +44,30 @@
         <table class="table">
             <caption>Odkazy</caption>
             <tbody>
-                <tr n:foreach="$links as $link">
-                    <td>
-                        <a href="{$link->anchor}" target="_blank">{$link->title}</a>
-                    </td>
-                    <td>
-                        <a n:href="edit $link" class="text-success text-center">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a n:href="remove $link" class="text-danger text-center">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
-                </tr>
+                {foreach $links as $link}
+                    <tr>
+                        <td>
+                            <a href="{$link->anchor}" target="_blank">{$link->title}</a>
+                        </td>
+                        <td>
+                            <a n:href="edit $link" class="text-success text-center">
+                                <span class="glyphicon glyphicon-edit"></span>
+                            </a>
+                        </td>
+                        <td>
+                            <a n:href="remove $link" class="text-danger text-center">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </td>
+                    </tr>
+                {/foreach}
             </tbody>
         </table>
     </div>
 {/if}
 
-<div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
+{if $user->loggedIn}
+<div id="add" class="modal fade" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -75,3 +80,4 @@
         </div>
     </div>
 </div>
+{/if}

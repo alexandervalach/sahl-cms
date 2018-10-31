@@ -91,29 +91,23 @@ class PlayersPresenter extends BasePresenter {
         $this->template->archive = $this->teamRow->ref('archive', 'archive_id');
     }
 
-    protected function createComponentAddForm() {
-        $types = $this->playerTypesRepository->getTypes();
-        $form = new Form;
-        $form->addText('name', 'Meno a priezvisko:');
-        $form->addText('num', 'Číslo:');
-        $form->addSelect('type_id', 'Typ hráča', $types);
-        $form->addCheckbox('trans', ' Prestupový hráč');
-        $form->addSubmit('add', 'Pridať');
-        $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
-    }
-
     protected function createComponentEditForm() {
         $types = $this->playerTypesRepository->getTypes();
 
         $form = new Form;
-        $form->addText('name', 'Meno a priezvisko:');
-        $form->addText('num', 'Číslo:');
-        $form->addText('goals', 'Góly:');
+        $form->addText('name', 'Meno a priezvisko')
+             ->setAttribute('placeholder', 'Zdeno Chára')
+             ->addRule(Form::FILLED, 'Meno musí byť vyplnené');
+        $form->addText('num', 'Číslo')
+             ->setAttribute('placeholder', 14);
+        $form->addText('goals', 'Góly');
         $form->addCheckbox('trans', ' Prestupový hráč');
         $form->addSelect('type_id', 'Typ hráča', $types);
-        $form->addSubmit('edit', 'Upraviť');
+        $form->addSubmit('edit', 'Uložiť')
+             ->setAttribute('class', 'btn btn-large btn-success');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', 'btn btn-large btn-warning')
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -122,11 +116,11 @@ class PlayersPresenter extends BasePresenter {
     protected function createComponentResetForm() {
         $form = new Form;
         $form->addSubmit('reset', 'Vynulovať')
-                        ->setAttribute('class', self::BTN_DANGER)
-                ->onClick[] = $this->submittedResetForm;
+             ->setAttribute('class', self::BTN_DANGER)
+             ->onClick[] = $this->submittedResetForm;
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

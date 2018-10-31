@@ -88,11 +88,12 @@ class AlbumsPresenter extends BasePresenter {
     {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->setRequired("Názov je povinné pole.");
-        $form->addSubmit('add', 'Pridať');
+             ->setRequired('Názov je povinné pole.')
+             ->setAttribute('placeholder', 'Finále SAHL 2018/19');
+        $form->addSubmit('save', 'Uložiť');
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -105,12 +106,13 @@ class AlbumsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->setRequired("Názov je povinné pole");
+             ->setRequired('Názov je povinné pole')
+             ->setAttribute('placeholder', 'Finále SAHL 2018/19');
         $form->addSubmit('edit', 'Upraviť')
-                ->setAttribute('class', self::BTN_SUCCESS);
+             ->setAttribute('class', self::BTN_SUCCESS);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -123,10 +125,10 @@ class AlbumsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-                ->setAttribute('class', self::BTN_DANGER);
+             ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -140,9 +142,12 @@ class AlbumsPresenter extends BasePresenter {
     protected function createComponentAddImgForm() {
         $form = new Form;
         $form->addMultiUpload('files', 'Obrázky')
-                ->addRule(Form::FILLED, 'Vyberte obrázky, prosím')
-                ->addRule(Form::IMAGE, 'Obrázok môže byť len vo formáte JPEG, PNG alebo GIF.');
+             ->addRule(Form::FILLED, 'Vyberte obrázky, prosím')
+             ->addRule(Form::IMAGE, 'Obrázok môže byť len vo formáte JPEG, PNG alebo GIF.');
         $form->addSubmit('upload', 'Nahrať');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_IMG_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

@@ -40,9 +40,12 @@ class RulesPresenter extends BasePresenter {
 
     protected function createComponentEditForm() {
         $form = new Form;
-        $form->addTextArea('rule', 'Text')
-                ->setAttribute('id', 'ckeditor');
+        $form->addTextArea('rule', 'Obsah')
+             ->setAttribute('id', 'ckeditor');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

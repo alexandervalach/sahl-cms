@@ -71,11 +71,15 @@ class GoalsPresenter extends BasePresenter {
         $form = new Form;
         $form->addSelect('player_id', 'Hráči', $players);
         $form->addText('goals', 'Počet gólov')
-                ->setDefaultValue(1)
-                ->addRule(Form::FILLED, 'Ešte treba vyplniť počet gólov')
-                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+             ->setDefaultValue(1)
+             ->setAttribute('placeholder', 0)
+             ->addRule(Form::FILLED, 'Ešte treba vyplniť počet gólov')
+             ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -84,10 +88,14 @@ class GoalsPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('goals', 'Počet gólov')
-                ->addRule(Form::FILLED, 'Ešte treba vyplniť počet gólov.')
-                ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
+             ->setAttribute('placeholder', 0)
+             ->addRule(Form::FILLED, 'Ešte treba vyplniť počet gólov.')
+             ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
         $form->addCheckbox('home', ' Hráč domáceho tímu');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

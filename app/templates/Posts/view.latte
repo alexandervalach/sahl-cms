@@ -40,78 +40,81 @@
     {var $count = $images->count()}
     <hr n:if="$count" />
 
-    <div id="post-images" n:if="$count" class="clearfix">
+    {if $count}
+        <div id="post-images" class="clearfix">
+            {foreach $images as $img}
+                <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6'
+                    style="margin-top: 1em">
+                    {if file_exists($imgFolder . '/' . $img->name) or $user->loggedIn}
+                        <img src="{$basePath}/{$imgFolder}/{$img->name}" alt="{$img->name}"
+                            class='img img-responsive' />
+                    {/if}
 
-        <figure n:foreach="$images as $img" class='col-xs-12 col-sm-12 col-md-6 col-lg-6'
-            style="margin-top: 1em">
-
-            <img n:if="file_exists($imgFolder . '/' . $img->name) or $user->loggedIn"
-                src="{$basePath}/{$imgFolder}/{$img->name}"
-                class='img img-responsive' alt="{$img->name}" />
-
-            <figcaption n:if="$user->loggedIn" class="text-center" style="margin-top: 1em">
-                <a n:href="setImg, $img->post_id, $img" class='{$btnPrimary}'
-                    title="Nastaviť obrázok ako miniatúru článku">
-                    <span class="glyphicon glyphicon-picture"></span>
-                </a>
-                <a n:href="removeImg, $img->post_id, $img" class='{$btnDanger}'
-                    title="Odstrániť obrázok">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </a>
-            </figcaption>
-
-        </figure>
-
-    </div>
+                    {if $user->loggedIn}
+                        <figcaption class="text-center" style="margin-top: 1em">
+                            <a n:href="setImg, $img->post_id, $img" class='{$btnPrimary}'
+                                title="Nastaviť obrázok ako miniatúru článku">
+                                <span class="glyphicon glyphicon-picture"></span>
+                            </a>
+                            <a n:href="removeImg, $img->post_id, $img" class='{$btnDanger}'
+                                title="Odstrániť obrázok">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </a>
+                        </figcaption>
+                    {/if}
+                </figure>
+            {/foreach}
+        </div>
+    {/if}
 
 </section>
 
-<section n:if="$user->loggedIn">
-
-    <div id="edit" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Upraviť článok</h3>
-                </div>
-                <div class="modal-body">
-                    {control editForm}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="remove" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Odstrániť článok</h3>
-                </div>
-                <div class="modal-body">
-                    <p>Naozaj chcete odstrániť článok?</p>
-                    {control removeForm}
+{if $user->loggedIn}
+    <section>
+        <div id="edit" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Upraviť článok</h3>
+                    </div>
+                    <div class="modal-body">
+                        {control editForm}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div id="upload" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Pridať obrázky</h3>
-                </div>
-                <div class="modal-body">
-                    {control addImgForm}
+        <div id="remove" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Odstrániť článok</h3>
+                    </div>
+                    <div class="modal-body">
+                        <p>Naozaj chcete odstrániť článok?</p>
+                        {control removeForm}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</section>
+        <div id="upload" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h3 class="modal-title">Pridať obrázky</h3>
+                    </div>
+                    <div class="modal-body">
+                        {control addImgForm}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{/if}
 
 {/block}
 

@@ -80,11 +80,15 @@ class PostsPresenter extends BasePresenter {
 
     protected function createComponentAddForm() {
         $form = new Form;
-        $form->addText('title', 'Názov:')
-                ->setRequired("Názov je povinné pole.");
-        $form->addTextArea('content', 'Obsah:')
-                ->setAttribute('id', 'ckeditor');
+        $form->addText('title', 'Názov')
+             ->setAttribute('placeholder', 'Novinka SAHL 2018')
+             ->setRequired('Názov je povinné pole.');
+        $form->addTextArea('content', 'Obsah')
+             ->setAttribute('id', 'ckeditor');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -92,11 +96,15 @@ class PostsPresenter extends BasePresenter {
 
     protected function createComponentEditForm() {
         $form = new Form;
-        $form->addText('title', 'Názov:')
-                ->setRequired("Názov je povinné pole.");
-        $form->addTextArea('content', 'Obsah:')
-                ->setAttribute('id', 'ckeditor');
+        $form->addText('title', 'Názov')
+             ->setAttribute('placeholder', 'Novinka SAHL 2018')
+             ->setRequired('Názov je povinné pole.');
+        $form->addTextArea('content', 'Obsah')
+             ->setAttribute('id', 'ckeditor');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -105,10 +113,10 @@ class PostsPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('delete', 'Odstrániť')
-                ->setAttribute('class', self::BTN_DANGER);
+             ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);
@@ -117,8 +125,11 @@ class PostsPresenter extends BasePresenter {
 
     protected function createComponentAddImgForm() {
         $form = new Form;
-        $form->addMultiUpload('images', 'Obrázok:');
+        $form->addMultiUpload('images', 'Obrázok');
         $form->addSubmit('upload', 'Nahrať');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_IMG_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

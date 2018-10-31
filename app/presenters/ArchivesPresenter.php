@@ -45,8 +45,12 @@ class ArchivesPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('title', 'Názov')
-                ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
-        $form->addSubmit('add', 'Pridať');
+             ->setAttribute('placeholder', 'Archív 2018')
+             ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
+        $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -55,9 +59,13 @@ class ArchivesPresenter extends BasePresenter {
     protected function createComponentEditForm() {
         $form = new Form;
         $form->addText('title', 'Názov')
-                ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
+             ->setAttribute('placeholder', 'Archív 2018')
+             ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
         $form->addSubmit('edit', 'Upraviť')
-                ->setAttribute('class', self::BTN_SUCCESS);
+             ->setAttribute('class', self::BTN_SUCCESS);
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;
@@ -66,10 +74,10 @@ class ArchivesPresenter extends BasePresenter {
     protected function createComponentRemoveForm() {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
-                ->setAttribute('class', self::BTN_DANGER);
+             ->setAttribute('class', self::BTN_DANGER);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
         $form->addProtection(self::CSRF_TOKEN_EXPIRED);
         FormHelper::setBootstrapFormRenderer($form);
@@ -79,10 +87,10 @@ class ArchivesPresenter extends BasePresenter {
     protected function createComponentArchiveForm() {
         $form = new Form;
         $form->addSubmit('archive', 'Archivovať')
-                ->setAttribute('class', self::BTN_DEFAULT);
+             ->setAttribute('class', self::BTN_DEFAULT);
         $form->addSubmit('cancel', 'Zrušiť')
-                ->setAttribute('class', self::BTN_WARNING)
-                ->setAttribute('data-dismiss', 'modal');
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->addProtection();
         $form->onSuccess[] = [$this, self::SUBMITTED_ARCHIVE_FORM];
         FormHelper::setBootstrapFormRenderer($form);

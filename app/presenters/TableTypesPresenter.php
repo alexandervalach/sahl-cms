@@ -67,10 +67,13 @@ class TableTypesPresenter extends BasePresenter {
     protected function createComponentAddForm() {
         $form = new Form;
         $form->addText('name', 'Názov')
-                ->addRule(Form::FILLED, 'Ešte treba vyplniť názov')
-                ->setAttribute('placeholder', 'Play Off');
+             ->addRule(Form::FILLED, 'Ešte treba vyplniť názov')
+             ->setAttribute('placeholder', 'Play Off');
         $form->addCheckbox('visible', ' Chcem, aby sa tabuľka zobrazila na stránke');
         $form->addSubmit('save', 'Uložiť');
+        $form->addSubmit('cancel', 'Zrušiť')
+             ->setAttribute('class', self::BTN_WARNING)
+             ->setAttribute('data-dismiss', 'modal');
         $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
         FormHelper::setBootstrapFormRenderer($form);
         return $form;

@@ -48,7 +48,8 @@ class RulesPresenter extends BasePresenter {
     $form = new Form;
     $form->addTextArea('content', 'Obsah')
           ->setAttribute('id', 'ckeditor');
-    $form->addSubmit('save', 'Uložiť');
+    $form->addSubmit('save', 'Uložiť')
+          ->setAttribute('class', self::BTN_SUCCESS);
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->setAttribute('data-dismiss', 'modal');

@@ -4,9 +4,10 @@ namespace App\Model;
 
 class GoalsRepository extends Repository {
 
-    public function getPlayerGoalsCount($id) {
-        return $this->findByValue('player_id = ?', $id)
-                        ->sum('goals');
-    }
+  const PLAYER_ID = 'player_id';
+
+  public function getPlayerGoalsCount($playerId) {
+    return $this->getAll()->where(self::PLAYER_ID, $playerId)->sum('goals');
+  }
 
 }

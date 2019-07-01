@@ -2,62 +2,57 @@
 
 <section class="content">
 
-    <div class="clearfix">
-
-        <div n:if="$user->loggedIn" class="pull-right">
-            <button type="button" class="{$btnPrimary}"
-                    data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </div>
-
+  <div class="clearfix">
+    <div n:if="$user->loggedIn" class="pull-right">
+      <button type="button" class="{$btnPrimary}" data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
+        <span class="glyphicon glyphicon-plus"></span> Pridať
+      </button>
     </div>
+  </div>
 
-    <div class="clearfix">
-        <h1 n:block="title">Rozpis zápasov</h1>
-    </div>
+  <div class="clearfix">
+    <h1 n:block="title">Rozpis zápasov</h1>
+  </div>
 
-    <article n:foreach="$events as $event"
-        class="clearfix text-center" style="padding: 2em">
-        <div class="overflow-container">
-            {$event->event|noescape}
-        </div>
+  <article n:foreach="$events as $event"
+      class="clearfix text-center" style="padding: 2em">
+      <div class="overflow-container">
+        {$event->content|noescape}
+      </div>
 
-        <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 1em">
-            <a n:href="edit $event" class="btn btn-large btn-success">
-                <span class="glyphicon glyphicon-edit"></span>
-            </a>
-            <a n:href="remove $event" class="btn btn-large btn-danger">
-                <span class="glyphicon glyphicon-trash"></span>
-            </a>
-        </div>
-
-        <hr n:if="!$iterator->last" />
-
-    </article>
+      <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 1em">
+        <a n:href="edit $event" class="btn btn-large btn-success">
+          <span class="glyphicon glyphicon-edit"></span>
+        </a>
+        <a n:href="remove $event" class="btn btn-large btn-danger">
+          <span class="glyphicon glyphicon-trash"></span>
+        </a>
+      </div>
+      <hr n:if="!$iterator->last" />
+  </article>
 
 </section>
 
 <div n:if="$user->loggedIn">
-    <div id="add" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Pridať rozpis zápasov</h3>
-                </div>
-                <div class="modal-body">
-                    {control addForm}
-                </div>
-            </div>
+  <div id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Pridať rozpis zápasov</h3>
         </div>
+        <div class="modal-body">
+          {control addForm}
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 {/block}
 
 {block scripts}
-{include #parent}
-<script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-<script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
+  {include #parent}
+  <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+  <script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
 {/block}

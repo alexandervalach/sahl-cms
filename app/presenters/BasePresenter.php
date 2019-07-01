@@ -4,7 +4,6 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Model\AlbumsRepository;
-use App\Model\ArchivesRepository;
 use App\Model\EventsRepository;
 use App\Model\FightsRepository;
 use App\Model\ImagesRepository;
@@ -17,6 +16,8 @@ use App\Model\PostsRepository;
 use App\Model\PunishmentsRepository;
 use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
+use App\Model\SeasonsRepository;
+use App\Model\SeasonsTeamsRepository;
 use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
@@ -58,12 +59,10 @@ abstract class BasePresenter extends Presenter {
     const ROUND_NOT_FOUND = 'Round not found';
     const ARCHIVE_NOT_FOUND = 'Archive not found';
     const RULE_NOT_FOUND = 'Rule not found';
+    const ITEM_NOT_FOUND = 'Item not found';
 
     /** @var AlbumsRepository */
     protected $albumsRepository;
-
-    /** @var ArchivesRepository */
-    protected $archivesRepository;
 
     /** @var EventsRepository */
     protected $eventsRepository;
@@ -104,6 +103,12 @@ abstract class BasePresenter extends Presenter {
     /** @var RulesRepository */
     protected $rulesRepository;
 
+    /** @var SeasonsRepository */
+    protected $seasonsRepository;
+
+    /** @var SeasonsTeamsRepository */
+    protected $seasonsTeamsRepository;
+
     /** @var TablesRepository */
     protected $tablesRepository;
 
@@ -125,7 +130,7 @@ abstract class BasePresenter extends Presenter {
     /**
      * Base constructor
      */
-    public function __construct(ArchivesRepository $archivesRepository,
+    public function __construct(
         AlbumsRepository $albumsRepository,
         EventsRepository $eventsRepository,
         FightsRepository $fightsRepository,
@@ -140,12 +145,13 @@ abstract class BasePresenter extends Presenter {
         PunishmentsRepository $punishmentsRepository,
         RoundsRepository $roundsRepository,
         RulesRepository $rulesRepository,
+        SeasonsRepository $seasonsRepository,
+        SeasonsTeamsRepository $seasonsTeamsRepository,
         TablesRepository $tablesRepository,
         TeamsRepository $teamsRepository,
         UsersRepository $usersRepository)
     {
         parent::__construct();
-        $this->archivesRepository = $archivesRepository;
         $this->albumsRepository = $albumsRepository;
         $this->eventsRepository = $eventsRepository;
         $this->fightsRepository = $fightsRepository;
@@ -160,6 +166,8 @@ abstract class BasePresenter extends Presenter {
         $this->punishmentsRepository = $punishmentsRepository;
         $this->roundsRepository = $roundsRepository;
         $this->rulesRepository = $rulesRepository;
+        $this->seasonsRepository = $seasonsRepository;
+        $this->seasonsTeamsRepository = $seasonsTeamsRepository;
         $this->tablesRepository = $tablesRepository;
         $this->teamsRepository = $teamsRepository;
         $this->usersRepository = $usersRepository;
@@ -178,16 +186,14 @@ abstract class BasePresenter extends Presenter {
      * Set before content rendering
      */
     public function beforeRender() {
-        $this->template->links = $this->linksRepository->findByValue('sponsor', 0)
-                ->order('title');
+        $this->template->links = $this->linksRepository->getLinks();
         $this->template->sponsors = $this->linksRepository->getSponsors();
         $this->template->imgFolder = self::IMG_FOLDER;
         $this->template->defaultImg = self::DEFAULT_IMG;
 
-        $sideTeams = $this->teamsRepository->findByValue('archive_id', NULL)
-                ->where('logo NOT', null);
+        $sideTeams = $this->seasonsTeamsRepository->getTeams();
         $this->template->sideTeams = $sideTeams;
-        $this->template->teamsCount = $sideTeams->count();
+        $this->template->teamsCount = 2;
         $this->template->addForm = self::ADD_FORM;
         $this->template->editForm = self::EDIT_FORM;
         $this->template->removeForm = self::REMOVE_FORM;

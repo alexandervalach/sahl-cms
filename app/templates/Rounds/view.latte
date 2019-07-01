@@ -2,150 +2,150 @@
 
 <section class="content">
 
-    <div n:if="$user->loggedIn" class="clearfix">
+  <div n:if="$user->loggedIn" class="clearfix">
 
-        <div class="pull-right">
+      <div class="pull-right">
 
-            <button type="button" class='{$btnSuccess}' 
-                    data-toggle="modal" data-target="#edit" title="Upraviť kolo">
-                <span class="glyphicon glyphicon-edit"></span>
-            </button>
+          <button type="button" class='{$btnSuccess}'
+                  data-toggle="modal" data-target="#edit" title="Upraviť kolo">
+              <span class="glyphicon glyphicon-edit"></span>
+          </button>
 
-            <button type="button" class='{$btnPrimary}' 
-                    data-toggle="modal" data-target="#add-fight" title="Pridať zápas">
-                <span class="glyphicon glyphicon-plus-sign"></span>
-            </button>
+          <button type="button" class='{$btnPrimary}'
+                  data-toggle="modal" data-target="#add-fight" title="Pridať zápas">
+              <span class="glyphicon glyphicon-plus-sign"></span>
+          </button>
 
-            <button type="button" class='{$btnDanger}' 
-                    data-toggle="modal" data-target="#remove" title="Odstrániť kolo">
-                <span class="glyphicon glyphicon-trash"></span>
-            </button>
+          <button type="button" class='{$btnDanger}'
+                  data-toggle="modal" data-target="#remove" title="Odstrániť kolo">
+              <span class="glyphicon glyphicon-trash"></span>
+          </button>
 
-        </div>
+      </div>
 
-    </div>
+  </div>
 
-    <div class="clearfix">
-        <h1 n:block="title">{$round->name}</h1>
-    </div>
+  <div class="clearfix">
+      <h1 n:block="title">{$round->label}</h1>
+  </div>
 
-    <div n:foreach="$fights as $fight" class="clearfix text-center" style="margin-top: 2em">
+  <div n:foreach="$fights as $fight" class="clearfix text-center" style="margin-top: 2em">
 
-        <div n:if="$user->loggedIn" style="margin-bottom: 1em">
-            <a class="{$btnSuccess}" n:href="Fights:edit $fight" title="Upraviť zápas">
-                <span class="glyphicon glyphicon-edit"></span>
-            </a>
-            <a class="{$btnDefault}" n:href="Goals:view $fight" title="Zobraziť góly">
-                <span class="glyphicon glyphicon-eye-open"></span>
-            </a>
-            <a class="{$btnDanger}" n:href="Fights:remove $fight" title="Odstrániť zápas">
-                <span class="glyphicon glyphicon-trash"></span>
-            </a>
-        </div>
+      <div n:if="$user->loggedIn" style="margin-bottom: 1em">
+          <a class="{$btnSuccess}" n:href="Fights:edit $fight" title="Upraviť zápas">
+              <span class="glyphicon glyphicon-edit"></span>
+          </a>
+          <a class="{$btnDefault}" n:href="Goals:view $fight" title="Zobraziť góly">
+              <span class="glyphicon glyphicon-eye-open"></span>
+          </a>
+          <a class="{$btnDanger}" n:href="Fights:remove $fight" title="Odstrániť zápas">
+              <span class="glyphicon glyphicon-trash"></span>
+          </a>
+      </div>
 
-        <div class="clearfix">
+      <div class="clearfix">
 
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
 
-                <div class="clearfix">
-                    <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_1']->logo}" width="20%" 
-                         n:if="$fight_data[$i]['team_1']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_1']->logo)" />
-                </div>
+              <div class="clearfix">
+                  <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_1']->logo}" width="20%"
+                        n:if="$fight_data[$i]['team_1']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_1']->logo)" />
+              </div>
 
-                <h2>
-                    {$fight_data[$i]['team_1']->name}<br />
-                    {$fight->score1}
-                </h2>
+              <h2>
+                  {$fight_data[$i]['team_1']->name}<br />
+                  {$fight->score1}
+              </h2>
 
-                <ul n:if="$fight_data[$i]['home_goals'] != NULL" class="clearfix">
-                    <li><strong>Domáci</strong> </li>
+              <ul n:if="$fight_data[$i]['home_goals'] != NULL" class="clearfix">
+                  <li><strong>Domáci</strong> </li>
 
-                    <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
-                        {var $player = $goal->ref('players', 'player_id')}
-                        {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
-                    </li>
+                  <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
+                      {var $player = $goal->ref('players', 'player_id')}
+                      {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
+                  </li>
 
-                </ul>
+              </ul>
 
-            </div>
+          </div>
 
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_2']}">
+          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_2']}">
 
-                <div class="clearfix">
-                    <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_2']->logo}" width="20%" 
-                         n:if="$fight_data[$i]['team_2']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_2']->logo)" />
-                </div>
+              <div class="clearfix">
+                  <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_2']->logo}" width="20%"
+                        n:if="$fight_data[$i]['team_2']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_2']->logo)" />
+              </div>
 
-                <h2>
-                    {$fight_data[$i]['team_2']->name}<br />
-                    {$fight->score2}
-                </h2>
+              <h2>
+                  {$fight_data[$i]['team_2']->name}<br />
+                  {$fight->score2}
+              </h2>
 
-                <ul n:if="$fight_data[$i]['guest_goals'] != NULL">
-                    <li><strong>Hostia</strong></li>
+              <ul n:if="$fight_data[$i]['guest_goals'] != NULL">
+                  <li><strong>Hostia</strong></li>
 
-                    <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
-                        {var $player = $goal->ref('players', 'player_id')}
-                        {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
-                    </li>
+                  <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
+                      {var $player = $goal->ref('players', 'player_id')}
+                      {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
+                  </li>
 
-                </ul>
+              </ul>
 
-            </div>
+          </div>
 
-        </div>
+      </div>
 
-        {var $i = $i + 1}
+      {var $i = $i + 1}
 
-        <hr n:if="!$iterator->last" />
+      <hr n:if="!$iterator->last" />
 
-    </div>
+  </div>
 
 </section>
 
 <section n:if="$user->loggedIn">
 
-    <div id="edit" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Upraviť kolo</h3>
-                </div>
-                <div class="modal-body">
-                    {control editForm}
-                </div>
-            </div>
-        </div>
-    </div>
+  <div id="edit" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h3 class="modal-title">Upraviť kolo</h3>
+              </div>
+              <div class="modal-body">
+                  {control editForm}
+              </div>
+          </div>
+      </div>
+  </div>
 
-    <div id="remove" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Odstrániť kolo</h3>
-                </div>
-                <div class="modal-body">
-                    {control removeForm}
-                </div>
-            </div>
-        </div>
-    </div>
+  <div id="remove" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h3 class="modal-title">Odstrániť kolo</h3>
+              </div>
+              <div class="modal-body">
+                  {control removeForm}
+              </div>
+          </div>
+      </div>
+  </div>
 
-    <div id="add-fight" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Pridať zápas</h3>
-                </div>
-                <div class="modal-body">
-                    {control addFightForm}
-                </div>
-            </div>
-        </div>
-    </div>
+  <div id="add-fight" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h3 class="modal-title">Pridať zápas</h3>
+              </div>
+              <div class="modal-body">
+                  {control addFightForm}
+              </div>
+          </div>
+      </div>
+  </div>
 
 </section>
 

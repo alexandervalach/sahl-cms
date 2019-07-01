@@ -2,53 +2,47 @@
 
 <section class="content">
 
-    <div n:if="$user->loggedIn" class="clearfix">
-
-        <div class="pull-right">
-            <button type="button" class="{$btnPrimary}" data-toggle="modal" data-target="#add">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </div>
-
+  <div n:if="$user->loggedIn" class="clearfix">
+    <div class="pull-right">
+        <button type="button" class="{$btnPrimary}" data-toggle="modal" data-target="#add">
+            <span class="glyphicon glyphicon-plus"></span> Pridať
+        </button>
     </div>
-
-    <div class="clearfix">
-        <h1 n:block="title">Kolá</h1>
-    </div>
-
+  </div>
+  <div class="clearfix">
+    <h1 n:block="title">Kolá</h1>
+  </div>
 </section>
 
 <div class="table-responsive" n:if="$rounds->count()">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Kolá</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr n:foreach="$rounds as $round">
-                <td><a n:href="view $round">{$round->name}</a></td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Kolá</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr n:foreach="$rounds as $round">
+        <td><a n:href="view $round">{$round->label}</a></td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <section n:if="$user->loggedIn">
-
-    <div id="add" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Vytvoriť nové kolo</h3>
-                </div>
-                <div class="modal-body">
-                    {control addForm}
-                </div>
-            </div>
+  <div id="add" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Vytvoriť nové kolo</h3>
         </div>
+        <div class="modal-body">
+          {control addForm}
+        </div>
+      </div>
     </div>
-
+  </div>
 </section>
 
 {/block}

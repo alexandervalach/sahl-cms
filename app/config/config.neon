@@ -26,7 +26,6 @@ services:
 	router: @App\RouterFactory::createRouter
 	authenticator: App\Model\UserManager
 	- App\Model\AlbumsRepository
-	- App\Model\ArchivesRepository
 	- App\Model\EventsRepository
 	- App\Model\FightsRepository
 	- App\Model\ImagesRepository
@@ -39,6 +38,8 @@ services:
 	- App\Model\PunishmentsRepository
 	- App\Model\RoundsRepository
 	- App\Model\RulesRepository
+	- App\Model\SeasonsRepository
+	- App\Model\SeasonsTeamsRepository
 	- App\Model\TableTypesRepository
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository

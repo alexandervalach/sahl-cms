@@ -4,8 +4,10 @@ namespace App\Model;
 
 class TableTypesRepository extends Repository {
 
-    public function getTypes() {
-        return $this->findAll()->fetchPairs('id', 'name');
-    }
+  protected $tableName = 'table_types';
+
+  public function getTableTypes() {
+    return $this->getAll()->fetchPairs('id', 'label');
+  }
 
 }

@@ -1,25 +1,24 @@
 {**
- * @param string   	$basePath web base path
- * @param string 	$imgFolder images folder path
- * @param array    	$sponsors  array of sponsors
+* @param string   	$basePath web base path
+* @param string 	$imgFolder images folder path
+* @param array    	$sponsors  array of sponsors
 *}
 
 <section id="sponsors" class="col-md-11 col-lg-8 content hidden-xs">
-    <header class="clearfix">
-        <h2>Sponzori</h2>
-    </header>
-    <main>
-        {foreach $sponsors as $sponsor}
-            <div style="width: 100%; display: block">
-                <figure class="col-md-4 col-lg-4">
-                    <a href="{$sponsor->anchor}" target="_blank" title="Prejsť na: {$sponsor->title}">
-                        {if file_exists($imgFolder . '/' . $sponsor->image)}
-                            <img class="img img-responsive" alt="{$sponsor->title} Logo"
-                                 src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
-                        {/if}
-                    </a>
-                </figure>
-            </div>
-        {/foreach}
-    </main>
+  <div class="clearfix">
+    <h2>Sponzori</h2>
+  </div>
+  <div>
+    {foreach $sponsors as $sponsor}
+      <div style="width: 100%; display: block">
+        <figure class="col-md-4 col-lg-4">
+          <a href="{$sponsor->anchor}" target="_blank" title="Prejsť na: {$sponsor->label}">
+            {if file_exists($imgFolder . '/' . $sponsor->image)}
+              <img class="img img-responsive" alt="{$sponsor->label}" src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
+            {/if}
+          </a>
+        </figure>
+      </div>
+    {/foreach}
+  </div>
 </section>

@@ -1,0 +1,40 @@
+{block content}
+
+<section class="content">
+
+  <div class="clearfix" n:if="$user->loggedIn">
+
+      <div class="pull-right">
+          <button type="button" class='btn btn-primary'
+                  data-toggle="modal" data-target="#add" title="Vytvoriť nový archív">
+              <span class="glyphicon glyphicon-plus"></span>
+          </button>
+      </div>
+
+  </div>
+
+  <div class="clearfix">
+      <h1 n:block="title">Archív</h1>
+  </div>
+
+  <ul>
+      <li n:foreach="$archive as $arch">
+          <a n:href="view $arch">{$arch->label}</a>
+      </li>
+  </ul>
+
+</section>
+
+<div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h3 class="modal-title">Pridať archív</h3>
+          </div>
+          <div class="modal-body">
+              {control addForm}
+          </div>
+      </div>
+  </div>
+</div>

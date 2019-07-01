@@ -7,6 +7,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
+use Nette\Forms\Controls\SubmitButton;
 
 class EventsPresenter extends BasePresenter {
 
@@ -54,10 +55,12 @@ class EventsPresenter extends BasePresenter {
     /**
      * Removes a record from database
      */
-    public function actionRemove($id) {
+    public function actionRemove($id): void
+    {
       $this->userIsLogged();
       $this->eventRow = $this->eventsRepository->findById($id);
-      if (!$this->eventRow) {
+
+      if (!$this->eventRow || !$this->eventRow->is_present) {
         throw new BadRequestException(self::EVENT_NOT_FOUND);
       }
     }
@@ -65,28 +68,30 @@ class EventsPresenter extends BasePresenter {
     /**
      * Checks whether event exists and passes data to template
      */
-    public function renderRemove($id) {
+    public function renderRemove($id): void
+    {
       $this->template->event = $this->eventRow;
     }
 
     /**
      * Get data for event arch page
      */
-    public function actionArchAll($id) {
+    public function actionArchAll($id): void
+    {
       $this->seasonRow = $this->seasonsRepository->findById($id);
     }
 
     /**
      * Renders arch view page
      */
-    public function renderArchAll($id) {
+    public function renderArchAll($id): void
+    {
       $this->template->archive = $this->seasonRow;
-      $this->template->events = $this->eventsRepository->getAll($id)->order('id DESC');
+      $this->template->events = $this->eventsRepository->getArchived($id)->order('id DESC');
     }
 
     /**
-     * Creates add form components
-     *
+     * Creates add form component
      * @return Nette\Application\UI\Form
      */
     protected function createComponentAddForm(): Form
@@ -95,6 +100,9 @@ class EventsPresenter extends BasePresenter {
       $form->addTextArea('content', 'Obsah')
           ->setAttribute('id', 'ckeditor');
       $form->addSubmit('save', 'Uložiť');
+      $form->addSubmit('cancel', 'Zrušiť')
+            ->setAttribute('class', self::BTN_WARNING)
+            ->setAttribute('data-dismiss', 'modal');
       $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
       FormHelper::setBootstrapFormRenderer($form);
       return $form;
@@ -102,7 +110,6 @@ class EventsPresenter extends BasePresenter {
 
     /**
      * Creates edit form component
-     *
      * @return Nette\Application\UI\Form
      */
     protected function createComponentEditForm(): Form
@@ -110,7 +117,12 @@ class EventsPresenter extends BasePresenter {
       $form = new Form;
       $form->addTextArea('content', 'Obsah')
           ->setAttribute('id', 'ckeditor');
-      $form->addSubmit('save', 'Uložiť');
+      $form->addSubmit('save', 'Uložiť')
+            ->setAttribute('class', self::BTN_SUCCESS)
+            ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
+      $form->addSubmit('cancel', 'Zrušiť')
+            ->setAttribute('class', self::BTN_WARNING)
+            ->onClick[] = [$this, 'formCancelled'];
       $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
       FormHelper::setBootstrapFormRenderer($form);
       return $form;
@@ -118,61 +130,58 @@ class EventsPresenter extends BasePresenter {
 
     /**
      * Renders remove form component
-     *
      * @return Nette\Application\UI\Form
      */
     protected function createComponentRemoveForm(): Form
     {
       $form = new Form;
+      $form->addSubmit('delete', 'Odstrániť')
+            ->setAttribute('class', self::BTN_DANGER)
+            ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
       $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->onClick[] = [$this, 'formCancelled'];
-      $form->addSubmit('delete', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-      $form->addProtection();
+      $form->addProtection(self::CSRF_TOKEN_EXPIRED);
       FormHelper::setBootstrapFormRenderer($form);
       return $form;
     }
 
     /**
-     * Sends form data
-     *
+     * Insert data to database
      * @param Nette\Application\UI\Form $form
      * @param Nette\Utils\ArrayHash $values
      */
     public function submittedAddForm(Form $form, ArrayHash $values) {
-        $this->eventsRepository->insert($values);
-        $this->flashMessage('Rozpis bol pridaný', self::SUCCESS);
-        $this->redirect('all');
+      $this->eventsRepository->insert($values);
+      $this->flashMessage('Rozpis bol pridaný', self::SUCCESS);
+      $this->redirect('all');
     }
 
     /**
-     * Sends edit form data
-     *
-     * @param Nette\Application\UI\Form
-     * @param array $values
+     * Edits selected row
+     * @param SubmitButton $button
+     * @param ArrayHash $values
      */
-    public function submittedEditForm(Form $form, array $values) {
-        $this->eventRow->update($values);
-        $this->flashMessage('Rozpis bol upravený', self::SUCCESS);
-        $this->redirect('all');
+    public function submittedEditForm(SubmitButton $button, ArrayHash $values) {
+      $this->eventRow->update($values);
+      $this->flashMessage('Rozpis bol upravený', self::SUCCESS);
+      $this->redirect('all');
     }
 
     /**
-     * Sends remove form data
+     * Removes selected row
      */
     public function submittedRemoveForm() {
-        $this->eventRow->delete();
-        $this->flashMessage('Rozpis bol odstránený', self::SUCCESS);
-        $this->redirect('all');
+      $this->eventsRepository->remove($this->eventRow);
+      $this->flashMessage('Rozpis bol odstránený', self::SUCCESS);
+      $this->redirect('all');
     }
 
     /**
      * Redirects user to all page
      */
     public function formCancelled() {
-        $this->redirect('all');
+      $this->redirect('all');
     }
 
 }

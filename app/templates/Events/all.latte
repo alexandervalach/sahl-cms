@@ -1,36 +1,30 @@
 {block content}
 
 <section class="content">
-
   <div class="clearfix">
     <div n:if="$user->loggedIn" class="pull-right">
-      <button type="button" class="{$btnPrimary}" data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
+      <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add" title="Pridať rozpis zápasov">
         <span class="glyphicon glyphicon-plus"></span> Pridať
       </button>
     </div>
   </div>
-
   <div class="clearfix">
     <h1 n:block="title">Rozpis zápasov</h1>
   </div>
-
-  <article n:foreach="$events as $event"
-      class="clearfix text-center" style="padding: 2em">
-      <div class="overflow-container">
-        {$event->content|noescape}
-      </div>
-
-      <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 1em">
-        <a n:href="edit $event" class="btn btn-large btn-success">
-          <span class="glyphicon glyphicon-edit"></span>
-        </a>
-        <a n:href="remove $event" class="btn btn-large btn-danger">
-          <span class="glyphicon glyphicon-trash"></span>
-        </a>
-      </div>
-      <hr n:if="!$iterator->last" />
+  <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
+    <div class="overflow-container">
+      {$event->content|noescape}
+    </div>
+    <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 1em">
+      <a n:href="edit $event" class="btn btn-large btn-success">
+        <span class="glyphicon glyphicon-pencil"></span> Upraviť
+      </a>
+      <a n:href="remove $event" class="btn btn-large btn-danger">
+        <span class="glyphicon glyphicon-trash"></span> Odstrániť
+      </a>
+    </div>
+    <hr n:if="!$iterator->last" />
   </article>
-
 </section>
 
 <div n:if="$user->loggedIn">

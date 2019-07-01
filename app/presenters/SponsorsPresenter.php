@@ -10,7 +10,7 @@ use Nette\Utils\FileSystem;
 
 class SponsorsPresenter extends BasePresenter {
 
-  const LINK_NOT_FOUND = 'Link not found';
+  const ITEM_NOT_FOUND = 'Sponsor not found';
 
   /** @var ActiveRow */
   private $sponsorRow;
@@ -27,7 +27,7 @@ class SponsorsPresenter extends BasePresenter {
     $this->userIsLogged();
     $this->sponsorRow = $this->sponsorsRepository->findById($id);
     if (!$this->sponsorRow || !$this->sponsorRow->is_present) {
-      throw new BadRequestException(self::LINK_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }
 
@@ -39,7 +39,7 @@ class SponsorsPresenter extends BasePresenter {
     $this->userIsLogged();
     $this->sponsorRow = $this->sponsorsRepository->findById($id);
     if (!$this->sponsorRow || !$this->sponsorRow->is_present) {
-      throw new BadRequestException(self::LINK_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->sponsorRow);
   }
@@ -117,13 +117,13 @@ class SponsorsPresenter extends BasePresenter {
 
   public function submittedRemoveForm() {
     $this->sponsorsRepository->remove($this->sponsorRow);
-    $this->flashMessage('Odkaz bol odstránený', self::SUCCESS);
+    $this->flashMessage('Sponzor bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
 
   public function submittedEditForm(Form $form, $values) {
     $this->sponsorRow->update($values);
-    $this->flashMessage('Odkaz bol upravený', self::SUCCESS);
+    $this->flashMessage('Sponzor bol upravený', self::SUCCESS);
     $this->redirect('all');
   }
 

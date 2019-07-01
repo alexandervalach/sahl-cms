@@ -2,7 +2,7 @@
 
 <section class="content">
   <div class="clearfix">
-    <h1 n:block="title">Odkazy</h1>
+    <h1 n:block="title">Sponzori</h1>
   </div>
   <div class="clearfix pull-right">
     <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal" title="Nový link/sponzor">
@@ -11,7 +11,7 @@
   </div>
 </section>
 
-{if $links->count()}
+{if $sponsors->count()}
   <div class="table-responsive">
     <table class="table">
       <thead>
@@ -21,18 +21,18 @@
         </tr>
       </thead>
       <tbody>
-        {foreach $links as $link}
+        {foreach $sponsors as $sponsor}
           <tr>
             <td>
-              <a href="{$link->url}" target="_blank">{$link->label}</a>
+              <a href="{$sponsor->url}" target="_blank">{$sponsor->label}</a>
             </td>
             <td>
-              <a n:href="edit $link" class="text-success text-center">
+              <a n:href="edit $sponsor" class="text-success">
                 <span class="glyphicon glyphicon-pencil"></span>
               </a>
             </td>
             <td>
-              <a n:href="remove $link" class="text-danger text-center">
+              <a n:href="remove $sponsor" class="text-danger">
                 <span class="glyphicon glyphicon-trash"></span>
               </a>
             </td>
@@ -45,16 +45,16 @@
 
 {if $user->loggedIn}
 <div id="add" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Nový odkaz</h3>
-            </div>
-            <div class="modal-body">
-                {control addForm}
-            </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 class="modal-title">Nový sponzor</h3>
+      </div>
+      <div class="modal-body">
+        {control addForm}
+      </div>
     </div>
+  </div>
 </div>
 {/if}

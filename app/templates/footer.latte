@@ -5,13 +5,13 @@
 <footer class='container-fluid text-center'>
 	<section>
 		<h2>Navštívte aj tieto stránky</h2>
-		<p n:foreach="$links as $link">
-			<a href='{$link->anchor}' target="_blank">{$link->label}</a>
+		<p n:foreach="$links as $footerLink">
+			<a href='{$footerLink->url}' target="_blank">{$footerLink->label}</a>
 		</p>
 	</section>
 
-	<section n:if="!$user->loggedIn" class="hidden-xs">
-		<button type="button" class="{$btnInfo}" data-target="#sign-in" data-toggle="modal" title="Prihlásenie do administrácie">
+	<section n:if="!$user->loggedIn">
+		<button type="button" class="btn btn-large btn-info" data-target="#sign-in" data-toggle="modal" title="Prihlásenie do administrácie">
 			Administrácia
 		</button>
 	</section>

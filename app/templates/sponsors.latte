@@ -9,12 +9,12 @@
     <h2>Sponzori</h2>
   </div>
   <div>
-    {foreach $sponsors as $sponsor}
+    {foreach $sponsors as $footSponsor}
       <div style="width: 100%; display: block">
         <figure class="col-md-4 col-lg-4">
-          <a href="{$sponsor->anchor}" target="_blank" title="Prejsť na: {$sponsor->label}">
-            {if file_exists($imgFolder . '/' . $sponsor->image)}
-              <img class="img img-responsive" alt="{$sponsor->label}" src="{$basePath}/{$imgFolder}/{$sponsor->image}" />
+          <a href="{$footSponsor->url}" target="_blank" title="Prejsť na {$footSponsor->label}">
+            {if file_exists($imgFolder . '/' . $footSponsor->image)}
+              <img class="img img-responsive" alt="{$footSponsor->label}" src="{$basePath}/{$imgFolder}/{$footSponsor->image}" />
             {/if}
           </a>
         </figure>

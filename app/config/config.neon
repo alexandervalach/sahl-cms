@@ -40,6 +40,7 @@ services:
 	- App\Model\RulesRepository
 	- App\Model\SeasonsRepository
 	- App\Model\SeasonsTeamsRepository
+	- App\Model\SponsorsRepository
 	- App\Model\TableTypesRepository
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository

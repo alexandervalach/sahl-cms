@@ -6,45 +6,46 @@ use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\FileSystem;
 
-class LinksPresenter extends BasePresenter {
+class SponsorsPresenter extends BasePresenter {
 
   const LINK_NOT_FOUND = 'Link not found';
 
   /** @var ActiveRow */
-  private $linkRow;
+  private $sponsorRow;
 
   public function actionAll() {
     $this->userIsLogged();
   }
 
   public function renderAll() {
-    $this->template->links = $this->linksRepository->getAll();
+    $this->template->sponsors = $this->sponsorsRepository->getAll();
   }
 
   public function actionRemove($id) {
     $this->userIsLogged();
-    $this->linkRow = $this->linksRepository->findById($id);
-    if (!$this->linkRow) {
+    $this->sponsorRow = $this->sponsorsRepository->findById($id);
+    if (!$this->sponsorRow || !$this->sponsorRow->is_present) {
       throw new BadRequestException(self::LINK_NOT_FOUND);
     }
   }
 
   public function renderRemove($id) {
-    $this->template->link = $this->linkRow;
+    $this->template->sponsor = $this->sponsorRow;
   }
 
   public function actionEdit($id) {
     $this->userIsLogged();
-    $this->linkRow = $this->linksRepository->findById($id);
-    if (!$this->linkRow) {
+    $this->sponsorRow = $this->sponsorsRepository->findById($id);
+    if (!$this->sponsorRow || !$this->sponsorRow->is_present) {
       throw new BadRequestException(self::LINK_NOT_FOUND);
     }
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->linkRow);
+    $this->getComponent(self::EDIT_FORM)->setDefaults($this->sponsorRow);
   }
 
   public function renderEdit($id) {
-    $this->template->link = $this->linkRow;
+    $this->template->sponsor = $this->sponsorRow;
   }
 
   protected function createComponentAddForm() {
@@ -53,7 +54,9 @@ class LinksPresenter extends BasePresenter {
           ->setAttribute('placeholder', 'Mesto Spišská Nová Ves')
           ->addRule(Form::FILLED, 'Názov je povinné pole');
     $form->addText('url', 'URL adresa')
-          ->setAttribute('placeholder', 'http://www.spisskanovaves.eu');
+          ->setAttribute('placeholder', 'http://www.spisskanovaves.eu')
+          ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
+    $form->addUpload('image', 'Obrázok');
     $form->addSubmit('save', 'Uložiť');
     $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
     FormHelper::setBootstrapFormRenderer($form);
@@ -95,20 +98,32 @@ class LinksPresenter extends BasePresenter {
   }
 
   public function submittedAddForm(Form $form, $values) {
-    $this->linksRepository->insert($values);
-    $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
-    $this->redirect('all');
-  }
+    $img = $values['image'];
 
-  public function submittedEditForm(Form $form, $values) {
-    $this->linkRow->update($values);
-    $this->flashMessage('Odkaz bol upravený', self::SUCCESS);
+    $name = strtolower($img->getSanitizedName());
+    try {
+        if ($img->isOk() AND $img->isImage()) {
+            $img->move($this->imageDir . '/' . $name);
+        }
+        $values['image'] = $name;
+        $this->sponsorsRepository->insert($values);
+        $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
+    } catch (IOException $e) {
+        $this->flashMessage('Obrázok ' . $name . ' sa nepodarilo nahrať', self::DANGER);
+    }
+
     $this->redirect('all');
   }
 
   public function submittedRemoveForm() {
-    $this->linksRepository->remove($this->linkRow);
+    $this->sponsorsRepository->remove($this->sponsorRow);
     $this->flashMessage('Odkaz bol odstránený', self::SUCCESS);
+    $this->redirect('all');
+  }
+
+  public function submittedEditForm(Form $form, $values) {
+    $this->sponsorRow->update($values);
+    $this->flashMessage('Odkaz bol upravený', self::SUCCESS);
     $this->redirect('all');
   }
 

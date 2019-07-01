@@ -18,6 +18,7 @@ use App\Model\RulesRepository;
 use App\Model\RoundsRepository;
 use App\Model\SeasonsRepository;
 use App\Model\SeasonsTeamsRepository;
+use App\Model\SponsorsRepository;
 use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
@@ -109,6 +110,9 @@ abstract class BasePresenter extends Presenter {
     /** @var SeasonsTeamsRepository */
     protected $seasonsTeamsRepository;
 
+    /** @var SponsorsRepository */
+    protected $sponsorsRepository;
+
     /** @var TablesRepository */
     protected $tablesRepository;
 
@@ -131,79 +135,68 @@ abstract class BasePresenter extends Presenter {
      * Base constructor
      */
     public function __construct(
-        AlbumsRepository $albumsRepository,
-        EventsRepository $eventsRepository,
-        FightsRepository $fightsRepository,
-        ImagesRepository $imagesRepository,
-        GoalsRepository $goalsRepository,
-        LinksRepository $linksRepository,
-        tableTypesRepository $tableTypesRepository,
-        PlayerTypesRepository $playerTypesRepository,
-        PlayersRepository $playersRepository,
-        PostImagesRepository $postImagesRepository,
-        PostsRepository $postsRepository,
-        PunishmentsRepository $punishmentsRepository,
-        RoundsRepository $roundsRepository,
-        RulesRepository $rulesRepository,
-        SeasonsRepository $seasonsRepository,
-        SeasonsTeamsRepository $seasonsTeamsRepository,
-        TablesRepository $tablesRepository,
-        TeamsRepository $teamsRepository,
-        UsersRepository $usersRepository)
+      AlbumsRepository $albumsRepository,
+      EventsRepository $eventsRepository,
+      FightsRepository $fightsRepository,
+      ImagesRepository $imagesRepository,
+      GoalsRepository $goalsRepository,
+      LinksRepository $linksRepository,
+      tableTypesRepository $tableTypesRepository,
+      PlayerTypesRepository $playerTypesRepository,
+      PlayersRepository $playersRepository,
+      PostImagesRepository $postImagesRepository,
+      PostsRepository $postsRepository,
+      PunishmentsRepository $punishmentsRepository,
+      RoundsRepository $roundsRepository,
+      RulesRepository $rulesRepository,
+      SeasonsRepository $seasonsRepository,
+      SeasonsTeamsRepository $seasonsTeamsRepository,
+      SponsorsRepository $sponsorsRepository,
+      TablesRepository $tablesRepository,
+      TeamsRepository $teamsRepository,
+      UsersRepository $usersRepository)
     {
-        parent::__construct();
-        $this->albumsRepository = $albumsRepository;
-        $this->eventsRepository = $eventsRepository;
-        $this->fightsRepository = $fightsRepository;
-        $this->imagesRepository = $imagesRepository;
-        $this->goalsRepository = $goalsRepository;
-        $this->linksRepository = $linksRepository;
-        $this->tableTypesRepository = $tableTypesRepository;
-        $this->playersRepository = $playersRepository;
-        $this->playerTypesRepository = $playerTypesRepository;
-        $this->postImagesRepository = $postImagesRepository;
-        $this->postsRepository = $postsRepository;
-        $this->punishmentsRepository = $punishmentsRepository;
-        $this->roundsRepository = $roundsRepository;
-        $this->rulesRepository = $rulesRepository;
-        $this->seasonsRepository = $seasonsRepository;
-        $this->seasonsTeamsRepository = $seasonsTeamsRepository;
-        $this->tablesRepository = $tablesRepository;
-        $this->teamsRepository = $teamsRepository;
-        $this->usersRepository = $usersRepository;
-        $this->backlink = '';
+      parent::__construct();
+      $this->albumsRepository = $albumsRepository;
+      $this->eventsRepository = $eventsRepository;
+      $this->fightsRepository = $fightsRepository;
+      $this->imagesRepository = $imagesRepository;
+      $this->goalsRepository = $goalsRepository;
+      $this->linksRepository = $linksRepository;
+      $this->tableTypesRepository = $tableTypesRepository;
+      $this->playersRepository = $playersRepository;
+      $this->playerTypesRepository = $playerTypesRepository;
+      $this->postImagesRepository = $postImagesRepository;
+      $this->postsRepository = $postsRepository;
+      $this->punishmentsRepository = $punishmentsRepository;
+      $this->roundsRepository = $roundsRepository;
+      $this->rulesRepository = $rulesRepository;
+      $this->seasonsRepository = $seasonsRepository;
+      $this->seasonsTeamsRepository = $seasonsTeamsRepository;
+      $this->sponsorsRepository = $sponsorsRepository;
+      $this->tablesRepository = $tablesRepository;
+      $this->teamsRepository = $teamsRepository;
+      $this->usersRepository = $usersRepository;
+      $this->backlink = '';
     }
 
     /**
      * Method for saving previous link
      */
     protected function startup() {
-        parent::startup();
-        $this->backlink = $this->storeRequest();
+      parent::startup();
+      $this->backlink = $this->storeRequest();
     }
 
     /**
      * Set before content rendering
      */
     public function beforeRender() {
-        $this->template->links = $this->linksRepository->getLinks();
-        $this->template->sponsors = $this->linksRepository->getSponsors();
-        $this->template->imgFolder = self::IMG_FOLDER;
-        $this->template->defaultImg = self::DEFAULT_IMG;
-
-        $sideTeams = $this->seasonsTeamsRepository->getTeams();
-        $this->template->sideTeams = $sideTeams;
-        $this->template->teamsCount = 2;
-        $this->template->addForm = self::ADD_FORM;
-        $this->template->editForm = self::EDIT_FORM;
-        $this->template->removeForm = self::REMOVE_FORM;
-        $this->template->uploadForm = self::UPLOAD_FORM;
-        $this->template->goalie_title = self::GOALIE;
-        $this->template->btnSuccess = self::BTN_SUCCESS;
-        $this->template->btnDanger = self::BTN_DANGER;
-        $this->template->btnPrimary = self::BTN_PRIMARY;
-        $this->template->btnInfo = self::BTN_INFO;
-        $this->template->btnDefault = self::BTN_DEFAULT;
+      $this->template->links = $this->linksRepository->getAll();
+      $this->template->sponsors = $this->sponsorsRepository->getAll();
+      $this->template->sideTeams = $this->seasonsTeamsRepository->getTeams();
+      $this->template->imgFolder = self::IMG_FOLDER;
+      $this->template->defaultImg = self::DEFAULT_IMG;
     }
 
     /**

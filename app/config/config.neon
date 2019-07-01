@@ -31,6 +31,7 @@ services:
 	- App\Model\ImagesRepository
 	- App\Model\GoalsRepository
 	- App\Model\LinksRepository
+	- App\Model\PlayersTeamsRepository
 	- App\Model\PlayerTypesRepository
 	- App\Model\PlayersRepository
 	- App\Model\PostImagesRepository

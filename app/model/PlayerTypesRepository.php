@@ -13,4 +13,8 @@ class PlayerTypesRepository extends Repository {
     return $this->getAll()->fetchPairs(self::ID, self::LABEL);
   }
 
+  public function getGoalie() {
+    return $this->getAll()->where('label LIKE', '%brankár%')->fetch();
+  }
+
 }

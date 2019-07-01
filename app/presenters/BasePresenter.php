@@ -9,6 +9,7 @@ use App\Model\FightsRepository;
 use App\Model\ImagesRepository;
 use App\Model\GoalsRepository;
 use App\Model\LinksRepository;
+use App\Model\PlayersTeamsRepository;
 use App\Model\PlayersRepository;
 use App\Model\PlayerTypesRepository;
 use App\Model\PostImagesRepository;
@@ -83,6 +84,9 @@ abstract class BasePresenter extends Presenter {
     /** @var TableTypesRepository */
     protected $tableTypesRepository;
 
+    /** @var PlayersTeamsRepository */
+    protected $playersTeamsRepository;
+
     /** @var PlayerTypesRepository */
     protected $playerTypesRepository;
 
@@ -142,6 +146,7 @@ abstract class BasePresenter extends Presenter {
       GoalsRepository $goalsRepository,
       LinksRepository $linksRepository,
       tableTypesRepository $tableTypesRepository,
+      PlayersTeamsRepository $playersTeamsRepository,
       PlayerTypesRepository $playerTypesRepository,
       PlayersRepository $playersRepository,
       PostImagesRepository $postImagesRepository,
@@ -165,6 +170,7 @@ abstract class BasePresenter extends Presenter {
       $this->linksRepository = $linksRepository;
       $this->tableTypesRepository = $tableTypesRepository;
       $this->playersRepository = $playersRepository;
+      $this->playersTeamsRepository = $playersTeamsRepository;
       $this->playerTypesRepository = $playerTypesRepository;
       $this->postImagesRepository = $postImagesRepository;
       $this->postsRepository = $postsRepository;

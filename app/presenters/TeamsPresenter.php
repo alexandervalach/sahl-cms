@@ -28,27 +28,24 @@ class TeamsPresenter extends BasePresenter {
 
     public function actionView($id) {
       $this->teamRow = $this->teamsRepository->findById($id);
+
       if (!$this->teamRow || !$this->teamRow->is_present) {
         throw new BadRequetsException(self::TEAM_NOT_FOUND);
+      }
+
+      if ($this->user->isLoggedIn()) {
+        $this->getComponent(self::EDIT_FORM)->setDefaults($this->teamRow);
       }
     }
 
     public function renderView($id) {
-      $goalie = $this->playerTypesRepository->findByValue('type', self::GOALIE)->fetch();
+      $goalie = $this->playerTypesRepository->getGoalie();
 
-      $this->template->players = $this->playersRepository->getArchived()->where('team_id', $id);
-      $this->template->goalies = $this->playersRepository->getArchived()->where('team_id', $id);
+      $this->template->players = $this->playersRepository->getForTeam($id);
+      $this->template->goalies = []; // $this->playersRepository->getArchived()->where('team_id', $id);
       $this->template->team = $this->teamRow;
       $this->template->i = 0;
       $this->template->j = 0;
-      $this->template->goalie_title = self::GOALIE;
-
-      if ($this->user->isLoggedIn()) {
-        $this->getComponent(self::EDIT_FORM)->setDefaults($this->teamRow);
-        $this->getComponent(self::UPLOAD_FORM);
-        $this->getComponent(self::REMOVE_FORM);
-        $this->getComponent(self::ADD_PLAYER_FORM);
-      }
     }
 
     public function actionArchAll($id) {
@@ -145,8 +142,16 @@ class TeamsPresenter extends BasePresenter {
     }
 
     public function submittedAddPlayerForm(Form $form, ArrayHash $values) {
-      $values['team_id'] = $this->teamRow;
-      $this->playersRepository->insert($values);
+      // $values['team_id'] = $this->teamRow;
+      $playerId = $this->playersRepository->insert($values);
+
+      $this->playersTeamsRepository->insert(
+        array(
+          'team_id' => $this->teamRow,
+          'player_id' => $playerId
+        )
+      );
+
       $this->flashMessage('Hráč bol pridaný', self::SUCCESS);
       $this->redirect('view', $this->teamRow);
     }
@@ -155,15 +160,14 @@ class TeamsPresenter extends BasePresenter {
       $img = $values->image;
 
       if ($img->isOk() AND $img->isImage()) {
-          $img_name = $img->getSanitizedName();
-          $img->move($this->imageDir . '/' . $img_name);
-          $data = array('image' => $img_name);
-          $this->teamRow->update($data);
-          $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);
+        $imgName = $img->getSanitizedName();
+        $img->move($this->imageDir . '/' . $imgName);
+        $data = array('logo' => $imgName);
+        $this->teamRow->update($data);
+        $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);
       } else {
-          $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
+        $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
       }
-
       $this->redirect('view', $this->teamRow);
     }
 

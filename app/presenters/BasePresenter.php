@@ -41,7 +41,7 @@ abstract class BasePresenter extends Presenter {
     const SUBMITTED_EDIT_FORM = 'submittedEditForm';
     const SUBMITTED_REMOVE_FORM = 'submittedRemoveForm';
     const SUBMITTED_UPLOAD_FORM = 'submittedUploadForm';
-    const SUBMITTED_ADD_IMG_FORM = 'submittedAddImgForm';
+    const SUBMITTED_ADD_IMAGE_FORM = 'submittedAddImageForm';
     const BTN_WARNING = 'btn btn-large btn-warning';
     const BTN_DANGER = 'btn btn-large btn-danger';
     const BTN_SUCCESS = 'btn btn-large btn-success';

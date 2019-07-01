@@ -19,4 +19,21 @@ class TeamsRepository extends Repository {
     return $team->related('players')->fetchPairs('id', 'name');
   }
 
+  /**
+   * Get teams for selected season
+   * @return ResultSet
+   */
+  public function getForSeason($seasonId = null) {
+    $con = $this->getConnection();
+    if ($seasonId === null) {
+      return $con->query('SELECT t.id, t.name, t.logo FROM seasons_teams as st
+        INNER JOIN teams as t ON st.team_id = t.id
+        WHERE st.season_id IS NULL AND t.is_present = ?', 1);
+    } else {
+      return $con->query('SELECT t.id, t.name, t.logo FROM seasons_teams as st
+        INNER JOIN teams as t ON st.team_id = t.id
+        WHERE st.season_id = ? AND t.is_present = ?', $seasonId, 1);
+    }
+  }
+
 }

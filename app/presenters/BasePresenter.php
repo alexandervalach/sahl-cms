@@ -194,7 +194,7 @@ abstract class BasePresenter extends Presenter {
     public function beforeRender() {
       $this->template->links = $this->linksRepository->getAll();
       $this->template->sponsors = $this->sponsorsRepository->getAll();
-      $this->template->sideTeams = $this->seasonsTeamsRepository->getTeams();
+      $this->template->sideTeams = $this->teamsRepository->getForSeason();
       $this->template->imgFolder = self::IMG_FOLDER;
       $this->template->defaultImg = self::DEFAULT_IMG;
     }

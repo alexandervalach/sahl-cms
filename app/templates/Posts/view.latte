@@ -1,127 +1,115 @@
 {block content}
 
 <section class="content">
-
-    <div class="clearfix" n:if="$user->loggedIn">
-
-        <div class="pull-right">
-
-            <button type="button" class='{$btnSuccess}'
-                data-target="#edit" data-toggle="modal" title="Upraviť článok">
-                <span class="glyphicon glyphicon-edit"></span>
-            </button>
-
-            <button type="button" class='{$btnPrimary}'
-                data-target="#upload" data-toggle="modal" title="Nahrať obrázky k článku">
-                <span class="glyphicon glyphicon-upload"></span>
-            </button>
-
-            <button type="button" class='{$btnDanger}'
-                data-target="#remove" data-toggle="modal" title="Odstrániť článok">
-                <span class="glyphicon glyphicon-trash"></span>
-            </button>
-
-        </div>
-
+  <div class="clearfix" n:if="$user->loggedIn">
+    <div class="pull-right">
+      <button type="button" class="btn btn-large btn-success"
+        data-target="#edit" data-toggle="modal" title="Upraviť článok">
+        <span class="glyphicon glyphicon-pencil"></span> Upraviť
+      </button>
+      <button type="button" class="btn btn-large btn-info"
+        data-target="#upload" data-toggle="modal" title="Nahrať obrázky k článku">
+        <span class="glyphicon glyphicon-upload"></span> Nahrať
+      </button>
+      <button type="button" class="btn btn-large btn-danger"
+        data-target="#remove" data-toggle="modal" title="Odstrániť článok">
+        <span class="glyphicon glyphicon-trash"></span> Odstrániť
+      </button>
     </div>
+  </div>
 
-    <article>
+  <article>
+    <header>
+      <h1 n:block="title">{$post->title}</h1>
+    </header>
+    <main class="overflow-container">
+      {$post->content|noescape}
+    </main>
+  </article>
 
-        <header>
-            <h1 n:block="title">{$post->title}</h1>
-        </header>
+  {var $count = $images->count()}
+  <hr n:if="$count" />
 
-        <main class="overflow-container">
-            {$post->content|noescape}
-        </main>
+  {if $count}
+    <div id="post-images" class="clearfix">
+      {foreach $images as $img}
+        <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style="margin-top: 1em">
+          {if file_exists($imgFolder . '/' . $img->name) or $user->loggedIn}
+            <img src="{$basePath}/{$imgFolder}/{$img->name}" alt="{$img->name}" class='img img-responsive' />
+          {/if}
 
-    </article>
-
-    {var $count = $images->count()}
-    <hr n:if="$count" />
-
-    {if $count}
-        <div id="post-images" class="clearfix">
-            {foreach $images as $img}
-                <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6'
-                    style="margin-top: 1em">
-                    {if file_exists($imgFolder . '/' . $img->name) or $user->loggedIn}
-                        <img src="{$basePath}/{$imgFolder}/{$img->name}" alt="{$img->name}"
-                            class='img img-responsive' />
-                    {/if}
-
-                    {if $user->loggedIn}
-                        <figcaption class="text-center" style="margin-top: 1em">
-                            <a n:href="setImg, $img->post_id, $img" class='{$btnPrimary}'
-                                title="Nastaviť obrázok ako miniatúru článku">
-                                <span class="glyphicon glyphicon-picture"></span>
-                            </a>
-                            <a n:href="removeImg, $img->post_id, $img" class='{$btnDanger}'
-                                title="Odstrániť obrázok">
-                                <span class="glyphicon glyphicon-trash"></span>
-                            </a>
-                        </figcaption>
-                    {/if}
-                </figure>
-            {/foreach}
-        </div>
-    {/if}
+          {if $user->loggedIn}
+            <figcaption class="text-center" style="margin-top: 1em">
+              <a n:href="setImg, $img->post_id, $img" class="btn btn-large btn-primary"
+                  title="Nastaviť obrázok ako miniatúru článku">
+                  <span class="glyphicon glyphicon-picture"></span>
+              </a>
+              <a n:href="removeImg, $img->post_id, $img" class="btn btn-large btn-danger"
+                  title="Odstrániť obrázok">
+                  <span class="glyphicon glyphicon-trash"></span>
+              </a>
+            </figcaption>
+          {/if}
+        </figure>
+      {/foreach}
+    </div>
+  {/if}
 
 </section>
 
 {if $user->loggedIn}
-    <section>
-        <div id="edit" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h3 class="modal-title">Upraviť článok</h3>
-                    </div>
-                    <div class="modal-body">
-                        {control editForm}
-                    </div>
-                </div>
-            </div>
+  <section>
+    <div id="edit" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h3 class="modal-title">Upraviť článok</h3>
+          </div>
+          <div class="modal-body">
+            {control editForm}
+          </div>
         </div>
+      </div>
+    </div>
 
-        <div id="remove" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h3 class="modal-title">Odstrániť článok</h3>
-                    </div>
-                    <div class="modal-body">
-                        <p>Naozaj chcete odstrániť článok?</p>
-                        {control removeForm}
-                    </div>
-                </div>
+      <div id="remove" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h3 class="modal-title">Odstrániť článok</h3>
             </div>
+            <div class="modal-body">
+              <p>Naozaj chcete odstrániť článok?</p>
+              {control removeForm}
+            </div>
+          </div>
         </div>
+      </div>
 
-        <div id="upload" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h3 class="modal-title">Pridať obrázky</h3>
-                    </div>
-                    <div class="modal-body">
-                        {control addImgForm}
-                    </div>
-                </div>
+      <div id="upload" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h3 class="modal-title">Pridať obrázky</h3>
             </div>
+            <div class="modal-body">
+              {control addImgForm}
+            </div>
+          </div>
         </div>
-    </section>
+      </div>
+  </section>
 {/if}
 
 {/block}
 
 {block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">
-        CKEDITOR.replace('ckeditor');
-    </script>
+  {include #parent}
+  <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+  <script type="text/javascript">
+      CKEDITOR.replace('ckeditor');
+  </script>
 {/block}

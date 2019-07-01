@@ -7,74 +7,61 @@
 {block content}
 
 <div class="content container-fluid">
-
-    <div class="clearfix" n:if="$user->loggedIn">
-        <div class="pull-right">
-            <button type="button" class="{$btnPrimary}"
-                data-target="#add" data-toggle="modal">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </div>
+  <div class="clearfix" n:if="$user->loggedIn">
+    <div class="pull-right">
+      <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal">
+        <span class="glyphicon glyphicon-plus"></span> Pridať
+      </button>
     </div>
-
-    <div class="clearfix">
-        <h1 n:block="title">Články</h1>
-    </div>
-
-    <article n:foreach="$posts as $post" class="clearfix">
-
-        <header class="clearfix">
-            <a n:href="view $post">
-                <h2>{$post->title}</h2>
-            </a>
-        </header>
-
-        <main class="clearfix overflow-container">
-            <a n:href="view $post">
-                <figure class="col-md-5 col-lg-5">
-                    {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
-                        <img src="{$basePath}/{$imgFolder}/{$post->thumbnail}" class="img img-responsive"
-                            alt="Miniatúra článku {$post->title}" />
-                    {else}
-                        <img src="{$basePath}/{$imgFolder}/{$defaultImg}" class="img img-responsive"
-                            alt="Logo sahl" />
-                    {/if}
-                </figure>
-            </a>
-
-            <div class="hidden-xs col-md-7 col-lg-7">
-                {$post->content|noescape|truncate:600}
-            </div>
-            <div class="hidden-sm hidden-md hidden-lg">
-                {$post->content|noescape|truncate:150}
-            </div>
-
-        </main>
-
-        <hr n:if="!$iterator->last" />
-
-    </article>
-
+  </div>
+  <div class="clearfix">
+    <h1 n:block="title">Články</h1>
+  </div>
+  <article n:foreach="$posts as $post" class="clearfix">
+    <header class="clearfix">
+      <a n:href="view $post">
+        <h2>{$post->title}</h2>
+      </a>
+    </header>
+    <main class="clearfix overflow-container">
+      <a n:href="view $post">
+        <figure class="col-md-5 col-lg-5">
+          {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
+            <img src="{$basePath}/{$imgFolder}/{$post->thumbnail}" class="img img-responsive" alt="Miniatúra článku {$post->title}" />
+          {else}
+            <img src="{$basePath}/{$imgFolder}/{$defaultImg}" class="img img-responsive" alt="Logo sahl" />
+          {/if}
+        </figure>
+      </a>
+      <div class="hidden-xs col-md-7 col-lg-7">
+        {$post->content|noescape|truncate:600}
+      </div>
+      <div class="hidden-sm hidden-md hidden-lg">
+        {$post->content|noescape|truncate:150}
+      </div>
+    </main>
+    <hr n:if="!$iterator->last" />
+  </article>
 </div>
 
 <div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h3 class="modal-title">Vytvoriť nový príspevok</h3>
-            </div>
-            <div class="modal-body">
-                {control addForm}
-            </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h3 class="modal-title">Vytvoriť nový príspevok</h3>
+      </div>
+      <div class="modal-body">
+        {control addForm}
+      </div>
     </div>
+  </div>
 </div>
 
 {/block}
 
 {block scripts}
-    {include #parent}
-    <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
+  {include #parent}
+  <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
+  <script type="text/javascript">CKEDITOR.replace('ckeditor');</script>
 {/block}

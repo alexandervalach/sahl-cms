@@ -12,7 +12,7 @@ class PunishmentsPresenter extends BasePresenter {
   private $punishmentRow;
 
   /** @var ActiveRow */
-  private $archRow;
+  private $seasonRow;
 
   public function renderAll() {
     $this->template->punishments = $this->punishmentsRepository->getArchived()->order('id DESC');
@@ -22,14 +22,15 @@ class PunishmentsPresenter extends BasePresenter {
     $this->userIsLogged();
     $this->punishmentRow = $this->punishmentsRepository->findById($id);
 
-    if (!$this->punishmentRow) {
+    if (!$this->punishmentRow || !$this->punishmentRow->is_present) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
+
+    $this->getComponent(self::EDIT_FORM)->setDefaults($this->punishmentRow);
   }
 
   public function renderEdit($id) {
     $this->template->player = $this->punishmentRow->ref('players', 'player_id');
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->punishmentRow);
   }
 
   public function actionRemove($id) {
@@ -39,16 +40,19 @@ class PunishmentsPresenter extends BasePresenter {
 
   public function renderRemove($id) {
     $this->template->punishment = $this->punishmentRow;
-    $this->getComponent(self::REMOVE_FORM);
+
+    if (!$this->punishmentRow || !$this->punishmentRow->is_present) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
   }
 
   public function actionArchAll($id) {
-    $this->archRow = $this->archivesRepository->findById($id);
+    $this->seasonRow = $this->seasonsRepository->findById($id);
   }
 
   public function renderArchAll($id) {
-    $this->template->archive = $this->archRow;
-    $this->template->punishments = $this->punishmentsRepository->findByValue('archive_id', $id);
+    $this->template->season = $this->seasonRow;
+    $this->template->punishments = $this->punishmentsRepository->getArchived($id);
   }
 
   /**

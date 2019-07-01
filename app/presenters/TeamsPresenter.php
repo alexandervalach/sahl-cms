@@ -23,58 +23,51 @@ class TeamsPresenter extends BasePresenter {
     private $archRow;
 
     public function renderAll() {
-        $this->template->teams = $this->teamsRepository->findByValue('archive_id', null)
-                ->where('logo NOT', null);
-        if ($this->user->isLoggedIn()) {
-            $this->getComponent(self::ADD_FORM);
-        }
+      $this->template->teams = $this->teamsRepository->getAll()->where('logo NOT', null);
     }
 
     public function actionView($id) {
-        $this->teamRow = $this->teamsRepository->findById($id);
+      $this->teamRow = $this->teamsRepository->findById($id);
     }
 
     public function renderView($id) {
-        if (!$this->teamRow) {
-            throw new BadRequetsException(self::TEAM_NOT_FOUND);
-        }
+      if (!$this->teamRow) {
+        throw new BadRequetsException(self::TEAM_NOT_FOUND);
+      }
 
-        $goalie = $this->playerTypesRepository->findByValue('type', self::GOALIE)->fetch();
+      $goalie = $this->playerTypesRepository->findByValue('type', self::GOALIE)->fetch();
 
-        $this->template->players = $this->playersRepository->findByValue('team_id', $id)
-                        ->where('type_id != ?', $goalie)->where('archive_id', null)
-        ;
-        $this->template->goalies = $this->playersRepository->findByValue('team_id', $id)
-                        ->where('type_id', $goalie)->where('archive_id', null);
-        $this->template->team = $this->teamRow;
-        $this->template->i = 0;
-        $this->template->j = 0;
-        $this->template->goalie_title = self::GOALIE;
+      $this->template->players = $this->playersRepository->getArchived()->where('team_id', $id);
+      $this->template->goalies = $this->playersRepository->getArchived()->where('team_id', $id);
+      $this->template->team = $this->teamRow;
+      $this->template->i = 0;
+      $this->template->j = 0;
+      $this->template->goalie_title = self::GOALIE;
 
-        if ($this->user->isLoggedIn()) {
-            $this->getComponent(self::EDIT_FORM)->setDefaults($this->teamRow);
-            $this->getComponent(self::UPLOAD_FORM);
-            $this->getComponent(self::REMOVE_FORM);
-            $this->getComponent(self::ADD_PLAYER_FORM);
-        }
+      if ($this->user->isLoggedIn()) {
+          $this->getComponent(self::EDIT_FORM)->setDefaults($this->teamRow);
+          $this->getComponent(self::UPLOAD_FORM);
+          $this->getComponent(self::REMOVE_FORM);
+          $this->getComponent(self::ADD_PLAYER_FORM);
+      }
     }
 
     public function actionArchAll($id) {
-        $this->archRow = $this->archivesRepository->findById($id);
+      $this->archRow = $this->seasonsRepository->findById($id);
     }
 
     public function renderArchAll($id) {
-        $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
-        $this->template->archive = $this->archRow;
+      $this->template->teams = $this->teamsRepository->getAll();
+      $this->template->archive = $this->archRow;
     }
 
     public function actionArchView($id) {
-        $this->archRow = $this->archivesRepository->findById($id);
+      $this->archRow = $this->seasonsRepository->findById($id);
     }
 
     public function renderArchView($id) {
-        $this->template->teams = $this->teamsRepository->findByValue('archive_id', $id);
-        $this->template->archive = $this->archRow;
+      $this->template->teams = $this->teamsRepository->getAll($id);
+      $this->template->archive = $this->archRow;
     }
 
     protected function createComponentUploadForm() {

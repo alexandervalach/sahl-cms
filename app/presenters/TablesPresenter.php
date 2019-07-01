@@ -22,9 +22,7 @@ class TablesPresenter extends BasePresenter {
         $tableRows = array();
 
         foreach ($tableTypes as $type) {
-            $tableRows[$type->name] = $this->tablesRepository->findByValue('archive_id', null)
-                    ->where('type = ?', $type)
-                    ->order('points DESC, (score1 - score2) DESC');
+            $tableRows[$type->name] = $this->tablesRepository->getArchived()->order('points DESC, (score1 - score2) DESC');
         }
 
         $this->template->tables = $tableRows;
@@ -43,7 +41,7 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function actionArchAll($id) {
-        $this->archRow = $this->archivesRepository->findById($id);
+        $this->archRow = $this->seasonsRepository->findById($id);
     }
 
     public function renderArchAll($id) {
@@ -109,8 +107,8 @@ class TablesPresenter extends BasePresenter {
     }
 
     public function submittedResetForm() {
-        $rows = $this->tablesRepository->findByValue('archive_id', null);
-        
+        $rows = $this->tablesRepository->getArchived();
+
         $values = array(
             'counter' => 0,
             'win' => 0,
@@ -120,11 +118,11 @@ class TablesPresenter extends BasePresenter {
             'score2' => 0,
             'points' => 0
         );
-        
+
         foreach ($rows as $row) {
             $row->update($values);
         }
-        
+
         $this->redirect('all');
     }
 

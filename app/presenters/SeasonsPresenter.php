@@ -17,13 +17,13 @@ class SeasonsPresenter extends BasePresenter {
   private $seasonRow;
 
   public function renderAll() {
-    $this->template->archive = $this->seasonsRepository->getAll();
+    $this->template->seasons = $this->seasonsRepository->getAll();
   }
 
   public function actionView($id) {
     $this->seasonRow = $this->seasonsRepository->findById($id);
 
-    if (!$this->seasonRow) {
+    if (!$this->seasonRow || !$this->seasonRow->is_present) {
       throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
     }
 
@@ -33,12 +33,12 @@ class SeasonsPresenter extends BasePresenter {
   }
 
   public function renderView($id) {
-    $this->template->archive = $this->seasonRow;
+    $this->template->season = $this->seasonRow;
   }
 
   protected function createComponentAddForm() {
     $form = new Form;
-    $form->addText('title', 'Názov')
+    $form->addText('label', 'Názov')
           ->setAttribute('placeholder', 'Archív 2018')
           ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
     $form->addSubmit('save', 'Uložiť');
@@ -52,7 +52,7 @@ class SeasonsPresenter extends BasePresenter {
 
   protected function createComponentEditForm() {
     $form = new Form;
-    $form->addText('title', 'Názov')
+    $form->addText('label', 'Názov')
           ->setAttribute('placeholder', 'Archív 2018')
           ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
     $form->addSubmit('edit', 'Upraviť')
@@ -85,7 +85,7 @@ class SeasonsPresenter extends BasePresenter {
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection();
+    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
     $form->onSuccess[] = [$this, self::SUBMITTED_ARCHIVE_FORM];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
@@ -93,13 +93,13 @@ class SeasonsPresenter extends BasePresenter {
 
   public function submittedAddForm(Form $form, $values) {
     $this->archivesRepository->insert($values);
-    $this->flashMessage("Archív bol pridaný", self::SUCCESS);
+    $this->flashMessage('Archív bol pridaný', self::SUCCESS);
     $this->redirect('all');
   }
 
   public function submittedEditForm(Form $form, $values) {
     $this->archiveRow->update($values);
-    $this->flashMessage("Archív bol upravený", self::SUCCESS);
+    $this->flashMessage('Archív bol upravený', self::SUCCESS);
     $this->redirect('view', $this->archiveRow);
   }
 

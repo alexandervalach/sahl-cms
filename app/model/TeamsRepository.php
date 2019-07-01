@@ -11,7 +11,7 @@ class TeamsRepository extends Repository {
    * @return array
    */
   public function getTeams() {
-    return $this->getArchived()->order('name ASC')->fetchPairs('id', 'name');
+    return $this->getAll()->order('name')->fetchPairs('id', 'name');
   }
 
   public function getPlayers($teamId) {

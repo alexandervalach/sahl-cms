@@ -1,13 +1,13 @@
 {block content}
 
 <section class="content">
-    <div class="clearfix">
-        <h1 n:block="title">Pravidlá a smernice</h1>
-    </div>
+  <div class="clearfix">
+    <h1 n:block="title">Pravidlá a smernice</h1>
+  </div>
 
-    <article n:foreach="$rules as $rule" class="overflow-container">
-        {$rule->rule|noescape}
+  {if $rule}
+    <article class="overflow-container">
+      {$rule->content|noescape}
     </article>
+  {/if}
 </section>
-
-{/block}

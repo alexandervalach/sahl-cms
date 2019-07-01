@@ -2,80 +2,75 @@
 
 <section class="content">
 
-    <div class="clearfix" n:if="$user->loggedIn">
-
-        <div class="pull-right">
-            <button type="button" class='btn btn-large btn-success' 
-                    data-target="#edit" data-toggle="modal" title="Upraviť archív">
-                <span class="glyphicon glyphicon-edit"></span>
-            </button>
-            <button type="button" class='btn btn-default' 
-                    data-toggle="modal" data-target="#archive" title="Archivovať záznamy v sezóne">
-                <span class="glyphicon glyphicon-book"></span>
-            </button>
-        </div>
-
+  <div class="clearfix" n:if="$user->loggedIn">
+    <div class="pull-right">
+      <button type="button" class='btn btn-large btn-success' data-target="#edit" data-toggle="modal" title="Upraviť archív">
+        <span class="glyphicon glyphicon-edit"></span>
+      </button>
+      <button type="button" class='btn btn-default' data-toggle="modal" data-target="#archive" title="Archivovať záznamy v sezóne">
+        <span class="glyphicon glyphicon-book"></span>
+      </button>
     </div>
+  </div>
 
-    <div class="clearfix">
-        <h1 n:block="title">{$archive->title}</h1>
-    </div>
+  <div class="clearfix">
+    <h1 n:block="title">{$season->label}</h1>
+  </div>
 
-    <ul>
-        <li><a n:href="Tables:archAll $archive">Tabuľky</a></li>
-        <li><a n:href="Rounds:archAll $archive">Kolá</a></li>
-        <li><a n:href="Teams:archAll $archive">Tímy</a></li>
-        <li><a n:href="Players:archAll $archive">Štatistiky</a></li>
-        <li><a n:href="Events:archAll $archive">Rozpis zápasov</a></li>
-        <li><a n:href="Rules:archView $archive">Pravidlá a smernice</a></li>
-        <li><a n:href="Punishments:archAll $archive">Tresty hráčov</a></li>
-    </ul>
+  <ul>
+    <li><a n:href="Tables:archAll $season">Tabuľky</a></li>
+    <li><a n:href="Rounds:archAll $season">Kolá</a></li>
+    <li><a n:href="Teams:archAll $season">Tímy</a></li>
+    <li><a n:href="Players:archAll $season">Štatistiky</a></li>
+    <li><a n:href="Events:archAll $season">Rozpis zápasov</a></li>
+    <li><a n:href="Rules:archView $season">Pravidlá a smernice</a></li>
+    <li><a n:href="Punishments:archAll $season">Tresty hráčov</a></li>
+  </ul>
 
 </section>
 
 <section n:if="$user->loggedIn">
-    <div id="edit" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Upraviť názov archívu</h3>
-                </div>
-                <div class="modal-body">
-                    {control editForm}
-                </div>
-            </div>
+  <div id="edit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Upraviť názov archívu</h3>
         </div>
-    </div>
-    <div id="remove" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Odstrániť archív</h3>
-                </div>
-                <div class="modal-body">
-                    <p>Naozaj chcete odstrániť archív aj so všetkými príspevkami?</p>
-                    {control removeForm}
-                </div>
-            </div>
+        <div class="modal-body">
+          {control editForm}
         </div>
+      </div>
     </div>
-    <div id="archive" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Archivovať záznamy</h3>
-                </div>
-                <div class="modal-body">
-                    <p>
-                        Naozaj chcete archivovať celú sezónu?
-                        Všetky záznamy budú presunuté do archívu.
-                    </p>
-                    {control archiveForm}
-                </div>
-            </div>
+  </div>
+  <div id="remove" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Odstrániť archív</h3>
         </div>
+        <div class="modal-body">
+          <p>Naozaj chcete odstrániť archív aj so všetkými príspevkami?</p>
+          {control removeForm}
+        </div>
+      </div>
     </div>
+  </div>
+  <div id="archive" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Archivovať záznamy</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            Naozaj chcete archivovať celú sezónu? Všetky záznamy budú presunuté do archívu.
+          </p>
+          {control archiveForm}
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

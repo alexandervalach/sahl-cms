@@ -1,41 +1,40 @@
 {block content}
 
 <section class="content">
-    {if $user->loggedIn}
-        <div class="clearfix">
-            <div class="pull-right">
-                <button type="button" class="{$btnSuccess}"
-                        data-toggle="modal" data-target="#edit" title="Upraviť pravidlá a smernice">
-                    <span class="glyphicon glyphicon-edit"></span>
-                </button>
-            </div>
-        </div>
-    {/if}
-
+  {if $user->loggedIn}
     <div class="clearfix">
-        <h1 n:block="title">Pravidlá a smernice</h1>
+      <div class="pull-right">
+        <button type="button" class="btn btn-large btn-success" data-toggle="modal" data-target="#edit" title="Upraviť pravidlá a smernice">
+          <span class="glyphicon glyphicon-edit"></span>
+        </button>
+      </div>
     </div>
+  {/if}
 
-    <div class="overflow-container">
-        {$rule->rule|noescape}
-    </div>
+  <div class="clearfix">
+    <h1 n:block="title">Pravidlá a smernice</h1>
+  </div>
+
+  <div class="overflow-container">
+    {$rule->content|noescape}
+  </div>
 
 </section>
 
 {if $user->loggedIn}
-    <div id="edit" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Upraviť pravidlá a smernice</h3>
-                </div>
-                <div class="modal-body">
-                    {control editForm}
-                </div>
-            </div>
+  <div id="edit" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h3 class="modal-title">Upraviť pravidlá a smernice</h3>
         </div>
+        <div class="modal-body">
+          {control editForm}
+        </div>
+      </div>
     </div>
+  </div>
 {/if}
 
 {/block}
@@ -44,7 +43,7 @@
 {include #parent}
 <script type="text/javascript" src="{$basePath}/js/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
-    CKEDITOR.replace('ckeditor');
+  CKEDITOR.replace('ckeditor');
 </script>
 {/block}
 

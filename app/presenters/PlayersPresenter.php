@@ -63,11 +63,11 @@ class PlayersPresenter extends BasePresenter {
     }
 
     public function actionArchAll($id) {
-        $this->archRow = $this->archivesRepository->findById($id);
+        $this->archRow = $this->seasonsRepository->findById($id);
     }
 
     public function renderArchAll($id) {
-        $this->template->stats = $this->playersRepository->findByValue('archive_id', $id)
+        $this->template->stats = $this->playersRepository->getArchived($id)
                 ->where('name != ?', ' ')
                 ->order('goals DESC, name DESC');
         $this->template->archive = $this->archRow;

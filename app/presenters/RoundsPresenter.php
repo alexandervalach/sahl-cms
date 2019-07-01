@@ -32,21 +32,21 @@ class RoundsPresenter extends BasePresenter {
 		$fights = $this->roundRow->related('fights')->order('id DESC');
 
 		foreach ($fights as $fight) {
-				$fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
-				$fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
-				$fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
-				$fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
+      $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
+      $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
+      $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
+      $fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
 
-				if ($fight->score1 > $fight->score2) {
-						$fight_data[$i]['state_1'] = 'text-success';
-						$fight_data[$i]['state_2'] = 'text-danger';
-				} else if ($fight->score1 < $fight->score2) {
-						$fight_data[$i]['state_1'] = 'text-danger';
-						$fight_data[$i]['state_2'] = 'text-success';
-				} else {
-						$fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
-				}
-				$i++;
+      if ($fight->score1 > $fight->score2) {
+          $fight_data[$i]['state_1'] = 'text-success';
+          $fight_data[$i]['state_2'] = 'text-danger';
+      } else if ($fight->score1 < $fight->score2) {
+          $fight_data[$i]['state_1'] = 'text-danger';
+          $fight_data[$i]['state_2'] = 'text-success';
+      } else {
+          $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
+      }
+      $i++;
 		}
 
 		$this->template->fights = $fights;
@@ -55,26 +55,25 @@ class RoundsPresenter extends BasePresenter {
 		$this->template->round = $this->roundRow;
 
 		if ($this->user->loggedIn) {
-				$this->getComponent(self::EDIT_FORM)->setDefaults($this->roundRow);
-				$this->getComponent(self::REMOVE_FORM);
+      $this->getComponent(self::EDIT_FORM)->setDefaults($this->roundRow);
 		}
 	}
 
 	public function actionArchAll($id) {
-		$this->archRow = $this->archivesRepository->findById($id);
+		$this->archRow = $this->seasonsRepository->findById($id);
 	}
 
 	public function renderArchAll($id) {
-		$this->template->rounds = $this->roundsRepository->findByValue('archive_id', $id);
+		$this->template->rounds = $this->roundsRepository->getArchived($id);
 		$this->template->archive = $this->archRow;
 	}
 
-	public function actionArchView($archive_id, $id) {
-		$this->archRow = $this->archivesRepository->findById($archive_id);
+	public function actionArchView($archiveId, $id) {
+		$this->archRow = $this->seasonsRepository->findById($archiveId);
 		$this->roundRow = $this->roundsRepository->findById($id);
 	}
 
-	public function renderArchView($archive_id, $id) {
+	public function renderArchView($archiveId, $id) {
 			if (!$this->roundRow) {
 					throw new BadRequestException(self::ROUND_NOT_FOUND);
 			}

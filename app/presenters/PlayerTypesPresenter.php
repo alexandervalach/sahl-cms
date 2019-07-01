@@ -29,10 +29,11 @@ class PlayerTypesPresenter extends BasePresenter {
     if (!$this->playerTypeRow || !$this->playerTypeRow->is_present) {
       throw new BadRequestException(self::TYPE_NOT_FOUND);
     }
+
+    $this->getComponent(self::EDIT_FORM)->setDefaults($this->playerTypeRow);
   }
 
   public function renderEdit($id) {
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->playerTypeRow);
     $this->template->type = $this->playerTypeRow;
   }
 
@@ -113,5 +114,4 @@ class PlayerTypesPresenter extends BasePresenter {
   public function formCancelled() {
     $this->redirect('all');
   }
-
 }

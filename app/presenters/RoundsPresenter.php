@@ -125,128 +125,129 @@ class RoundsPresenter extends BasePresenter {
 	}
 
 	protected function createComponentEditForm() {
-			$form = new Form;
-			$form->addText('label', 'Názov')
-						->setAttribute('placeholder', '1.kolo')
-						->addRule(Form::MAX_LENGTH, 'Dĺžka názvu môže byť len 50 znakov', 50)
-						->addRule(Form::FILLED, 'Názov je povinné pole');
-			$form->addSubmit('save', 'Uložiť');
-			$form->addSubmit('cancel', 'Zrušiť')
-						->setAttribute('class', self::BTN_WARNING)
-						->setAttribute('data-dismiss', 'modal');
-			$form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-			FormHelper::setBootstrapFormRenderer($form);
-			return $form;
+    $form = new Form;
+    $form->addText('label', 'Názov')
+          ->setAttribute('placeholder', '1.kolo')
+          ->addRule(Form::MAX_LENGTH, 'Dĺžka názvu môže byť len 50 znakov', 50)
+          ->addRule(Form::FILLED, 'Názov je povinné pole');
+    $form->addSubmit('save', 'Uložiť')
+          ->setAttribute('class', 'btn btn-large btn-success');
+    $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', self::BTN_WARNING)
+          ->setAttribute('data-dismiss', 'modal');
+    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
+    FormHelper::setBootstrapFormRenderer($form);
+    return $form;
 	}
 
 	protected function createComponentRemoveForm() {
-			$form = new Form;
-			$form->addSubmit('remove', 'Odstrániť')
-						->setAttribute('class', self::BTN_DANGER);
-			$form->addSubmit('cancel', 'Zrušiť')
-						->setAttribute('class', self::BTN_WARNING)
-						->setAttribute('data-dismiss', 'modal');
-			$form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-			FormHelper::setBootstrapFormRenderer($form);
-			return $form;
+    $form = new Form;
+    $form->addSubmit('remove', 'Odstrániť')
+          ->setAttribute('class', self::BTN_DANGER);
+    $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', self::BTN_WARNING)
+          ->setAttribute('data-dismiss', 'modal');
+    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
+    FormHelper::setBootstrapFormRenderer($form);
+    return $form;
 	}
 
 	protected function createComponentAddFightForm() {
-			$teams = $this->teamsRepository->getTeams();
-			$form = new Form;
-			$form->addSelect('team1_id', 'Tím 1', $teams);
-			$form->addText('score1', 'Skóre tímu 1')
-						->setAttribute('placeholder', '1');
-			$form->addSelect('team2_id', 'Tím 2', $teams);
-			$form->addText('score2', 'Skóre tímu 2')
-						->setAttribute('placeholder', '0');
-			$form->addCheckbox('type', ' Označiť zápas ako Play Off');
-			$form->addSubmit('save', 'Uložiť');
-			$form->addSubmit('cancel', 'Zrušiť')
-						->setAttribute('class', self::BTN_WARNING)
-						->setAttribute('data-dismiss', 'modal');
-			$form->onSuccess[] = [$this, 'submittedAddFightForm'];
-			FormHelper::setBootstrapFormRenderer($form);
-			return $form;
+    $teams = $this->teamsRepository->getTeams();
+    $form = new Form;
+    $form->addSelect('team1_id', 'Tím 1', $teams);
+    $form->addText('score1', 'Skóre tímu 1')
+          ->setAttribute('placeholder', '1');
+    $form->addSelect('team2_id', 'Tím 2', $teams);
+    $form->addText('score2', 'Skóre tímu 2')
+          ->setAttribute('placeholder', '0');
+    $form->addCheckbox('type', ' Označiť zápas ako Play Off');
+    $form->addSubmit('save', 'Uložiť');
+    $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', self::BTN_WARNING)
+          ->setAttribute('data-dismiss', 'modal');
+    $form->onSuccess[] = [$this, 'submittedAddFightForm'];
+    FormHelper::setBootstrapFormRenderer($form);
+    return $form;
 	}
 
 	public function submittedAddFightForm(Form $form, $values) {
-			if ($values['team1_id'] == $values['team2_id']) {
-					$form->addError('Zvoľte dva rozdielne tímy.');
-					return false;
-			}
-			$values['round_id'] = $this->roundRow;
+    if ($values['team1_id'] == $values['team2_id']) {
+      $form->addError('Zvoľte dva rozdielne tímy.');
+      return false;
+    }
+    $values['round_id'] = $this->roundRow;
 
-			$values['type'] ? $type = 1 : $type = 2;
-			unset($values['type']);
+    $values['type'] ? $type = 1 : $type = 2;
+    unset($values['type']);
 
-			$this->fightsRepository->insert($values);
-			$this->updateTableRows($values, $type);
-			$this->updateTablePoints($values, $type);
-			$this->updateTableGoals($values, $type);
-			$this->flashMessage('Zápas bol pridaný', self::SUCCESS);
-			$this->redirect('Rounds:view', $this->roundRow);
+    $this->fightsRepository->insert($values);
+    $this->updateTableRows($values, $type);
+    $this->updateTablePoints($values, $type);
+    $this->updateTableGoals($values, $type);
+    $this->flashMessage('Zápas bol pridaný', self::SUCCESS);
+    $this->redirect('Rounds:view', $this->roundRow);
 	}
 
 	public function submittedAddForm(Form $form, $values) {
-			$this->roundsRepository->insert($values);
-			$this->flashMessage('Kolo bolo pridané', self::SUCCESS);
-			$this->redirect('all');
+    $this->roundsRepository->insert($values);
+    $this->flashMessage('Kolo bolo pridané', self::SUCCESS);
+    $this->redirect('all');
 	}
 
 	public function submittedEditForm(Form $form, $values) {
-			$this->roundRow->update($values);
-			$this->flashMessage('Kolo bolo upravené', self::SUCCESS);
-			$this->redirect('view', $this->roundRow);
+    $this->roundRow->update($values);
+    $this->flashMessage('Kolo bolo upravené', self::SUCCESS);
+    $this->redirect('view', $this->roundRow);
 	}
 
 	public function submittedRemoveForm() {
-			$fights = $this->roundRow->related('fights');
+    $fights = $this->fightsRepository->getForRound($this->roundRow);
 
-			foreach ($fights as $fight) {
-					$fight->delete();
-			}
+    foreach ($fights as $fight) {
+      $this->fightsRepository->remove($fight);
+    }
 
-			$this->roundRow->delete();
-			$this->flashMessage('Kolo bolo odstránené', self::SUCCESS);
-			$this->redirect('all');
+    $this->roundsRepository->remove($this->roundRow);
+    $this->flashMessage('Kolo bolo odstránené', self::SUCCESS);
+    $this->redirect('all');
 	}
 
 	protected function updateTableRows($values, $type, $value = 1) {
-			$state1 = 'tram';
-			$state2 = 'tram';
+    $state1 = 'tram';
+    $state2 = 'tram';
 
-			if ($values['score1'] > $values['score2']) {
-					$state1 = 'win';
-					$state2 = 'lost';
-			} elseif ($values['score1'] < $values['score2']) {
-					$state1 = 'lost';
-					$state2 = 'win';
-			}
-			$this->tablesRepository->incTabVal($values['team1_id'], $type, $state1, $value);
-			$this->tablesRepository->incTabVal($values['team2_id'], $type, $state2, $value);
-			$this->tablesRepository->updateFights($values['team1_id'], $type);
-			$this->tablesRepository->updateFights($values['team2_id'], $type);
+    if ($values['score1'] > $values['score2']) {
+      $state1 = 'win';
+      $state2 = 'lost';
+    } elseif ($values['score1'] < $values['score2']) {
+      $state1 = 'lost';
+      $state2 = 'win';
+    }
+    $this->tablesRepository->incTabVal($values['team1_id'], $type, $state1, $value);
+    $this->tablesRepository->incTabVal($values['team2_id'], $type, $state2, $value);
+    $this->tablesRepository->updateFights($values['team1_id'], $type);
+    $this->tablesRepository->updateFights($values['team2_id'], $type);
 	}
 
 	protected function updateTablePoints($values, $type, $column = 'points') {
-			if ($values['score1'] > $values['score2']) {
-					$this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 2);
-					$this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 0);
-			} elseif ($values['score1'] < $values['score2']) {
-					$this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 2);
-					$this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 0);
-			} else {
-					$this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 1);
-					$this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 1);
-			}
+    if ($values['score1'] > $values['score2']) {
+      $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 2);
+      $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 0);
+    } elseif ($values['score1'] < $values['score2']) {
+      $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 2);
+      $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 0);
+    } else {
+      $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 1);
+      $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 1);
+    }
 	}
 
 	protected function updateTableGoals($values, $type) {
-			$this->tablesRepository->incTabVal($values['team1_id'], $type, 'score1', $values['score1']);
-			$this->tablesRepository->incTabVal($values['team1_id'], $type, 'score2', $values['score2']);
-			$this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);
-			$this->tablesRepository->incTabVal($values['team2_id'], $type, 'score2', $values['score1']);
+    $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score1', $values['score1']);
+    $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score2', $values['score2']);
+    $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);
+    $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score2', $values['score1']);
 	}
 
 }

@@ -66,6 +66,7 @@ abstract class BasePresenter extends Presenter {
     const ARCHIVE_NOT_FOUND = 'Archive not found';
     const RULE_NOT_FOUND = 'Rule not found';
     const ITEM_NOT_FOUND = 'Item not found';
+    const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené';
 
     /** @var AlbumsRepository */
     protected $albumsRepository;

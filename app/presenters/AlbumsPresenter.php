@@ -41,7 +41,7 @@ class AlbumsPresenter extends BasePresenter {
     }
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent(self::EDIT_FORM)->setDefaults($this->albumRow);
+      $this->getComponent('albumForm')->setDefaults($this->albumRow);
     }
   }
 
@@ -89,36 +89,17 @@ class AlbumsPresenter extends BasePresenter {
    * Creates add album form
    * @return Nette\Application\UI\Form
    */
-  protected function createComponentAddForm()
+  protected function createComponentAlbumForm()
   {
     $form = new Form;
     $form->addText('name', 'Názov')
-          ->setRequired('Názov je povinné pole.')
+          ->addRule(Form::FILLED, 'Názov je povinné pole.')
           ->setAttribute('placeholder', 'Finále SAHL 2018/19');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
-   * Creates edit album form
-   * @return Nette\Application\UI\Form
-   */
-  protected function createComponentEditForm() {
-    $form = new Form;
-    $form->addText('name', 'Názov')
-          ->setRequired('Názov je povinné pole')
-          ->setAttribute('placeholder', 'Finále SAHL 2018/19');
-    $form->addSubmit('edit', 'Upraviť')
-          ->setAttribute('class', self::BTN_SUCCESS);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
+    $form->onSuccess[] = [$this, 'submittedAlbumForm'];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
   }
@@ -164,21 +145,16 @@ class AlbumsPresenter extends BasePresenter {
    * @param Nette\Application\UI\Form $form
    * @param array $values
    */
-  public function submittedAddForm(Form $form, array $values) {
-    $this->albumsRepository->insert($values);
-    $this->flashMessage('Album bol pridaný', self::SUCCESS);
-    $this->redirect('all');
-  }
+  public function submittedAlbumForm(Form $form, array $values) {
+    $id = $this->getParameter('id');
 
-  /**
-   * Submites edited values to database
-   *
-   * @param Nette\Application\UI\Form $form
-   * @param array $values
-   */
-  public function submittedEditForm(Form $form, array $values) {
-    $this->albumRow->update($values);
-    $this->flashMessage('Album bol upravený', self::SUCCESS);
+    if ($id) {
+      $this->albumRow->update($values);
+    } else {
+      $this->albumRow = $this->albumsRepository->insert($values);
+    }
+
+    $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
     $this->redirect('view', $this->albumRow->id);
   }
 

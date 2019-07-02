@@ -109,12 +109,12 @@ class PlayersPresenter extends BasePresenter {
   protected function createComponentResetForm() {
     $form = new Form;
     $form->addSubmit('reset', 'Vynulovať')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = $this->submittedResetForm;
+          ->setAttribute('class', self::BTN_DANGER);
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection();
+    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
+    $form->onSuccess[] = [$this, self::SUBMITTED_RESET_FORM];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
   }

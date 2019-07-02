@@ -22,11 +22,13 @@ class TeamsPresenter extends BasePresenter {
     /** @var ActiveRow */
     private $seasonRow;
 
-    public function renderAll() {
+    public function renderAll(): void
+    {
       $this->template->teams = $this->teamsRepository->getForSeason();
     }
 
-    public function actionView($id) {
+    public function actionView(int $id): void
+    {
       $this->teamRow = $this->teamsRepository->findById($id);
 
       if (!$this->teamRow || !$this->teamRow->is_present) {
@@ -38,7 +40,8 @@ class TeamsPresenter extends BasePresenter {
       }
     }
 
-    public function renderView($id) {
+    public function renderView($id): void
+    {
       $goalie = $this->playerTypesRepository->getGoalie();
 
       $this->template->players = $this->playersRepository->getForTeam($id);
@@ -66,19 +69,22 @@ class TeamsPresenter extends BasePresenter {
       $this->template->season = $this->seasonRow;
     }
 
-    protected function createComponentUploadForm() {
+    protected function createComponentUploadForm(): Form
+    {
       $form = new Form;
       $form->addUpload('image', 'Nahrajte obrázok');
       $form->addSubmit('upload', 'Nastaviť obrázok');
       $form->addSubmit('cancel', 'Zrušiť')
             ->setAttribute('class', 'btn btn-large btn-warning')
             ->setAttribute('data-dismiss', 'modal');
+      $form->addProtection(self::CSRF_TOKEN_EXPIRED);
       $form->onSuccess[] = [$this, self::SUBMITTED_UPLOAD_FORM];
       FormHelper::setBootstrapFormRenderer($form);
       return $form;
     }
 
-    protected function createComponentAddForm() {
+    protected function createComponentAddForm(): Form
+    {
       $form = new Form;
       $form->addText('name', 'Názov tímu')
             ->setAttribute('placeholder', 'SKV Aligators')
@@ -88,12 +94,14 @@ class TeamsPresenter extends BasePresenter {
       $form->addSubmit('cancel', 'Zrušiť')
             ->setAttribute('class', 'btn btn-large btn-warning')
             ->setAttribute('data-dismiss', 'modal');
+      $form->addProtection(self::CSRF_TOKEN_EXPIRED);
       $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
       FormHelper::setBootstrapFormRenderer($form);
       return $form;
     }
 
-    protected function createComponentEditForm() {
+    protected function createComponentEditForm(): Form
+    {
       $form = new Form;
       $form->addText('name', 'Názov tímu')
             ->setAttribute('placeholder', 'SKV Aligators')
@@ -104,12 +112,14 @@ class TeamsPresenter extends BasePresenter {
       $form->addSubmit('cancel', 'Zrušiť')
             ->setAttribute('class', 'btn btn-large btn-warning')
             ->setAttribute('data-dismiss', 'modal');
+      $form->addProtection(self::CSRF_TOKEN_EXPIRED);
       $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
       FormHelper::setBootstrapFormRenderer($form);
       return $form;
     }
 
-    protected function createComponentRemoveForm() {
+    protected function createComponentRemoveForm(): Form
+    {
       $form = new Form;
       $form->addSubmit('delete', 'Odstrániť')
             ->setAttribute('class', 'btn btn-large btn-danger');
@@ -122,7 +132,8 @@ class TeamsPresenter extends BasePresenter {
       return $form;
     }
 
-    protected function createComponentAddPlayerForm() {
+    protected function createComponentAddPlayerForm(): Form
+    {
       $types = $this->playerTypesRepository->getTypes();
       $form = new Form;
       $form->addText('name', 'Meno a priezvisko')
@@ -141,7 +152,8 @@ class TeamsPresenter extends BasePresenter {
       return $form;
     }
 
-    public function submittedAddPlayerForm(Form $form, ArrayHash $values) {
+    public function submittedAddPlayerForm(Form $form, ArrayHash $values): void
+    {
       // $values['team_id'] = $this->teamRow;
       $playerId = $this->playersRepository->insert($values);
 
@@ -153,10 +165,11 @@ class TeamsPresenter extends BasePresenter {
       );
 
       $this->flashMessage('Hráč bol pridaný', self::SUCCESS);
-      $this->redirect('view', $this->teamRow);
+      $this->redirect('view', $this->teamRow->id);
     }
 
-    public function submittedUploadForm(Form $form, ArrayHash $values) {
+    public function submittedUploadForm(Form $form, ArrayHash $values): void
+    {
       $img = $values->image;
 
       if ($img->isOk() AND $img->isImage()) {
@@ -168,10 +181,11 @@ class TeamsPresenter extends BasePresenter {
       } else {
         $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
       }
-      $this->redirect('view', $this->teamRow);
+      $this->redirect('view', $this->teamRow->id);
     }
 
-    public function submittedRemoveForm() {
+    public function submittedRemoveForm(): void
+    {
       $players = $this->teamRow->related('players');
 
       foreach ($players as $player) {
@@ -195,17 +209,19 @@ class TeamsPresenter extends BasePresenter {
      * @param Form $form
      * @param ArrayHash $values
      */
-    public function submittedAddForm(Form $form, ArrayHash $values) {
+    public function submittedAddForm(Form $form, ArrayHash $values): void
+    {
       $team = $this->teamsRepository->insert($values);
       // $this->tablesRepository->insert(array('team_id' => $team));
       $this->flashMessage('Tím bol pridaný', self::SUCCESS);
       $this->redirect('all');
     }
 
-    public function submittedEditForm(Form $form, ArrayHash $values) {
+    public function submittedEditForm(Form $form, ArrayHash $values): void
+    {
       $this->teamRow->update($values);
       $this->flashMessage('Tím bol upravený', self::SUCCESS);
-      $this->redirect('view', $this->teamRow);
+      $this->redirect('view', $this->teamRow->id);
     }
 
 }

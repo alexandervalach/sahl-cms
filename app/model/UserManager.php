@@ -5,6 +5,7 @@ namespace App\Model;
 use Nette;
 use Nette\Security as NS;
 use Nette\Security\Passwords;
+use Nette\Security\IIdentity;
 
 /**
  * Users management.
@@ -25,7 +26,8 @@ class UserManager implements NS\IAuthenticator
    * @return NS\Identity
    * @throws NS\AuthenticationException
    */
-  public function authenticate(array $credentials) {
+  public function authenticate(array $credentials): IIdentity
+  {
     list($username, $password) = $credentials;
 
     $row = $this->usersRepository->findByValue(self::COLUMN_NAME, $username)->fetch();

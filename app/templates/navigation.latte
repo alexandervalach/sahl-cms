@@ -13,23 +13,23 @@
     <div class="collapse navbar-collapse" id="main-nav">
       <ul class="nav navbar-nav">
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Zápasy <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a n:href="Rounds:all">Kolá</a></li>
-                <li><a n:href="Events:all">Rozpis zápasov</a></li>
-            </ul>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Zápasy <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a n:href="Rounds:all">Kolá</a></li>
+            <li><a n:href="Events:all">Rozpis zápasov</a></li>
+          </ul>
         </li>
         <li>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                Hráči <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a n:href="Players:all">Štatistiky</a></li>
-                <li><a n:href="Teams:all">Tímy</a></li>
-                <li><a n:href="Punishments:all">Tresty hráčov</a></li>
-            </ul>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Hráči <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+              <li><a n:href="Players:all">Štatistiky</a></li>
+              <li><a n:href="Teams:all">Tímy</a></li>
+              <li><a n:href="Punishments:all">Tresty hráčov</a></li>
+          </ul>
         </li>
         <li><a n:href="Tables:all">Tabuľky</a></li>
         <li><a n:href="Posts:all">Články</a></li>
@@ -38,16 +38,17 @@
         <li><a n:href="Seasons:all">Archív</a></li>
         {if $user->loggedIn}
           <li>
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                  Admin <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                  <li><a n:href="PlayerTypes:all">Typy hráčov</a></li>
-                  <li><a n:href="TableTypes:all">Typy tabuliek</a></li>
-                  <li><a n:href="Sponsors:all">Sponzori</a></li>
-                  <li><a n:href="Links:all">Odkazy</a></li>
-                  <li><a n:href="Homepage:out">Odhlásiť</a></li>
-              </ul>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Admin <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a n:href="PlayerTypes:all">Typy hráčov</a></li>
+              <li><a n:href="TableTypes:all">Typy tabuliek</a></li>
+              <li><a n:href="Sponsors:all">Sponzori</a></li>
+              <li><a n:href="Links:all">Odkazy</a></li>
+              <li><a n:href="Groups:all">Skupiny</a></li>
+              <li><a n:href="Homepage:out">Odhlásiť</a></li>
+            </ul>
           </li>
         {/if}
       </ul>

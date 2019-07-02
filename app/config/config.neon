@@ -30,6 +30,7 @@ services:
 	- App\Model\FightsRepository
 	- App\Model\ImagesRepository
 	- App\Model\GoalsRepository
+	- App\Model\GroupsRepository
 	- App\Model\LinksRepository
 	- App\Model\PlayersTeamsRepository
 	- App\Model\PlayerTypesRepository

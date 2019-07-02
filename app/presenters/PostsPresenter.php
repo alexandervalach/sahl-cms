@@ -34,7 +34,7 @@ class PostsPresenter extends BasePresenter {
     }
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent(self::EDIT_FORM)->setDefaults($this->postRow);
+      $this->getComponent('postForm')->setDefaults($this->postRow);
     }
   }
 
@@ -73,7 +73,7 @@ class PostsPresenter extends BasePresenter {
     $this->submittedRemoveImgForm();
   }
 
-  protected function createComponentAddForm() {
+  protected function createComponentPostForm() {
     $form = new Form;
     $form->addText('title', 'Názov')
           ->setAttribute('placeholder', 'Novinka SAHL 2018')
@@ -84,36 +84,7 @@ class PostsPresenter extends BasePresenter {
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  protected function createComponentEditForm() {
-    $form = new Form;
-    $form->addText('title', 'Názov')
-          ->setAttribute('placeholder', 'Novinka SAHL 2018')
-          ->setRequired('Názov je povinné pole.');
-    $form->addTextArea('content', 'Obsah')
-          ->setAttribute('id', 'ckeditor');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  protected function createComponentRemoveForm() {
-    $form = new Form;
-    $form->addSubmit('delete', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
+    $form->onSuccess[] = [$this, 'submittedPostForm'];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
   }
@@ -130,15 +101,17 @@ class PostsPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedAddForm(Form $form, $values) {
-    $post = $this->postsRepository->insert($values);
-    $this->flashMessage('Príspevok bol pridaný', self::SUCCESS);
-    $this->redirect('view', $post->id);
-  }
+  public function submittedPostForm(Form $form, array $values) {
+    $id = $this->getParameter('id');
 
-  public function submittedEditForm(Form $form, $values) {
-    $this->postRow->update($values);
-    $this->flashMessage('Príspevok bol upravený', self::SUCCESS);
+    if ($id) {
+      $this->postRow = $this->postsRepository->findById($id);
+      $this->postRow->update($values);
+    } else {
+      $this->postRow = $this->postsRepository->insert($values);
+    }
+
+    $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
     $this->redirect('view', $this->postRow->id);
   }
 

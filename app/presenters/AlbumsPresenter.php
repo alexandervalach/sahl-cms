@@ -105,23 +105,6 @@ class AlbumsPresenter extends BasePresenter {
   }
 
   /**
-   * Creates remove album form
-   * @return Nette\Application\UI\Form
-   */
-  protected function createComponentRemoveForm() {
-    $form = new Form;
-    $form->addSubmit('remove', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection();
-    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
    * Creates add image form
    * @return Nette\Application\UI\Form
    */

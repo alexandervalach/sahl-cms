@@ -51,12 +51,13 @@ class SponsorsPresenter extends BasePresenter {
   protected function createComponentAddForm() {
     $form = new Form;
     $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', 'Mesto Spišská Nová Ves')
           ->addRule(Form::FILLED, 'Názov je povinné pole');
     $form->addText('url', 'URL adresa')
-          ->setAttribute('placeholder', 'http://www.spisskanovaves.eu')
           ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
-    $form->addUpload('image', 'Obrázok');
+    $form->addUpload('image', 'Obrázok')
+          ->addRule(Form::FILLED, 'Ešte treba doplniť obrázok')
+          ->addRule(Form::IMAGE, 'Obrázok môže byť len vo formáte JPEG, PNG alebo GIF')
+          ->addRule(Form::MAX_FILE_SIZE, 'Obrázok môže mať len 10 MB', 10 * 1024 * 1024);
     $form->addSubmit('save', 'Uložiť');
     $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
     FormHelper::setBootstrapFormRenderer($form);
@@ -66,10 +67,8 @@ class SponsorsPresenter extends BasePresenter {
   protected function createComponentEditForm() {
     $form = new Form;
     $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', 'Mesto Spišská Nová Ves')
           ->addRule(Form::FILLED, 'Názov je povinné pole');
     $form->addText('url', 'URL adresa')
-          ->setAttribute('placeholder', 'http://www.spisskanovaves.eu')
           ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
     $form->addSubmit('save', 'Uložiť')
           ->setAttribute('class', 'btn btn-large btn-success');

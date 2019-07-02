@@ -27,12 +27,12 @@
               <a href="{$sponsor->url}" target="_blank">{$sponsor->label}</a>
             </td>
             <td>
-              <a n:href="edit $sponsor" class="text-success">
+              <a n:href="edit $sponsor->id" class="text-success">
                 <span class="glyphicon glyphicon-pencil"></span>
               </a>
             </td>
             <td>
-              <a n:href="remove $sponsor" class="text-danger">
+              <a n:href="remove $sponsor->id" class="text-danger">
                 <span class="glyphicon glyphicon-trash"></span>
               </a>
             </td>

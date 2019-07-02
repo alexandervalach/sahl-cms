@@ -27,12 +27,12 @@
               <a href="{$link->url}" target="_blank">{$link->label}</a>
             </td>
             <td>
-              <a n:href="edit $link" class="text-success text-center">
+              <a n:href="edit $link->id" class="text-success text-center">
                 <span class="glyphicon glyphicon-pencil"></span>
               </a>
             </td>
             <td>
-              <a n:href="remove $link" class="text-danger text-center">
+              <a n:href="remove $link->id" class="text-danger text-center">
                 <span class="glyphicon glyphicon-trash"></span>
               </a>
             </td>

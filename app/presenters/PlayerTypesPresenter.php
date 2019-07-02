@@ -6,6 +6,7 @@ use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
+use Nette\Forms\Controls\SubmitButton;
 
 class PlayerTypesPresenter extends BasePresenter {
 
@@ -14,15 +15,18 @@ class PlayerTypesPresenter extends BasePresenter {
   /** @var ActiveRow */
   private $playerTypeRow;
 
-  public function actionAll() {
+  public function actionAll(): void
+  {
     $this->userIsLogged();
   }
 
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->types = $this->playerTypesRepository->getAll();
   }
 
-  public function actionEdit($id) {
+  public function actionEdit($id): void
+  {
     $this->userIsLogged();
     $this->playerTypeRow = $this->playerTypesRepository->findById($id);
 
@@ -33,11 +37,13 @@ class PlayerTypesPresenter extends BasePresenter {
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->playerTypeRow);
   }
 
-  public function renderEdit($id) {
+  public function renderEdit($id): void
+  {
     $this->template->type = $this->playerTypeRow;
   }
 
-  public function actionRemove($id) {
+  public function actionRemove($id): void
+  {
     $this->userIsLogged();
     $this->playerTypeRow = $this->playerTypesRepository->findById($id);
 
@@ -46,18 +52,21 @@ class PlayerTypesPresenter extends BasePresenter {
     }
   }
 
-  public function renderRemove($id) {
+  public function renderRemove($id): void
+  {
     $this->template->type = $this->playerTypeRow;
   }
 
-  protected function createComponentAddForm() {
+  /**
+   * @return Nette\Application\UI\Form
+   */
+  protected function createComponentAddForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Typ hráča')
-          ->setAttribute('placeholder', 'Kapitán')
           ->addRule(Form::FILLED, 'Ešte vyplňte názov')
           ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
-    $form->addText('abbr', 'Skratka')
-          ->setAttribute('placeholder', 'C');
+    $form->addText('abbr', 'Skratka');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
@@ -67,22 +76,31 @@ class PlayerTypesPresenter extends BasePresenter {
     return $form;
   }
 
-  protected function createComponentEditForm() {
+  /**
+   * @return Nette\Application\UI\Form
+   */
+  protected function createComponentEditForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Typ hráča')
-        ->setAttribute('placeholder', 'Kapitán')
         ->addRule(Form::FILLED, 'Ešte vyplňte názov')
         ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
-    $form->addText('abbr', 'Skratka')
-          ->setAttribute('placeholder', 'C');
-    $form->addSubmit('save', 'Upraviť')
-          ->setAttribute('class', self::BTN_SUCCESS);
+    $form->addText('abbr', 'Skratka');
+    $form->addSubmit('save', 'Uložiť')
+          ->setAttribute('class', self::BTN_SUCCESS)
+          ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
+    $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', self::BTN_WARNING)
+          ->onClick[] = [$this, 'formCancelled'];
     FormHelper::setBootstrapFormRenderer($form);
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
     return $form;
   }
 
-  protected function createComponentRemoveForm() {
+  /**
+   * @return Nette\Application\UI\Form
+   */
+  protected function createComponentRemoveForm(): Form
+  {
     $form = new Form;
     $form->addSubmit('save', 'Odstrániť')
           ->setAttribute('class', self::BTN_DANGER)
@@ -93,25 +111,43 @@ class PlayerTypesPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedAddForm(Form $form, $values) {
+  /**
+   * @param Nette\Application\UI\Form $form
+   * @param $values
+   */
+  public function submittedAddForm(Form $form, $values): void
+  {
     $this->playerTypesRepository->insert($values);
     $this->flashMessage('Typ hráča bol pridaný', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedEditForm(Form $form, $values) {
+  /**
+   * @param Nette\Forms\Controls\SubmitButton $button
+   * @param $values
+   */
+  public function submittedEditForm(SubmitButton $button, $values): void
+  {
     $this->playerTypeRow->update($values);
     $this->flashMessage('Typ hráča bol upravený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedRemoveForm() {
+  /**
+   *
+   */
+  public function submittedRemoveForm(): void
+  {
     $this->playerTypesRepository->remove($this->playerTypeRow);
     $this->flashMessage('Typ hráča bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function formCancelled() {
+  /**
+   *
+   */
+  public function formCancelled(): void
+  {
     $this->redirect('all');
   }
 }

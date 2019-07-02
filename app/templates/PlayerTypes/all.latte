@@ -27,12 +27,12 @@
         <td>{$type->label}</td>
         <td>{if $type->abbr}{$type->abbr}{/if}</td>
         <td>
-          <a n:if="$iterator->counter > 2" n:href="edit $type" class="text-success">
+          <a n:if="$iterator->counter > 2" n:href="edit $type->id" class="text-success">
             <span class="glyphicon glyphicon-pencil"></span>
           </a>
         </td>
         <td>
-          <a n:if="$iterator->counter > 2" n:href="remove $type" class="text-danger">
+          <a n:if="$iterator->counter > 2" n:href="remove $type->id" class="text-danger">
             <span class="glyphicon glyphicon-trash"></span>
           </a>
         </td>

@@ -16,15 +16,27 @@ class TeamsPresenter extends BasePresenter {
   const ADD_PLAYER_FORM = 'addPlayerForm';
   const SUBMITTED_ADD_PLAYER_FORM = 'submittedAddPlayerForm';
 
+  /** @var array */
+  private $teams;
+
   /** @var ActiveRow */
   private $teamRow;
 
   /** @var ActiveRow */
   private $seasonRow;
 
+  public function actionAll(): void
+  {
+    $teams = $this->seasonsTeamsRepository->getForSeason();
+
+    foreach ($teams as $team) {
+      $this->teams[] = $team->ref('teams', 'team_id');
+    }
+  }
+
   public function renderAll(): void
   {
-    $this->template->teams = $this->teamsRepository->getForSeason();
+    $this->template->teams = $this->teams;
   }
 
   public function actionView(int $id): void
@@ -42,8 +54,6 @@ class TeamsPresenter extends BasePresenter {
 
   public function renderView($id): void
   {
-    $goalie = $this->playerTypesRepository->getGoalie();
-
     $this->template->players = $this->playersRepository->getForTeam($id);
     $this->template->goalies = []; // $this->playersRepository->getArchived()->where('team_id', $id);
     $this->template->team = $this->teamRow;
@@ -53,19 +63,30 @@ class TeamsPresenter extends BasePresenter {
 
   public function actionArchAll($id) {
     $this->seasonRow = $this->seasonsRepository->findById($id);
+    if (!$this->seasonRow || !$this->seasonRow->is_present) {
+      throw new BadRequetsException(self::ITEM_NOT_FOUND);
+    }
+
+    $teams = $this->seasonsTeamsRepository->getForSeason($id);
+    foreach ($teams as $team) {
+      $this->teams[] = $team->ref('teams', 'team_id');
+    }
   }
 
   public function renderArchAll($id) {
-    $this->template->teams = $this->teamsRepository->getAll();
+    $this->template->teams = $this->teams;
     $this->template->archive = $this->seasonRow;
   }
 
   public function actionArchView($id) {
     $this->seasonRow = $this->seasonsRepository->findById($id);
+    if (!$this->seasonRow || !$this->seasonRow->is_present) {
+      throw new BadRequetsException(self::ITEM_NOT_FOUND);
+    }
   }
 
   public function renderArchView($id) {
-    $this->template->teams = $this->teamsRepository->getAll($id);
+    // $this->template->teams = $this->teamsRepository->getAll($id);
     $this->template->season = $this->seasonRow;
   }
 
@@ -77,7 +98,6 @@ class TeamsPresenter extends BasePresenter {
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')
           ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
     $form->onSuccess[] = [$this, self::SUBMITTED_UPLOAD_FORM];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;

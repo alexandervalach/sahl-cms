@@ -14,14 +14,7 @@ class SeasonsTeamsRepository extends Repository {
    * @return
    */
   public function getForSeason($seasonId = null) {
-    if ($seasonId === null) {
-      return $this->findAll()->where('season_id IS NULL');
-    }
     return $this->findAll()->where('season_id', $seasonId);
-  }
-
-  public function getForTeam() {
-
   }
 
 }

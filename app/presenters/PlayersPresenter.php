@@ -27,61 +27,57 @@ class PlayersPresenter extends BasePresenter {
     $this->template->j = 0;
     $this->template->current = 0;
     $this->template->previous = 0;
-
-    if ($this->user->isLoggedIn()) {
-        $this->getComponent('resetForm');
-    }
   }
 
   public function actionView($id) {
     $this->playerRow = $this->playersRepository->findById($id);
 
-    if (!$this->playerRow || !$this->playerRow) {
+    if (!$this->playerRow || !$this->playerRow->is_present) {
       throw new BadRequestException(self::PLAYER_NOT_FOUND);
     }
 
-    $this->teamRow = $this->teamsRepository->findById($this->playerRow->team_id);
+    $this->teamRow = $this->teamsRepository->getForPlayer($this->playerRow);
+
+    if (!$this->teamRow || !$this->teamRow->is_present) {
+      throw new BadRequestException(self::TEAM_NOT_FOUND);
+    }
+
+    if ($this->user->isLoggedIn()) {
+      $this->getComponent(self::EDIT_FORM)->setDefaults($this->playerRow);
+    }
   }
 
   public function renderView($id) {
-      if (!$this->teamRow) {
-          throw new BadRequestException(self::TEAM_NOT_FOUND);
-      }
-
-      $this->template->player = $this->playerRow;
-      $this->template->team = $this->teamRow;
-      $this->template->goals_count = $this->goalsRepository->getPlayerGoalsCount($id);
-      $this->template->type = $this->playerTypesRepository->findById($this->playerRow->type_id);
-
-      if ($this->user->isLoggedIn()) {
-          $this->getComponent(self::EDIT_FORM)->setDefaults($this->playerRow);
-          $this->getComponent(self::REMOVE_FORM);
-      }
+    $this->template->player = $this->playerRow;
+    $this->template->team = $this->teamRow;
+    $this->template->goals_count = $this->goalsRepository->getPlayerGoalsCount($id);
+    $this->template->type = $this->playerTypesRepository->findById($this->playerRow->type_id);
   }
 
   public function actionArchAll($id) {
-      $this->archRow = $this->seasonsRepository->findById($id);
+    $this->archRow = $this->seasonsRepository->findById($id);
   }
 
   public function renderArchAll($id) {
-      $this->template->stats = $this->playersRepository->getArchived($id)
-              ->where('name != ?', ' ')
-              ->order('goals DESC, name DESC');
-      $this->template->archive = $this->archRow;
-      $this->template->i = 0;
-      $this->template->j = 0;
-      $this->template->current = 0;
-      $this->template->previous = 0;
+    $this->template->stats = $this->playersRepository->getArchived($id)
+            ->where('name != ?', ' ')
+            ->order('goals DESC, name DESC');
+    $this->template->archive = $this->archRow;
+    $this->template->i = 0;
+    $this->template->j = 0;
+    $this->template->current = 0;
+    $this->template->previous = 0;
   }
 
   public function actionArchView($id, $param) {
-      $this->teamRow = $this->teamsRepository->findById($param);
+    $this->teamRow = $this->teamsRepository->findById($param);
+
+    if (!$this->teamRow || !$this->teamRow->is_present) {
+      throw new BadRequestException($this->error);
+    }
   }
 
   public function renderArchView($id, $param) {
-    if (!$this->teamRow) {
-      throw new BadRequestException($this->error);
-    }
     $this->template->players = $this->playersRepository->findByValue('team_id', $param)->where('archive_id', $id)->where('NOT type_id', 2);
     $this->template->goalies = $players = $this->playersRepository->findByValue('team_id', $param)->where('archive_id', $id)->where('type_id', 2);
     $this->template->team = $this->teamRow;
@@ -130,20 +126,23 @@ class PlayersPresenter extends BasePresenter {
   }
 
   public function submittedRemoveForm() {
-    $team = $this->playerRow->team_id;
-    $this->playerRow->delete();
+    $team = $this->teamsRepository->getForPlayer($this->playerRow);
+    $this->playersRepository->remove($this->playerRow);
     $this->flashMessage('Hráč bol odstránený.', self::SUCCESS);
     $this->redirect('Teams:view', $team);
   }
 
   public function submittedResetForm() {
     $players = $this->playersRepository
-            ->findByValue('archive_id', null)
-            ->where('goals != ?', 0);
+      ->findByValue('archive_id', null)
+      ->where('goals != ?', 0);
+
     $values = array('goals' => 0);
+
     foreach ($players as $player) {
-        $player->update($values);
+      $player->update($values);
     }
+
     $this->redirect('all');
   }
 

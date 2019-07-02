@@ -36,4 +36,13 @@ class TeamsRepository extends Repository {
     }
   }
 
+  /**
+   * Get teams for selected season
+   * @return ActiveRow
+   */
+  public function getForPlayer($playerRow) {
+    $seasonTeam = $playerRow->ref('players_seasons_teams', 'players_seasons_teams_id');
+    return $this->table($tableName)->get($seasonTeam->team_id);
+  }
+
 }

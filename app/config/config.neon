@@ -32,9 +32,9 @@ services:
 	- App\Model\GoalsRepository
 	- App\Model\GroupsRepository
 	- App\Model\LinksRepository
-	- App\Model\PlayersTeamsRepository
-	- App\Model\PlayerTypesRepository
 	- App\Model\PlayersRepository
+	- App\Model\PlayersSeasonsTeamsRepository
+	- App\Model\PlayerTypesRepository
 	- App\Model\PostImagesRepository
 	- App\Model\PostsRepository
 	- App\Model\PunishmentsRepository
@@ -43,6 +43,7 @@ services:
 	- App\Model\SeasonsRepository
 	- App\Model\SeasonsTeamsRepository
 	- App\Model\SponsorsRepository
+	- App\Model\TableEntriesRepository
 	- App\Model\TableTypesRepository
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository

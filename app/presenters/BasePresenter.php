@@ -10,7 +10,7 @@ use App\Model\ImagesRepository;
 use App\Model\GoalsRepository;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
-use App\Model\PlayersTeamsRepository;
+use App\Model\PlayersSeasonsTeamsRepository;
 use App\Model\PlayersRepository;
 use App\Model\PlayerTypesRepository;
 use App\Model\PostImagesRepository;
@@ -21,6 +21,7 @@ use App\Model\RoundsRepository;
 use App\Model\SeasonsRepository;
 use App\Model\SeasonsTeamsRepository;
 use App\Model\SponsorsRepository;
+use App\Model\TableEntriesRepository;
 use App\Model\TableTypesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
@@ -85,11 +86,8 @@ abstract class BasePresenter extends Presenter {
     /** @var LinksRepository */
     protected $linksRepository;
 
-    /** @var TableTypesRepository */
-    protected $tableTypesRepository;
-
-    /** @var PlayersTeamsRepository */
-    protected $playersTeamsRepository;
+    /** @var PlayersSeasonsTeamsRepository */
+    protected $playersSeasonsTeamsRepository;
 
     /** @var PlayerTypesRepository */
     protected $playerTypesRepository;
@@ -121,6 +119,12 @@ abstract class BasePresenter extends Presenter {
     /** @var SponsorsRepository */
     protected $sponsorsRepository;
 
+    /** @var TableEntriesRepository */
+    protected $tableEntriesRepository;
+
+    /** @var TableTypesRepository */
+    protected $tableTypesRepository;
+
     /** @var TablesRepository */
     protected $tablesRepository;
 
@@ -150,8 +154,7 @@ abstract class BasePresenter extends Presenter {
       GoalsRepository $goalsRepository,
       GroupsRepository $groupsRepository,
       LinksRepository $linksRepository,
-      tableTypesRepository $tableTypesRepository,
-      PlayersTeamsRepository $playersTeamsRepository,
+      PlayersSeasonsTeamsRepository $playersSeasonsTeamsRepository,
       PlayerTypesRepository $playerTypesRepository,
       PlayersRepository $playersRepository,
       PostImagesRepository $postImagesRepository,
@@ -162,6 +165,8 @@ abstract class BasePresenter extends Presenter {
       SeasonsRepository $seasonsRepository,
       SeasonsTeamsRepository $seasonsTeamsRepository,
       SponsorsRepository $sponsorsRepository,
+      TableEntriesRepository $tableEntriesRepository,
+      TableTypesRepository $tableTypesRepository,
       TablesRepository $tablesRepository,
       TeamsRepository $teamsRepository,
       UsersRepository $usersRepository)
@@ -174,9 +179,8 @@ abstract class BasePresenter extends Presenter {
       $this->goalsRepository = $goalsRepository;
       $this->groupsRepository = $groupsRepository;
       $this->linksRepository = $linksRepository;
-      $this->tableTypesRepository = $tableTypesRepository;
       $this->playersRepository = $playersRepository;
-      $this->playersTeamsRepository = $playersTeamsRepository;
+      $this->playersSeasonsTeamsRepository = $playersSeasonsTeamsRepository;
       $this->playerTypesRepository = $playerTypesRepository;
       $this->postImagesRepository = $postImagesRepository;
       $this->postsRepository = $postsRepository;
@@ -186,6 +190,8 @@ abstract class BasePresenter extends Presenter {
       $this->seasonsRepository = $seasonsRepository;
       $this->seasonsTeamsRepository = $seasonsTeamsRepository;
       $this->sponsorsRepository = $sponsorsRepository;
+      $this->tableEntriesRepository = $tableEntriesRepository;
+      $this->tableTypesRepository = $tableTypesRepository;
       $this->tablesRepository = $tablesRepository;
       $this->teamsRepository = $teamsRepository;
       $this->usersRepository = $usersRepository;

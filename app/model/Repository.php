@@ -14,8 +14,10 @@ use Nette\Database\Table\ActiveRow;
 abstract class Repository {
 
   const IS_PRESENT = 'is_present';
+  const IS_VISIBLE = 'is_visible';
   const SEASON_ID = 'season_id';
   const ID = 'id';
+  const LABEL = 'label';
 
   /** @var Context */
   protected $database;

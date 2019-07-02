@@ -1,75 +1,74 @@
 {block content}
 
 <section class="content">
-
-    <div n:if="$user->loggedIn" class="clearfix">
-        <div class="pull-right">
-            <button type="button" class="btn btn-large btn-danger" 
-                    data-toggle="modal" data-target="#reset-data" title="Vynulovať tabuľky">
-                <span class="glyphicon glyphicon-erase"></span>
-            </button>
-        </div>
+  <div n:if="$user->loggedIn" class="clearfix">
+    <div class="pull-right">
+      <button type="button" class="btn btn-large btn-danger" data-toggle="modal" data-target="#reset-data" title="Vynulovať tabuľky">
+        <span class="glyphicon glyphicon-erase"></span> Vynulovať
+      </button>
     </div>
-
-    <div class="clearfix">
-        <h1 n:block="title">Tabuľky</h1>
-    </div>
-
+  </div>
+  <div class="clearfix">
+    <h1 n:block="title">Tabuľky</h1>
+  </div>
 </section>
 
-<div n:foreach="$tableTypes as $type" n:if="$tables[$type->name]->count()" class='table-responsive'>
+<div n:foreach="$tables as $table" class='table-responsive'>
+  {if $table['entries']->count()}
     <table class='table'>
-        <caption>
-            <h2 class="text-center">{$type->name}</h2>
-        </caption>
-        <thead>
-            <tr>
-                <th>P.č.</th>
-                <th>Tím</th>
-                <th><span class="glyphicon glyphicon-thumbs-up"></span></th>
-                <th>Remízy</th>
-                <th><span class="glyphicon glyphicon-thumbs-down"></span></th>
-                <th>Skóre</th>
-                <th>Rozdiel</th>
-                <th>Body</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr n:foreach="$tables[$type->name] as $row" {if $iterator->first}class="first"{/if}>
-                {var $team = $row->ref('teams','team_id')}
-                <td>{$iterator->counter}.</td>
-                <td>
-                    <a n:href="Teams:view $team">
-                        <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="30px" 
-                             n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
-                        {$team->name}
-                    </a>
-                </td>
-                <td>{$row->win}</td>
-                <td>{$row->tram}</td>
-                <td>{$row->lost}</td>
-                <td>{$row->score1}:{$row->score2}</td>
-                <td>{$diff = $row->score1 - $row->score2}</td>
-                <td>
-                    <strong class="text-danger">{$row->points}</strong>
-                </td>
-            </tr>
-        </tbody>
+      <caption>
+        <h2 class="text-center">{$table['type']->label}</h2>
+      </caption>
+      <thead>
+        <tr>
+          <th>P.č.</th>
+          <th>Tím</th>
+          <th><span class="glyphicon glyphicon-thumbs-up"></span></th>
+          <th>Remízy</th>
+          <th><span class="glyphicon glyphicon-thumbs-down"></span></th>
+          <th>Skóre</th>
+          <th>Rozdiel</th>
+          <th>Body</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr n:foreach="$table['entries'] as $entry" {if $iterator->first}class="first"{/if}>
+          {var $team = $entry->ref('teams','team_id')}
+          <td>{$iterator->counter}.</td>
+          <td>
+            <a n:href="Teams:view $team->id">
+              {if $team->logo and file_exists($imgFolder . '/' . $team->logo)}
+                <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="30px" />
+              {/if}
+              {$team->name}
+            </a>
+          </td>
+          <td>{$entry->win}</td>
+          <td>{$entry->tram}</td>
+          <td>{$entry->lost}</td>
+          <td>{$entry->score1}:{$entry->score2}</td>
+          <td>{$entry->score1 - $entry->score2}</td>
+          <td>
+            <strong class="text-danger">{$entry->points}</strong>
+          </td>
+        </tr>
+      </tbody>
     </table>
+  {/if}
 </div>
 
 <div n:if="$user->loggedIn" id="reset-data" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Vynulovať tabuľky?</h4>
-            </div>
-            <div class="modal-body">
-                {control resetForm}
-            </div>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Vynulovať tabuľky?</h4>
+      </div>
+      <div class="modal-body">
+        {control resetForm}
+      </div>
     </div>
+  </div>
 </div>
 
 {/block}

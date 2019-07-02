@@ -4,6 +4,11 @@ namespace App\Model;
 
 class TablesRepository extends Repository {
 
+  public function getForSeason($seasonId = null) {
+    return $this->getAll()->where(self::SEASON_ID, $seasonId)
+      ->where(self::IS_VISIBLE, 1);
+  }
+
   public function getTableStats($type) {
     $rows = $this->getNonArchived()->where('type', $type)
       ->order('points DESC')->order('score1 - score2 DESC');

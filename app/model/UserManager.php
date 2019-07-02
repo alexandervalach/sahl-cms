@@ -1,45 +1,61 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
 
 use Nette;
-use Nette\Security as NS;
+use Nette\Security\Identity;
+use Nette\Security\AuthenticationException;
 use Nette\Security\Passwords;
 use Nette\Security\IIdentity;
+use Nette\Security\IAuthenticator;
 
 /**
  * Users management.
  */
-class UserManager implements NS\IAuthenticator
+class UserManager implements IAuthenticator
 {
+  use Nette\SmartObject;
+
   const COLUMN_NAME = 'username';
+  const COLUMN_PASSWORD_HASH = 'password';
+  const COLUMN_ID = 'id';
+  const COLUMN_ROLE = 'role';
 
   /** @var UsersRepository */
   private $usersRepository;
 
-  public function __construct(UsersRepository $usersRepository) {
+  /** @var Passwords */
+  private $passwords;
+
+  public function __construct(UsersRepository $usersRepository, Passwords $passwords) {
     $this->usersRepository = $usersRepository;
+    $this->passwords = $passwords;
   }
 
   /**
    * Performs an authentication.
-   * @return NS\Identity
-   * @throws NS\AuthenticationException
+   * @throws AuthenticationException
    */
   public function authenticate(array $credentials): IIdentity
   {
-    list($username, $password) = $credentials;
+    [$username, $password] = $credentials;
 
     $row = $this->usersRepository->findByValue(self::COLUMN_NAME, $username)->fetch();
 
     if (!$row) {
-      throw new NS\AuthenticationException('Používateľ neexistuje.');
+      throw new AuthenticationException('Používateľ neexistuje.', self::IDENTITY_NOT_FOUND);
+    } elseif (!$this->passwords->verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
+      throw new AuthenticationException('Nesprávne heslo', self::INVALID_CREDENTIAL);
+    } elseif ($this->passwords->needsRehash($row[self::COLUMN_PASSWORD_HASH])) {
+      $row->update([
+			  self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),
+			]);
     }
 
-    if (!NS\Passwords::verify($password, $row->password)) {
-      throw new NS\AuthenticationException('Nesprávne heslo.');
-    }
-
-    return new NS\Identity($row->id, $row->role, [self::COLUMN_NAME => $row->username]);
+    $arr = $row->toArray();
+    unset($arr[self::COLUMN_PASSWORD_HASH]);
+    return new Identity($row[self::COLUMN_ID], $row[self::COLUMN_ROLE], $arr);
   }
 }

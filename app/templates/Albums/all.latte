@@ -15,7 +15,7 @@
   </div>
   {foreach $albums as $album}
     <figure class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 2em">
-      <a n:href="view $album">
+      <a n:href="view $album->id">
         {if $album->thumbnail && file_exists($imgFolder . "/" . $album->thumbnail)}
           {var $image = $album->thumbnail}
           {var $text = "Album " . $album->name}

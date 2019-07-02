@@ -125,7 +125,7 @@ class PostsPresenter extends BasePresenter {
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_IMG_FORM];
+    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_IMAGE_FORM];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
   }
@@ -133,13 +133,13 @@ class PostsPresenter extends BasePresenter {
   public function submittedAddForm(Form $form, $values) {
     $post = $this->postsRepository->insert($values);
     $this->flashMessage('Príspevok bol pridaný', self::SUCCESS);
-    $this->redirect('view', $post);
+    $this->redirect('view', $post->id);
   }
 
   public function submittedEditForm(Form $form, $values) {
     $this->postRow->update($values);
     $this->flashMessage('Príspevok bol upravený', self::SUCCESS);
-    $this->redirect('view', $this->postRow);
+    $this->redirect('view', $this->postRow->id);
   }
 
   public function submittedRemoveForm() {
@@ -158,7 +158,7 @@ class PostsPresenter extends BasePresenter {
     $values['thumbnail'] = $this->imgRow->name;
     $this->postRow->update($values);
     $this->flashMessage('Miniatúra bola nastavená', self::SUCCESS);
-    $this->redirect('view', $this->postRow);
+    $this->redirect('view', $this->postRow->id);
   }
 
   public function submittedRemoveImgForm() {
@@ -169,10 +169,10 @@ class PostsPresenter extends BasePresenter {
     } catch (IOException $e) {
       $this->flashMessage('Obrázok sa nepodarilo odstrániť', self::DANGER);
     }
-    $this->redirect('view', $this->postRow);
+    $this->redirect('view', $this->postRow->id);
   }
 
-  public function submittedAddImgForm(Form $form, $values) {
+  public function submittedAddImageForm(Form $form, $values) {
     foreach ($values['images'] as $file) {
       $name = strtolower($file->getSanitizedName());
 

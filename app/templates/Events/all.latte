@@ -16,10 +16,10 @@
       {$event->content|noescape}
     </div>
     <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 1em">
-      <a n:href="edit $event" class="btn btn-large btn-success">
+      <a n:href="edit $event->id" class="btn btn-large btn-success">
         <span class="glyphicon glyphicon-pencil"></span> Upraviť
       </a>
-      <a n:href="remove $event" class="btn btn-large btn-danger">
+      <a n:href="remove $event->id" class="btn btn-large btn-danger">
         <span class="glyphicon glyphicon-trash"></span> Odstrániť
       </a>
     </div>

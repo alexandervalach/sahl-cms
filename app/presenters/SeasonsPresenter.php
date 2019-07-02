@@ -100,7 +100,7 @@ class SeasonsPresenter extends BasePresenter {
   public function submittedEditForm(Form $form, $values) {
     $this->seasonRow->update($values);
     $this->flashMessage('Archív bol upravený', self::SUCCESS);
-    $this->redirect('view', $this->seasonRow);
+    $this->redirect('view', $this->seasonRow->id);
   }
 
   public function submittedRemoveForm() {
@@ -108,6 +108,7 @@ class SeasonsPresenter extends BasePresenter {
   }
 
   public function submittedArchiveForm() {
+    /*
     $team_id = array();
     $player_id = array();
     $arch_id = array('season_id' => $this->seasonRow->id);
@@ -256,8 +257,9 @@ class SeasonsPresenter extends BasePresenter {
 
         $this->flashMessage('Góly boli archivované', self::SUCCESS);
     }
+    */
 
-    $this->redirect('view', $this->archiveRow);
+    $this->redirect('view', $this->seasonRow->id);
   }
 
 }

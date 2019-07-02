@@ -27,11 +27,11 @@
                   class="img img-responsive lightbox-trigger" alt="{$image->name}" />
               {if $user->loggedIn}
                 <figcaption class="text-center" style="margin-top: 1em">
-                  <a n:href="Albums:setImage, $image->album_id, $image" class="btn btn-primary"
+                  <a n:href="Albums:setImage, $image->album_id, $image->id" class="btn btn-primary"
                       title="Nastaví obrázok ako miniatúru albumu">
                       <span class="glyphicon glyphicon-picture"></span>
                   </a>
-                  <a n:href="Albums:removeImage, $image" class="btn btn-danger"
+                  <a n:href="Albums:removeImage, $image->id" class="btn btn-danger"
                       title="Odstrániť obrázok">
                       <span class="glyphicon glyphicon-trash"></span>
                   </a>

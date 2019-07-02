@@ -179,7 +179,7 @@ class AlbumsPresenter extends BasePresenter {
   public function submittedEditForm(Form $form, array $values) {
     $this->albumRow->update($values);
     $this->flashMessage('Album bol upravený', self::SUCCESS);
-    $this->redirect('view', $this->albumRow);
+    $this->redirect('view', $this->albumRow->id);
   }
 
   /***
@@ -241,7 +241,7 @@ class AlbumsPresenter extends BasePresenter {
     }
 
     $this->flashMessage('Obrázky boli pridané', self::SUCCESS);
-    $this->redirect('Albums:view', $this->albumRow);
+    $this->redirect('Albums:view', $this->albumRow->id);
   }
 
 }

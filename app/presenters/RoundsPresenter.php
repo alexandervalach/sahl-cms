@@ -186,19 +186,19 @@ class RoundsPresenter extends BasePresenter {
     $this->updateTablePoints($values, $type);
     $this->updateTableGoals($values, $type);
     $this->flashMessage('Zápas bol pridaný', self::SUCCESS);
-    $this->redirect('Rounds:view', $this->roundRow);
+    $this->redirect('view', $this->roundRow->id);
 	}
 
 	public function submittedAddForm(Form $form, $values) {
-    $this->roundsRepository->insert($values);
+    $round = $this->roundsRepository->insert($values);
     $this->flashMessage('Kolo bolo pridané', self::SUCCESS);
-    $this->redirect('all');
+    $this->redirect('view', $round->id);
 	}
 
 	public function submittedEditForm(Form $form, $values) {
     $this->roundRow->update($values);
     $this->flashMessage('Kolo bolo upravené', self::SUCCESS);
-    $this->redirect('view', $this->roundRow);
+    $this->redirect('view', $this->roundRow->id);
 	}
 
 	public function submittedRemoveForm() {

@@ -25,12 +25,12 @@
       <tr n:foreach="$groups as $group">
         <td>{$group->label}</td>
         <td>
-          <a n:href="edit $group" class="text-success">
+          <a n:href="edit $group->id" class="text-success">
             <span class="glyphicon glyphicon-pencil"></span>
           </a>
         </td>
         <td>
-          <a n:if="$iterator->counter > 1" n:href="remove $group" class="text-danger">
+          <a n:if="$iterator->counter > 1" n:href="remove $group->id" class="text-danger">
             <span class="glyphicon glyphicon-trash"></span>
           </a>
         </td>

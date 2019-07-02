@@ -19,12 +19,12 @@
   </div>
   <article n:foreach="$posts as $post" class="clearfix">
     <header class="clearfix">
-      <a n:href="view $post">
+      <a n:href="view $post->id">
         <h2>{$post->title}</h2>
       </a>
     </header>
     <main class="clearfix overflow-container">
-      <a n:href="view $post">
+      <a n:href="view $post->id">
         <figure class="col-md-5 col-lg-5">
           {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
             <img src="{$basePath}/{$imgFolder}/{$post->thumbnail}" class="img img-responsive" alt="Miniatúra článku {$post->title}" />

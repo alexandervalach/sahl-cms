@@ -86,21 +86,6 @@ class TableTypesPresenter extends BasePresenter {
   }
 
   /**
-   * Creates remove table types form
-   * @return Nette\Application\UI\Form
-   */
-  protected function createComponentRemoveForm() {
-    $form = new Form;
-    $form->addSubmit('save', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
-    return $form;
-  }
-
-  /**
    * Submitting data from add form
    * @param Form $form
    * @param array $values

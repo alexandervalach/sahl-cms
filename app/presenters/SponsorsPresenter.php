@@ -77,25 +77,6 @@ class SponsorsPresenter extends BasePresenter {
     return $form;
   }
 
-  /**
-   * Component for creating a remove form
-   * @return Nette\Application\UI\Form
-   */
-  protected function createComponentRemoveForm() {
-    $form = new Form;
-            $form = new Form;
-    $form->addSubmit('save', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
   public function submittedAddForm(Form $form, $values) {
     $img = $values['image'];
 

@@ -204,7 +204,8 @@ abstract class BasePresenter extends Presenter {
     /**
      * Method for saving previous link
      */
-    protected function startup() {
+    protected function startup(): void
+    {
       parent::startup();
       $this->backlink = $this->storeRequest();
     }
@@ -212,7 +213,8 @@ abstract class BasePresenter extends Presenter {
     /**
      * Set before content rendering
      */
-    public function beforeRender() {
+    public function beforeRender(): void
+    {
       $this->template->links = $this->linksRepository->getAll();
       $this->template->sponsors = $this->sponsorsRepository->getAll();
       $this->template->sideTeams = $this->teamsRepository->getForSeason();
@@ -224,7 +226,8 @@ abstract class BasePresenter extends Presenter {
      * Component for creating a remove form
      * @return Nette\Application\UI\Form
      */
-    protected function createComponentRemoveForm() {
+    protected function createComponentRemoveForm(): Form
+    {
         $form = new Form;
         $form->addSubmit('remove', 'Odstrániť')
              ->setAttribute('class', self::BTN_DANGER);
@@ -241,18 +244,19 @@ abstract class BasePresenter extends Presenter {
      * Component for creating a sign in form
      * @return Nette\Application\UI\Form
      */
-    protected function createComponentSignInForm() {
-        $form = new Form;
-        $form->addText('username', 'Používateľské meno')
-                ->setRequired('Zadajte používateľské meno');
-        $form->addPassword('password', 'Heslo')
-                ->setRequired('Zadajte heslo');
-        $form->addCheckbox('remember', ' Zapamätať si ma na 7 dní');
-        $form->addSubmit('login', 'Prihlásiť');
-        $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-        $form->onSuccess[] = [$this, 'submittedSignInForm'];
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
+    protected function createComponentSignInForm(): Form
+    {
+      $form = new Form;
+      $form->addText('username', 'Používateľské meno')
+              ->setRequired('Zadajte používateľské meno');
+      $form->addPassword('password', 'Heslo')
+              ->setRequired('Zadajte heslo');
+      $form->addCheckbox('remember', ' Zapamätať si ma na 7 dní');
+      $form->addSubmit('login', 'Prihlásiť');
+      $form->addProtection(self::CSRF_TOKEN_EXPIRED);
+      $form->onSuccess[] = [$this, 'submittedSignInForm'];
+      FormHelper::setBootstrapFormRenderer($form);
+      return $form;
     }
 
     /**
@@ -262,39 +266,42 @@ abstract class BasePresenter extends Presenter {
      * @param array $values
      * @throws Nette\Security\AuthenticationException
      */
-    public function submittedSignInForm(Form $form, $values) {
-        if ($values->remember) {
-            $this->user->setExpiration('7 days', FALSE);
-        } else {
-            $this->user->setExpiration('30 minutes', TRUE);
-        }
+    public function submittedSignInForm(Form $form, $values): Form
+    {
+      if ($values->remember) {
+        $this->user->setExpiration('7 days', FALSE);
+      } else {
+        $this->user->setExpiration('30 minutes', TRUE);
+      }
 
-        try {
-            $this->user->login($values->username, $values->password);
-            $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
-            $this->redirect('Homepage:all');
-        } catch (Nette\Security\AuthenticationException $e) {
-            $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
-            $this->redirect('Homepage:all');
-        }
+      try {
+          $this->user->login($values->username, $values->password);
+          $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
+          $this->redirect('Homepage:all');
+      } catch (Nette\Security\AuthenticationException $e) {
+          $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
+          $this->redirect('Homepage:all');
+      }
     }
 
     /**
      * Log out action routing
      */
-    public function actionOut() {
-        $this->getUser()->logout();
-        $this->flashMessage('Boli ste odhlásený', self::SUCCESS);
-        $this->redirect('Homepage:all');
+    public function actionOut(): void
+    {
+      $this->getUser()->logout();
+      $this->flashMessage('Boli ste odhlásený', self::SUCCESS);
+      $this->redirect('Homepage:all');
     }
 
     /**
      * Checks whether User is logged
      */
-    protected function userIsLogged() {
-        if (!$this->user->isLoggedIn()) {
-            $this->redirect('Homepage:all');
-        }
+    protected function userIsLogged(): void
+    {
+      if (!$this->user->isLoggedIn()) {
+          $this->redirect('Homepage:all');
+      }
     }
 
 }

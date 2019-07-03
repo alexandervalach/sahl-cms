@@ -82,17 +82,6 @@ class GroupsPresenter extends BasePresenter {
     return $form;
   }
 
-  protected function createComponentRemoveForm() {
-    $form = new Form;
-    $form->addSubmit('save', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
-    return $form;
-  }
-
   public function submittedAddForm(Form $form, $values) {
     $this->groupsRepository->insert($values);
     $this->flashMessage('Skupina bol pridaná', self::SUCCESS);

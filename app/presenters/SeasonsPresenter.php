@@ -65,19 +65,6 @@ class SeasonsPresenter extends BasePresenter {
     return $form;
   }
 
-  protected function createComponentRemoveForm() {
-    $form = new Form;
-    $form->addSubmit('remove', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
   protected function createComponentArchiveForm() {
     $form = new Form;
     $form->addSubmit('archive', 'Archivovať')

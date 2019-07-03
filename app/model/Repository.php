@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
 
-use Nette\Database\Table\Selection;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
 
 /**
  * Description of Repository
@@ -25,7 +27,8 @@ abstract class Repository {
   /** @var string */
   protected $tableName;
 
-  public function __construct(Context $database) {
+  public function __construct(Context $database)
+  {
     $this->database = $database;
   }
 
@@ -33,7 +36,8 @@ abstract class Repository {
    * Vrací objekt reprezentující databázovou tabulku.
    * @return Selection
    */
-  protected function getTable() {
+  protected function getTable(): Selection
+  {
     if (isset($this->tableName)) {
       return $this->database->table($this->tableName);
     } else {
@@ -46,21 +50,24 @@ abstract class Repository {
   /**
    * @return Context
    */
-  public function getConnection() {
+  public function getConnection(): Context
+  {
     return $this->database;
   }
 
   /**
    * @return Selection
    */
-  public function getAll() {
+  public function getAll(): Selection
+  {
     return $this->findAll()->where(self::IS_PRESENT, 1);
   }
 
   /**
    * @return Selection
    */
-  public function getArchived($seasonId = null) {
+  public function getArchived($seasonId = null): Selection
+  {
     return $this->getAll()->where(self::SEASON_ID, $seasonId);
   }
 
@@ -68,7 +75,8 @@ abstract class Repository {
    * Returns rows from the table
    * @return Selection
    */
-  public function findAll() {
+  public function findAll(): Selection
+  {
     return $this->getTable();
   }
 
@@ -76,66 +84,74 @@ abstract class Repository {
    * Vrací řádky podle filtru, např. array('name' => 'Jon').
    * @return Selection
    */
-  public function findBy(array $by) {
+  public function findBy(array $by): Selection
+  {
     return $this->getTable()->where($by);
   }
 
   /**
    * Returns selection
-   * @param type $columnName
+   * @param string $columnName
    * @param type $value
    * @return Selection
    */
-  public function findByValue($columnName, $value) {
-    $condition = array($columnName => $value);
-    return $this->findBy($condition);
+  public function findByValue(string $columnName, $value): Selection
+  {
+    return $this->findBy( array($columnName => $value) );
   }
 
   /**
    * Returns row identified by ID
-   * @param type $id primary key
+   * @param int $id primary key
    * @return ActiveRow
    */
-  public function findById($id) {
+  public function findById(int $id): ActiveRow
+  {
     return $this->getTable()->get($id);
   }
 
   /**
    * Add data to table
-   * @param $id data to be inserted
-   * @param $data data to be inserted
+   * @param int $id data to be inserted
+   * @param array $data data to be inserted
    * @return ActiveRow
    */
-  public function update($id, $data) {
+  public function update(int $id, array $data): ActiveRow
+  {
     $this->getTable()->wherePrimary($id)->update($data);
   }
 
   /**
    * Add data to table
-   * @param $data data to be inserted
+   * @param array $data data to be inserted
    * @return ActiveRow
    */
-  public function insert($data) {
+  public function insert(array $data) {
     return $this->getTable()->insert($data);
   }
 
   /**
+   * @param int $id
    * @return void
    */
-  public function remove($id) {
-    $this->getTable()->get($id)->update(
-      array('is_present' => 0)
+  public function remove(int $id): void
+  {
+    $this->getTable()->wherePrimary($id)->update(
+      array(self::IS_PRESENT => 0)
     );
   }
 
   /**
+   * @param type $data
    * @return Selection
    */
-  public function select($data) {
+  public function select($data): Selection
+  {
     return $this->getAll()->select($data);
   }
 
-  public function getAsArray($id) {
+  public function getAsArray($id)
+  {
     $checkRows = $this->findByValue('season_id', $id);
 
     if ($checkRows->count()) {
@@ -149,8 +165,8 @@ abstract class Repository {
     } else {
       $i = 0;
       foreach ($rows as $row) {
-          $data[$i] = $row;
-          $i++;
+        $data[$i] = $row;
+        $i++;
       }
     }
     return $data;

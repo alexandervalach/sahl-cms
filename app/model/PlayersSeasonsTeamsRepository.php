@@ -1,17 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
+
+use Nette\Database\Table\Selection;
 
 class PlayersSeasonsTeamsRepository extends Repository {
 
   protected $tableName = 'players_seasons_teams';
 
-  public function getAll($seasonId = null) {
-    return $this->findAll()->where('season_id', $seasonId);
+  public function getAll(): Selection
+  {
+    return $this->findAll();
   }
 
-  public function getTeam($teamId) {
-    return $this->findAll()->where('team_id', $team);
+  public function getForSeason($id = null): Selection
+  {
+    return $this->findAll()->where(self::SEASON_ID, $id);
+  }
+
+  public function getTeam(int $id): Selection
+  {
+    return $this->findAll()->where('team_id', $id);
+  }
+
+  public function getPlayers(int $id): Selection
+  {
+    return $this->getAll()->where('seasons_teams_id', $id);
   }
 
 }

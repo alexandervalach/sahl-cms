@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Presenters;
 
 use App\FormHelper;
@@ -33,8 +35,8 @@ use Nette\Security\AuthenticationException;
 /**
  * Base class for all application presenters.
  */
-abstract class BasePresenter extends Presenter {
-
+abstract class BasePresenter extends Presenter
+{
     /* Defined Constants */
     const ADD_FORM = 'addForm';
     const EDIT_FORM = 'editForm';
@@ -228,16 +230,16 @@ abstract class BasePresenter extends Presenter {
      */
     protected function createComponentRemoveForm(): Form
     {
-        $form = new Form;
-        $form->addSubmit('remove', 'Odstrániť')
-             ->setAttribute('class', self::BTN_DANGER);
-        $form->addSubmit('cancel', 'Zrušiť')
-             ->setAttribute('class', self::BTN_WARNING)
-             ->setAttribute('data-dismiss', 'modal');
-        $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-        $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-        FormHelper::setBootstrapFormRenderer($form);
-        return $form;
+      $form = new Form;
+      $form->addSubmit('remove', 'Odstrániť')
+            ->setAttribute('class', self::BTN_DANGER);
+      $form->addSubmit('cancel', 'Zrušiť')
+            ->setAttribute('class', self::BTN_WARNING)
+            ->setAttribute('data-dismiss', 'modal');
+      $form->addProtection(self::CSRF_TOKEN_EXPIRED);
+      $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
+      FormHelper::setBootstrapFormRenderer($form);
+      return $form;
     }
 
     /**
@@ -251,7 +253,7 @@ abstract class BasePresenter extends Presenter {
               ->setRequired('Zadajte používateľské meno');
       $form->addPassword('password', 'Heslo')
               ->setRequired('Zadajte heslo');
-      $form->addCheckbox('remember', ' Zapamätať si ma na 7 dní');
+      $form->addCheckbox('remember', ' Zapamätať si ma, kým nezavriem prehliadač');
       $form->addSubmit('login', 'Prihlásiť');
       $form->addProtection(self::CSRF_TOKEN_EXPIRED);
       $form->onSuccess[] = [$this, 'submittedSignInForm'];
@@ -269,18 +271,18 @@ abstract class BasePresenter extends Presenter {
     public function submittedSignInForm(Form $form, $values): Form
     {
       if ($values->remember) {
-        $this->user->setExpiration('7 days', FALSE);
+        $this->user->setExpiration(null, 0);
       } else {
-        $this->user->setExpiration('30 minutes', TRUE);
+        $this->user->setExpiration('30 minutes', 0);
       }
 
       try {
-          $this->user->login($values->username, $values->password);
-          $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
-          $this->redirect('Homepage:all');
+        $this->user->login($values->username, $values->password);
+        $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
+        $this->redirect('Homepage:all');
       } catch (Nette\Security\AuthenticationException $e) {
-          $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
-          $this->redirect('Homepage:all');
+        $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
+        $this->redirect('Homepage:all');
       }
     }
 
@@ -300,7 +302,7 @@ abstract class BasePresenter extends Presenter {
     protected function userIsLogged(): void
     {
       if (!$this->user->isLoggedIn()) {
-          $this->redirect('Homepage:all');
+        $this->redirect('Homepage:all');
       }
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use Nette\Database\ResultSet;
+use Nette\Database\Table\Selection;
 
 class SeasonsTeamsRepository extends Repository {
 
@@ -10,11 +10,20 @@ class SeasonsTeamsRepository extends Repository {
 
   protected $tableName = 'seasons_teams';
 
-  /***
-   * @return
+  /**
+   * @return Selection
    */
-  public function getForSeason($seasonId = null) {
-    return $this->findAll()->where('season_id', $seasonId);
+  public function getAll(): Selection
+  {
+    return $this->findAll();
+  }
+
+  /**
+   * @return Selection
+   */
+  public function getForSeason($id = null): Selection
+  {
+    return $this->findAll()->where('season_id', $id);
   }
 
 }

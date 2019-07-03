@@ -18,29 +18,22 @@
 
   {foreach $punishments as $punishment}
     <div style="margin-top: 2em" class="text-center">
-      {var $player = $punishment->ref('players', 'player_id')}
-      {var $team = $player->ref('teams', 'team_id')}
-
-      <h2>{$player->name} ({$player->num})</h2>
+      <h2>{$punishment->player_name} ({$punishment->player_num})</h2>
       <h3>
-        {if $team->logo and file_exists($imgFolder . '/' . $team->logo)}
-          <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="40px" />
+        {if $punishment->team_logo and file_exists($imgFolder . '/' . $punishment->team_logo)}
+          <img src="{$basePath}/{$imgFolder}/{$punishment->team_logo}" width="40px" />
         {/if}
-        {$team->name}
+        {$punishment->team_name}
       </h3>
 
       <ul>
         {if !empty($punishment->round) && isset($punishment->round)}
           <li><strong>Stop na: </strong>{$punishment->round}</li>
         {/if}
-        {if $punishment->text}
-          <li><strong>Dôvod: </strong>{$punishment->text}</li>
-        {/if}
-        {if $punishment->condition}
-          <li><strong>Podmienečne</strong></li>
-        {/if}
+        <li n:if="$punishment->content"><strong>Dôvod: </strong>{$punishment->content}</li>
+        <li n:if="$punishment->condition"><strong>Podmienečne</strong></li>
       </ul>
-      {if !$iterator->last}<hr />{/if}
+      <hr n:if="!$iterator->last"/>
     </div>
   {/foreach}
 </section>

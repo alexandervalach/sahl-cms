@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Presenters;
 
 use App\FormHelper;
@@ -14,11 +16,21 @@ class PunishmentsPresenter extends BasePresenter {
   /** @var ActiveRow */
   private $seasonRow;
 
-  public function renderAll() {
-    $this->template->punishments = $this->punishmentsRepository->getArchived()->order('id DESC');
+  /** @var array */
+  private $punishments;
+
+  public function actionAll(): void
+  {
+    $this->punishments = array();
   }
 
-  public function actionEdit($id) {
+  public function renderAll(): void
+  {
+    $this->template->punishments = $this->punishmentsRepository->getForSeason();
+  }
+
+  public function actionEdit($id): void
+  {
     $this->userIsLogged();
     $this->punishmentRow = $this->punishmentsRepository->findById($id);
 
@@ -29,16 +41,19 @@ class PunishmentsPresenter extends BasePresenter {
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->punishmentRow);
   }
 
-  public function renderEdit($id) {
+  public function renderEdit($id): void
+  {
     $this->template->player = $this->punishmentRow->ref('players', 'player_id');
   }
 
-  public function actionRemove($id) {
+  public function actionRemove($id): void
+  {
     $this->userIsLogged();
     $this->punishmentRow = $this->punishmentsRepository->findById($id);
   }
 
-  public function renderRemove($id) {
+  public function renderRemove($id): void
+  {
     $this->template->punishment = $this->punishmentRow;
 
     if (!$this->punishmentRow || !$this->punishmentRow->is_present) {

@@ -1,6 +1,6 @@
 {**
  * @param string   $basePath web base path
- * @param string   $imgFolder images folder path
+ * @param string   $imageFolder images folder path
  * @param array    $posts list of posts
 *}
 
@@ -26,10 +26,10 @@
     <main class="clearfix overflow-container">
       <a n:href="view $post->id">
         <figure class="col-md-5 col-lg-5">
-          {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
-            <img src="{$basePath}/{$imgFolder}/{$post->thumbnail}" class="img img-responsive" alt="Miniatúra článku {$post->title}" />
+          {if $post->thumbnail and file_exists($imageFolder . "/" . $post->thumbnail)}
+            <img src="{$basePath}/{$imageFolder}/{$post->thumbnail}" class="img img-responsive" alt="Miniatúra článku {$post->title}" />
           {else}
-            <img src="{$basePath}/{$imgFolder}/{$defaultImg}" class="img img-responsive" alt="Logo sahl" />
+            <img src="{$basePath}/{$imageFolder}/{$defaultImage}" class="img img-responsive" alt="Logo sahl" />
           {/if}
         </figure>
       </a>

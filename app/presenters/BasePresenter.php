@@ -59,8 +59,8 @@ abstract class BasePresenter extends Presenter
     const DANGER = 'danger';
     const WARNING = 'warning';
     const GOALIE = 'Brankár';
-    const IMG_FOLDER = 'images';
-    const DEFAULT_IMG = 'sahl.png';
+    const IMAGE_FOLDER = 'images';
+    const DEFAULT_IMAGE = 'sahl.png';
     const CSRF_TOKEN_EXPIRED = 'Platnosť formulára vypršala. Odošlite ho, prosím, znovu.';
     const IMG_NOT_FOUND = 'Image not found';
     const PLAYER_NOT_FOUND = 'Player not found';
@@ -220,8 +220,8 @@ abstract class BasePresenter extends Presenter
       $this->template->links = $this->linksRepository->getAll();
       $this->template->sponsors = $this->sponsorsRepository->getAll();
       $this->template->sideTeams = $this->teamsRepository->getForSeason();
-      $this->template->imgFolder = self::IMG_FOLDER;
-      $this->template->defaultImg = self::DEFAULT_IMG;
+      $this->template->imageFolder = self::IMAGE_FOLDER;
+      $this->template->defaultImage = self::DEFAULT_IMAGE;
     }
 
     /**

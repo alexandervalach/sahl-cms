@@ -28,15 +28,15 @@
             {var $team1 = $fight->ref('teams', 'team1_id');}
             {var $team2 = $fight->ref('teams', 'team2_id');}
             <td>
-              <img src="{$basePath}/{$imgFolder}/{$team1->logo}"
+              <img src="{$basePath}/{$imageFolder}/{$team1->logo}"
                     width="20px" alt="Logo {$team1->name}"
-                    n:if="$team1->logo and file_exists($imgFolder . '/' . $team1->logo)" />
+                    n:if="$team1->logo and file_exists($imageFolder . '/' . $team1->logo)" />
               {$team1->name}
             </td>
             <td>
-              <img src="{$basePath}/{$imgFolder}/{$team2->logo}"
+              <img src="{$basePath}/{$imageFolder}/{$team2->logo}"
                     width="20px" alt="Logo {$team2->name}"
-                    n:if="$team2->logo and file_exists($imgFolder . '/' . $team2->logo)" />
+                    n:if="$team2->logo and file_exists($imageFolder . '/' . $team2->logo)" />
               {$team2->name}
             </td>
             <td>{$fight->score1}</td>
@@ -60,9 +60,9 @@
                 {var $team = $row->ref('teams', 'team_id')}
                 <td>{$iterator->counter}.</td>
                 <td>
-                    <img src="{$basePath}/{$imgFolder}/{$team->logo}"
+                    <img src="{$basePath}/{$imageFolder}/{$team->logo}"
                         width="20px" alt="Logo {$team->name}"
-                        n:if="$team->logo and file_exists($imgFolder . '/' . $team->logo)" />
+                        n:if="$team->logo and file_exists($imageFolder . '/' . $team->logo)" />
                     {$team->name}
                 </td>
                 <td>
@@ -85,10 +85,10 @@
     </header>
     <main class="clearfix">
       <figure class="col-md-5 col-lg-5">
-        {if $post->thumbnail and file_exists($imgFolder . "/" . $post->thumbnail)}
-          <img src='{$basePath}/{$imgFolder}/{$post->thumbnail}' class="img img-responsive" />
+        {if $post->thumbnail and file_exists($imageFolder . "/" . $post->thumbnail)}
+          <img src='{$basePath}/{$imageFolder}/{$post->thumbnail}' class="img img-responsive" />
         {else}
-          <img src='{$basePath}/{$imgFolder}/{$defaultImg}' class="img img-responsive" />
+          <img src='{$basePath}/{$imageFolder}/{$defaultImg}' class="img img-responsive" />
         {/if}
       </figure>
       <div class="col-md-7 col-lg-7">

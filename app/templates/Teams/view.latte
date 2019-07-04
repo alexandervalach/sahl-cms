@@ -24,9 +24,9 @@
       <h1 n:block="title">{$team->name}</h1>
     </div>
   </div>
-  {if $team->logo and file_exists($imgFolder . '/' . $team->logo)}
+  {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
     <figure style="margin-top: 1em">
-      <img class="img img-responsive" src="{$basePath}/{$imgFolder}/{$team->logo}" alt="{$team->name}" style="margin: 0 auto" />
+      <img class="img img-responsive" src="{$basePath}/{$imageFolder}/{$team->logo}" alt="{$team->name}" style="margin: 0 auto" />
     </figure>
   {/if}
 </section>

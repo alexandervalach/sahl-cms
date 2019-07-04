@@ -150,6 +150,7 @@ abstract class Repository {
     return $this->getAll()->select($data);
   }
 
+  /*
   public function getAsArray($id)
   {
     $checkRows = $this->findByValue('season_id', $id);
@@ -171,5 +172,6 @@ abstract class Repository {
     }
     return $data;
   }
+  */
 
 }

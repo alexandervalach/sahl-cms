@@ -32,19 +32,19 @@
 
   {if $count}
     <div id="post-images" class="clearfix">
-      {foreach $images as $img}
+      {foreach $images as $image}
         <figure class='col-xs-12 col-sm-12 col-md-6 col-lg-6' style="margin-top: 1em">
-          {if file_exists($imgFolder . '/' . $img->name) or $user->loggedIn}
-            <img src="{$basePath}/{$imgFolder}/{$img->name}" alt="{$img->name}" class='img img-responsive' />
+          {if file_exists($imageFolder . '/' . $image->name) or $user->loggedIn}
+            <img src="{$basePath}/{$imageFolder}/{$image->name}" alt="{$image->name}" class='img img-responsive' />
           {/if}
 
           {if $user->loggedIn}
             <figcaption class="text-center" style="margin-top: 1em">
-              <a n:href="setImg, $img->post_id, $img->id" class="btn btn-large btn-primary"
+              <a n:href="setImg, $image->post_id, $image->id" class="btn btn-large btn-primary"
                   title="Nastaviť obrázok ako miniatúru článku">
                   <span class="glyphicon glyphicon-picture"></span>
               </a>
-              <a n:href="removeImg, $img->post_id, $img->id" class="btn btn-large btn-danger"
+              <a n:href="removeImg, $image->post_id, $image->id" class="btn btn-large btn-danger"
                   title="Odstrániť obrázok">
                   <span class="glyphicon glyphicon-trash"></span>
               </a>

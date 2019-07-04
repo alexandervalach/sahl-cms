@@ -28,6 +28,7 @@ class TeamsPresenter extends BasePresenter {
   public function actionAll(): void
   {
     $teams = $this->seasonsTeamsRepository->getForSeason();
+    $this->teams = [];
 
     foreach ($teams as $team) {
       $this->teams[] = $team->ref('teams', 'team_id');
@@ -36,7 +37,7 @@ class TeamsPresenter extends BasePresenter {
 
   public function renderAll(): void
   {
-    $this->template->teams = $this->teams;
+    $this->template->teams = is_array($this->teams) ? $this->teams : [];
   }
 
   public function actionView(int $id): void
@@ -105,11 +106,13 @@ class TeamsPresenter extends BasePresenter {
 
   protected function createComponentTeamForm(): Form
   {
+    $groups = $this->groupsRepository->getAsArray();
     $form = new Form;
     $form->addText('name', 'Názov tímu')
           ->setAttribute('placeholder', 'SKV Aligators')
           ->setRequired('Názov tímu je povinné pole.')
           ->addRule(Form::MAX_LENGTH, "Dĺžka názvu smie byť len 255 znakov.", 255);
+    $form->addSelect('group_id', 'Divízia', $groups);
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')
@@ -199,7 +202,20 @@ class TeamsPresenter extends BasePresenter {
       $this->teamRow = $this->teamsRepository->findById($id);
       $this->teamRow->update($values);
     } else {
-      $this->teamRow = $this->teamsRepository->insert($values);
+      $this->teamRow = $this->teamsRepository->findByValue('name', $values['name'])->fetch();
+
+      if (!$this->teamRow) {
+        $this->teamRow = $this->teamsRepository->insert(
+          array('name' => $values['name'])
+        );
+      }
+
+      $this->seasonsTeamsRepository->insert(
+        array(
+          'team_id' => $this->teamRow->id,
+          'group_id' => $values['group_id']
+        )
+      );
     }
 
     // $this->tablesRepository->insert(array('team_id' => $team));

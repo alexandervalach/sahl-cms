@@ -128,7 +128,7 @@ class TeamsPresenter extends BasePresenter {
     $form = new Form;
     $form->addText('name', 'Meno a priezvisko')
           ->setAttribute('placeholder', 'Zdeno Chára')
-          ->addRule(Form::FILLED, 'Opa, ešte nie je vyplnené Meno a priezvisko hráča');
+          ->addRule(Form::FILLED, 'Opa, ešte nie je vyplnené Meno a priezvisko');
     $form->addText('num', 'Číslo')
           ->setAttribute('placeholder', 14);
     $form->addSelect('type_id', 'Typ hráča', $types);
@@ -142,19 +142,25 @@ class TeamsPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedAddPlayerForm(Form $form, ArrayHash $values): void
+  public function submittedAddPlayerForm(Form $form, array $values): void
   {
-    // $values['team_id'] = $this->teamRow;
-    $playerId = $this->playersRepository->insert($values);
+    $playerId = $this->playersRepository->findByValue('name', $values['name'])
+      ->where('num', $values['num'])->fetch();
 
-    /*
-    $this->playersTeamsRepository->insert(
+    if (!$playerId) {
+      $playerId = $this->playersRepository->insert($values);
+    }
+
+    $seasonTeam = $this->seasonsTeamsRepository
+      ->findByValue('team_id', $this->teamRow->id)
+      ->where('season_id', null)->select('id')->fetch();
+
+    $this->playersSeasonsTeamsRepository->insert(
       array(
-        'team_id' => $this->teamRow,
+        'seasons_teams_id' => $seasonTeam->id,
         'player_id' => $playerId
       )
     );
-    */
 
     $this->flashMessage('Hráč bol pridaný', self::SUCCESS);
     $this->redirect('view', $this->teamRow->id);
@@ -181,11 +187,11 @@ class TeamsPresenter extends BasePresenter {
     $players = $this->teamRow->related('players');
 
     foreach ($players as $player) {
-      $this->playersRepository->remove($player);
+      $this->playersRepository->remove($player->id);
     }
 
     $this->flashMessage('Tím bol odstránený', self::SUCCESS);
-    $this->teamsRepository->remove($this->teamRow);
+    $this->teamsRepository->remove($this->teamRow->id);
     $this->redirect('all');
   }
 
@@ -200,7 +206,13 @@ class TeamsPresenter extends BasePresenter {
 
     if ($id) {
       $this->teamRow = $this->teamsRepository->findById($id);
-      $this->teamRow->update($values);
+      $this->teamRow->update(
+        array('name' => $values['name'])
+      );
+
+      $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('view', $this->teamRow->id);
+
     } else {
       $this->teamRow = $this->teamsRepository->findByValue('name', $values['name'])->fetch();
 

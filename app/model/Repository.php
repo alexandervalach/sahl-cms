@@ -7,6 +7,7 @@ namespace App\Model;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use Nette\Utils\ArrayHash;
 
 /**
  * Description of Repository
@@ -123,10 +124,10 @@ abstract class Repository {
 
   /**
    * Add data to table
-   * @param array $data data to be inserted
+   * @param array|ArrayHash $data data to be inserted
    * @return ActiveRow
    */
-  public function insert(array $data) {
+  public function insert($data) {
     return $this->getTable()->insert($data);
   }
 

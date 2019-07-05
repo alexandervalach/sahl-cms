@@ -26,16 +26,20 @@
             {foreach $types as $type}
               <tr>
                 <td>{$type->label}</td>
-                <td>
-                  <a n:href="edit $type->id" class="text-success">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                  </a>
-                </td>
-                <td>
-                  <a n:href="remove $type->id" class="text-danger">
-                    <span class="glyphicon glyphicon-trash"></span>
-                  </a>
-                </td>
+                {if $iterator->counter > 1}
+                  <td>
+                    <a n:href="edit $type->id" class="text-success">
+                      <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                  </td>
+                  <td>
+                    <a n:href="remove $type->id" class="text-danger">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                  </td>
+                {else}
+                  <td colspan="2"></td>
+                {/if}
               </tr>
             {/foreach}
           </tbody>

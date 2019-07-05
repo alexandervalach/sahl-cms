@@ -21,21 +21,24 @@ class TablesPresenter extends BasePresenter {
   /** @var ActiveRow */
   private $archRow;
 
-  public function actionAll() {
+  public function actionAll(): void
+  {
     $tables = $this->tablesRepository->getForSeason();
 
     foreach ($tables as $table) {
       $this->tables[$table->id]['data'] = $table;
       $this->tables[$table->id]['entries'] = $table->related('table_entries')->order('points DESC, (score1 - score2) DESC');
-      $this->tables[$table->id]['type'] = $table->ref('table_types', 'type_id');
+      $this->tables[$table->id]['type'] = $table->ref('table_types', 'table_type_id');
     }
   }
 
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->tables = $this->tables;
   }
 
-  public function actionAddToSidebar($id) {
+  public function actionAddToSidebar($id): void
+  {
     $this->userIsLogged();
     $this->tableRow = $this->tablesRepository->findById($id);
 
@@ -46,19 +49,21 @@ class TablesPresenter extends BasePresenter {
     $this->submittedSetVisible();
   }
 
-  public function actionArchAll($id) {
+  public function actionArchAll(int $id): void
+  {
     $this->archRow = $this->seasonsRepository->findById($id);
   }
 
-  public function renderArchAll($id) {
+  public function renderArchAll(int $id): void
+  {
     $tableTypes = $this->tableTypesRepository->findAll();
     $tableRows = array();
 
     foreach ($tableTypes as $type) {
-        $tableRows[$type->name] = $this->tablesRepository
-                ->findByValue('archive_id', $this->archRow)
-                ->where('type = ?', $type)
-                ->order('points DESC, (score1 - score2) DESC');
+      $tableRows[$type->name] = $this->tablesRepository
+              ->findByValue('season_id', $this->archRow)
+              ->where('table_type = ?', $type)
+              ->order('points DESC, (score1 - score2) DESC');
     }
 
     $this->template->tables = $tableRows;
@@ -66,7 +71,8 @@ class TablesPresenter extends BasePresenter {
     $this->template->archive = $this->archRow;
   }
 
-  protected function createComponentEditForm() {
+  protected function createComponentEditForm(): Form
+  {
     $form = new Form;
     $form->addText('win', 'Výhry');
     $form->addText('tram', 'Remízy');
@@ -80,7 +86,8 @@ class TablesPresenter extends BasePresenter {
     return $form;
   }
 
-  protected function createComponentResetForm() {
+  protected function createComponentResetForm(): Form
+  {
     $form = new Form;
     $form->addSubmit('reset', 'Vynulovať')
           ->setAttribute('class', self::BTN_DANGER);
@@ -93,26 +100,30 @@ class TablesPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedEditForm(Form $form, $values) {
+  public function submittedEditForm(Form $form, $values): void
+  {
     $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
     $this->tableRow->update($values);
     $this->flashMessage('Záznam bol upravený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedRemoveForm() {
+  public function submittedRemoveForm(): void
+  {
     $this->tableRow->delete();
     $this->flashMessage('Záznam bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedSetVisible() {
-    $this->tableRow->update(array('visible' => 1));
+  public function submittedSetVisible(): void
+  {
+    $this->tableRow->update(array('is_visible' => 1));
     $this->flashMessage('Tabuľka bola pridaná na domovskú stránku', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedResetForm() {
+  public function submittedResetForm(): void
+  {
     $rows = $this->tablesRepository->getArchived();
 
     $values = array(
@@ -132,8 +143,9 @@ class TablesPresenter extends BasePresenter {
     $this->redirect('all');
   }
 
-  public function formCancelled() {
-      $this->redirect('all');
+  public function formCancelled(): void
+  {
+    $this->redirect('all');
   }
 
 }

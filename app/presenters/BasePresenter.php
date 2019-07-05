@@ -243,60 +243,6 @@ abstract class BasePresenter extends Presenter
     }
 
     /**
-     * Component for creating a sign in form
-     * @return Nette\Application\UI\Form
-     */
-    protected function createComponentSignInForm(): Form
-    {
-      $form = new Form;
-      $form->addText('username', 'Používateľské meno')
-              ->setRequired('Zadajte používateľské meno');
-      $form->addPassword('password', 'Heslo')
-              ->setRequired('Zadajte heslo');
-      $form->addCheckbox('remember', ' Zapamätať si ma, kým nezavriem prehliadač');
-      $form->addSubmit('login', 'Prihlásiť');
-      $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-      $form->onSuccess[] = [$this, 'submittedSignInForm'];
-      FormHelper::setBootstrapFormRenderer($form);
-      return $form;
-    }
-
-    /**
-     * Checking whether user exists
-     *
-     * @param Nette\Application\UI\Form $form
-     * @param array $values
-     * @throws Nette\Security\AuthenticationException
-     */
-    public function submittedSignInForm(Form $form, $values): Form
-    {
-      if ($values->remember) {
-        $this->user->setExpiration(null, 0);
-      } else {
-        $this->user->setExpiration('30 minutes', 0);
-      }
-
-      try {
-        $this->user->login($values->username, $values->password);
-        $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
-        $this->redirect('Homepage:all');
-      } catch (Nette\Security\AuthenticationException $e) {
-        $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
-        $this->redirect('Homepage:all');
-      }
-    }
-
-    /**
-     * Log out action routing
-     */
-    public function actionOut(): void
-    {
-      $this->getUser()->logout();
-      $this->flashMessage('Boli ste odhlásený', self::SUCCESS);
-      $this->redirect('Homepage:all');
-    }
-
-    /**
      * Checks whether User is logged
      */
     protected function userIsLogged(): void

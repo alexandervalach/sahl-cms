@@ -10,12 +10,6 @@
 		</p>
 	</section>
 
-	<section n:if="!$user->loggedIn">
-		<button type="button" class="btn btn-large btn-info" data-target="#sign-in" data-toggle="modal" title="Prihlásenie do administrácie">
-			Administrácia
-		</button>
-	</section>
-
 	<section id="authors">
 		<h2>Na vylepšení stránky stále pracujú</h2>
 
@@ -46,18 +40,4 @@
 		</div>
 	</section>
 </footer>
-
-<div n:if="!$user->loggedIn" id="sign-in" class="modal fade" role="dialog">
-	<div class="modal-dialog">
-			<div class="modal-content">
-					<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h3 class="modal-title">Prihlásenie do administrácie</h3>
-					</div>
-					<div class="modal-body">
-							{control signInForm}
-					</div>
-			</div>
-	</div>
-</div>
 

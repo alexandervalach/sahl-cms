@@ -39,12 +39,6 @@ class RoundsPresenter extends BasePresenter
 
     foreach ($fights as $fight)
     {
-      $playersSeasonsTeams1 = $fight->ref('players_seasons_teams', 'players_seasons_teams_id');
-      $playersSeasonsTeams2 = $fight->ref('players_seasons_teams', 'players_seasons_teams_id');
-
-      $seasonsTeams1 = $playersSeasonsTeams1;
-      $seasonsTeams2 = $playersSeasonsTeams2;
-
       $this->fights[$fight->id]['team_1'] = $playersSeasonsTeams1;
       $this->fights[$fight->id]['team_2'] = $playersSeasonsTeams2;
       $this->fights[$fight->id]['home_goals'] = $fight->related('goals')->where('is_home_player', 1)->order('goals DESC');
@@ -151,14 +145,15 @@ class RoundsPresenter extends BasePresenter
   protected function createComponentAddFightForm(): Form
   {
     $teams = $this->teamsRepository->getTeams();
+
     $form = new Form;
     $form->addSelect('team1_id', 'Tím 1', $teams);
+    $form->addHidden('round_id', (string) $this->roundRow->id);
     $form->addText('score1', 'Skóre tímu 1')
           ->setAttribute('placeholder', '1');
     $form->addSelect('team2_id', 'Tím 2', $teams);
     $form->addText('score2', 'Skóre tímu 2')
           ->setAttribute('placeholder', '0');
-    $form->addCheckbox('type', ' Označiť zápas ako Play Off');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
@@ -168,20 +163,21 @@ class RoundsPresenter extends BasePresenter
     return $form;
 	}
 
-	public function submittedAddFightForm(Form $form, $values) {
-    if ($values['team1_id'] == $values['team2_id']) {
+  public function submittedAddFightForm(Form $form, ArrayHash $values)
+  {
+    if ($values->team1_id === $values->team2_id)
+    {
       $form->addError('Zvoľte dva rozdielne tímy.');
       return false;
     }
-    $values['round_id'] = $this->roundRow;
 
-    $values['type'] ? $type = 1 : $type = 2;
-    unset($values['type']);
-
+    // Insert data into database tables
     $this->fightsRepository->insert($values);
+    /*
     $this->updateTableRows($values, $type);
     $this->updateTablePoints($values, $type);
     $this->updateTableGoals($values, $type);
+    */
     $this->flashMessage('Zápas bol pridaný', self::SUCCESS);
     $this->redirect('view', $this->roundRow->id);
 	}
@@ -215,8 +211,7 @@ class RoundsPresenter extends BasePresenter
 
   protected function updateTableRows($values, $type, $value = 1): void
   {
-    $state1 = 'tram';
-    $state2 = 'tram';
+    $state1 = $state2 = 'tram';
 
     if ($values['score1'] > $values['score2']) {
       $state1 = 'win';

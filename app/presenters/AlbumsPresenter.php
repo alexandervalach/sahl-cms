@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Presenters;
 
 use App\FormHelper;
@@ -9,9 +11,10 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
 use Nette\IOException;
 use Nette\InvalidArgumentException;
+use Nette\Utils\ArrayHash;
 
-class AlbumsPresenter extends BasePresenter {
-
+class AlbumsPresenter extends BasePresenter
+{
   const ALBUM_NOT_FOUND = 'Album not found';
   const IMAGE_NOT_FOUND = 'Image not found';
 
@@ -24,16 +27,17 @@ class AlbumsPresenter extends BasePresenter {
   /**
    * Passes prepared data to template
    */
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->albums = $this->albumsRepository->getAll();
   }
 
   /**
    * Loads album data
-   *
-   * @param ActiveRow|string $id
+   * @param int $id
    */
-  public function actionView($id) {
+  public function actionView(int $id): void
+  {
     $this->albumRow = $this->albumsRepository->findById($id);
 
     if (!$this->albumRow || !$this->albumRow->is_present) {
@@ -46,18 +50,20 @@ class AlbumsPresenter extends BasePresenter {
   }
 
   /**
-   * @param string $id
+   * @param int $id
    */
-  public function renderView(string $id) {
+  public function renderView(int $id): void
+  {
     $this->template->album = $this->albumRow;
-    $this->template->images = $this->imagesRepository->getForAlbum($this->albumRow);
+    $this->template->images = $this->imagesRepository->getForAlbum($this->albumRow->id);
   }
 
   /**
    * @param int $album_id
-   * @param ActiveRow|string $id
+   * @param int $id
    */
-  public function actionSetImage(int $albumId, $id) {
+  public function actionSetImage(int $albumId, int $id): void
+  {
     $this->userIsLogged();
     $this->albumRow = $this->albumsRepository->findById($albumId);
     $this->imageRow = $this->imagesRepository->findById($id);
@@ -74,13 +80,15 @@ class AlbumsPresenter extends BasePresenter {
   }
 
   /**
-   * @param ActiveRow|string $id
+   * @param int $id
+   * @throws Nette\Application\BadRequestException
    */
-  public function actionRemoveImage($id) {
+  public function actionRemoveImage(int $id): void
+  {
     $this->userIsLogged();
     $this->imageRow = $this->imagesRepository->findById($id);
     if (!$this->imageRow) {
-        throw new BadRequestException(self::IMAE_NOT_FOUND);
+      throw new BadRequestException(self::IMAE_NOT_FOUND);
     }
     $this->submittedRemoveImage();
   }
@@ -89,7 +97,7 @@ class AlbumsPresenter extends BasePresenter {
    * Creates add album form
    * @return Nette\Application\UI\Form
    */
-  protected function createComponentAlbumForm()
+  protected function createComponentAlbumForm(): Form
   {
     $form = new Form;
     $form->addText('name', 'Názov')
@@ -108,7 +116,8 @@ class AlbumsPresenter extends BasePresenter {
    * Creates add image form
    * @return Nette\Application\UI\Form
    */
-  protected function createComponentAddImageForm() {
+  protected function createComponentAddImageForm(): Form
+  {
     $form = new Form;
     $form->addMultiUpload('files', 'Obrázky')
           ->addRule(Form::FILLED, 'Vyberte obrázky, prosím')
@@ -126,9 +135,10 @@ class AlbumsPresenter extends BasePresenter {
    * Adds form values to database
    *
    * @param Nette\Application\UI\Form $form
-   * @param array $values
+   * @param ArrayHash $values
    */
-  public function submittedAlbumForm(Form $form, array $values) {
+  public function submittedAlbumForm(Form $form, ArrayHash $values): void
+  {
     $id = $this->getParameter('id');
 
     if ($id) {
@@ -144,14 +154,15 @@ class AlbumsPresenter extends BasePresenter {
   /***
    * Removes albums and related records from database
    */
-  public function submittedRemoveForm() {
-    $images = $this->imagesRepository->getForAlbum($this->albumRow);
+  public function submittedRemoveForm(): void
+  {
+    $images = $this->imagesRepository->getForAlbum($this->albumRow->id);
 
     foreach ($images as $image) {
-      $this->imagesRepository->remove($image);
+      $this->imagesRepository->remove($image->id);
     }
 
-    $this->albumsRepository->remove($this->albumRow);
+    $this->albumsRepository->remove($this->albumRow->id);
     $this->flashMessage('Album bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
@@ -159,13 +170,15 @@ class AlbumsPresenter extends BasePresenter {
   /**
    * Removes an image from database and filesystem
    */
-  public function submittedRemoveImage() {
-    $this->imagesRepository->remove($this->imageRow);
+  public function submittedRemoveImage(): void
+  {
+    $this->imagesRepository->remove($this->imageRow->id);
     $this->flashMessage('Obrázok bol odstránený', self::SUCCESS);
     $this->redirect('Albums:view', $this->imageRow->album_id);
   }
 
-  public function submittedSetImage() {
+  public function submittedSetImage(): void
+  {
     $data['thumbnail'] = $this->imageRow->name;
     $this->albumRow->update($data);
     $this->flashMessage('Miniatúra bola nastavená', self::SUCCESS);
@@ -176,12 +189,13 @@ class AlbumsPresenter extends BasePresenter {
    * Adds image into database and filesystem
    *
    * @param Nette\Application\UI\Form $form
-   * @param array $values
+   * @param ArrayHash $values
    */
-  public function submittedAddImageForm(Form $form, $values) {
+  public function submittedAddImageForm(Form $form, ArrayHash $values): void
+  {
     $data = array();
 
-    foreach ($values['files'] as $image) {
+    foreach ($values->files as $image) {
       $name = strtolower($image->getSanitizedName());
       $data = array(
         'name' => $name,

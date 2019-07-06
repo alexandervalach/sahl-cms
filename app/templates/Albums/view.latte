@@ -21,19 +21,18 @@
   </div>
   <section id="pictures">
     {foreach $images as $image}
-      {if file_exists($imgFolder . '/' . $image->name) or $user->loggedIn}
+      {if file_exists($imageFolder . '/' . $image->name) or $user->loggedIn}
         <figure class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <img src="{$basePath}/{$imgFolder}/{$image->name}"
+            <img src="{$basePath}/{$imageFolder}/{$image->name}"
                   class="img img-responsive lightbox-trigger" alt="{$image->name}" />
               {if $user->loggedIn}
                 <figcaption class="text-center" style="margin-top: 1em">
                   <a n:href="Albums:setImage, $image->album_id, $image->id" class="btn btn-primary"
-                      title="Nastaví obrázok ako miniatúru albumu">
-                      <span class="glyphicon glyphicon-picture"></span>
+                    title="Nastaví obrázok ako miniatúru albumu">
+                    <span class="glyphicon glyphicon-picture"></span>
                   </a>
-                  <a n:href="Albums:removeImage, $image->id" class="btn btn-danger"
-                      title="Odstrániť obrázok">
-                      <span class="glyphicon glyphicon-trash"></span>
+                  <a n:href="Albums:removeImage, $image->id" class="btn btn-danger" title="Odstrániť obrázok">
+                    <span class="glyphicon glyphicon-trash"></span>
                   </a>
                 </figcaption>
               {/if}

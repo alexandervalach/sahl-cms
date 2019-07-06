@@ -16,14 +16,14 @@
   {foreach $albums as $album}
     <figure class="col-lg-4 col-md-4 col-sm-6 col-xs-12" style="margin-top: 2em">
       <a n:href="view $album->id">
-        {if $album->thumbnail && file_exists($imgFolder . "/" . $album->thumbnail)}
+        {if $album->thumbnail && file_exists($imageFolder . "/" . $album->thumbnail)}
           {var $image = $album->thumbnail}
           {var $text = "Album " . $album->name}
         {else}
           {var $image = $defaultImg}
           {var $text = "Logo SAHL"}
         {/if}
-        <img src="{$basePath}/{$imgFolder}/{$image}" class="img img-responsive" alt="{$text}" />
+        <img src="{$basePath}/{$imageFolder}/{$image}" class="img img-responsive" alt="{$text}" />
       </a>
       <figcaption class="text-center" style="margin: 1em;">
         <strong>{$album->name}</strong>

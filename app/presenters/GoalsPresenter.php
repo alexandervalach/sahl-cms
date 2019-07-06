@@ -5,6 +5,13 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\GoalsRepository;
+use App\Model\FightsRepository;
+use App\Model\RoundsRepository;
+use App\Model\PlayersRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -26,6 +33,35 @@ class GoalsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $team2;
+
+  /** @var GoalsRepository */
+  private $goalsRepository;
+
+  /** @var FightsRepository */
+  private $fightsRepository;
+
+  /** @var RoundsRepository */
+  private $roundsRepository;
+
+  /** @var PlayersRepository */
+  private $playersRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    GoalsRepository $goalsRepository,
+    FightsRepository $fightsRepository,
+    PlayersRepository $playersRepository,
+    RoundsRepository $roundsRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->goalsRepository = $goalsRepository;
+    $this->fightsRepository = $fightsRepository;
+    $this->playersRepository = $playersRepository;
+    $this->roundsRepository = $roundsRepository;
+  }
 
   public function actionView(int $id): void
   {

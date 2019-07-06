@@ -3,6 +3,10 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\PlayerTypesRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -13,8 +17,22 @@ class PlayerTypesPresenter extends BasePresenter
 {
   const TYPE_NOT_FOUND = 'Player type not found';
 
+  /** @var PlayerTypesRepository */
+  private $playerTypesRepository;
+
   /** @var ActiveRow */
   private $playerTypeRow;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    PlayerTypesRepository $playerTypesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->playerTypesRepository = $playerTypesRepository;
+  }
 
   public function actionAll(): void
   {

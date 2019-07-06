@@ -1,10 +1,49 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Presenters;
 
-class HomepagePresenter extends BasePresenter {
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\PostsRepository;
+use App\Model\RoundsRepository;
+use App\Model\TableTypesRepository;
 
-  public function renderAll() {
+class HomepagePresenter extends BasePresenter
+{
+  /** @var PostsRepository */
+  private $postsRepository;
+
+  /** @var TableTypesRepository */
+  private $tableTypesRepository;
+
+  /** @var RoundsRepository */
+  private $roundsRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    PostsRepository $postsRepository,
+    TableTypesRepository $tableTypesRepository,
+    RoundsRepository $roundsRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->postsRepository = $postsRepository;
+    $this->tableTypesRepository = $tableTypesRepository;
+    $this->roundsRepository = $roundsRepository;
+  }
+
+  public function actionAll(): void
+  {
+
+  }
+
+  public function renderAll(): void
+  {
     $posts = $this->postsRepository->getLatestPosts();
     $sideTables = array();
     $sideTableTypes = $this->tableTypesRepository->getTableTypes();

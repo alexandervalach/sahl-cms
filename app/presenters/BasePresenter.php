@@ -5,32 +5,11 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
-use App\Model\AlbumsRepository;
-use App\Model\EventsRepository;
-use App\Model\FightsRepository;
-use App\Model\ImagesRepository;
-use App\Model\GoalsRepository;
-use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
-use App\Model\PlayersSeasonsTeamsRepository;
-use App\Model\PlayersRepository;
-use App\Model\PlayerTypesRepository;
-use App\Model\PostImagesRepository;
-use App\Model\PostsRepository;
-use App\Model\PunishmentsRepository;
-use App\Model\RulesRepository;
-use App\Model\RoundsRepository;
-use App\Model\SeasonsRepository;
-use App\Model\SeasonsTeamsRepository;
 use App\Model\SponsorsRepository;
-use App\Model\TableEntriesRepository;
-use App\Model\TableTypesRepository;
-use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
-use App\Model\UsersRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
-use Nette\Security\AuthenticationException;
 
 /**
  * Base class for all application presenters.
@@ -70,74 +49,14 @@ abstract class BasePresenter extends Presenter
   const ITEM_NOT_FOUND = 'Item not found';
   const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené';
 
-  /** @var AlbumsRepository */
-  protected $albumsRepository;
-
-  /** @var EventsRepository */
-  protected $eventsRepository;
-
-  /** @var FightsRepository */
-  protected $fightsRepository;
-
-  /** @var ImagesRepository */
-  protected $imagesRepository;
-
-  /** @var GoalsRepository */
-  protected $goalsRepository;
-
-  /** @var GroupsRepository */
-  protected $groupsRepository;
-
   /** @var LinksRepository */
   protected $linksRepository;
-
-  /** @var PlayersSeasonsTeamsRepository */
-  protected $playersSeasonsTeamsRepository;
-
-  /** @var PlayerTypesRepository */
-  protected $playerTypesRepository;
-
-  /** @var PlayersRepository */
-  protected $playersRepository;
-
-  /** @var PostImagesRepository */
-  protected $postImagesRepository;
-
-  /** @var PostsRepository */
-  protected $postsRepository;
-
-  /** @var PunishmentsRepository */
-  protected $punishmentsRepository;
-
-  /** @var RoundsRepository */
-  protected $roundsRepository;
-
-  /** @var RulesRepository */
-  protected $rulesRepository;
-
-  /** @var SeasonsRepository */
-  protected $seasonsRepository;
-
-  /** @var SeasonsTeamsRepository */
-  protected $seasonsTeamsRepository;
 
   /** @var SponsorsRepository */
   protected $sponsorsRepository;
 
-  /** @var TableEntriesRepository */
-  protected $tableEntriesRepository;
-
-  /** @var TableTypesRepository */
-  protected $tableTypesRepository;
-
-  /** @var TablesRepository */
-  protected $tablesRepository;
-
   /** @var TeamsRepository */
   protected $teamsRepository;
-
-  /** @var UsersRepository */
-  protected $usersRepository;
 
   /** @var string */
   protected $webDir;
@@ -145,72 +64,30 @@ abstract class BasePresenter extends Presenter
   /** @var string */
   protected $imageDir = 'images';
 
-  /** @persistent */
-  protected $backlink;
-
   /**
    * Base constructor
    */
   public function __construct(
-    AlbumsRepository $albumsRepository,
-    EventsRepository $eventsRepository,
-    FightsRepository $fightsRepository,
-    ImagesRepository $imagesRepository,
-    GoalsRepository $goalsRepository,
-    GroupsRepository $groupsRepository,
     LinksRepository $linksRepository,
-    PlayersSeasonsTeamsRepository $playersSeasonsTeamsRepository,
-    PlayerTypesRepository $playerTypesRepository,
-    PlayersRepository $playersRepository,
-    PostImagesRepository $postImagesRepository,
-    PostsRepository $postsRepository,
-    PunishmentsRepository $punishmentsRepository,
-    RoundsRepository $roundsRepository,
-    RulesRepository $rulesRepository,
-    SeasonsRepository $seasonsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository,
     SponsorsRepository $sponsorsRepository,
-    TableEntriesRepository $tableEntriesRepository,
-    TableTypesRepository $tableTypesRepository,
-    TablesRepository $tablesRepository,
-    TeamsRepository $teamsRepository,
-    UsersRepository $usersRepository)
+    TeamsRepository $teamsRepository)
   {
     parent::__construct();
-    $this->albumsRepository = $albumsRepository;
-    $this->eventsRepository = $eventsRepository;
-    $this->fightsRepository = $fightsRepository;
-    $this->imagesRepository = $imagesRepository;
-    $this->goalsRepository = $goalsRepository;
-    $this->groupsRepository = $groupsRepository;
     $this->linksRepository = $linksRepository;
-    $this->playersRepository = $playersRepository;
-    $this->playersSeasonsTeamsRepository = $playersSeasonsTeamsRepository;
-    $this->playerTypesRepository = $playerTypesRepository;
-    $this->postImagesRepository = $postImagesRepository;
-    $this->postsRepository = $postsRepository;
-    $this->punishmentsRepository = $punishmentsRepository;
-    $this->roundsRepository = $roundsRepository;
-    $this->rulesRepository = $rulesRepository;
-    $this->seasonsRepository = $seasonsRepository;
-    $this->seasonsTeamsRepository = $seasonsTeamsRepository;
     $this->sponsorsRepository = $sponsorsRepository;
-    $this->tableEntriesRepository = $tableEntriesRepository;
-    $this->tableTypesRepository = $tableTypesRepository;
-    $this->tablesRepository = $tablesRepository;
     $this->teamsRepository = $teamsRepository;
-    $this->usersRepository = $usersRepository;
-    $this->backlink = '';
   }
 
   /**
    * Method for saving previous link
    */
+  /*
   protected function startup(): void
   {
     parent::startup();
     $this->backlink = $this->storeRequest();
   }
+  */
 
   /**
    * Set before content rendering

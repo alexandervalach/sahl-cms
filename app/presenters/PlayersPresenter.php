@@ -5,6 +5,11 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\PlayersRepository;
+use App\Model\PlayerTypesRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -26,6 +31,25 @@ class PlayersPresenter extends BasePresenter
 
   /** @var ArrayHash */
   private $playerData;
+
+  /** @var PlayersRepository */
+  private $playersRepository;
+
+  /** @var PlayerTypesRepository */
+  private $playerTypesRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    PlayersRepository $playersRepository,
+    PlayerTypesRepository $playerTypesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->playersRepository = $playersRepository;
+    $this->playerTypesRepository = $playerTypesRepository;
+  }
 
   public function renderAll(): void
   {

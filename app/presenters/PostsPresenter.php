@@ -3,6 +3,11 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\PostsRepository;
+use App\Model\PostImagesRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -10,8 +15,8 @@ use Nette\Utils\FileSystem;
 use Nette\IOException;
 use Nette\InvalidArgumentException;
 
-class PostsPresenter extends BasePresenter {
-
+class PostsPresenter extends BasePresenter
+{
   const POST_NOT_FOUND = 'Post not found';
   const IMAGE_NOT_FOUND = 'Image not found';
   const ADD_IMG_FORM = 'addImgForm';
@@ -21,6 +26,25 @@ class PostsPresenter extends BasePresenter {
 
   /** @var ActiveRow */
   private $imgRow;
+
+  /** @var PostsRepository */
+  private $postsRepository;
+
+  /** @var PostImagesRepository */
+  private $postImagesRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    PostsRepository $postsRepository,
+    PostImagesRepository $postImagesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->postsRepository = $postsRepository;
+    $this->$postImagesRepository = $postImagesRepository;
+  }
 
   public function renderAll() {
     $this->template->posts = $this->postsRepository->getAll()->order('id DESC');

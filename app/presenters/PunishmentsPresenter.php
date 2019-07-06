@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\PlayersRepository;
+use App\Model\PunishmentsRepository;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 
@@ -18,6 +23,25 @@ class PunishmentsPresenter extends BasePresenter
 
   /** @var array */
   private $punishments;
+
+  /** @var PunishmentsRepository */
+  private $punishmentsRepository;
+
+  /** @var PlayersRepository */
+  private $playersRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    PlayersRepository $playersRepository,
+    PunishmentsRepository $punishmentsRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->playersRepository = $playersRepository;
+    $this->punishmentsRepository = $punishmentsRepository;
+  }
 
   public function actionAll(): void
   {

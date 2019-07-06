@@ -5,6 +5,11 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\AlbumsRepository;
+use App\Model\ImagesRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -23,6 +28,25 @@ class AlbumsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $imageRow;
+
+  /** @var SeasonsRepository */
+  private $albumsRepository;
+
+  /** @var ImagesRepository */
+  private $imagesRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    AlbumsRepository $albumsRepository,
+    ImagesRepository $imagesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->albumsRepository = $albumsRepository;
+    $this->imagesRepository = $imagesRepository;
+  }
 
   /**
    * Passes prepared data to template

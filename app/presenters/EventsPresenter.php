@@ -5,6 +5,10 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\EventsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -21,6 +25,20 @@ class EventsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var EventsRepository */
+  private $eventsRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    EventsRepository $eventsRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->eventsRepository = $eventsRepository;
+  }
 
   /**
    * Renders data for all view

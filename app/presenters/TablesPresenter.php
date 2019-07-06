@@ -3,6 +3,10 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\TablesRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -20,6 +24,20 @@ class TablesPresenter extends BasePresenter {
 
   /** @var ActiveRow */
   private $archRow;
+
+  /** @var TablesRepository */
+  private $tablesRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    TablesRepository $tablesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->tablesRepository = $tablesRepository;
+  }
 
   public function actionAll(): void
   {

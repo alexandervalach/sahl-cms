@@ -1,6 +1,9 @@
 php:
 	date.timezone: Europe/Prague
 
+session:
+	expiration: 7 days
+
 application:
 	errorPresenter: Error
 	mapping:

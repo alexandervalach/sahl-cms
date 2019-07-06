@@ -3,6 +3,10 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\TableTypesRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -10,11 +14,24 @@ use Nette\Utils\ArrayHash;
 
 class TableTypesPresenter extends BasePresenter
 {
-
   const TYPE_NOT_FOUND = 'Type not found';
 
   /** @var ActiveRow */
   private $tableTypeRow;
+
+  /** @var TableTypesRepository */
+  private $tableTypesRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    TableTypesRepository $tableTypesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->tableTypesRepository = $tableTypesRepository;
+  }
 
   public function actionAll(): void
   {

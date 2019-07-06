@@ -16,9 +16,7 @@
         ],
         "require": {
             "php": ">= 7.1.1",
-            "nette/nette": "~3.0.0",
-                "latte/latte": "^2.5",
-                "tracy/tracy": "^2.6"
+            "nette/nette": "~3.0.0"
         },
         "require-dev": {
             "nette/tester": "~2.2.0"

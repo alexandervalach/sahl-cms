@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Model;
 
+use Nette\SmartObject;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
@@ -14,7 +15,9 @@ use Nette\Utils\ArrayHash;
  *
  * @author
  */
-abstract class Repository {
+abstract class Repository
+{
+  use SmartObject;
 
   const IS_PRESENT = 'is_present';
   const IS_VISIBLE = 'is_visible';
@@ -28,6 +31,9 @@ abstract class Repository {
   /** @var string */
   protected $tableName;
 
+  /**
+   * @param Context $database
+   */
   public function __construct(Context $database)
   {
     $this->database = $database;

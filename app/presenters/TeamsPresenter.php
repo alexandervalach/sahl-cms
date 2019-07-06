@@ -3,6 +3,13 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\GroupsRepository;
+use App\Model\LinksRepository;
+use App\Model\PlayersRepository;
+use App\Model\PlayerTypesRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\SeasonsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequetsException;
 use Nette\Database\Table\ActiveRow;
@@ -24,6 +31,36 @@ class TeamsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var SeasonsTeamsRepository */
+  private $seasonsTeamsRepository;
+
+  /** @var GroupsRepository */
+  private $groupsRepository;
+
+  /** @var PlayersRepository */
+  private $playersRepository;
+
+  /** @var PlayerTypesRepository */
+  private $playerTypesRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    SeasonsTeamsRepository $seasonsTeamsRepository,
+    GroupsRepository $groupsRepository,
+    PlayersRepository $playersRepository,
+    PlayerTypesRepository $playerTypesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->seasonsTeamsRepository = $seasonsTeamsRepository;
+    $this->groupsRepository = $groupsRepository;
+    $this->playersRepository = $playersRepository;
+    $this->playerTypesRepository = $playerTypesRepository;
+  }
+
 
   public function actionAll(): void
   {

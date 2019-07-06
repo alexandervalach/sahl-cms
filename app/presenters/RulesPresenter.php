@@ -3,6 +3,10 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\RulesRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -14,6 +18,20 @@ class RulesPresenter extends BasePresenter {
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var RulesRepository */
+  private $rulesRepository;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    RulesRepository $rulesRepository
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->rulesRepository = $rulesRepository;
+  }
 
   public function actionAll() {
     $this->ruleRow = $this->rulesRepository->getArchived()->order('id DESC')->fetch();

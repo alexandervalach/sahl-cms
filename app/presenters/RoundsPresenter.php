@@ -1,81 +1,104 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Presenters;
 
 use App\FormHelper;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
 
-class RoundsPresenter extends BasePresenter {
-
+class RoundsPresenter extends BasePresenter
+{
 	/** @var ActiveRow */
 	private $roundRow;
 
 	/** @var ActiveRow */
-	private $archRow;
+  private $seasonRow;
 
-	public function renderAll() {
+  /** @var array */
+  private $fights;
+
+  public function renderAll(): void
+  {
 		$this->template->rounds = $this->roundsRepository->getArchived();
 	}
 
-	public function actionView($id) {
+  public function actionView(int $id): void
+  {
 		$this->roundRow = $this->roundsRepository->findById($id);
-		if (!$this->roundRow) {
+    if (!$this->roundRow || !$this->roundRow->is_present)
+    {
 			throw new BadRequestException(self::ROUND_NOT_FOUND);
-		}
-	}
+    }
 
-	public function renderView($id) {
-		$i = 0;
-		$fight_data = array();
-		$fights = $this->roundRow->related('fights')->where('is_present', 1)->order('id DESC');
+    $fights = $this->roundRow->related('fights')->where('is_present', 1)->order('id DESC');
+    $this->fights = [];
 
-		foreach ($fights as $fight) {
-      $fight_data[$i]['team_1'] = $fight->ref('teams', 'team1_id');
-      $fight_data[$i]['team_2'] = $fight->ref('teams', 'team2_id');
-      $fight_data[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
-      $fight_data[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
+    foreach ($fights as $fight)
+    {
+      $playersSeasonsTeams1 = $fight->ref('players_seasons_teams', 'players_seasons_teams_id');
+      $playersSeasonsTeams2 = $fight->ref('players_seasons_teams', 'players_seasons_teams_id');
 
-      if ($fight->score1 > $fight->score2) {
-          $fight_data[$i]['state_1'] = 'text-success';
-          $fight_data[$i]['state_2'] = 'text-danger';
-      } else if ($fight->score1 < $fight->score2) {
-          $fight_data[$i]['state_1'] = 'text-danger';
-          $fight_data[$i]['state_2'] = 'text-success';
-      } else {
-          $fight_data[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
+      $seasonsTeams1 = $playersSeasonsTeams1;
+      $seasonsTeams2 = $playersSeasonsTeams2;
+
+      $this->fights[$fight->id]['team_1'] = $playersSeasonsTeams1;
+      $this->fights[$fight->id]['team_2'] = $playersSeasonsTeams2;
+      $this->fights[$fight->id]['home_goals'] = $fight->related('goals')->where('is_home_player', 1)->order('goals DESC');
+      $this->fights[$fight->id]['guest_goals'] = $fight->related('goals')->where('is_home_player', 0)->order('goals DESC');
+
+      if ($fight->score1 > $fight->score2)
+      {
+        $this->fights[$fight->id]['state_1'] = 'text-success';
+        $this->fights[$fight->id]['state_2'] = 'text-danger';
       }
-      $i++;
-		}
+      else if ($fight->score1 < $fight->score2)
+      {
+        $this->fights[$fight->id]['state_1'] = 'text-danger';
+        $this->fights[$fight->id]['state_2'] = 'text-success';
+      }
+      else
+      {
+        $this->fights[$fight->id]['state_1'] = '';
+        $this->fights[$fight->id]['state_2'] = '';
+      }
+    }
 
-		$this->template->fights = $fights;
-		$this->template->fight_data = $fight_data;
-		$this->template->i = 0;
+    if ($this->user->loggedIn)
+    {
+      $this->getComponent('roundForm')->setDefaults($this->roundRow);
+		}
+  }
+
+  public function renderView(int $id): void
+  {
+		$this->template->fights = $this->fights;
 		$this->template->round = $this->roundRow;
-
-		if ($this->user->loggedIn) {
-      $this->getComponent(self::EDIT_FORM)->setDefaults($this->roundRow);
-		}
 	}
 
-	public function actionArchAll($id) {
+  public function actionArchAll($id): void
+  {
 		$this->archRow = $this->seasonsRepository->findById($id);
 	}
 
-	public function renderArchAll($id) {
+  public function renderArchAll($id): void
+  {
 		$this->template->rounds = $this->roundsRepository->getArchived($id);
 		$this->template->archive = $this->archRow;
 	}
 
-	public function actionArchView($archiveId, $id) {
-    $this->archRow = $this->seasonsRepository->findById($archiveId);
-    if (!$this->archRow) {
-      throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
+  public function actionArchView(int $seasonId, int $id): void
+  {
+    $this->seasonRow = $this->seasonsRepository->findById($seasonId);
+    if (!$this->seasonRow || !$this->seasonRow->is_present) {
+      throw new BadRequestException(self::SEASON_NOT_FOUND);
     }
 
     $this->roundRow = $this->roundsRepository->findById($id);
-    if (!$this->roundRow) {
+    if (!$this->roundRow || !$this->seasonRow->is_present) {
       throw new BadRequestException(self::ROUND_NOT_FOUND);
     }
 	}
@@ -110,7 +133,8 @@ class RoundsPresenter extends BasePresenter {
     $this->template->archive = $this->archRow;
 	}
 
-	protected function createComponentAddForm() {
+  protected function createComponentRoundForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Názov')
           ->setAttribute('placeholder', '1.kolo')
@@ -119,28 +143,13 @@ class RoundsPresenter extends BasePresenter {
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
           ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
+    $form->onSuccess[] = [$this, 'submittedRoundForm'];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
 	}
 
-	protected function createComponentEditForm() {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', '1.kolo')
-          ->addRule(Form::MAX_LENGTH, 'Dĺžka názvu môže byť len 50 znakov', 50)
-          ->addRule(Form::FILLED, 'Názov je povinné pole');
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', 'btn btn-large btn-success');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-	}
-
-	protected function createComponentAddFightForm() {
+  protected function createComponentAddFightForm(): Form
+  {
     $teams = $this->teamsRepository->getTeams();
     $form = new Form;
     $form->addSelect('team1_id', 'Tím 1', $teams);
@@ -177,31 +186,35 @@ class RoundsPresenter extends BasePresenter {
     $this->redirect('view', $this->roundRow->id);
 	}
 
-	public function submittedAddForm(Form $form, $values) {
-    $round = $this->roundsRepository->insert($values);
-    $this->flashMessage('Kolo bolo pridané', self::SUCCESS);
-    $this->redirect('view', $round->id);
-	}
+  public function submittedRoundForm(Form $form, ArrayHash $values): void
+  {
+    $id = $this->getParameter('id');
 
-	public function submittedEditForm(Form $form, $values) {
-    $this->roundRow->update($values);
-    $this->flashMessage('Kolo bolo upravené', self::SUCCESS);
+    if ($id && $this->roundRow) {
+      $this->roundRow->update($values);
+    } else {
+      $this->roundRow = $this->roundsRepository->insert($values);
+    }
+
+    $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
     $this->redirect('view', $this->roundRow->id);
 	}
 
-	public function submittedRemoveForm() {
-    $fights = $this->fightsRepository->getForRound($this->roundRow);
+  public function submittedRemoveForm(): void
+  {
+    $fights = $this->fightsRepository->getForRound($this->roundRow->id);
 
     foreach ($fights as $fight) {
-      $this->fightsRepository->remove($fight);
+      $this->fightsRepository->remove($fight->id);
     }
 
-    $this->roundsRepository->remove($this->roundRow);
+    $this->roundsRepository->remove($this->roundRow->id);
     $this->flashMessage('Kolo bolo odstránené', self::SUCCESS);
     $this->redirect('all');
 	}
 
-	protected function updateTableRows($values, $type, $value = 1) {
+  protected function updateTableRows($values, $type, $value = 1): void
+  {
     $state1 = 'tram';
     $state2 = 'tram';
 
@@ -218,7 +231,8 @@ class RoundsPresenter extends BasePresenter {
     $this->tablesRepository->updateFights($values['team2_id'], $type);
 	}
 
-	protected function updateTablePoints($values, $type, $column = 'points') {
+  protected function updateTablePoints($values, $type, $column = 'points'): void
+  {
     if ($values['score1'] > $values['score2']) {
       $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 2);
       $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 0);
@@ -231,7 +245,8 @@ class RoundsPresenter extends BasePresenter {
     }
 	}
 
-	protected function updateTableGoals($values, $type) {
+  protected function updateTableGoals($values, $type): void
+  {
     $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score1', $values['score1']);
     $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score2', $values['score2']);
     $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Presenters;
 
@@ -65,7 +65,7 @@ abstract class BasePresenter extends Presenter
     const IMG_NOT_FOUND = 'Image not found';
     const PLAYER_NOT_FOUND = 'Player not found';
     const ROUND_NOT_FOUND = 'Round not found';
-    const ARCHIVE_NOT_FOUND = 'Archive not found';
+    const SEASON_NOT_FOUND = 'Season not found';
     const RULE_NOT_FOUND = 'Rule not found';
     const ITEM_NOT_FOUND = 'Item not found';
     const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené';

@@ -60,8 +60,10 @@ class SponsorsPresenter extends BasePresenter
   {
     $form = new Form;
     $form->addText('label', 'Názov')
+          ->setAttribute('placeholder', 'SAHL')
           ->addRule(Form::FILLED, 'Názov je povinné pole');
     $form->addText('url', 'URL adresa')
+          ->setAttribute('placeholder', 'https://sahl.sk')
           ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
     $form->addUpload('image', 'Obrázok')
           ->addRule(Form::FILLED, 'Ešte treba doplniť obrázok')
@@ -77,13 +79,31 @@ class SponsorsPresenter extends BasePresenter
   {
     $form = new Form;
     $form->addText('label', 'Názov')
+          ->setAttribute('placeholder', 'SAHL')
           ->addRule(Form::FILLED, 'Názov je povinné pole');
     $form->addText('url', 'URL adresa')
+          ->setAttribute('placeholder', 'https://sahl.sk')
           ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
     $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', 'btn btn-large btn-success');
+          ->setAttribute('class', self::BTN_SUCCESS);
     $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
     FormHelper::setBootstrapFormRenderer($form);
+    return $form;
+  }
+
+  /**
+   * Generates new remove form
+   * @return Nette\Application\UI\Form
+   */
+  protected function createComponentRemoveForm(): Form
+  {
+    $form = new Form;
+    $form->addSubmit('save', 'Odstrániť')
+          ->setAttribute('class', self::BTN_DANGER)
+          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
+    $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', self::BTN_WARNING)
+          ->onClick[] = [$this, self::FORM_CANCELLED];
     return $form;
   }
 
@@ -110,12 +130,12 @@ class SponsorsPresenter extends BasePresenter
   public function submittedRemoveForm(): void
   {
     $this->userIsLogged();
-    $this->sponsorsRepository->remove($this->sponsorRow);
+    $this->sponsorsRepository->remove($this->sponsorRow->id);
     $this->flashMessage('Sponzor bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedEditForm(Form $form, $values): void
+  public function submittedEditForm(Form $form, ArrayHash $values): void
   {
     $this->userIsLogged();
     $this->sponsorRow->update($values);

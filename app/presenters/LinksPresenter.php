@@ -7,9 +7,10 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\ArrayHash;
 
-class LinksPresenter extends BasePresenter {
-
+class LinksPresenter extends BasePresenter
+{
   const LINK_NOT_FOUND = 'Link not found';
 
   /** @var ActiveRow */
@@ -82,7 +83,7 @@ class LinksPresenter extends BasePresenter {
           ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
+          ->onClick[] = [$this, self::FORM_CANCELLED];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
   }
@@ -99,7 +100,7 @@ class LinksPresenter extends BasePresenter {
           ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
+          ->onClick[] = [$this, self::FORM_CANCELLED];
     $form->addProtection(self::CSRF_TOKEN_EXPIRED);
     $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
     FormHelper::setBootstrapFormRenderer($form);
@@ -108,10 +109,11 @@ class LinksPresenter extends BasePresenter {
 
   /**
    * @param Nette\Application\UI\Form $form
-   * @param $values
+   * @param Nette\Utils\ArrayHash $values
    */
-  public function submittedAddForm(Form $form, $values): void
+  public function submittedAddForm(Form $form, ArrayHash $values): void
   {
+    $this->userIsLogged();
     $this->linksRepository->insert($values);
     $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
     $this->redirect('all');
@@ -119,10 +121,11 @@ class LinksPresenter extends BasePresenter {
 
   /**
    * @param Nette\Forms\Control\SubmitButton $button
-   * @param $values
+   * @param Nette\Utils\ArrayHash $values
    */
-  public function submittedEditForm(SubmitButton $button, $values): void
+  public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
   {
+    $this->userIsLogged();
     $this->linkRow->update($values);
     $this->flashMessage('Odkaz bol upravený', self::SUCCESS);
     $this->redirect('all');
@@ -130,14 +133,9 @@ class LinksPresenter extends BasePresenter {
 
   public function submittedRemoveForm(): void
   {
-    $this->linksRepository->remove($this->linkRow);
+    $this->userIsLogged();
+    $this->linksRepository->remove($this->linkRow->id);
     $this->flashMessage('Odkaz bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
-
-  public function formCancelled(): void
-  {
-    $this->redirect('all');
-  }
-
 }

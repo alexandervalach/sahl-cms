@@ -7,9 +7,10 @@ use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\ArrayHash;
 
-class PlayerTypesPresenter extends BasePresenter {
-
+class PlayerTypesPresenter extends BasePresenter
+{
   const TYPE_NOT_FOUND = 'Player type not found';
 
   /** @var ActiveRow */
@@ -91,12 +92,13 @@ class PlayerTypesPresenter extends BasePresenter {
           ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
+          ->onClick[] = [$this, self::FORM_CANCELLED];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
   }
 
   /**
+   * Generates new remove form
    * @return Nette\Application\UI\Form
    */
   protected function createComponentRemoveForm(): Form
@@ -107,16 +109,17 @@ class PlayerTypesPresenter extends BasePresenter {
           ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
+          ->onClick[] = [$this, self::FORM_CANCELLED];
     return $form;
   }
 
   /**
    * @param Nette\Application\UI\Form $form
-   * @param $values
+   * @param Nette\Utils\ArrayHash $values
    */
-  public function submittedAddForm(Form $form, $values): void
+  public function submittedAddForm(Form $form, ArrayHash $values): void
   {
+    $this->userIsLogged();
     $this->playerTypesRepository->insert($values);
     $this->flashMessage('Typ hráča bol pridaný', self::SUCCESS);
     $this->redirect('all');
@@ -124,10 +127,11 @@ class PlayerTypesPresenter extends BasePresenter {
 
   /**
    * @param Nette\Forms\Controls\SubmitButton $button
-   * @param $values
+   * @param Nette\Utils\ArrayHash $values
    */
-  public function submittedEditForm(SubmitButton $button, $values): void
+  public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
   {
+    $this->userIsLogged();
     $this->playerTypeRow->update($values);
     $this->flashMessage('Typ hráča bol upravený', self::SUCCESS);
     $this->redirect('all');
@@ -138,16 +142,9 @@ class PlayerTypesPresenter extends BasePresenter {
    */
   public function submittedRemoveForm(): void
   {
-    $this->playerTypesRepository->remove($this->playerTypeRow);
+    $this->userIsLogged();
+    $this->playerTypesRepository->remove($this->playerTypeRow->id);
     $this->flashMessage('Typ hráča bol odstránený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  /**
-   *
-   */
-  public function formCancelled(): void
-  {
     $this->redirect('all');
   }
 }

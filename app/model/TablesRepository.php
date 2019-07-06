@@ -15,15 +15,18 @@ class TablesRepository extends Repository
 
   public function getTableStats($type)
   {
-    $rows = $this->getNonArchived()->where('type', $type)
-      ->order('points DESC')->order('score1 - score2 DESC');
+    $rows = $this->getArchived()->where('type', $type)->order('points DESC')->order('score1 - score2 DESC');
+
     if (!$rows) {
       return null;
     }
+
     $result = array();
+
     foreach ($rows as $row) {
       $result[] = $row;
     }
+
     return $result;
   }
 
@@ -36,7 +39,8 @@ class TablesRepository extends Repository
     return $tableRow;
   }
 
-  public function updateFights($teamId, $type) {
+  public function updateFights($teamId, $type)
+  {
     $conn = $this->getConnection();
     $tableRow = $conn->query("UPDATE `tables` SET `counter` = `win` + `tram` + `lost` WHERE (`team_id` = ?) AND (`archive_id` IS NULL) AND (`type` = ?)", $teamId, $type);
     return $tableRow;

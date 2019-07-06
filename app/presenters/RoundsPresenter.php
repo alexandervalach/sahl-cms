@@ -18,8 +18,8 @@ class RoundsPresenter extends BasePresenter
 	/** @var ActiveRow */
   private $seasonRow;
 
-  /** @var array */
-  private $fights;
+  /** @var ArrayHash */
+  private $items;
 
   public function renderAll(): void
   {
@@ -35,31 +35,49 @@ class RoundsPresenter extends BasePresenter
     }
 
     $fights = $this->roundRow->related('fights')->where('is_present', 1)->order('id DESC');
-    $this->fights = [];
+    $data = [];
 
     foreach ($fights as $fight)
     {
-      $this->fights[$fight->id]['team_1'] = $playersSeasonsTeams1;
-      $this->fights[$fight->id]['team_2'] = $playersSeasonsTeams2;
-      $this->fights[$fight->id]['home_goals'] = $fight->related('goals')->where('is_home_player', 1)->order('goals DESC');
-      $this->fights[$fight->id]['guest_goals'] = $fight->related('goals')->where('is_home_player', 0)->order('goals DESC');
+      $data[$fight->id]['fight'] = $fight;
+      $data[$fight->id]['team1'] = $fight->ref('teams', 'team1_id');
+      $data[$fight->id]['team2'] = $fight->ref('teams', 'team2_id');;
+      $homeGoals = $fight->related('goals')->where('is_home_player', 1)->order('number DESC');
+      $guestGoals = $fight->related('goals')->where('is_home_player', 0)->order('number DESC');
+      $data[$fight->id]['homeGoals'] = [];
+      $data[$fight->id]['guestGoals'] = [];
 
+      foreach ($homeGoals as $goal)
+      {
+        $data[$fight->id]['homeGoals'][$goal->id]['goal'] = $goal;
+        $data[$fight->id]['homeGoals'][$goal->id]['player'] = $goal->ref('players', 'player_id');
+      }
+
+      foreach ($guestGoals as $goal)
+      {
+        $data[$fight->id]['guestGoals'][$goal->id]['goal'] = $goal;
+        $data[$fight->id]['guestGoals'][$goal->id]['player'] = $goal->ref('players', 'player_id');
+      }
+
+      // Determining CSS bootstrap classes
       if ($fight->score1 > $fight->score2)
       {
-        $this->fights[$fight->id]['state_1'] = 'text-success';
-        $this->fights[$fight->id]['state_2'] = 'text-danger';
+        $data[$fight->id]['class1'] = 'text-success';
+        $data[$fight->id]['class2'] = 'text-danger';
       }
       else if ($fight->score1 < $fight->score2)
       {
-        $this->fights[$fight->id]['state_1'] = 'text-danger';
-        $this->fights[$fight->id]['state_2'] = 'text-success';
+        $data[$fight->id]['class1'] = 'text-danger';
+        $data[$fight->id]['class2'] = 'text-success';
       }
       else
       {
-        $this->fights[$fight->id]['state_1'] = '';
-        $this->fights[$fight->id]['state_2'] = '';
+        $data[$fight->id]['class1'] = '';
+        $data[$fight->id]['class2'] = '';
       }
     }
+
+    $this->items = ArrayHash::from($data);
 
     if ($this->user->loggedIn)
     {
@@ -69,19 +87,24 @@ class RoundsPresenter extends BasePresenter
 
   public function renderView(int $id): void
   {
-		$this->template->fights = $this->fights;
+		$this->template->items = $this->items;
 		$this->template->round = $this->roundRow;
 	}
 
   public function actionArchAll($id): void
   {
-		$this->archRow = $this->seasonsRepository->findById($id);
+    $this->seasonRow = $this->seasonsRepository->findById($id);
+
+    if (!$this->seasonRow || !$this->seasonRow->is_present)
+    {
+			throw new BadRequestException(self::SEASON_NOT_FOUND);
+    }
 	}
 
   public function renderArchAll($id): void
   {
 		$this->template->rounds = $this->roundsRepository->getArchived($id);
-		$this->template->archive = $this->archRow;
+		$this->template->season = $this->seasonRow;
 	}
 
   public function actionArchView(int $seasonId, int $id): void
@@ -97,7 +120,8 @@ class RoundsPresenter extends BasePresenter
     }
 	}
 
-	public function renderArchView($archiveId, $id) {
+  public function renderArchView($archiveId, $id): void
+  {
     $i = 0;
     $fightData = array();
     $fights = $this->roundRow->related('fights');
@@ -148,12 +172,12 @@ class RoundsPresenter extends BasePresenter
 
     $form = new Form;
     $form->addSelect('team1_id', 'Tím 1', $teams);
-    $form->addHidden('round_id', (string) $this->roundRow->id);
     $form->addText('score1', 'Skóre tímu 1')
           ->setAttribute('placeholder', '1');
     $form->addSelect('team2_id', 'Tím 2', $teams);
     $form->addText('score2', 'Skóre tímu 2')
           ->setAttribute('placeholder', '0');
+    $form->addHidden('round_id', (string) $this->roundRow->id);
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)

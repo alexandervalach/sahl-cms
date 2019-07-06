@@ -19,59 +19,56 @@
     <h1 n:block="title">{$round->label}</h1>
   </div>
 
-  <div n:foreach="$fights as $fight" class="clearfix text-center" style="margin-top: 2em">
-    <div n:if="$user->loggedIn" style="margin-bottom: 1em">
-      <a class="{$btnSuccess}" n:href="Fights:edit $fight" title="Upraviť zápas">
-        <span class="glyphicon glyphicon-edit"></span>
-      </a>
-      <a class="{$btnDefault}" n:href="Goals:view $fight" title="Zobraziť góly">
-        <span class="glyphicon glyphicon-eye-open"></span>
-      </a>
-      <a class="{$btnDanger}" n:href="Fights:remove $fight" title="Odstrániť zápas">
-        <span class="glyphicon glyphicon-trash"></span>
-      </a>
-    </div>
-
-    <div class="clearfix">
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_1']}">
-        <div class="clearfix">
-          <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_1']->logo}" width="20%"
-            n:if="$fight_data[$i]['team_1']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_1']->logo)" />
-        </div>
-        <h2>
-          {$fight_data[$i]['team_1']->name}<br />
-          {$fight->score1}
-        </h2>
-        <ul n:if="$fight_data[$i]['home_goals'] != NULL" class="clearfix">
-          <li><strong>Domáci</strong> </li>
-          <li n:foreach="$fight_data[$i]['home_goals'] as $goal">
-              {var $player = $goal->ref('players', 'player_id')}
-              {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
-          </li>
-        </ul>
+  {foreach $items as $id => $item}
+    <div class="clearfix text-center" style="margin-top: 2em">
+      <div n:if="$user->loggedIn" style="margin-bottom: 1em">
+        <a class="btn btn-large btn-success" n:href="Fights:edit $id" title="Upraviť zápas">
+          <span class="glyphicon glyphicon-edit"></span>
+        </a>
+        <a class="btn btn-large btn-default" n:href="Goals:view $id" title="Zobraziť góly">
+          <span class="glyphicon glyphicon-eye-open"></span>
+        </a>
+        <a class="btn btn-large btn-danger" n:href="Fights:remove $id" title="Odstrániť zápas">
+          <span class="glyphicon glyphicon-trash"></span>
+        </a>
       </div>
 
-      <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fight_data[$i]['state_2']}">
-        <div class="clearfix">
-            <img src="{$basePath}/{$imgFolder}/{$fight_data[$i]['team_2']->logo}" width="20%"
-                  n:if="$fight_data[$i]['team_2']->logo and file_exists($imgFolder . '/' . $fight_data[$i]['team_2']->logo)" />
+      <div class="clearfix">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$item->class1}">
+          <div class="clearfix">
+            {if $item->team1->logo and file_exists($imageFolder . '/' . $item->team1->logo)}
+              <img src="{$basePath}/{$imageFolder}/{$item->team1->logo}" width="20%" />
+            {/if}
+          </div>
+          <h2>{$item->team1->name}</h2>
+          <h3>{$item->fight->score1}</h3>
+          <ul n:if="count($item->homeGoals)" class="clearfix">
+            <li><strong>Domáci</strong> </li>
+            <li n:foreach="$item->homeGoals as $goal">
+              {$goal->player->name} {if $goal->number > 1}{$goal->number}{/if}
+            </li>
+          </ul>
         </div>
-        <h2>
-          {$fight_data[$i]['team_2']->name}<br />
-          {$fight->score2}
-        </h2>
-        <ul n:if="$fight_data[$i]['guest_goals'] != NULL">
-          <li><strong>Hostia</strong></li>
-          <li n:foreach="$fight_data[$i]['guest_goals'] as $goal">
-              {var $player = $goal->ref('players', 'player_id')}
-              {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
-          </li>
-        </ul>
+
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$item->class2}">
+          <div class="clearfix">
+            {if $item->team2->logo and file_exists($imageFolder . '/' . $item->team2->logo)}
+              <img src="{$basePath}/{$imageFolder}/{$item->team2->logo}" width="20%" />
+            {/if}
+          </div>
+          <h2>{$item->team2->name}</h2>
+          <h3>{$item->fight->score2}</h3>
+          <ul n:if="count($item->guestGoals)">
+            <li><strong>Hostia</strong></li>
+            <li n:foreach="$item->guestGoals as $goal">
+              {$goal->player->name} {if $goal->number > 1}{$goal->number}{/if}
+            </li>
+          </ul>
+        </div>
       </div>
+      <hr n:if="!$iterator->last" />
     </div>
-    {var $i = $i + 1}
-    <hr n:if="!$iterator->last" />
-  </div>
+  {/foreach}
 </section>
 
 <section n:if="$user->loggedIn">

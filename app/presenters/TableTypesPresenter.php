@@ -6,23 +6,28 @@ use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
 
-class TableTypesPresenter extends BasePresenter {
+class TableTypesPresenter extends BasePresenter
+{
 
   const TYPE_NOT_FOUND = 'Type not found';
 
   /** @var ActiveRow */
   private $tableTypeRow;
 
-  public function actionAll() {
+  public function actionAll(): void
+  {
     $this->userIsLogged();
   }
 
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->types = $this->tableTypesRepository->getAll();
   }
 
-  public function actionEdit($id) {
+  public function actionEdit(int $id): void
+  {
     $this->userIsLogged();
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
@@ -33,11 +38,13 @@ class TableTypesPresenter extends BasePresenter {
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->tableTypeRow);
   }
 
-  public function renderEdit($id) {
+  public function renderEdit(int $id): void
+  {
     $this->template->type = $this->tableTypeRow;
   }
 
-  public function actionRemove($id) {
+  public function actionRemove($id): void
+  {
     $this->userIsLogged();
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
@@ -46,7 +53,8 @@ class TableTypesPresenter extends BasePresenter {
     }
   }
 
-  public function renderRemove($id) {
+  public function renderRemove($id): void
+  {
     $this->template->type = $this->tableTypeRow;
   }
 
@@ -54,7 +62,8 @@ class TableTypesPresenter extends BasePresenter {
    * Creates add table types form
    * @return Nette\Application\UI\Form
    */
-  protected function createComponentAddForm() {
+  protected function createComponentAddForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Názov')
           ->addRule(Form::FILLED, 'Ešte treba vyplniť názov')
@@ -73,7 +82,8 @@ class TableTypesPresenter extends BasePresenter {
    * Creates edit table types form
    * @return Nette\Application\UI\Form
    */
-  protected function createComponentEditForm() {
+  protected function createComponentEditForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Názov')
           ->addRule(Form::FILLED, 'Ešte treba vyplniť názov')
@@ -86,11 +96,29 @@ class TableTypesPresenter extends BasePresenter {
   }
 
   /**
+   * Component for creating a remove form
+   * @return Nette\Application\UI\Form
+   */
+  protected function createComponentRemoveForm(): Form
+  {
+    $form = new Form;
+    $form->addSubmit('remove', 'Odstrániť')
+          ->setAttribute('class', self::BTN_DANGER)
+          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
+    $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', self::BTN_WARNING)
+          ->onClick[] = [$this, self::FORM_CANCELLED];
+    FormHelper::setBootstrapFormRenderer($form);
+    return $form;
+  }
+
+  /**
    * Submitting data from add form
    * @param Form $form
-   * @param array $values
+   * @param ArrayHash $values
    */
-  public function submittedAddForm(Form $form, $values) {
+  public function submittedAddForm(Form $form, ArrayHash $values): void
+  {
     $this->tableTypesRepository->insert($values);
     $this->flashMessage('Typ tabuľky bol pridaný', self::SUCCESS);
     $this->redirect('all');
@@ -101,7 +129,8 @@ class TableTypesPresenter extends BasePresenter {
    * @param Form $form
    * @param array $values
    */
-  public function submittedEditForm(Form $form, $values) {
+  public function submittedEditForm(Form $form, ArrayHash $values): void
+  {
     $this->tableTypeRow->update($values);
     $this->flashMessage('Záznam bol upravený', self::SUCCESS);
     $this->redirect('all');
@@ -110,20 +139,18 @@ class TableTypesPresenter extends BasePresenter {
   /**
    * Submits remove table type form
    */
-  public function submittedRemoveForm() {
-    $this->tableTypesRepository->remove($this->tableTypeRow);
+  public function submittedRemoveForm(): void
+  {
+    $this->tableTypesRepository->remove($this->tableTypeRow->id);
     $this->flashMessage('Typ hráča bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function formCancelled() {
-    $this->redirect('all');
-  }
-
   /**
-   * @param integer $id
+   * @param int $id
    */
-  public function actionShow($id) {
+  public function actionShow(int $id): void
+  {
     $this->userIsLogged();
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
@@ -134,7 +161,8 @@ class TableTypesPresenter extends BasePresenter {
     $this->submittedShowTable();
   }
 
-  public function submittedShowTable() {
+  public function submittedShowTable(): void
+  {
     /*
     $this->tableTypeRow->update(array('visible' => 1));
     $this->flashMessage('Tabuľka je viditeľná', self::SUCCESS);
@@ -143,9 +171,10 @@ class TableTypesPresenter extends BasePresenter {
   }
 
   /**
-   * @param integer $id
+   * @param int $id
    */
-  public function actionHide($id) {
+  public function actionHide(int $id): void
+  {
     $this->userIsLogged();
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
@@ -156,7 +185,8 @@ class TableTypesPresenter extends BasePresenter {
     $this->submittedHideTable();
   }
 
-  public function submittedHideTable() {
+  public function submittedHideTable(): void
+  {
     /*
     $this->tableTypeRow->update(array('visible' => 0));
     $this->flashMessage('Tabuľka je skrytá pre verejnosť', self::SUCCESS);

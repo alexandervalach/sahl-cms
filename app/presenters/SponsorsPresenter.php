@@ -7,23 +7,27 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
+use Nette\Utils\ArrayHash;
 
-class SponsorsPresenter extends BasePresenter {
-
+class SponsorsPresenter extends BasePresenter
+{
   const ITEM_NOT_FOUND = 'Sponsor not found';
 
   /** @var ActiveRow */
   private $sponsorRow;
 
-  public function actionAll() {
+  public function actionAll(): void
+  {
     $this->userIsLogged();
   }
 
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->sponsors = $this->sponsorsRepository->getAll();
   }
 
-  public function actionRemove($id) {
+  public function actionRemove(int $id): void
+  {
     $this->userIsLogged();
     $this->sponsorRow = $this->sponsorsRepository->findById($id);
     if (!$this->sponsorRow || !$this->sponsorRow->is_present) {
@@ -31,11 +35,13 @@ class SponsorsPresenter extends BasePresenter {
     }
   }
 
-  public function renderRemove($id) {
+  public function renderRemove(int $id): void
+  {
     $this->template->sponsor = $this->sponsorRow;
   }
 
-  public function actionEdit($id) {
+  public function actionEdit(int $id): void
+  {
     $this->userIsLogged();
     $this->sponsorRow = $this->sponsorsRepository->findById($id);
     if (!$this->sponsorRow || !$this->sponsorRow->is_present) {
@@ -48,7 +54,8 @@ class SponsorsPresenter extends BasePresenter {
     $this->template->sponsor = $this->sponsorRow;
   }
 
-  protected function createComponentAddForm() {
+  protected function createComponentAddForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Názov')
           ->addRule(Form::FILLED, 'Názov je povinné pole');
@@ -64,7 +71,8 @@ class SponsorsPresenter extends BasePresenter {
     return $form;
   }
 
-  protected function createComponentEditForm() {
+  protected function createComponentEditForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Názov')
           ->addRule(Form::FILLED, 'Názov je povinné pole');
@@ -77,38 +85,39 @@ class SponsorsPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedAddForm(Form $form, $values) {
-    $img = $values['image'];
+  public function submittedAddForm(Form $form, ArrayHash $values): void
+  {
+    $this->userIsLogged();
+    $img = $values->image;
 
     $name = strtolower($img->getSanitizedName());
     try {
-        if ($img->isOk() AND $img->isImage()) {
-            $img->move($this->imageDir . '/' . $name);
-        }
-        $values['image'] = $name;
-        $this->sponsorsRepository->insert($values);
-        $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
+      if ($img->isOk() AND $img->isImage()) {
+        $img->move($this->imageDir . '/' . $name);
+      }
+      $values->image = $name;
+      $this->sponsorsRepository->insert($values);
+      $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
     } catch (IOException $e) {
-        $this->flashMessage('Obrázok ' . $name . ' sa nepodarilo nahrať', self::DANGER);
+      $this->flashMessage('Obrázok ' . $name . ' sa nepodarilo nahrať', self::DANGER);
     }
 
     $this->redirect('all');
   }
 
-  public function submittedRemoveForm() {
+  public function submittedRemoveForm(): void
+  {
+    $this->userIsLogged();
     $this->sponsorsRepository->remove($this->sponsorRow);
     $this->flashMessage('Sponzor bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedEditForm(Form $form, $values) {
+  public function submittedEditForm(Form $form, $values): void
+  {
+    $this->userIsLogged();
     $this->sponsorRow->update($values);
     $this->flashMessage('Sponzor bol upravený', self::SUCCESS);
     $this->redirect('all');
   }
-
-  public function formCancelled() {
-    $this->redirect('all');
-  }
-
 }

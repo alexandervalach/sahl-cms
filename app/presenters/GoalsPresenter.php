@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Presenters;
 
 use App\FormHelper;
@@ -152,7 +154,8 @@ class GoalsPresenter extends BasePresenter
     $this->redirect('view', $this->goalRow->fight_id);
   }
 
-  protected function teamPlayersHelper(ActiveRow $row) {
+  protected function teamPlayersHelper(ActiveRow $row): array
+  {
     $team1 = $this->teamsRepository->findById($row->team1_id);
     $team2 = $this->teamsRepository->findById($row->team2_id);
     $players1 = $this->teamsRepository->getPlayersForTeam($team1->id);

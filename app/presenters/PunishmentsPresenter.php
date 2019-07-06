@@ -8,8 +8,8 @@ use App\FormHelper;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 
-class PunishmentsPresenter extends BasePresenter {
-
+class PunishmentsPresenter extends BasePresenter
+{
   /** @var ActiveRow */
   private $punishmentRow;
 
@@ -29,7 +29,7 @@ class PunishmentsPresenter extends BasePresenter {
     $this->template->punishments = $this->punishmentsRepository->getForSeason();
   }
 
-  public function actionEdit($id): void
+  public function actionEdit(int $id): void
   {
     $this->userIsLogged();
     $this->punishmentRow = $this->punishmentsRepository->findById($id);
@@ -41,7 +41,7 @@ class PunishmentsPresenter extends BasePresenter {
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->punishmentRow);
   }
 
-  public function renderEdit($id): void
+  public function renderEdit(int $id): void
   {
     $this->template->player = $this->punishmentRow->ref('players', 'player_id');
   }
@@ -50,22 +50,24 @@ class PunishmentsPresenter extends BasePresenter {
   {
     $this->userIsLogged();
     $this->punishmentRow = $this->punishmentsRepository->findById($id);
-  }
-
-  public function renderRemove($id): void
-  {
-    $this->template->punishment = $this->punishmentRow;
 
     if (!$this->punishmentRow || !$this->punishmentRow->is_present) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }
 
-  public function actionArchAll($id) {
+  public function renderRemove(int $id): void
+  {
+    $this->template->punishment = $this->punishmentRow;
+  }
+
+  public function actionArchAll(int $id): void
+  {
     $this->seasonRow = $this->seasonsRepository->findById($id);
   }
 
-  public function renderArchAll($id) {
+  public function renderArchAll(int $id): void
+  {
     $this->template->season = $this->seasonRow;
     $this->template->punishments = $this->punishmentsRepository->getArchived($id);
   }
@@ -73,7 +75,8 @@ class PunishmentsPresenter extends BasePresenter {
   /**
    * @return Nette\Application\UI\Form;
    */
-  protected function createComponentEditForm() {
+  protected function createComponentEditForm(): Form
+  {
     $form = new Form;
     $form->addText('text', 'Dôvod')
           ->setAttribute('placeholder', 'Nešportové správanie');
@@ -89,7 +92,8 @@ class PunishmentsPresenter extends BasePresenter {
     return $form;
   }
 
-  protected function createComponentAddForm() {
+  protected function createComponentAddForm(): Form
+  {
     $players = $this->playersRepository->getNonEmptyPlayers();
     $form = new Form;
     $form->addSelect('player_id', 'Hráč', $players);
@@ -107,26 +111,27 @@ class PunishmentsPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedEditForm(Form $form, $values) {
+  public function submittedEditForm(Form $form, ArrayHash $values): void
+  {
+    $this->userIsLogged();
     $this->punishmentRow->update($values);
     $this->flashMessage('Trest bol upravený', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedAddForm(Form $form, $values) {
+  public function submittedAddForm(Form $form, ArrayHash $values): void
+  {
+    $this->userIsLogged();
     $this->punishmentsRepository->insert($values);
     $this->flashMessage('Trest bol pridaný', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedRemoveForm() {
-    $this->punishmentsRepo->delete();
+  public function submittedRemoveForm(): void
+  {
+    $this->userIsLogged();
+    $this->punishmentsRepository->remove($this->punishmentRow->id);
     $this->flashMessage('Trest bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
-
-  public function formCancelled() {
-      $this->redirect('all');
-  }
-
 }

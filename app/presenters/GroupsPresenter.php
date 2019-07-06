@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Presenters;
 
 use App\FormHelper;
@@ -8,22 +10,25 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 
-class GroupsPresenter extends BasePresenter {
-
+class GroupsPresenter extends BasePresenter
+{
   const TYPE_NOT_FOUND = 'Player type not found';
 
   /** @var ActiveRow */
   private $groupRow;
 
-  public function actionAll() {
+  public function actionAll(): void
+  {
     $this->userIsLogged();
   }
 
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->groups = $this->groupsRepository->getAll();
   }
 
-  public function actionEdit($id) {
+  public function actionEdit(int $id): void
+  {
     $this->userIsLogged();
     $this->groupRow = $this->groupsRepository->findById($id);
 
@@ -34,11 +39,13 @@ class GroupsPresenter extends BasePresenter {
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->groupRow);
   }
 
-  public function renderEdit($id) {
+  public function renderEdit(int $id): void
+  {
     $this->template->group = $this->groupRow;
   }
 
-  public function actionRemove($id) {
+  public function actionRemove(int $id): void
+  {
     $this->userIsLogged();
     $this->groupRow = $this->groupsRepository->findById($id);
 
@@ -47,11 +54,13 @@ class GroupsPresenter extends BasePresenter {
     }
   }
 
-  public function renderRemove($id) {
+  public function renderRemove(int $id): void
+  {
     $this->template->group = $this->groupRow;
   }
 
-  protected function createComponentAddForm() {
+  protected function createComponentAddForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Názov')
           ->setAttribute('placeholder', 'Skupina A')
@@ -66,7 +75,8 @@ class GroupsPresenter extends BasePresenter {
     return $form;
   }
 
-  protected function createComponentEditForm() {
+  protected function createComponentEditForm(): Form
+  {
     $form = new Form;
     $form->addText('label', 'Názov')
         ->setAttribute('placeholder', 'Skupina A')
@@ -77,30 +87,29 @@ class GroupsPresenter extends BasePresenter {
           ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
+          ->onClick[] = [$this, self::FORM_CANCELLED];
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
   }
 
-  public function submittedAddForm(Form $form, $values) {
+  public function submittedAddForm(Form $form, ArrayHash $values): void
+  {
     $this->groupsRepository->insert($values);
     $this->flashMessage('Skupina bol pridaná', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedEditForm(SubmitButton $button, $values) {
+  public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
+  {
     $this->groupRow->update($values);
     $this->flashMessage('Skupina bola upravená', self::SUCCESS);
     $this->redirect('all');
   }
 
-  public function submittedRemoveForm() {
-    $this->groupsRepository->remove($this->groupRow);
+  public function submittedRemoveForm(): void
+  {
+    $this->groupsRepository->remove($this->groupRow->id);
     $this->flashMessage('Skupina bola odstránená', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  public function formCancelled() {
     $this->redirect('all');
   }
 }

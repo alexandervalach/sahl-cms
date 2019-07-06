@@ -43,7 +43,7 @@
       </thead>
       <tbody>
         {foreach $players as $player}
-          <tr {if $player->trans}class="borrowed-player"{/if}>
+          <tr {if $player->is_transfer}class="borrowed-player"{/if}>
             {if $player->name}
               <td>{$iterator->counter}.</td>
               <td>
@@ -51,7 +51,7 @@
                   {$player->name}{if $player->type_abbr} - {$player->type_abbr}{/if}
                 </a>
               </td>
-              <td>{if $player->num != 0}{$player->num}{/if}</td>
+              <td>{if $player->number != 0}{$player->number}{/if}</td>
             {else}
               {for $j = 0; $j < 3; $j++}
                 <td>&nbsp;</td>
@@ -60,13 +60,15 @@
           </tr>
           {var $i = $iterator->counter}
         {/foreach}
-        <tr n:foreach="$goalies as $goalie" {if $player->trans}class="borrowed-player"{/if}>
-          <td>{$iterator->counter + $i}.</td>
-          <td>
-            <a n:href="Players:view $goalie">{$goalie->name}</a>
-          </td>
-          <td>{$goalie_title}, {$goalie->num}</td>
-        </tr>
+        {foreach $goalies as $goalie}
+          <tr {if $player->is_transfer}class="borrowed-player"{/if}>
+            <td>{$iterator->counter + $i}.</td>
+            <td>
+              <a n:href="Players:view $goalie">{$goalie->name}</a>
+            </td>
+            <td>Brankár, {$goalie->number}</td>
+          </tr>
+        {/foreach}
       </tbody>
     </table>
   </div>

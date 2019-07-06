@@ -2,21 +2,21 @@
 
 namespace App\Presenters;
 
-use \App\FormHelper;
-use \Nette\Application\UI\Form;
-use \Nette\Application\BadRequetsException;
-use \Nette\Database\Table\ActiveRow;
-use \Nette\Utils\FileSystem;
-use \Nette\IOException;
-use \Nette\Utils\ArrayHash;
+use App\FormHelper;
+use Nette\Application\UI\Form;
+use Nette\Application\BadRequetsException;
+use Nette\Database\Table\ActiveRow;
+use Nette\Utils\FileSystem;
+use Nette\IOException;
+use Nette\Utils\ArrayHash;
 
-class TeamsPresenter extends BasePresenter {
-
+class TeamsPresenter extends BasePresenter
+{
   const TEAM_NOT_FOUND = 'Team not found';
   const ADD_PLAYER_FORM = 'addPlayerForm';
   const SUBMITTED_ADD_PLAYER_FORM = 'submittedAddPlayerForm';
 
-  /** @var array */
+  /** @var ArrayHash */
   private $teams;
 
   /** @var ActiveRow */
@@ -28,16 +28,18 @@ class TeamsPresenter extends BasePresenter {
   public function actionAll(): void
   {
     $teams = $this->seasonsTeamsRepository->getForSeason();
-    $this->teams = [];
+    $data = [];
 
     foreach ($teams as $team) {
-      $this->teams[] = $team->ref('teams', 'team_id');
+      $data[$team->id] = $team->ref('teams', 'team_id');
     }
+
+    $this->teams = ArrayHash::from($data);
   }
 
   public function renderAll(): void
   {
-    $this->template->teams = is_array($this->teams) ? $this->teams : [];
+    $this->template->teams = $this->teams;
   }
 
   public function actionView(int $id): void
@@ -62,31 +64,37 @@ class TeamsPresenter extends BasePresenter {
     $this->template->j = 0;
   }
 
-  public function actionArchAll($id) {
+  public function actionArchAll(int $id): void
+  {
     $this->seasonRow = $this->seasonsRepository->findById($id);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
       throw new BadRequetsException(self::ITEM_NOT_FOUND);
     }
 
     $teams = $this->seasonsTeamsRepository->getForSeason($id);
+    $data = [];
     foreach ($teams as $team) {
-      $this->teams[] = $team->ref('teams', 'team_id');
+      $data[$team->id] = $team->ref('teams', 'team_id');
     }
+    $this->teams = ArrayHash::from($data);
   }
 
-  public function renderArchAll($id) {
+  public function renderArchAll(int $id): void
+  {
     $this->template->teams = $this->teams;
     $this->template->archive = $this->seasonRow;
   }
 
-  public function actionArchView($id) {
+  public function actionArchView(int $id): void
+  {
     $this->seasonRow = $this->seasonsRepository->findById($id);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
       throw new BadRequetsException(self::ITEM_NOT_FOUND);
     }
   }
 
-  public function renderArchView($id) {
+  public function renderArchView($id): void
+  {
     // $this->template->teams = $this->teamsRepository->getAll($id);
     $this->template->season = $this->seasonRow;
   }
@@ -129,10 +137,10 @@ class TeamsPresenter extends BasePresenter {
     $form->addText('name', 'Meno a priezvisko')
           ->setAttribute('placeholder', 'Zdeno Chára')
           ->addRule(Form::FILLED, 'Opa, ešte nie je vyplnené Meno a priezvisko');
-    $form->addText('num', 'Číslo')
+    $form->addText('number', 'Číslo')
           ->setAttribute('placeholder', 14);
-    $form->addSelect('type_id', 'Typ hráča', $types);
-    $form->addCheckbox('trans', ' Prestupový hráč');
+    $form->addSelect('player_type_id', 'Typ hráča', $types);
+    $form->addCheckbox('is_transfer', ' Prestupový hráč');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')
@@ -142,13 +150,18 @@ class TeamsPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedAddPlayerForm(Form $form, array $values): void
+  public function submittedAddPlayerForm(Form $form, ArrayHash $values): void
   {
-    $playerId = $this->playersRepository->findByValue('name', $values['name'])
-      ->where('num', $values['num'])->fetch();
+    $playerId = $this->playersRepository->findByValue('name', $values->name)
+      ->where('number', $values->number)->fetch();
 
     if (!$playerId) {
-      $playerId = $this->playersRepository->insert($values);
+      $playerId = $this->playersRepository->insert(
+        array(
+          'name' => $values->name,
+          'number' => $values->number
+        )
+      );
     }
 
     $seasonTeam = $this->seasonsTeamsRepository
@@ -158,7 +171,9 @@ class TeamsPresenter extends BasePresenter {
     $this->playersSeasonsTeamsRepository->insert(
       array(
         'seasons_teams_id' => $seasonTeam->id,
-        'player_id' => $playerId
+        'player_id' => $playerId,
+        'is_transfer' => $values->is_transfer,
+        'player_type_id' => $values->player_type_id
       )
     );
 

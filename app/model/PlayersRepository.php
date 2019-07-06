@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class PlayersRepository extends Repository {
+use Nette\Database\ResultSet;
 
-  public function getNonEmptyPlayers() {
+class PlayersRepository extends Repository
+{
+  public function getNonEmptyPlayers(): array
+  {
     return $this->select('id, name, number')->where('number != ?', 0)
       ->order('name')
       ->fetchPairs('id', 'name');
   }
 
-  public function getForTeam($teamId, $seasonId = null) {
+  public function getForTeam($teamId, $seasonId = null): ResultSet
+  {
     $con = $this->getConnection();
 
     $query = 'SELECT t.name as team_name, t.logo as team_logo, t.id as team_id,
@@ -43,7 +47,8 @@ class PlayersRepository extends Repository {
       AND p.is_present = ?', $seasonId, $teamId, 1, 1);
   }
 
-  public function getForSeason($seasonId = null) {
+  public function getForSeason($seasonId = null): ResultSet
+  {
     $con = $this->getConnection();
 
     $query = 'SELECT t.name as team_name, t.logo as team_logo, t.id as team_id,

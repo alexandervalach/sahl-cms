@@ -1,84 +1,79 @@
 {block content}
 
 <section class="content">
-    <div class="clearfix">
-        <h1>
-            {block title}{$player->name}{/block}, {$player->num}
-        </h1>
-        <div n:if="$user->loggedIn" class="pull-right hidden-xs">
-            <button type="button" class="{$btnSuccess}"
-                    data-target="#edit" data-toggle="modal">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </button>
+  <div class="clearfix">
+      <h1>
+        {block title}{$player->name}{/block}, {$player->number}
+      </h1>
+      <div n:if="$user->loggedIn" class="pull-right hidden-xs">
+        <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
+          <span class="glyphicon glyphicon-pencil"></span>
+        </button>
+        <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
+          <span class="glyphicon glyphicon-trash"></span>
+        </button>
+      </div>
+      <h2>
+        <a n:href="Teams:view $team->id">
+          {if $team->logo && file_exists($imageFolder . '/' . $team->logo)}
+            <img src="{$basePath}/{$imageFolder}/{$team->logo}" />
+          {/if}
+        </a>
+      </h2>
+  </div>
 
-            <button type="button" class="{$btnDanger}"
-                    data-target="#remove" data-toggle="modal">
-                <span class="glyphicon glyphicon-trash"></span>
-            </button>
-        </div>
-        <h2>
-            <a n:href="Teams:view $team">
-                <img src="{$basePath}/{$imgFolder}/{$team->logo}"
-                     n:if="$team->logo && file_exists($imgFolder . '/' . $team->logo)" />
-            </a>
-        </h2>
-    </div>
+  <div class="clearfix">
+    {if $player->photo && file_exists($imageFolder . '/' . $player->photo)}
+      <img src="{$basePath}/{$imageFolder}/{$player->photo}" />
+    {/if}
+  </div>
 
-    <div class="clearfix">
-        <img n:if="$player->photo && file_exists($imgFolder . '/' . $player->photo)"
-             src="{$basePath}/{$imgFolder}/{$player->photo}" />
-    </div>
-
-    <div class="clearfix table-responsive">
-        <table class="table">
-            <tbody>
-                <tr>
-                    <td>Funkcia</td>
-                    <td>{$type->type}</td>
-                </tr>
-                <tr n:if="$type->type != $goalie_title">
-                    <td>Počet inkasovaných gólov</td>
-                    <td>{$player->goals}</td>
-                </tr>
-                <tr n:if="$player->trans">
-                    <td colspan="2">Prestupový hráč</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
+  <div class="clearfix table-responsive">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td>Funkcia</td>
+          <td>{$type->label}</td>
+        </tr>
+        <tr n:if="$type->label != 'Brankár'">
+          <td>Počet inkasovaných gólov</td>
+          <td>{$player->goals}</td>
+        </tr>
+        <tr n:if="$player->is_transfer">
+          <td colspan="2">Prestupový hráč</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 {if $user->loggedIn}
-
-    <div id="edit" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Upraviť údaje o hráčovi</h3>
-                </div>
-                <div class="modal-body">
-                    {control $editForm}
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="remove" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title">Odstrániť údaje o hráčovi</h3>
-                </div>
-                <div class="modal-body">
-                    {control $removeForm}
-                </div>
-            </div>
-        </div>
-    </div>
-
+  <div id="edit" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h3 class="modal-title">Upraviť údaje o hráčovi</h3>
+              </div>
+              <div class="modal-body">
+                {control editForm}
+              </div>
+          </div>
+      </div>
+  </div>
+  <div id="remove" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h3 class="modal-title">Odstrániť údaje o hráčovi</h3>
+              </div>
+              <div class="modal-body">
+                  {control removeForm}
+              </div>
+          </div>
+      </div>
+  </div>
 {/if}
 
 {/block}

@@ -29,12 +29,13 @@
         {var $current = $player->goals}
         <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}</td>
         <td><a n:href="view $player->id">{$player->name}</a></td>
-        <td>{$player->num}</td>
+        <td>{$player->number}</td>
         <td>
           <a n:href="Teams:view $player->team_id">
-            <img src="{$basePath}/{$imgFolder}/{$player->team_logo}" width="30px"
-              n:if="$player->team_logo and file_exists($imgFolder . '/' . $player->team_logo)" />
-            {$player->team_name}
+            {if $player->team_logo and file_exists($imageFolder . '/' . $player->team_logo)}
+            <img src="{$basePath}/{$imageFolder}/{$player->team_logo}" width="30px" />
+              {$player->team_name}
+            {/if}
           </a>
         </td>
         <td>{$player->goals}</td>

@@ -9,6 +9,7 @@ use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Utils\ArrayHash;
 
 class GroupsPresenter extends BasePresenter
 {
@@ -92,8 +93,28 @@ class GroupsPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * Component for creating a remove form
+   * @return Nette\Application\UI\Form
+   */
+  protected function createComponentRemoveForm(): Form
+  {
+    $form = new Form;
+    $form->addSubmit('save', 'Odstrániť')
+          ->setAttribute('class', self::BTN_DANGER)
+          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
+    $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', self::BTN_WARNING)
+          ->onClick[] = [$this, self::FORM_CANCELLED];
+    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
+    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
+    FormHelper::setBootstrapFormRenderer($form);
+    return $form;
+  }
+
   public function submittedAddForm(Form $form, ArrayHash $values): void
   {
+    $this->userIsLogged();
     $this->groupsRepository->insert($values);
     $this->flashMessage('Skupina bol pridaná', self::SUCCESS);
     $this->redirect('all');
@@ -101,6 +122,7 @@ class GroupsPresenter extends BasePresenter
 
   public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
   {
+    $this->userIsLogged();
     $this->groupRow->update($values);
     $this->flashMessage('Skupina bola upravená', self::SUCCESS);
     $this->redirect('all');
@@ -108,6 +130,7 @@ class GroupsPresenter extends BasePresenter
 
   public function submittedRemoveForm(): void
   {
+    $this->userIsLogged();
     $this->groupsRepository->remove($this->groupRow->id);
     $this->flashMessage('Skupina bola odstránená', self::SUCCESS);
     $this->redirect('all');

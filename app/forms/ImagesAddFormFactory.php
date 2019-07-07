@@ -34,8 +34,8 @@ class ImagesAddFormFactory
   public function create(callable $onSuccess)
   {
     $form = $this->formFactory->create();
-    $form->addMultiUpload('images', 'Obrázky')
-          ->addRule(Form::FILLED)
+    $form->addMultiUpload('images', 'Obrázky*')
+          ->setRequired()
           ->addRule(Form::IMAGE);
     $form->addSubmit('upload', 'Nahrať');
     $form->addSubmit('cancel', 'Zrušiť')

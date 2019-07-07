@@ -35,7 +35,7 @@ class EventEditFormFactory
   public function create(callable $onSuccess, callable $onCancel)
   {
     $form = $this->formFactory->create();
-    $form->addTextArea('content', 'Obsah')
+    $form->addTextArea('content', 'Obsah*')
         ->setAttribute('id', 'ckeditor');
     $save = $form->addSubmit('save', 'Uložiť')
             ->setAttribute('class', 'btn btn-large btn-success');

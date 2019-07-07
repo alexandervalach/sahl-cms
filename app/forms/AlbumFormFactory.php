@@ -34,7 +34,7 @@ class AlbumFormFactory
   {
     $form = $this->formFactory->create();
     $form->addText('name', 'Názov*')
-          ->addRule(Form::FILLED)
+          ->setRequired()
           ->setAttribute('placeholder', 'Finále SAHL 2018/19');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')

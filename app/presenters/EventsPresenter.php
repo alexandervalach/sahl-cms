@@ -79,7 +79,7 @@ class EventsPresenter extends BasePresenter
     }
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent(self::EDIT_FORM)->setDefaults($this->eventRow);
+      $this[self::EDIT_FORM]->setDefaults($this->eventRow);
     }
   }
 

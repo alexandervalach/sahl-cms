@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\EventAddFormFactory;
+use App\Forms\EventEditFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -29,15 +31,25 @@ class EventsPresenter extends BasePresenter
   /** @var EventsRepository */
   private $eventsRepository;
 
+  /** @var EventAddFormFactory */
+  private $eventAddFormFactory;
+
+  /** @var EventEditFormFactory */
+  private $eventEditFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
-    EventsRepository $eventsRepository
+    EventsRepository $eventsRepository,
+    EventAddFormFactory $eventAddFormFactory,
+    EventEditFormFactory $eventEditFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
     $this->eventsRepository = $eventsRepository;
+    $this->eventAddFormFactory = $eventAddFormFactory;
+    $this->eventEditFormFactory = $eventEditFormFactory;
   }
 
   /**
@@ -123,16 +135,12 @@ class EventsPresenter extends BasePresenter
    */
   protected function createComponentAddForm(): Form
   {
-    $form = new Form;
-    $form->addTextArea('content', 'Obsah')
-        ->setAttribute('id', 'ckeditor');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->eventAddFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->userIsLogged();
+      $this->eventsRepository->insert($values);
+      $this->flashMessage('Rozpis bol pridaný', self::SUCCESS);
+      $this->redirect('all');
+    });
   }
 
   /**
@@ -141,18 +149,14 @@ class EventsPresenter extends BasePresenter
    */
   protected function createComponentEditForm(): Form
   {
-    $form = new Form;
-    $form->addTextArea('content', 'Obsah')
-        ->setAttribute('id', 'ckeditor');
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', self::BTN_SUCCESS)
-          ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, 'formCancelled'];
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->eventEditFormFactory->create(function (SubmitButton $button, ArrayHash $values) {
+      $this->userIsLogged();
+      $this->eventRow->update($values);
+      $this->flashMessage('Rozpis bol upravený', self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 
   /**
@@ -171,32 +175,6 @@ class EventsPresenter extends BasePresenter
     $form->addProtection(self::CSRF_TOKEN_EXPIRED);
     FormHelper::setBootstrapFormRenderer($form);
     return $form;
-  }
-
-  /**
-   * Insert data to database
-   * @param Nette\Application\UI\Form $form
-   * @param Nette\Utils\ArrayHash $values
-   */
-  public function submittedAddForm(Form $form, ArrayHash $values): void
-  {
-    $this->userIsLogged();
-    $this->eventsRepository->insert($values);
-    $this->flashMessage('Rozpis bol pridaný', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  /**
-   * Edits selected row
-   * @param SubmitButton $button
-   * @param ArrayHash $values
-   */
-  public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
-  {
-    $this->userIsLogged();
-    $this->eventRow->update($values);
-    $this->flashMessage('Rozpis bol upravený', self::SUCCESS);
-    $this->redirect('all');
   }
 
   /**

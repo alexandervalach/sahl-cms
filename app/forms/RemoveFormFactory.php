@@ -10,7 +10,7 @@ use Nette\Utils\ArrayHash;
 /**
  * @package App\Forms
  */
-class AlbumFormFactory
+class RemoveFormFactory
 {
   use SmartObject;
 

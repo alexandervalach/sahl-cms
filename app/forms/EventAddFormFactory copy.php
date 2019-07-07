@@ -10,7 +10,7 @@ use Nette\Utils\ArrayHash;
 /**
  * @package App\Forms
  */
-class AlbumFormFactory
+class EventAddFormFactory
 {
   use SmartObject;
 
@@ -33,9 +33,8 @@ class AlbumFormFactory
   public function create(callable $onSuccess)
   {
     $form = $this->formFactory->create();
-    $form->addText('name', 'Názov*')
-          ->addRule(Form::FILLED)
-          ->setAttribute('placeholder', 'Finále SAHL 2018/19');
+    $form->addTextArea('content', 'Obsah*')
+        ->setAttribute('id', 'ckeditor');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')

@@ -50,6 +50,8 @@ services:
 
 	# Form factories
 	- App\Forms\AlbumFormFactory
+	- App\Forms\EventAddFormFactory
+	- App\Forms\EventEditFormFactory
 	- App\Forms\FormFactory
 	- App\Forms\ImagesAddFormFactory
 	- App\Forms\PostFormFactory

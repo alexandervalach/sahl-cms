@@ -12,8 +12,8 @@ use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 
-class FightsPresenter extends BasePresenter {
-
+class FightsPresenter extends BasePresenter
+{
   const FIGHT_NOT_FOUND = 'Fight not found';
 
   /** @var ActiveRow */

@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\AlbumFormFactory;
+use App\Forms\ImagesAddFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -35,17 +37,27 @@ class AlbumsPresenter extends BasePresenter
   /** @var ImagesRepository */
   private $imagesRepository;
 
+  /** @var AlbumFormFactory */
+  private $albumFormFactory;
+
+  /** @var ImagesAddFormFactory */
+  private $imagesAddFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     AlbumsRepository $albumsRepository,
-    ImagesRepository $imagesRepository
+    ImagesRepository $imagesRepository,
+    AlbumFormFactory $albumFormFactory,
+    ImagesAddFormFactory $imagesAddFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
     $this->albumsRepository = $albumsRepository;
     $this->imagesRepository = $imagesRepository;
+    $this->albumFormFactory = $albumFormFactory;
+    $this->imagesAddFormFactory = $imagesAddFormFactory;
   }
 
   /**
@@ -69,7 +81,7 @@ class AlbumsPresenter extends BasePresenter
     }
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent('albumForm')->setDefaults($this->albumRow);
+      $this['albumForm']->setDefaults($this->albumRow);
     }
   }
 
@@ -112,7 +124,7 @@ class AlbumsPresenter extends BasePresenter
     $this->userIsLogged();
     $this->imageRow = $this->imagesRepository->findById($id);
     if (!$this->imageRow) {
-      throw new BadRequestException(self::IMAE_NOT_FOUND);
+      throw new BadRequestException(self::IMAGE_NOT_FOUND);
     }
     $this->submittedRemoveImage();
   }
@@ -123,17 +135,18 @@ class AlbumsPresenter extends BasePresenter
    */
   protected function createComponentAlbumForm(): Form
   {
-    $form = new Form;
-    $form->addText('name', 'Názov')
-          ->addRule(Form::FILLED, 'Názov je povinné pole.')
-          ->setAttribute('placeholder', 'Finále SAHL 2018/19');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, 'submittedAlbumForm'];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->albumFormFactory->create(function (Form $form, ArrayHash $values) {
+      $id = $this->getParameter('id');
+
+      if ($id) {
+        $this->albumRow->update($values);
+      } else {
+        $this->albumRow = $this->albumsRepository->insert($values);
+      }
+
+      $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('view', $this->albumRow->id);
+    });
   }
 
   /**
@@ -142,37 +155,28 @@ class AlbumsPresenter extends BasePresenter
    */
   protected function createComponentAddImageForm(): Form
   {
-    $form = new Form;
-    $form->addMultiUpload('files', 'Obrázky')
-          ->addRule(Form::FILLED, 'Vyberte obrázky, prosím')
-          ->addRule(Form::IMAGE, 'Obrázok môže byť len vo formáte JPEG, PNG alebo GIF.');
-    $form->addSubmit('upload', 'Nahrať');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_IMAGE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
+    return $this->imagesAddFormFactory->create(function (Form $form, ArrayHash $values) {
+      foreach ($values->images as $image) {
+        $name = strtolower($image->getSanitizedName());
+        $data = array(
+          'name' => $name,
+          'album_id' => $this->albumRow
+        );
 
-  /**
-   * Adds form values to database
-   *
-   * @param Nette\Application\UI\Form $form
-   * @param ArrayHash $values
-   */
-  public function submittedAlbumForm(Form $form, ArrayHash $values): void
-  {
-    $id = $this->getParameter('id');
+        if (!$image->isOk() || !$image->isImage()) {
+          throw new InvalidArgumentException;
+        }
 
-    if ($id) {
-      $this->albumRow->update($values);
-    } else {
-      $this->albumRow = $this->albumsRepository->insert($values);
-    }
+        if (!$image->move($this->imageDir . '/' . $name)) {
+          throw new IOException;
+        }
 
-    $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
-    $this->redirect('view', $this->albumRow->id);
+        $this->imagesRepository->insert($data);
+      }
+
+      $this->flashMessage('Obrázky boli pridané', self::SUCCESS);
+      $this->redirect('Albums:view', $this->albumRow->id);
+    });
   }
 
   /***
@@ -203,42 +207,9 @@ class AlbumsPresenter extends BasePresenter
 
   public function submittedSetImage(): void
   {
-    $data['thumbnail'] = $this->imageRow->name;
+    $data = array('thumbnail' => $this->imageRow->name);
     $this->albumRow->update($data);
     $this->flashMessage('Miniatúra bola nastavená', self::SUCCESS);
     $this->redirect('all');
   }
-
-  /**
-   * Adds image into database and filesystem
-   *
-   * @param Nette\Application\UI\Form $form
-   * @param ArrayHash $values
-   */
-  public function submittedAddImageForm(Form $form, ArrayHash $values): void
-  {
-    $data = array();
-
-    foreach ($values->files as $image) {
-      $name = strtolower($image->getSanitizedName());
-      $data = array(
-        'name' => $name,
-        'album_id' => $this->albumRow
-      );
-
-      if (!$image->isOk() OR !$image->isImage()) {
-        throw new InvalidArgumentException;
-      }
-
-      if (!$image->move($this->imageDir . '/' . $name)) {
-        throw new IOException;
-      }
-
-      $this->imagesRepository->insert($data);
-    }
-
-    $this->flashMessage('Obrázky boli pridané', self::SUCCESS);
-    $this->redirect('Albums:view', $this->albumRow->id);
-  }
-
 }

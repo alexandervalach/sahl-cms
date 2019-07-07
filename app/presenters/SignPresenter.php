@@ -38,11 +38,6 @@ class SignPresenter extends BasePresenter
     }
   }
 
-  public function renderIn(): void
-  {
-
-  }
-
   /**
    * Component for creating a sign in form
    * @return Form

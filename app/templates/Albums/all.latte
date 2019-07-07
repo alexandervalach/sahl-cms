@@ -20,7 +20,7 @@
           {var $image = $album->thumbnail}
           {var $text = "Album " . $album->name}
         {else}
-          {var $image = $defaultImg}
+          {var $image = $defaultImage}
           {var $text = "Logo SAHL"}
         {/if}
         <img src="{$basePath}/{$imageFolder}/{$image}" class="img img-responsive" alt="{$text}" />

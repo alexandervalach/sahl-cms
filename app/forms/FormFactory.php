@@ -20,7 +20,6 @@ class FormFactory
   public function create()
   {
     $form = new Form;
-    // Prostor pro výchozí nastavení.
     return $form;
   }
 }

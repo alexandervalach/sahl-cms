@@ -13,6 +13,7 @@ forms:
 	messages:
 		REQUIRED: 'Pole je povinné.'
 		EMAIL: 'Neplatná emailová adresa.'
+		IMAGE: 'Obrázok môže byť len vo formáte JPEG, PNG alebo GIF'
 
 services:
 	# Router factory
@@ -48,5 +49,7 @@ services:
 	- App\Model\UsersRepository
 
 	# Form factories
+	- App\Forms\AlbumFormFactory
 	- App\Forms\FormFactory
+	- App\Forms\ImagesAddFormFactory
 	- App\Forms\SignInFormFactory

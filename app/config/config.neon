@@ -9,10 +9,20 @@ application:
 	mapping:
 		*: App\*Module\Presenters\*Presenter
 
+forms:
+	messages:
+		REQUIRED: 'Pole je povinné.'
+		EMAIL: 'Neplatná emailová adresa.'
+
 services:
+	# Router factory
 	- App\RouterFactory
 	router: @App\RouterFactory::createRouter
+
+	# Authenticator
 	authenticator: App\Model\UserManager
+
+	# Model repositories
 	- App\Model\AlbumsRepository
 	- App\Model\EventsRepository
 	- App\Model\FightsRepository
@@ -36,3 +46,7 @@ services:
 	- App\Model\TablesRepository
 	- App\Model\TeamsRepository
 	- App\Model\UsersRepository
+
+	# Form factories
+	- App\Forms\FormFactory
+	- App\Forms\SignInFormFactory

@@ -1,16 +1,36 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\SignInFormFactory;
+use App\Model\LinksRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
+use App\Model\TablesRepository;
 use Nette\Application\UI\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\ArrayHash;
 
 class SignPresenter extends BasePresenter
 {
+
+  /** @var SignInFormFactory */
+  private $signInFormFactory;
+
+  public function __construct(
+    LinksRepository $linksRepository,
+    SponsorsRepository $sponsorsRepository,
+    TeamsRepository $teamsRepository,
+    SignInFormFactory $signInFormFactory
+  )
+  {
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    $this->signInFormFactory = $signInFormFactory;
+  }
+
   public function actionIn(): void
   {
     if ($this->user->isLoggedIn()) {
@@ -29,41 +49,16 @@ class SignPresenter extends BasePresenter
    */
   protected function createComponentSignInForm(): Form
   {
-    $form = new Form;
-    $form->addText('username', 'Používateľské meno')
-            ->setRequired('Zadajte používateľské meno');
-    $form->addPassword('password', 'Heslo')
-            ->setRequired('Zadajte heslo');
-    $form->addCheckbox('remember', ' Zapamätať si ma, kým nezavriem prehliadač');
-    $form->addSubmit('login', 'Prihlásiť');
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, 'submittedSignInForm'];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
-   * Checking whether user exists
-   *
-   * @param Form $form
-   * @param array $values
-   */
-  public function submittedSignInForm(Form $form, ArrayHash $values): Form
-  {
-    if ($values->remember) {
-      $this->user->setExpiration(null, 0);
-    } else {
-      $this->user->setExpiration('30 minutes', 0);
-    }
-
-    try {
-      $this->user->login($values->username, $values->password);
-      $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
-      $this->redirect('Homepage:all');
-    } catch (AuthenticationException $e) {
-      $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
-      $this->redirect('Homepage:all');
-    }
+    return $this->signInFormFactory->create(function (Form $form, ArrayHash $values) {
+      try {
+        $this->user->login($values->username, $values->password);
+        $this->flashMessage('Vitajte v administrácií SAHL', self::SUCCESS);
+        $this->redirect('Homepage:all');
+      } catch (AuthenticationException $e) {
+        $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
+        $this->redirect('Homepage:all');
+      }
+    });
   }
 
   /**

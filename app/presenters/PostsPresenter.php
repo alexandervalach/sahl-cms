@@ -12,6 +12,7 @@ use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
+use Nette\Utils\ArrayHash;
 use Nette\IOException;
 use Nette\InvalidArgumentException;
 
@@ -46,11 +47,13 @@ class PostsPresenter extends BasePresenter
     $this->$postImagesRepository = $postImagesRepository;
   }
 
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->posts = $this->postsRepository->getAll()->order('id DESC');
   }
 
-  public function actionView($id) {
+  public function actionView(int $id): void
+  {
     $this->postRow = $this->postsRepository->findById($id);
 
     if (!$this->postRow || !$this->postRow->is_present) {
@@ -58,16 +61,18 @@ class PostsPresenter extends BasePresenter
     }
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent('postForm')->setDefaults($this->postRow);
+      $this['postForm']->setDefaults($this->postRow);
     }
   }
 
-  public function renderView($id) {
+  public function renderView(int $id): void
+  {
     $this->template->post = $this->postRow;
     $this->template->images = $this->postsRepository->getImages($this->postRow);
   }
 
-  public function actionSetImg($postId, $id) {
+  public function actionSetImg($postId, $id): void
+  {
     $this->imgRow = $this->postImagesRepository->findById($id);
     $this->postRow = $this->postsRepository->findById($postId);
 
@@ -82,7 +87,8 @@ class PostsPresenter extends BasePresenter
     $this->submittedSetImgForm();
   }
 
-  public function actionRemoveImg($postId, $id) {
+  public function actionRemoveImg($postId, $id): void
+  {
     $this->imgRow = $this->postImagesRepository->findById($id);
     $this->postRow = $this->postsRepository->findById($postId);
 
@@ -97,7 +103,8 @@ class PostsPresenter extends BasePresenter
     $this->submittedRemoveImgForm();
   }
 
-  protected function createComponentPostForm() {
+  protected function createComponentPostForm(): Form
+  {
     $form = new Form;
     $form->addText('title', 'Názov')
           ->setAttribute('placeholder', 'Novinka SAHL 2018')
@@ -113,7 +120,8 @@ class PostsPresenter extends BasePresenter
     return $form;
   }
 
-  protected function createComponentAddImgForm() {
+  protected function createComponentAddImgForm(): Form
+  {
     $form = new Form;
     $form->addMultiUpload('images', 'Obrázok');
     $form->addSubmit('upload', 'Nahrať');
@@ -125,7 +133,8 @@ class PostsPresenter extends BasePresenter
     return $form;
   }
 
-  public function submittedPostForm(Form $form, array $values) {
+  public function submittedPostForm(Form $form, ArrayHash $values): void
+  {
     $id = $this->getParameter('id');
 
     if ($id) {
@@ -139,7 +148,8 @@ class PostsPresenter extends BasePresenter
     $this->redirect('view', $this->postRow->id);
   }
 
-  public function submittedRemoveForm() {
+  public function submittedRemoveForm(): void
+  {
     $images = $this->postsRepository->getImages($this->postRow);
 
     foreach ($images as $image) {
@@ -151,14 +161,16 @@ class PostsPresenter extends BasePresenter
     $this->redirect('all');
   }
 
-  public function submittedSetImgForm() {
+  public function submittedSetImgForm(): void
+  {
     $values['thumbnail'] = $this->imgRow->name;
     $this->postRow->update($values);
     $this->flashMessage('Miniatúra bola nastavená', self::SUCCESS);
     $this->redirect('view', $this->postRow->id);
   }
 
-  public function submittedRemoveImgForm() {
+  public function submittedRemoveImgForm(): void
+  {
     try {
       FileSystem::delete($this->imageDir . $this->imgRow->name);
       $this->imgRow->delete();
@@ -169,8 +181,9 @@ class PostsPresenter extends BasePresenter
     $this->redirect('view', $this->postRow->id);
   }
 
-  public function submittedAddImageForm(Form $form, $values) {
-    foreach ($values['images'] as $file) {
+  public function submittedAddImageForm(Form $form, ArrayHash $values): void
+  {
+    foreach ($values->images as $file) {
       $name = strtolower($file->getSanitizedName());
 
       if (!$file->isOK() || !$file->isImage()) {

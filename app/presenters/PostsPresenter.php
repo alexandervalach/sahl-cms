@@ -3,6 +3,8 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\ImagesAddFormFactory;
+use App\Forms\PostFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -34,17 +36,27 @@ class PostsPresenter extends BasePresenter
   /** @var PostImagesRepository */
   private $postImagesRepository;
 
+  /** @var ImagesAddFormFactory */
+  private $imagesAddFormFactory;
+
+  /** @var PostFormFactory */
+  private $postFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     PostsRepository $postsRepository,
-    PostImagesRepository $postImagesRepository
+    PostImagesRepository $postImagesRepository,
+    ImagesAddFormFactory $imagesAddFormFactory,
+    PostFormFactory $postFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
     $this->postsRepository = $postsRepository;
-    $this->$postImagesRepository = $postImagesRepository;
+    $this->postImagesRepository = $postImagesRepository;
+    $this->imagesAddFormFactory = $imagesAddFormFactory;
+    $this->postFormFactory = $postFormFactory;
   }
 
   public function renderAll(): void
@@ -105,47 +117,43 @@ class PostsPresenter extends BasePresenter
 
   protected function createComponentPostForm(): Form
   {
-    $form = new Form;
-    $form->addText('title', 'Názov')
-          ->setAttribute('placeholder', 'Novinka SAHL 2018')
-          ->setRequired('Názov je povinné pole.');
-    $form->addTextArea('content', 'Obsah')
-          ->setAttribute('id', 'ckeditor');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, 'submittedPostForm'];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->postFormFactory->create(function (Form $form, ArrayHash $values) {
+      $id = $this->getParameter('id');
+
+      if ($id) {
+        // $this->postRow = $this->postsRepository->findById($id);
+        $this->postRow->update($values);
+      } else {
+        $this->postRow = $this->postsRepository->insert($values);
+      }
+
+      $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('view', $this->postRow->id);
+    });
   }
 
-  protected function createComponentAddImgForm(): Form
+  /**
+   * @return Nette\Application\UI\Form
+   */
+  protected function createComponentAddImageForm(): Form
   {
-    $form = new Form;
-    $form->addMultiUpload('images', 'Obrázok');
-    $form->addSubmit('upload', 'Nahrať');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_IMAGE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
+    return $this->imagesAddFormFactory->create(function (Form $form, ArrayHash $values) {
+      foreach ($values->images as $image) {
+        $name = strtolower($image->getSanitizedName());
 
-  public function submittedPostForm(Form $form, ArrayHash $values): void
-  {
-    $id = $this->getParameter('id');
+        if (!$image->isOK() || !$image->isImage()) {
+          throw new InvalidArgumentException;
+        }
+        $image->move($this->imageDir . '/' . $name);
 
-    if ($id) {
-      $this->postRow = $this->postsRepository->findById($id);
-      $this->postRow->update($values);
-    } else {
-      $this->postRow = $this->postsRepository->insert($values);
-    }
-
-    $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
-    $this->redirect('view', $this->postRow->id);
+        $data = array(
+          'name' => $name,
+          'post_id' => $this->postRow->id
+        );
+        $this->postImagesRepository->insert($data);
+      }
+      $this->flashMessage('Obrázky boli pridané', self::SUCCESS);
+    });
   }
 
   public function submittedRemoveForm(): void
@@ -183,18 +191,7 @@ class PostsPresenter extends BasePresenter
 
   public function submittedAddImageForm(Form $form, ArrayHash $values): void
   {
-    foreach ($values->images as $file) {
-      $name = strtolower($file->getSanitizedName());
 
-      if (!$file->isOK() || !$file->isImage()) {
-        throw new InvalidArgumentException;
-      }
-
-      $file->move($this->imageDir . '/' . $name);
-      $data = array('name' => $name, 'post_id' => $this->postRow);
-      $this->postImagesRepository->insert($data);
-    }
-    $this->flashMessage('Obrázky boli pridané', self::SUCCESS);
   }
 
 }

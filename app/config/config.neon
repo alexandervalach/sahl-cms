@@ -52,4 +52,5 @@ services:
 	- App\Forms\AlbumFormFactory
 	- App\Forms\FormFactory
 	- App\Forms\ImagesAddFormFactory
+	- App\Forms\PostFormFactory
 	- App\Forms\SignInFormFactory

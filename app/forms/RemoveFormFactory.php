@@ -26,24 +26,26 @@ class RemoveFormFactory
   }
 
   /**
-   * Creates and renders sign in form
-   * @param callable $onSuccess
+   * Creates and renders remove form
+   * @param callable $onRemove
+   * @param callable $onCancel
    * @return Form
    */
-  public function create(callable $onSuccess)
+  public function create(callable $onRemove, callable $onCancel)
   {
     $form = $this->formFactory->create();
-    $form->addText('name', 'Názov*')
-          ->addRule(Form::FILLED)
-          ->setAttribute('placeholder', 'Finále SAHL 2018/19');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', 'btn btn-large btn-warning')
-          ->setAttribute('data-dismiss', 'modal');
+    $remove = $form->addSubmit('remove', 'Odstrániť')
+          ->setAttribute('class', 'btn btn-large btn-danger');
+    $cancel = $form->addSubmit('cancel', 'Zrušiť')
+          ->setAttribute('class', 'btn btn-large btn-warning');
     FormHelper::setBootstrapFormRenderer($form);
 
-    $form->onSuccess[] = function (Form $form, ArrayHash $values) use ($onSuccess) {
-      $onSuccess($form, $values);
+    $remove->onClick[] = function () use ($onRemove) {
+      $onRemove();
+    };
+
+    $cancel->onClick[] = function () use ($onCancel) {
+      $onCancel();
     };
 
     return $form;

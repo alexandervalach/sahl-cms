@@ -55,4 +55,5 @@ services:
 	- App\Forms\FormFactory
 	- App\Forms\ImagesAddFormFactory
 	- App\Forms\PostFormFactory
+	- App\Forms\RemoveFormFactory
 	- App\Forms\SignInFormFactory

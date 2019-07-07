@@ -7,6 +7,7 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Forms\EventAddFormFactory;
 use App\Forms\EventEditFormFactory;
+use App\Forms\RemoveFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -19,7 +20,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class EventsPresenter extends BasePresenter
 {
-  /* String constant for debugging purpose */
   const EVENT_NOT_FOUND = 'Event not found';
 
   /** @var ActiveRow */
@@ -37,19 +37,24 @@ class EventsPresenter extends BasePresenter
   /** @var EventEditFormFactory */
   private $eventEditFormFactory;
 
+  /** @var RemoveFormFactory */
+  private $removeFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     EventsRepository $eventsRepository,
     EventAddFormFactory $eventAddFormFactory,
-    EventEditFormFactory $eventEditFormFactory
+    EventEditFormFactory $eventEditFormFactory,
+    RemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
     $this->eventsRepository = $eventsRepository;
     $this->eventAddFormFactory = $eventAddFormFactory;
     $this->eventEditFormFactory = $eventEditFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
   }
 
   /**
@@ -165,26 +170,13 @@ class EventsPresenter extends BasePresenter
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Form;
-    $form->addSubmit('remove', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-        ->setAttribute('class', self::BTN_WARNING)
-        ->onClick[] = [$this, self::FORM_CANCELLED];
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
-   * Removes selected row
-   */
-  public function submittedRemoveForm(): void
-  {
-    $this->userIsLogged();
-    $this->eventsRepository->remove($this->eventRow);
-    $this->flashMessage('Rozpis bol odstránený', self::SUCCESS);
-    $this->redirect('all');
+    return $this->removeFormFactory->create(function () {
+      $this->userIsLogged();
+      $this->eventsRepository->remove($this->eventRow->id);
+      $this->flashMessage('Rozpis bol odstránený', self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 }

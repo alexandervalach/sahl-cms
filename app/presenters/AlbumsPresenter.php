@@ -13,6 +13,7 @@ use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\AlbumsRepository;
 use App\Model\ImagesRepository;
+use App\Model\SeasonsTeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -44,8 +45,8 @@ class AlbumsPresenter extends BasePresenter
   /** @var ImagesAddFormFactory */
   private $imagesAddFormFactory;
 
-    /** @var ModalRemoveFormFactory */
-    private $removeFormFactory;
+  /** @var ModalRemoveFormFactory */
+  private $removeFormFactory;
 
   public function __construct(
     LinksRepository $linksRepository,
@@ -53,12 +54,13 @@ class AlbumsPresenter extends BasePresenter
     TeamsRepository $teamsRepository,
     AlbumsRepository $albumsRepository,
     ImagesRepository $imagesRepository,
+    SeasonsTeamsRepository $seasonsTeamsRepository,
     AlbumFormFactory $albumFormFactory,
     ImagesAddFormFactory $imagesAddFormFactory,
     ModalRemoveFormFactory $removeFormFactory
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->albumsRepository = $albumsRepository;
     $this->imagesRepository = $imagesRepository;
     $this->albumFormFactory = $albumFormFactory;

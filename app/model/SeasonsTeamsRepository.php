@@ -7,23 +7,22 @@ use Nette\Database\Table\Selection;
 class SeasonsTeamsRepository extends Repository {
 
   const SEASON_ID = 'season_id';
+  const TEAM_ID = 'team_id';
 
   protected $tableName = 'seasons_teams';
 
-  /**
-   * @return Selection
-   */
-  public function getAll(): Selection
+  public function getTeam($teamId, $seasonId = null)
   {
-    return $this->findAll();
+    return $this->getForSeason($seasonId)->where(self::TEAM_ID, $teamId)->fetch();
   }
 
   /**
+   * @param $seasonId
    * @return Selection
    */
-  public function getForSeason($id = null): Selection
+  public function getForSeason($seasonId = null): Selection
   {
-    return $this->findAll()->where('season_id', $id);
+    return $this->getAll()->where('season_id', $seasonId);
   }
 
 }

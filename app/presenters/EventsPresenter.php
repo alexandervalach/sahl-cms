@@ -12,6 +12,7 @@ use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\EventsRepository;
+use App\Model\SeasonsTeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -45,12 +46,13 @@ class EventsPresenter extends BasePresenter
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     EventsRepository $eventsRepository,
+    SeasonsTeamsRepository $seasonsTeamsRepository,
     EventAddFormFactory $eventAddFormFactory,
     EventEditFormFactory $eventEditFormFactory,
     RemoveFormFactory $removeFormFactory
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->eventsRepository = $eventsRepository;
     $this->eventAddFormFactory = $eventAddFormFactory;
     $this->eventEditFormFactory = $eventEditFormFactory;

@@ -7,9 +7,11 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
+use App\Model\SeasonsTeamsRepository;
 use App\Model\TeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use Nette\Utils\ArrayHash;
 
 /**
  * Base class for all application presenters.
@@ -55,14 +57,17 @@ abstract class BasePresenter extends Presenter
   /** @var SponsorsRepository */
   protected $sponsorsRepository;
 
+  /** @var SeasonsTeamsRepository */
+  protected $seasonsTeamsRepository;
+
   /** @var TeamsRepository */
   protected $teamsRepository;
 
   /** @var string */
-  protected $webDir;
+  protected $imageDir;
 
-  /** @var string */
-  protected $imageDir = 'images';
+  /** @var AraryHash */
+  protected $teams;
 
   /**
    * Base constructor
@@ -70,12 +75,15 @@ abstract class BasePresenter extends Presenter
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository)
+    TeamsRepository $teamsRepository,
+    SeasonsTeamsRepository $seasonsTeamsRepository)
   {
     parent::__construct();
     $this->linksRepository = $linksRepository;
     $this->sponsorsRepository = $sponsorsRepository;
     $this->teamsRepository = $teamsRepository;
+    $this->seasonsTeamsRepository = $seasonsTeamsRepository;
+    $this->imageDir = 'images';
   }
 
   /**
@@ -94,9 +102,18 @@ abstract class BasePresenter extends Presenter
    */
   public function beforeRender(): void
   {
+    $teams = $this->seasonsTeamsRepository->getForSeason();
+    $data = [];
+
+    foreach ($teams as $team) {
+      $data[$team->id] = $team->ref('teams', 'team_id');
+    }
+
+    $this->teams = ArrayHash::from($data);
+
     $this->template->links = $this->linksRepository->getAll();
     $this->template->sponsors = $this->sponsorsRepository->getAll();
-    $this->template->sideTeams = $this->teamsRepository->getForSeason();
+    $this->template->teams = $this->teams;
     $this->template->imageFolder = self::IMAGE_FOLDER;
     $this->template->defaultImage = self::DEFAULT_IMAGE;
   }

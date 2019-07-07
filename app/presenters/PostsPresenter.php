@@ -10,6 +10,7 @@ use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PostsRepository;
 use App\Model\PostImagesRepository;
+use App\Model\SeasonsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -48,11 +49,12 @@ class PostsPresenter extends BasePresenter
     TeamsRepository $teamsRepository,
     PostsRepository $postsRepository,
     PostImagesRepository $postImagesRepository,
+    SeasonsTeamsRepository $seasonsTeamsRepository,
     ImagesAddFormFactory $imagesAddFormFactory,
     PostFormFactory $postFormFactory
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->postsRepository = $postsRepository;
     $this->postImagesRepository = $postImagesRepository;
     $this->imagesAddFormFactory = $imagesAddFormFactory;

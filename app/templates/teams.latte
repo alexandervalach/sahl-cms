@@ -1,13 +1,13 @@
 {**
  * @param string	$basePath web base path
- * @param string 	$imgFolder images folder path
- * @param array		$side_team teams
+ * @param string 	$imageFolder images folder path
+ * @param array		$teams teams
 *}
 
 <section id="teams" class="container-fluid hidden-xs">
-	{foreach $sideTeams as $sideTeam}
-	  <a n:href="Teams:view $sideTeam->id" title="{$sideTeam->name}">
-	    <img src="{$basePath}/{$imageFolder}/{$sideTeam->logo}" width="5%" alt="{$sideTeam->name} logo" />
+	{foreach $teams as $team}
+	  <a n:href="Teams:view $team->id" title="{$team->name}">
+	    <img src="{$basePath}/{$imageFolder}/{$team->logo}" width="5%" alt="{$team->name} logo" />
 	  </a>
   {/foreach}
 </section>

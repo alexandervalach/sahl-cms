@@ -9,6 +9,7 @@ use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PostsRepository;
 use App\Model\RoundsRepository;
+use App\Model\SeasonsTeamsRepository;
 use App\Model\TableTypesRepository;
 
 class HomepagePresenter extends BasePresenter
@@ -28,10 +29,11 @@ class HomepagePresenter extends BasePresenter
     TeamsRepository $teamsRepository,
     PostsRepository $postsRepository,
     TableTypesRepository $tableTypesRepository,
-    RoundsRepository $roundsRepository
+    RoundsRepository $roundsRepository,
+    SeasonsTeamsRepository $seasonsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->postsRepository = $postsRepository;
     $this->tableTypesRepository = $tableTypesRepository;
     $this->roundsRepository = $roundsRepository;

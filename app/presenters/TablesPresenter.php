@@ -7,13 +7,14 @@ use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\TablesRepository;
+use App\Model\SeasonsTeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
-class TablesPresenter extends BasePresenter {
-
+class TablesPresenter extends BasePresenter
+{
   const TABLE_NOT_FOUND = 'Table not found';
 
   /** @var array */
@@ -32,10 +33,11 @@ class TablesPresenter extends BasePresenter {
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
-    TablesRepository $tablesRepository
+    TablesRepository $tablesRepository,
+    SeasonsTeamsRepository $seasonsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->tablesRepository = $tablesRepository;
   }
 

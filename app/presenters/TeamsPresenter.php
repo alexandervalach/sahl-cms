@@ -23,17 +23,11 @@ class TeamsPresenter extends BasePresenter
   const ADD_PLAYER_FORM = 'addPlayerForm';
   const SUBMITTED_ADD_PLAYER_FORM = 'submittedAddPlayerForm';
 
-  /** @var ArrayHash */
-  private $teams;
-
   /** @var ActiveRow */
   private $teamRow;
 
   /** @var ActiveRow */
   private $seasonRow;
-
-  /** @var SeasonsTeamsRepository */
-  private $seasonsTeamsRepository;
 
   /** @var GroupsRepository */
   private $groupsRepository;
@@ -54,29 +48,10 @@ class TeamsPresenter extends BasePresenter
     PlayerTypesRepository $playerTypesRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
-    $this->seasonsTeamsRepository = $seasonsTeamsRepository;
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
-  }
-
-
-  public function actionAll(): void
-  {
-    $teams = $this->seasonsTeamsRepository->getForSeason();
-    $data = [];
-
-    foreach ($teams as $team) {
-      $data[$team->id] = $team->ref('teams', 'team_id');
-    }
-
-    $this->teams = ArrayHash::from($data);
-  }
-
-  public function renderAll(): void
-  {
-    $this->template->teams = $this->teams;
   }
 
   public function actionView(int $id): void
@@ -88,7 +63,7 @@ class TeamsPresenter extends BasePresenter
     }
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent('teamForm')->setDefaults($this->teamRow);
+      $this['teamForm']->setDefaults($this->teamRow);
     }
   }
 
@@ -236,14 +211,9 @@ class TeamsPresenter extends BasePresenter
 
   public function submittedRemoveForm(): void
   {
-    $players = $this->teamRow->related('players');
-
-    foreach ($players as $player) {
-      $this->playersRepository->remove($player->id);
-    }
-
+    $seasonTeam = $this->seasonsTeamsRepository->getTeam($this->teamRow->id);
+    $this->seasonsTeamsRepository->remove($seasonTeam->id);
     $this->flashMessage('Tím bol odstránený', self::SUCCESS);
-    $this->teamsRepository->remove($this->teamRow->id);
     $this->redirect('all');
   }
 

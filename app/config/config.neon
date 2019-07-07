@@ -54,6 +54,7 @@ services:
 	- App\Forms\EventEditFormFactory
 	- App\Forms\FormFactory
 	- App\Forms\ImagesAddFormFactory
+	- App\Forms\ModalRemoveFormFactory
 	- App\Forms\PostFormFactory
 	- App\Forms\RemoveFormFactory
 	- App\Forms\SignInFormFactory

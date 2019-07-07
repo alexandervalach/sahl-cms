@@ -7,6 +7,7 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Forms\AlbumFormFactory;
 use App\Forms\ImagesAddFormFactory;
+use App\Forms\ModalRemoveFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -43,6 +44,9 @@ class AlbumsPresenter extends BasePresenter
   /** @var ImagesAddFormFactory */
   private $imagesAddFormFactory;
 
+    /** @var ModalRemoveFormFactory */
+    private $removeFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
@@ -50,7 +54,8 @@ class AlbumsPresenter extends BasePresenter
     AlbumsRepository $albumsRepository,
     ImagesRepository $imagesRepository,
     AlbumFormFactory $albumFormFactory,
-    ImagesAddFormFactory $imagesAddFormFactory
+    ImagesAddFormFactory $imagesAddFormFactory,
+    ModalRemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
@@ -58,6 +63,7 @@ class AlbumsPresenter extends BasePresenter
     $this->imagesRepository = $imagesRepository;
     $this->albumFormFactory = $albumFormFactory;
     $this->imagesAddFormFactory = $imagesAddFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
   }
 
   /**
@@ -149,6 +155,21 @@ class AlbumsPresenter extends BasePresenter
     });
   }
 
+  protected function createComponentRemoveForm(): Form
+  {
+    return $this->removeFormFactory->create(function () {
+      $images = $this->imagesRepository->getForAlbum($this->albumRow->id);
+
+      foreach ($images as $image) {
+        $this->imagesRepository->remove($image->id);
+      }
+
+      $this->albumsRepository->remove($this->albumRow->id);
+      $this->flashMessage('Album bol odstránený', self::SUCCESS);
+      $this->redirect('all');
+    });
+  }
+
   /**
    * Creates add image form
    * @return Nette\Application\UI\Form
@@ -177,22 +198,6 @@ class AlbumsPresenter extends BasePresenter
       $this->flashMessage('Obrázky boli pridané', self::SUCCESS);
       $this->redirect('Albums:view', $this->albumRow->id);
     });
-  }
-
-  /***
-   * Removes albums and related records from database
-   */
-  public function submittedRemoveForm(): void
-  {
-    $images = $this->imagesRepository->getForAlbum($this->albumRow->id);
-
-    foreach ($images as $image) {
-      $this->imagesRepository->remove($image->id);
-    }
-
-    $this->albumsRepository->remove($this->albumRow->id);
-    $this->flashMessage('Album bol odstránený', self::SUCCESS);
-    $this->redirect('all');
   }
 
   /**

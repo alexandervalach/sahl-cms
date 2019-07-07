@@ -40,10 +40,10 @@ class SignInFormFactory
   public function create(callable $onSuccess)
   {
     $form = $this->formFactory->create();
-    $form->addText('username', 'Používateľské meno')
-          ->setRequired('Zadajte používateľské meno');
-    $form->addPassword('password', 'Heslo')
-          ->setRequired('Zadajte heslo');
+    $form->addText('username', 'Používateľské meno*')
+          ->setRequired();
+    $form->addPassword('password', 'Heslo*')
+          ->setRequired();
     $form->addCheckbox('remember', ' Zapamätať si ma na 7 dní');
     $form->addSubmit('login', 'Prihlásiť');
     // $form->addProtection(self::CSRF_TOKEN_EXPIRED);

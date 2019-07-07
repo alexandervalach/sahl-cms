@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\RemoveFormFactory;
 use App\Model\FightsRepository;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
@@ -37,17 +38,22 @@ class FightsPresenter extends BasePresenter
   /** @var TablesRepository */
   private $tablesRepository;
 
+  /** @var RemoveFormFactory */
+  private $removeFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     FightsRepository $fightsRepository,
-    TablesRepository $tablesRepository
+    TablesRepository $tablesRepository,
+    RemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
     $this->fightsRepository = $fightsRepository;
     $this->tablesRepository = $tablesRepository;
+    $this->removeFormFactory = $removeFormFactory;
   }
 
   public function actionEdit(int $id): void
@@ -64,7 +70,7 @@ class FightsPresenter extends BasePresenter
   public function renderEdit(int $id): void
   {
     $this->template->round = $this->roundRow;
-    $this->getComponent('editForm')->setDefaults($this->fightRow);
+    $this[self::EDIT_FORM]->setDefaults($this->fightRow);
   }
 
   public function actionRemove(int $id): void
@@ -123,15 +129,13 @@ class FightsPresenter extends BasePresenter
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Form;
-    $form->addSubmit('remove', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, self::FORM_CANCELLED];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->removeFormFactory->create(function () {
+      $this->fightsRepository->remove($this->fightRow->id);
+      $this->flashMessage('Zápas bol odstránený', self::SUCCESS);
+      $this->redirect('Rounds:view', $this->roundRow->id);
+    }, function () {
+      $this->redirect('Rounds:view', $this->roundRow->id);
+    });
   }
 
   public function submittedAddForm(Form $form, ArrayHash $values)
@@ -161,13 +165,6 @@ class FightsPresenter extends BasePresenter
     }
     $this->fightRow->update($values);
     $this->flashMessage('Zápas bol upravený', 'success');
-    $this->redirect('Rounds:view', $this->roundRow->id);
-  }
-
-  public function submittedRemoveForm(): void
-  {
-    $this->fightsRepository->remove($this->fightRow->id);
-    $this->flashMessage('Zápas bol odstránený', 'success');
     $this->redirect('Rounds:view', $this->roundRow->id);
   }
 
@@ -209,11 +206,6 @@ class FightsPresenter extends BasePresenter
     $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score2', $values['score2']);
     $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);
     $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score2', $values['score1']);
-  }
-
-  public function formCancelled(): void
-  {
-    $this->redirect('Rounds:view', $this->roundRow->id);
   }
 
 }

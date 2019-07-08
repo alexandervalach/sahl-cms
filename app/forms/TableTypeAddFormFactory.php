@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace App\Forms;
 
 use App\FormHelper;
@@ -30,10 +32,10 @@ class TableTypeAddFormFactory
    * @param callable $onSuccess
    * @return Form
    */
-  public function create(callable $onSuccess)
+  public function create(callable $onSuccess): Form
   {
     $form = $this->formFactory->create();
-    $form->addText('label', 'Názov')
+    $form->addText('label', 'Názov*')
           ->setAttribute('placeholder', 'Play Off')
           ->setRequired();
     $form->addSubmit('save', 'Uložiť');

@@ -8,6 +8,7 @@ use App\FormHelper;
 use App\Forms\SignInFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
+use App\Model\SeasonsTeamsRepository;
 use App\Model\TeamsRepository;
 use App\Model\TablesRepository;
 use Nette\Application\UI\Form;
@@ -24,10 +25,11 @@ class SignPresenter extends BasePresenter
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
-    SignInFormFactory $signInFormFactory
+    SignInFormFactory $signInFormFactory,
+    SeasonsTeamsRepository $seasonsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->signInFormFactory = $signInFormFactory;
   }
 

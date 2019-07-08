@@ -3,6 +3,8 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\TableTypeAddFormFactory;
+use App\Forms\RemoveFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -23,16 +25,26 @@ class TableTypesPresenter extends BasePresenter
   /** @var TableTypesRepository */
   private $tableTypesRepository;
 
+  /** @var TableTypeAddFormFactory */
+  private $tableTypeAddFormFactory;
+
+  /** @var RemoveFormFactory */
+  private $removeFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     TableTypesRepository $tableTypesRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository
+    SeasonsTeamsRepository $seasonsTeamsRepository,
+    TableTypeAddFormFactory $tableTypeAddFormFactory,
+    RemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->tableTypesRepository = $tableTypesRepository;
+    $this->tableTypeAddFormFactory = $tableTypeAddFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
   }
 
   public function actionAll(): void
@@ -54,7 +66,7 @@ class TableTypesPresenter extends BasePresenter
       throw new BadRequestException(self::TYPE_NOT_FOUND);
     }
 
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->tableTypeRow);
+    $this[self::EDIT_FORM]->setDefaults($this->tableTypeRow);
   }
 
   public function renderEdit(int $id): void
@@ -62,7 +74,7 @@ class TableTypesPresenter extends BasePresenter
     $this->template->type = $this->tableTypeRow;
   }
 
-  public function actionRemove($id): void
+  public function actionRemove(int $id): void
   {
     $this->userIsLogged();
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
@@ -72,7 +84,7 @@ class TableTypesPresenter extends BasePresenter
     }
   }
 
-  public function renderRemove($id): void
+  public function renderRemove(int $id): void
   {
     $this->template->type = $this->tableTypeRow;
   }
@@ -83,17 +95,18 @@ class TableTypesPresenter extends BasePresenter
    */
   protected function createComponentAddForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->addRule(Form::FILLED, 'Ešte treba vyplniť názov')
-          ->setAttribute('placeholder', 'Play Off');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->tableTypeAddFormFactory->create(function (Form $form, ArrayHash $values) {
+      $tableType = $this->tableTypesRepository->findByLabel($values->label);
+
+      if (!$tableType) {
+        $this->tableTypesRepository->insert($values);
+        $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+      } else {
+        $this->flashMessage(self::ITEM_ALREADY_EXISTS, self::WARNING);
+      }
+
+      $this->redirect('all');
+    });
   }
 
 
@@ -120,27 +133,13 @@ class TableTypesPresenter extends BasePresenter
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Form;
-    $form->addSubmit('remove', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, self::FORM_CANCELLED];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
-   * Submitting data from add form
-   * @param Form $form
-   * @param ArrayHash $values
-   */
-  public function submittedAddForm(Form $form, ArrayHash $values): void
-  {
-    $this->tableTypesRepository->insert($values);
-    $this->flashMessage('Typ tabuľky bol pridaný', self::SUCCESS);
-    $this->redirect('all');
+    return $this->removeFormFactory->create(function () {
+      $this->tableTypesRepository->remove($this->tableTypeRow->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 
   /**
@@ -152,16 +151,6 @@ class TableTypesPresenter extends BasePresenter
   {
     $this->tableTypeRow->update($values);
     $this->flashMessage('Záznam bol upravený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  /**
-   * Submits remove table type form
-   */
-  public function submittedRemoveForm(): void
-  {
-    $this->tableTypesRepository->remove($this->tableTypeRow->id);
-    $this->flashMessage('Typ hráča bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }
 

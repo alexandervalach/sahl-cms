@@ -43,13 +43,16 @@ abstract class BasePresenter extends Presenter
   const IMAGE_FOLDER = 'images';
   const DEFAULT_IMAGE = 'sahl.png';
   const CSRF_TOKEN_EXPIRED = 'Platnosť formulára vypršala. Odošlite ho, prosím, znovu.';
-  const IMG_NOT_FOUND = 'Image not found';
-  const PLAYER_NOT_FOUND = 'Player not found';
-  const ROUND_NOT_FOUND = 'Round not found';
-  const SEASON_NOT_FOUND = 'Season not found';
-  const RULE_NOT_FOUND = 'Rule not found';
-  const ITEM_NOT_FOUND = 'Item not found';
-  const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené';
+  const IMG_NOT_FOUND = 'Image not found.';
+  const PLAYER_NOT_FOUND = 'Player not found.';
+  const ROUND_NOT_FOUND = 'Round not found.';
+  const SEASON_NOT_FOUND = 'Season not found.';
+  const RULE_NOT_FOUND = 'Rule not found.';
+  const ITEM_NOT_FOUND = 'Item not found.';
+  const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené.';
+  const ITEM_ALREADY_EXISTS = 'Záznam už existuje.';
+  const ITEM_ADDED_SUCCESSFULLY = 'Položka bola úspešne pridaná.';
+  const ITEM_REMOVED_SUCCESSFULLY = 'Položka bola úspešne odstránená.';
 
   /** @var LinksRepository */
   protected $linksRepository;

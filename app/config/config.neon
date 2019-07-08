@@ -59,3 +59,4 @@ services:
 	- App\Forms\RemoveFormFactory
 	- App\Forms\SignInFormFactory
 	- App\Forms\TableTypeAddFormFactory
+	- App\Forms\TableTypeEditFormFactory

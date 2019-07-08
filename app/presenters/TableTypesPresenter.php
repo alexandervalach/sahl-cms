@@ -4,16 +4,18 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Forms\TableTypeAddFormFactory;
+use App\Forms\TableTypeEditFormFactory;
 use App\Forms\RemoveFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\TableTypesRepository;
 use App\Model\SeasonsTeamsRepository;
-use Nette\Application\UI\Form;
-use Nette\Application\BadRequestException;
-use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Form;
+use Nette\Database\Table\ActiveRow;
+use Nette\Forms\Controls\SubmitButton;
 
 class TableTypesPresenter extends BasePresenter
 {
@@ -28,6 +30,9 @@ class TableTypesPresenter extends BasePresenter
   /** @var TableTypeAddFormFactory */
   private $tableTypeAddFormFactory;
 
+  /** @var TableTypeEditFormFactory */
+  private $tableTypeEditFormFactory;
+
   /** @var RemoveFormFactory */
   private $removeFormFactory;
 
@@ -38,6 +43,7 @@ class TableTypesPresenter extends BasePresenter
     TableTypesRepository $tableTypesRepository,
     SeasonsTeamsRepository $seasonsTeamsRepository,
     TableTypeAddFormFactory $tableTypeAddFormFactory,
+    TableTypeEditFormFactory $tableTypeEditFormFactory,
     RemoveFormFactory $removeFormFactory
   )
   {
@@ -45,6 +51,7 @@ class TableTypesPresenter extends BasePresenter
     $this->tableTypesRepository = $tableTypesRepository;
     $this->tableTypeAddFormFactory = $tableTypeAddFormFactory;
     $this->removeFormFactory = $removeFormFactory;
+    $this->tableTypeEditFormFactory = $tableTypeEditFormFactory;
   }
 
   public function actionAll(): void
@@ -57,6 +64,9 @@ class TableTypesPresenter extends BasePresenter
     $this->template->types = $this->tableTypesRepository->getAll();
   }
 
+  /**
+   * @param int $id
+   */
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();
@@ -69,11 +79,17 @@ class TableTypesPresenter extends BasePresenter
     $this[self::EDIT_FORM]->setDefaults($this->tableTypeRow);
   }
 
+  /**
+   * @param int $id
+   */
   public function renderEdit(int $id): void
   {
     $this->template->type = $this->tableTypeRow;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionRemove(int $id): void
   {
     $this->userIsLogged();
@@ -84,6 +100,9 @@ class TableTypesPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderRemove(int $id): void
   {
     $this->template->type = $this->tableTypeRow;
@@ -116,15 +135,13 @@ class TableTypesPresenter extends BasePresenter
    */
   protected function createComponentEditForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->addRule(Form::FILLED, 'Ešte treba vyplniť názov')
-          ->setAttribute('placeholder', 'Play Off');
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', self::BTN_SUCCESS);
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->tableTypeEditFormFactory->create(function (SubmitButton $button, ArrayHash $values) {
+      $this->tableTypeRow->update($values);
+      $this->flashMessage('Záznam bol upravený', self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 
   /**
@@ -149,9 +166,7 @@ class TableTypesPresenter extends BasePresenter
    */
   public function submittedEditForm(Form $form, ArrayHash $values): void
   {
-    $this->tableTypeRow->update($values);
-    $this->flashMessage('Záznam bol upravený', self::SUCCESS);
-    $this->redirect('all');
+
   }
 
   /**

@@ -160,16 +160,6 @@ class TableTypesPresenter extends BasePresenter
   }
 
   /**
-   * Submitting data from add form
-   * @param Form $form
-   * @param array $values
-   */
-  public function submittedEditForm(Form $form, ArrayHash $values): void
-  {
-
-  }
-
-  /**
    * @param int $id
    */
   public function actionShow(int $id): void

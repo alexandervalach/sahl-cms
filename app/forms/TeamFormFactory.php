@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Forms;
 
 use App\FormHelper;
+use App\Model\GroupsRepository;
 use Nette\SmartObject;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
@@ -12,19 +13,24 @@ use Nette\Utils\ArrayHash;
 /**
  * @package App\Forms
  */
-class EventAddFormFactory
+class TeamFormFactory
 {
   use SmartObject;
 
   /** @var FormFactory */
   private $formFactory;
 
+  /** @var GroupsRepository */
+  private $groupsRepository;
+
   /**
    * @param FormFactory $factory
+   * @param GroupsRepository $groupsRepository
    */
-  public function __construct(FormFactory $factory)
+  public function __construct(FormFactory $factory, GroupsRepository $groupsRepository)
   {
     $this->formFactory = $factory;
+    $this->groupsRepository = $groupsRepository;
   }
 
   /**
@@ -32,11 +38,14 @@ class EventAddFormFactory
    * @param callable $onSuccess
    * @return Form
    */
-  public function create(callable $onSuccess)
+  public function create(callable $onSuccess): Form
   {
     $form = $this->formFactory->create();
-    $form->addTextArea('content', 'Obsah*')
-        ->setAttribute('id', 'ckeditor');
+    $form->addText('name', 'Názov tímu')
+          ->setAttribute('placeholder', 'SKV Aligators')
+          ->setRequired()
+          ->addRule(Form::MAX_LENGTH, 'Dĺžka názvu smie byť len 255 znakov.', 255);
+    $form->addSelect('group_id', 'Divízia', $this->groupsRepository->getGroups());
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')

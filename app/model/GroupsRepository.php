@@ -8,7 +8,7 @@ class GroupsRepository extends Repository {
 
   const LABEL = 'label';
 
-  public function getAsArray()
+  public function getGroups(): array
   {
     return $this->getAll()->fetchPairs(self::ID, self::LABEL);
   }

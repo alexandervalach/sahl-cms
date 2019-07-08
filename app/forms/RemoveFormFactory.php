@@ -33,7 +33,7 @@ class RemoveFormFactory
    * @param callable $onCancel
    * @return Form
    */
-  public function create(callable $onRemove, callable $onCancel)
+  public function create(callable $onRemove, callable $onCancel): Form
   {
     $form = $this->formFactory->create();
     $remove = $form->addSubmit('remove', 'Odstrániť')

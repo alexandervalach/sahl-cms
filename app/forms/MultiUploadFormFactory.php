@@ -13,7 +13,7 @@ use Nette\Utils\ArrayHash;
  * Add image form factory
  * @package App\Forms
  */
-class ImagesAddFormFactory
+class MultiUploadFormFactory
 {
   use SmartObject;
 
@@ -33,7 +33,7 @@ class ImagesAddFormFactory
    * @param callable $onSuccess
    * @return Form
    */
-  public function create(callable $onSuccess)
+  public function create(callable $onSuccess): Form
   {
     $form = $this->formFactory->create();
     $form->addMultiUpload('images', 'Obrázky*')

@@ -53,10 +53,11 @@ services:
 	- App\Forms\EventAddFormFactory
 	- App\Forms\EventEditFormFactory
 	- App\Forms\FormFactory
-	- App\Forms\ImagesAddFormFactory
+	- App\Forms\MultiUploadFormFactory
 	- App\Forms\ModalRemoveFormFactory
 	- App\Forms\PostFormFactory
 	- App\Forms\RemoveFormFactory
 	- App\Forms\SignInFormFactory
 	- App\Forms\TableTypeAddFormFactory
 	- App\Forms\TableTypeEditFormFactory
+	- App\Forms\TeamFormFactory

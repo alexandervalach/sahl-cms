@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\TeamFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
@@ -38,6 +39,9 @@ class TeamsPresenter extends BasePresenter
   /** @var PlayerTypesRepository */
   private $playerTypesRepository;
 
+  /** @var TeamFormFactory */
+  private $teamFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
@@ -45,21 +49,26 @@ class TeamsPresenter extends BasePresenter
     SeasonsTeamsRepository $seasonsTeamsRepository,
     GroupsRepository $groupsRepository,
     PlayersRepository $playersRepository,
-    PlayerTypesRepository $playerTypesRepository
+    PlayerTypesRepository $playerTypesRepository,
+    TeamFormFactory $teamFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
+    $this->teamFormFactory = $teamFormFactory;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionView(int $id): void
   {
     $this->teamRow = $this->teamsRepository->findById($id);
 
     if (!$this->teamRow || !$this->teamRow->is_present) {
-      throw new BadRequetsException(self::TEAM_NOT_FOUND);
+      throw new BadRequetsException(self::ITEM_NOT_FOUND);
     }
 
     if ($this->user->isLoggedIn()) {
@@ -126,20 +135,9 @@ class TeamsPresenter extends BasePresenter
 
   protected function createComponentTeamForm(): Form
   {
-    $groups = $this->groupsRepository->getAsArray();
-    $form = new Form;
-    $form->addText('name', 'Názov tímu')
-          ->setAttribute('placeholder', 'SKV Aligators')
-          ->setRequired('Názov tímu je povinné pole.')
-          ->addRule(Form::MAX_LENGTH, "Dĺžka názvu smie byť len 255 znakov.", 255);
-    $form->addSelect('group_id', 'Divízia', $groups);
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', 'btn btn-large btn-warning')
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, 'submittedTeamForm'];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->teamFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->submittedTeamForm($form, $values);
+    });
   }
 
   protected function createComponentAddPlayerForm(): Form
@@ -220,37 +218,32 @@ class TeamsPresenter extends BasePresenter
   /**
    * Saves values to database and created new table entry for team in current season
    * @param Form $form
-   * @param array $values
+   * @param AraryHash $values
    */
-  public function submittedTeamForm(Form $form, array $values): void
+  public function submittedTeamForm(Form $form, ArrayHash $values): void
   {
     $id = $this->getParameter('id');
 
     if ($id) {
       $this->teamRow = $this->teamsRepository->findById($id);
-      $this->teamRow->update(
-        array('name' => $values['name'])
-      );
+      $this->teamRow->update( array('name' => $values->name) );
 
       $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('view', $this->teamRow->id);
-
-    } else {
-      $this->teamRow = $this->teamsRepository->findByValue('name', $values['name'])->fetch();
-
-      if (!$this->teamRow) {
-        $this->teamRow = $this->teamsRepository->insert(
-          array('name' => $values['name'])
-        );
-      }
-
-      $this->seasonsTeamsRepository->insert(
-        array(
-          'team_id' => $this->teamRow->id,
-          'group_id' => $values['group_id']
-        )
-      );
     }
+
+    $this->teamRow = $this->teamsRepository->findByName($values->name);
+
+    if (!$this->teamRow) {
+      $this->teamRow = $this->teamsRepository->insert( array('name' => $values->name) );
+    }
+
+    $this->seasonsTeamsRepository->insert(
+      array(
+        'team_id' => $this->teamRow->id,
+        'group_id' => $values->group_id
+      )
+    );
 
     // $this->tablesRepository->insert(array('team_id' => $team));
     $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);

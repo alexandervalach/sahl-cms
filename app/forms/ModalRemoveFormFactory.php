@@ -32,7 +32,7 @@ class ModalRemoveFormFactory
    * @param callable $onSuccess
    * @return Form
    */
-  public function create(callable $onSuccess)
+  public function create(callable $onSuccess): Form
   {
     $form = $this->formFactory->create();
     $form->addSubmit('remove', 'Odstrániť')

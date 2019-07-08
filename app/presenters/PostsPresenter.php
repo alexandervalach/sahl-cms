@@ -3,7 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
-use App\Forms\ImagesAddFormFactory;
+use App\Forms\MultiUploadFormFactory;
 use App\Forms\PostFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
@@ -37,8 +37,8 @@ class PostsPresenter extends BasePresenter
   /** @var PostImagesRepository */
   private $postImagesRepository;
 
-  /** @var ImagesAddFormFactory */
-  private $imagesAddFormFactory;
+  /** @var MultiUploadFormFactory */
+  private $multiUploadFormFactory;
 
   /** @var PostFormFactory */
   private $postFormFactory;
@@ -50,14 +50,14 @@ class PostsPresenter extends BasePresenter
     PostsRepository $postsRepository,
     PostImagesRepository $postImagesRepository,
     SeasonsTeamsRepository $seasonsTeamsRepository,
-    ImagesAddFormFactory $imagesAddFormFactory,
+    MultiUploadFormFactory $multiUploadFormFactory,
     PostFormFactory $postFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->postsRepository = $postsRepository;
     $this->postImagesRepository = $postImagesRepository;
-    $this->imagesAddFormFactory = $imagesAddFormFactory;
+    $this->multiUploadFormFactory = $multiUploadFormFactory;
     $this->postFormFactory = $postFormFactory;
   }
 
@@ -71,7 +71,7 @@ class PostsPresenter extends BasePresenter
     $this->postRow = $this->postsRepository->findById($id);
 
     if (!$this->postRow || !$this->postRow->is_present) {
-      throw new BadRequestException(self::POST_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     if ($this->user->isLoggedIn()) {
@@ -91,11 +91,11 @@ class PostsPresenter extends BasePresenter
     $this->postRow = $this->postsRepository->findById($postId);
 
     if (!$this->imgRow || !$this->imgRow->is_present) {
-      throw new BadRequestException(self::IMAGE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     if (!$this->postRow || !$this->postRow->is_present) {
-      throw new BadRequestException(self::POST_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this->submittedSetImgForm();
@@ -107,11 +107,11 @@ class PostsPresenter extends BasePresenter
     $this->postRow = $this->postsRepository->findById($postId);
 
     if (!$this->imgRow || !$this->imgRow->is_present) {
-      throw new BadRequestException(self::IMAGE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     if (!$this->postRow || !$this->postRow->is_present) {
-      throw new BadRequestException(self::POST_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this->submittedRemoveImgForm();
@@ -139,7 +139,7 @@ class PostsPresenter extends BasePresenter
    */
   protected function createComponentAddImageForm(): Form
   {
-    return $this->imagesAddFormFactory->create(function (Form $form, ArrayHash $values) {
+    return $this->multiUploadFormFactory->create(function (Form $form, ArrayHash $values) {
       foreach ($values->images as $image) {
         $name = strtolower($image->getSanitizedName());
 

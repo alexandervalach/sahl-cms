@@ -6,7 +6,7 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Forms\AlbumFormFactory;
-use App\Forms\ImagesAddFormFactory;
+use App\Forms\MultiUploadFormFactory;
 use App\Forms\ModalRemoveFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
@@ -42,8 +42,8 @@ class AlbumsPresenter extends BasePresenter
   /** @var AlbumFormFactory */
   private $albumFormFactory;
 
-  /** @var ImagesAddFormFactory */
-  private $imagesAddFormFactory;
+  /** @var MultiUploadFormFactory */
+  private $multiUploadFormFactory;
 
   /** @var ModalRemoveFormFactory */
   private $removeFormFactory;
@@ -56,7 +56,7 @@ class AlbumsPresenter extends BasePresenter
     ImagesRepository $imagesRepository,
     SeasonsTeamsRepository $seasonsTeamsRepository,
     AlbumFormFactory $albumFormFactory,
-    ImagesAddFormFactory $imagesAddFormFactory,
+    MultiUploadFormFactory $multiUploadFormFactory,
     ModalRemoveFormFactory $removeFormFactory
   )
   {
@@ -64,7 +64,7 @@ class AlbumsPresenter extends BasePresenter
     $this->albumsRepository = $albumsRepository;
     $this->imagesRepository = $imagesRepository;
     $this->albumFormFactory = $albumFormFactory;
-    $this->imagesAddFormFactory = $imagesAddFormFactory;
+    $this->multiUploadFormFactory = $multiUploadFormFactory;
     $this->removeFormFactory = $removeFormFactory;
   }
 
@@ -178,7 +178,7 @@ class AlbumsPresenter extends BasePresenter
    */
   protected function createComponentAddImageForm(): Form
   {
-    return $this->imagesAddFormFactory->create(function (Form $form, ArrayHash $values) {
+    return $this->multiUploadFormFactory->create(function (Form $form, ArrayHash $values) {
       foreach ($values->images as $image) {
         $name = strtolower($image->getSanitizedName());
         $data = array(

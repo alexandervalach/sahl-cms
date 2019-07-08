@@ -19,7 +19,7 @@ class FormFactory
    * Creates and returns form with default settings
    * @return Form
    */
-  public function create()
+  public function create(): Form
   {
     $form = new Form;
     return $form;

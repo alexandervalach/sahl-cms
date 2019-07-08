@@ -6,11 +6,20 @@ namespace App\Model;
 
 use Nette\Database\ResultSet;
 use Nette\Database\Table\ActiveRow;
-use Nette\Database\Row;
+use Nette\Database\Table\Selection;
+use Nette\Database\IRow;
 
 class TeamsRepository extends Repository
 {
   const NAME = 'name';
+
+  /**
+   * @return Nette\Database\Table\Selection
+   */
+  public function getAll(): Selection
+  {
+    return $this->findAll();
+  }
 
   /**
    * Loop trough all teams and store them in array.
@@ -30,6 +39,15 @@ class TeamsRepository extends Repository
   public function getPlayers(int $id): array
   {
     return ($this->findById($id))->related('players')->fetchPairs(self::ID, self::NAME);
+  }
+
+  /**
+   * @param string $name
+   * @return IRow|null
+   */
+  public function findByName(string $name)
+  {
+    return $this->getAll()->where(self::NAME, $name);
   }
 
   /**
@@ -53,6 +71,10 @@ class TeamsRepository extends Repository
     }
   }
 
+  /**
+   * @param int $playerId
+   * @return IRow|null
+   */
   public function getForPlayer(int $playerId)
   {
     $con = $this->getConnection();

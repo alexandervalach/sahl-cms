@@ -62,3 +62,4 @@ services:
 	- App\Forms\TableTypeAddFormFactory
 	- App\Forms\TableTypeEditFormFactory
 	- App\Forms\TeamFormFactory
+	- App\Forms\UploadFormFactory

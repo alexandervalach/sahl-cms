@@ -10,10 +10,10 @@ use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 
 /**
- * Add multi upload form factory
+ * Add upload form factory
  * @package App\Forms
  */
-class MultiUploadFormFactory
+class UploadFormFactory
 {
   use SmartObject;
 
@@ -36,7 +36,7 @@ class MultiUploadFormFactory
   public function create(callable $onSuccess): Form
   {
     $form = $this->formFactory->create();
-    $form->addMultiUpload('images', 'Obrázky*')
+    $form->addUpload('image', 'Obrázok*')
           ->setRequired()
           ->addRule(Form::IMAGE);
     $form->addSubmit('upload', 'Nahrať');

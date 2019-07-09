@@ -5,6 +5,7 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Forms\PlayerAddFormFactory;
 use App\Forms\TeamFormFactory;
+use App\Forms\UploadFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
@@ -50,6 +51,9 @@ class TeamsPresenter extends BasePresenter
   /** @var PlayerAddFactory */
   private $playerAddFormFactory;
 
+  /** @var UploadFormFactory */
+  private $uploadFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
@@ -60,7 +64,8 @@ class TeamsPresenter extends BasePresenter
     PlayerTypesRepository $playerTypesRepository,
     TeamFormFactory $teamFormFactory,
     PlayerAddFormFactory $playerAddFormFactory,
-    PlayersSeasonsTeamsRepository $playersSeasonsTeamsRepository
+    PlayersSeasonsTeamsRepository $playersSeasonsTeamsRepository,
+    UploadFormFactory $uploadFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
@@ -70,6 +75,7 @@ class TeamsPresenter extends BasePresenter
     $this->teamFormFactory = $teamFormFactory;
     $this->playerAddFormFactory = $playerAddFormFactory;
     $this->playersSeasonsTeamsRepository = $playersSeasonsTeamsRepository;
+    $this->uploadFormFactory = $uploadFormFactory;
   }
 
   /**
@@ -88,7 +94,10 @@ class TeamsPresenter extends BasePresenter
     }
   }
 
-  public function renderView($id): void
+  /**
+   * @param int $id
+   */
+  public function renderView(int $id): void
   {
     $this->template->players = $this->playersRepository->getForTeam($id);
     $this->template->goalies = []; // $this->playersRepository->getArchived()->where('team_id', $id);
@@ -97,6 +106,9 @@ class TeamsPresenter extends BasePresenter
     $this->template->j = 0;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionArchAll(int $id): void
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
@@ -112,12 +124,18 @@ class TeamsPresenter extends BasePresenter
     $this->teams = ArrayHash::from($data);
   }
 
+  /**
+   * @param int $id
+   */
   public function renderArchAll(int $id): void
   {
     $this->template->teams = $this->teams;
     $this->template->archive = $this->seasonRow;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionArchView(int $id): void
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
@@ -126,25 +144,35 @@ class TeamsPresenter extends BasePresenter
     }
   }
 
-  public function renderArchView($id): void
+  public function renderArchView(int $id): void
   {
     // $this->template->teams = $this->teamsRepository->getAll($id);
     $this->template->season = $this->seasonRow;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentUploadForm(): Form
   {
-    $form = new Form;
-    $form->addUpload('image', 'Nahrajte obrázok');
-    $form->addSubmit('upload', 'Nastaviť obrázok');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', 'btn btn-large btn-warning')
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_UPLOAD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->uploadFormFactory->create(function (Form $form, ArrayHash $values) {
+      $img = $values->image;
+
+      if ($img->isOk() && $img->isImage()) {
+        $imgName = $img->getSanitizedName();
+        $img->move($this->imageDir . '/' . $imgName);
+        $this->teamRow->update( array('logo' => $imgName) );
+        $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);
+      } else {
+        $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
+      }
+      $this->redirect('view', $this->teamRow->id);
+    });
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentTeamForm(): Form
   {
     return $this->teamFormFactory->create(function (Form $form, ArrayHash $values) {
@@ -152,6 +180,9 @@ class TeamsPresenter extends BasePresenter
     });
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentAddPlayerForm(): Form
   {
     return $this->playerAddFormFactory->create(function (Form $form, ArrayHash $values) {
@@ -188,22 +219,6 @@ class TeamsPresenter extends BasePresenter
       )
     );
 
-    $this->redirect('view', $this->teamRow->id);
-  }
-
-  public function submittedUploadForm(Form $form, ArrayHash $values): void
-  {
-    $img = $values->image;
-
-    if ($img->isOk() AND $img->isImage()) {
-      $imgName = $img->getSanitizedName();
-      $img->move($this->imageDir . '/' . $imgName);
-      $data = array('logo' => $imgName);
-      $this->teamRow->update($data);
-      $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);
-    } else {
-      $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
-    }
     $this->redirect('view', $this->teamRow->id);
   }
 

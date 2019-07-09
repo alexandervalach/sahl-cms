@@ -3,21 +3,38 @@
 namespace App\Model;
 
 use Nette\Database\Table\Selection;
+use Nette\Database\IRow;
 
-class SeasonsTeamsRepository extends Repository {
-
+class SeasonsTeamsRepository extends Repository
+{
   const SEASON_ID = 'season_id';
   const TEAM_ID = 'team_id';
 
   protected $tableName = 'seasons_teams';
 
-  public function getTeam($teamId, $seasonId = null)
+  /**
+   * @param int $teamId
+   * @param int|null $seasonId
+   */
+  public function getTeam(int $teamId, $seasonId = null)
   {
     return $this->getForSeason($seasonId)->where(self::TEAM_ID, $teamId)->fetch();
   }
 
   /**
-   * @param $seasonId
+   * @param int $teamId
+   * @param int|null $seasonId
+   * @return IRow|null
+   */
+  public function getSeasonTeam(int $teamId, $seasonId = null)
+  {
+    return $this->getForSeason($seasonId)
+      ->where(self::TEAM_ID, $teamId)
+      ->select(self::ID)->fetch();
+  }
+
+  /**
+   * @param int|null $seasonId
    * @return Selection
    */
   public function getForSeason($seasonId = null): Selection

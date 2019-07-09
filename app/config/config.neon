@@ -55,6 +55,7 @@ services:
 	- App\Forms\FormFactory
 	- App\Forms\MultiUploadFormFactory
 	- App\Forms\ModalRemoveFormFactory
+	- App\Forms\PlayerAddFormFactory
 	- App\Forms\PostFormFactory
 	- App\Forms\RemoveFormFactory
 	- App\Forms\SignInFormFactory

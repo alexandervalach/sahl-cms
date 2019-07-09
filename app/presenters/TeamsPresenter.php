@@ -3,10 +3,12 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\PlayerAddFormFactory;
 use App\Forms\TeamFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
+use App\Model\PlayersSeasonsTeamsRepository;
 use App\Model\PlayerTypesRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -36,11 +38,17 @@ class TeamsPresenter extends BasePresenter
   /** @var PlayersRepository */
   private $playersRepository;
 
+  /** @var PlayersSeasonsTeamsRepository */
+  private $playersSeasonsTeamsRepository;
+
   /** @var PlayerTypesRepository */
   private $playerTypesRepository;
 
   /** @var TeamFormFactory */
   private $teamFormFactory;
+
+  /** @var PlayerAddFactory */
+  private $playerAddFormFactory;
 
   public function __construct(
     LinksRepository $linksRepository,
@@ -50,7 +58,9 @@ class TeamsPresenter extends BasePresenter
     GroupsRepository $groupsRepository,
     PlayersRepository $playersRepository,
     PlayerTypesRepository $playerTypesRepository,
-    TeamFormFactory $teamFormFactory
+    TeamFormFactory $teamFormFactory,
+    PlayerAddFormFactory $playerAddFormFactory,
+    PlayersSeasonsTeamsRepository $playersSeasonsTeamsRepository
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
@@ -58,6 +68,8 @@ class TeamsPresenter extends BasePresenter
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
     $this->teamFormFactory = $teamFormFactory;
+    $this->playerAddFormFactory = $playerAddFormFactory;
+    $this->playersSeasonsTeamsRepository = $playersSeasonsTeamsRepository;
   }
 
   /**
@@ -142,52 +154,40 @@ class TeamsPresenter extends BasePresenter
 
   protected function createComponentAddPlayerForm(): Form
   {
-    $types = $this->playerTypesRepository->getTypes();
-    $form = new Form;
-    $form->addText('name', 'Meno a priezvisko')
-          ->setAttribute('placeholder', 'Zdeno Chára')
-          ->addRule(Form::FILLED, 'Opa, ešte nie je vyplnené Meno a priezvisko');
-    $form->addText('number', 'Číslo')
-          ->setAttribute('placeholder', 14);
-    $form->addSelect('player_type_id', 'Typ hráča', $types);
-    $form->addCheckbox('is_transfer', ' Prestupový hráč');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', 'btn btn-large btn-warning')
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_PLAYER_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->playerAddFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->submittedAddPlayerForm($form, $values);
+    });
   }
 
+  /**
+   * Add new player and
+   * @param Nette\Application\UI\Form;
+   * @param Nette\Utils\ArrayHash;
+   */
   public function submittedAddPlayerForm(Form $form, ArrayHash $values): void
   {
-    $playerId = $this->playersRepository->findByValue('name', $values->name)
-      ->where('number', $values->number)->fetch();
+    $player = $this->playersRepository->getPlayer($values->name, $values->number);
 
-    if (!$playerId) {
-      $playerId = $this->playersRepository->insert(
-        array(
-          'name' => $values->name,
-          'number' => $values->number
-        )
+    if (!$player) {
+      $player = $this->playersRepository->insert(
+        array( 'name' => $values->name, 'number' => $values->number )
       );
+      $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+    } else {
+      $this->flashMessage(self::ITEM_ALREADY_EXISTS, self::WARNING);
     }
 
-    $seasonTeam = $this->seasonsTeamsRepository
-      ->findByValue('team_id', $this->teamRow->id)
-      ->where('season_id', null)->select('id')->fetch();
+    $seasonTeam = $this->seasonsTeamsRepository->getSeasonTeam($this->teamRow->id);
 
     $this->playersSeasonsTeamsRepository->insert(
       array(
         'seasons_teams_id' => $seasonTeam->id,
-        'player_id' => $playerId,
+        'player_id' => $player->id,
         'is_transfer' => $values->is_transfer,
         'player_type_id' => $values->player_type_id
       )
     );
 
-    $this->flashMessage('Hráč bol pridaný', self::SUCCESS);
     $this->redirect('view', $this->teamRow->id);
   }
 

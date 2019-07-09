@@ -5,9 +5,13 @@ declare(strict_types=1);
 namespace App\Model;
 
 use Nette\Database\ResultSet;
+use Nette\Database\IRow;
 
 class PlayersRepository extends Repository
 {
+  const NUMBER = 'number';
+  const NAME = 'name';
+
   public function getNonEmptyPlayers(): array
   {
     return $this->select('id, name, number')->where('number != ?', 0)
@@ -15,7 +19,12 @@ class PlayersRepository extends Repository
       ->fetchPairs('id', 'name');
   }
 
-  public function getForTeam($teamId, $seasonId = null): ResultSet
+  /**
+   * @param int $teamId
+   * @param int|null $seasonId
+   * @return ResultSet
+   */
+  public function getForTeam(int $teamId, $seasonId = null): ResultSet
   {
     $con = $this->getConnection();
 
@@ -47,6 +56,10 @@ class PlayersRepository extends Repository
       AND p.is_present = ?', $seasonId, $teamId, 1, 1);
   }
 
+  /**
+   * @param int|null $seasonId
+   * @return ResultSet
+   */
   public function getForSeason($seasonId = null): ResultSet
   {
     $con = $this->getConnection();
@@ -80,4 +93,15 @@ class PlayersRepository extends Repository
       AND t.is_present = ?', $seasonId, ' ', '%voľné miesto%', 1, 1);
   }
 
+  /**
+   * @param string $name
+   * @param int $number
+   * @return IRow|null
+   */
+  public function getPlayer(string $name, int $number)
+  {
+    return $this->findByValue(self::NAME, $name)
+      ->where(self::NUMBER, $number)
+      ->select(self::ID)->fetch();
+  }
 }

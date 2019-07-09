@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\RoundFormFactory;
 use App\Model\FightsRepository;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
@@ -33,18 +34,23 @@ class RoundsPresenter extends BasePresenter
   /** @var RoundsRepository */
   private $roundsRepository;
 
+  /** @var RoundFormFactory */
+  private $roundFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     RoundsRepository $roundsRepository,
     FightsRepository $fightsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository
+    SeasonsTeamsRepository $seasonsTeamsRepository,
+    RoundFormFactory $roundFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->roundsRepository = $roundsRepository;
     $this->fightsRepository = $fightsRepository;
+    $this->roundFormFactory = $roundFormFactory;
   }
 
   public function renderAll(): void
@@ -52,6 +58,9 @@ class RoundsPresenter extends BasePresenter
 		$this->template->rounds = $this->roundsRepository->getArchived();
 	}
 
+  /**
+   * @param int $id
+   */
   public function actionView(int $id): void
   {
 		$this->roundRow = $this->roundsRepository->findById($id);
@@ -107,7 +116,7 @@ class RoundsPresenter extends BasePresenter
 
     if ($this->user->loggedIn)
     {
-      $this->getComponent('roundForm')->setDefaults($this->roundRow);
+      $this['roundForm']->setDefaults($this->roundRow);
 		}
   }
 
@@ -117,7 +126,7 @@ class RoundsPresenter extends BasePresenter
 		$this->template->round = $this->roundRow;
 	}
 
-  public function actionArchAll($id): void
+  public function actionArchAll(int $id): void
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
 
@@ -127,7 +136,7 @@ class RoundsPresenter extends BasePresenter
     }
 	}
 
-  public function renderArchAll($id): void
+  public function renderArchAll(int $id): void
   {
 		$this->template->rounds = $this->roundsRepository->getArchived($id);
 		$this->template->season = $this->seasonRow;
@@ -146,7 +155,7 @@ class RoundsPresenter extends BasePresenter
     }
 	}
 
-  public function renderArchView($archiveId, $id): void
+  public function renderArchView(int $archiveId, int $id): void
   {
     $i = 0;
     $fightData = array();
@@ -177,19 +186,23 @@ class RoundsPresenter extends BasePresenter
     $this->template->archive = $this->archRow;
 	}
 
+  /**
+   * @return Form
+   */
   protected function createComponentRoundForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', '1.kolo')
-          ->addRule(Form::FILLED, 'Ešte treba vyplniť názov kola');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, 'submittedRoundForm'];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->roundFormFactory->create(function (Form $form, ArrayHash $values) {
+      $id = $this->getParameter('id');
+
+      if ($id) {
+        $this->roundRow->update($values);
+      } else {
+        $this->roundRow = $this->roundsRepository->insert($values);
+      }
+
+      $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('view', $this->roundRow->id);
+    });
 	}
 
   protected function createComponentAddFightForm(): Form
@@ -234,16 +247,6 @@ class RoundsPresenter extends BasePresenter
 
   public function submittedRoundForm(Form $form, ArrayHash $values): void
   {
-    $id = $this->getParameter('id');
-
-    if ($id && $this->roundRow) {
-      $this->roundRow->update($values);
-    } else {
-      $this->roundRow = $this->roundsRepository->insert($values);
-    }
-
-    $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
-    $this->redirect('view', $this->roundRow->id);
 	}
 
   public function submittedRemoveForm(): void

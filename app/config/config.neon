@@ -58,6 +58,7 @@ services:
 	- App\Forms\PlayerAddFormFactory
 	- App\Forms\PostFormFactory
 	- App\Forms\RemoveFormFactory
+	- App\Forms\RoundFormFactory
 	- App\Forms\SignInFormFactory
 	- App\Forms\TableTypeAddFormFactory
 	- App\Forms\TableTypeEditFormFactory

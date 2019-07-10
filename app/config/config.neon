@@ -52,6 +52,7 @@ services:
 	- App\Forms\AlbumFormFactory
 	- App\Forms\EventAddFormFactory
 	- App\Forms\EventEditFormFactory
+	- App\Forms\FightAddFormFactory
 	- App\Forms\FormFactory
 	- App\Forms\MultiUploadFormFactory
 	- App\Forms\ModalRemoveFormFactory

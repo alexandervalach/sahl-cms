@@ -10,6 +10,9 @@ class TableTypesRepository extends Repository
 {
   protected $tableName = 'table_types';
 
+  /**
+   * @return array
+   */
   public function getTableTypes(): array
   {
     return $this->getAll()->fetchPairs(self::ID, self::LABEL);

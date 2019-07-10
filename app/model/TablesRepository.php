@@ -4,46 +4,36 @@ declare(strict_types = 1);
 
 namespace App\Model;
 
+use Nette\Utils\ArrayHash;
+use Nette\Database\IRow;
 use Nette\Database\Table\Selection;
 
 class TablesRepository extends Repository
 {
+  const TABLE_TYPE_ID = 'table_type_id';
+
+  /**
+   * @param int|null $seasonId
+   * @return Selection
+   */
   public function getForSeason($seasonId = null): Selection
   {
-    return $this->getAll()->where(self::SEASON_ID, $seasonId)->where(self::IS_VISIBLE, 1);
+    return $this->getAll()
+      ->where(self::SEASON_ID, $seasonId)
+      ->where(self::IS_VISIBLE, 1);
   }
 
-  public function getTableStats($type)
+  /**
+   * @param int $tableTypeId
+   * @param int|null $seasonId
+   * @return IRow|null
+   */
+  public function getByTableTypeId(int $tableTypeId, $seasonId = null)
   {
-    $rows = $this->getArchived()->where('type', $type)->order('points DESC')->order('score1 - score2 DESC');
-
-    if (!$rows) {
-      return null;
-    }
-
-    $result = array();
-
-    foreach ($rows as $row) {
-      $result[] = $row;
-    }
-
-    return $result;
+    return $this->getAll()
+      ->where(self::TABLE_TYPE_ID, $tableTypeId)
+      ->where(self::SEASON_ID, $seasonId)
+      ->select(self::ID)
+      ->fetch();
   }
-
-  public function incTabVal($teamId, $type, $columnName, $value)
-  {
-    $conn = $this->getConnection();
-    $tableRow = $conn->query("UPDATE tables SET ? = ? + ?
-      WHERE (team_id = ?) AND (season_id IS NULL) AND (type = ?)",
-      $columnName, $columnName, $value, $teamId, $type);
-    return $tableRow;
-  }
-
-  public function updateFights($teamId, $type)
-  {
-    $conn = $this->getConnection();
-    $tableRow = $conn->query("UPDATE `tables` SET `counter` = `win` + `tram` + `lost` WHERE (`team_id` = ?) AND (`archive_id` IS NULL) AND (`type` = ?)", $teamId, $type);
-    return $tableRow;
-  }
-
 }

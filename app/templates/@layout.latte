@@ -1,62 +1,56 @@
 {**
- * @param string   $basePath web base path
- * @param array    $flashes  flash messages
+* @param string   $basePath web base path
+* @param array    $flashes  flash messages
 *}
 
 <!DOCTYPE html>
 <html lang="sk">
-    <head>
-        <meta http-equiv="content-type" content="text/html" charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>{ifset #title}{include title|striptags} | {/ifset}Spišská amatérska hokejová liga</title>
-        <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style.css?v=1.1.3" type="text/css">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-    </head>
-    <body>
-        {include 'navigation.latte'}
-
-        <div id="main" class="container-fluid">
-
-            {include 'teams.latte'}
-
-            <main class="col-md-11 col-lg-8">
-                {foreach $flashes as $flash}
-                    <div class="alert alert-{$flash->type}">
-                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                        {if $flash->type == 'success'}
-                            {var $state = "ok"}
-                        {elseif $flash->type == 'danger'}
-                            {var $state = "remove"}
-                        {elseif $flash->type == 'warning'}
-                            {var $state = "warning-sign"}
-                        {/if}
-
-                        <span class="glyphicon glyphicon-{$state}"></span>&nbsp;
-                        {$flash->message}
-                    </div>
-                {/foreach}
-                {include content}
-            </main>
-
-            <div>
-              <button type="button" id="scroll-to-top">
-                <span class="sr-only">Späť na vrch stránky</span>
-                <span class="glyphicon glyphicon-menu-up"></span>
-              </button>
+  <head>
+    <meta http-equiv="content-type" content="text/html" charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Informačný systém pre fanúšikov Spišskej amatérskej hokejovej ligy">
+    <meta name="keywords" content="Hokej,Spiš,Spišská Nová Ves,Amatérska hokejová liga">
+    <title>{ifset #title}{include title|striptags} | {/ifset}Spišská amatérska hokejová liga</title>
+    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style.css?v=1.1.3" type="text/css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+  </head>
+  <body>
+    {include 'navigation.latte'}
+    <div id="main" class="container-fluid">
+      {include 'teams.latte'}
+      <main class="col-md-11 col-lg-8">
+          {foreach $flashes as $flash}
+            <div class="alert alert-{$flash->type}">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              {if $flash->type == 'success'}
+                {var $state = "ok"}
+              {elseif $flash->type == 'danger'}
+                {var $state = "remove"}
+              {elseif $flash->type == 'warning'}
+                {var $state = "warning-sign"}
+              {/if}
+              <span class="glyphicon glyphicon-{$state}"></span>&nbsp;
+              {$flash->message}
             </div>
-
-            {include 'sponsors.latte'}
-
-        </div>
-
-        {include 'footer.latte'}
-    </body>
+          {/foreach}
+          {include content}
+      </main>
+      <div>
+        <button type="button" id="scroll-to-top">
+          <span class="sr-only">Späť na vrch stránky</span>
+          <span class="glyphicon glyphicon-menu-up"></span>
+        </button>
+      </div>
+      {include 'sponsors.latte'}
+    </div>
+    {include 'footer.latte'}
+  </body>
 </html>
 
 {block scripts}
-    <script src="{$basePath}/js/main.js"></script>
-    <script src="{$basePath}/js/netteForms.js"></script>
+  <script src="{$basePath}/js/main.js"></script>
+  <script src="{$basePath}/js/netteForms.js"></script>
 {/block}

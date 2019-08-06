@@ -149,6 +149,9 @@ abstract class BasePresenter extends Presenter
     }
   }
 
+  /**
+   * Redirect user after form cancelation
+   */
   public function formCancelled(): void
   {
     $this->redirect('all');

@@ -13,7 +13,7 @@ use Nette\Forms\Controls\SubmitButton;
 /**
  * @package App\Forms
  */
-class TableTypeEditFormFactory
+class PlayerTypeEditFormFactory
 {
   use SmartObject;
 
@@ -29,7 +29,7 @@ class TableTypeEditFormFactory
   }
 
   /**
-   * Creates and renders table type edit form
+   * Creates and renders player type edit form
    * @param callable $onSave
    * @param callable $onCancel
    * @return Form
@@ -38,9 +38,9 @@ class TableTypeEditFormFactory
   {
     $form = $this->formFactory->create();
     $form->addText('label', 'Názov*')
-          ->setAttribute('placeholder', 'Play Off')
-          ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 255 znakov.', 255)
-          ->setRequired();
+        ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 255 znakov.', 255)
+        ->setRequired();
+    $form->addText('abbr', 'Skratka');
     $save = $form->addSubmit('save', 'Uložiť');
     $cancel = $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning');

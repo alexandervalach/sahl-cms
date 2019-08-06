@@ -58,6 +58,8 @@ services:
 	- App\Forms\MultiUploadFormFactory
 	- App\Forms\ModalRemoveFormFactory
 	- App\Forms\PlayerAddFormFactory
+	- App\Forms\PlayerTypeAddFormFactory
+	- App\Forms\PlayerTypeEditFormFactory
 	- App\Forms\PostFormFactory
 	- App\Forms\RemoveFormFactory
 	- App\Forms\RoundFormFactory

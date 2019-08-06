@@ -12,7 +12,7 @@ use Nette\Utils\ArrayHash;
 /**
  * @package App\Forms
  */
-class TableTypeAddFormFactory
+class PlayerTypeAddFormFactory
 {
   use SmartObject;
 
@@ -36,9 +36,9 @@ class TableTypeAddFormFactory
   {
     $form = $this->formFactory->create();
     $form->addText('label', 'Názov*')
-          ->setAttribute('placeholder', 'Play Off')
           ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 255 znakov.', 255)
           ->setRequired();
+    $form->addText('abbr', 'Skratka');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')

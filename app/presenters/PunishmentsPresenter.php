@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace App\Presenters;
 
@@ -13,6 +13,7 @@ use App\Model\PunishmentsRepository;
 use App\Model\SeasonsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
 
 class PunishmentsPresenter extends BasePresenter
 {
@@ -122,7 +123,7 @@ class PunishmentsPresenter extends BasePresenter
   {
     $players = $this->playersRepository->getNonEmptyPlayers();
     $form = new Form;
-    $form->addSelect('player_id', 'Hráč', $players);
+    $form->addSelect('player_id', 'Hráč*', $players);
     $form->addText('text', 'Dôvod')
           ->setAttribute('placeholder', 'Nešportové správanie');
     $form->addText('round', 'Stop na kolo')

@@ -60,6 +60,7 @@ services:
 	- App\Forms\PostFormFactory
 	- App\Forms\RemoveFormFactory
 	- App\Forms\RoundFormFactory
+	- App\Forms\SeasonFormFactory
 	- App\Forms\SignInFormFactory
 	- App\Forms\TableTypeAddFormFactory
 	- App\Forms\TableTypeEditFormFactory

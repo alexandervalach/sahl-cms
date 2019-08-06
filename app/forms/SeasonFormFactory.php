@@ -12,7 +12,7 @@ use Nette\Utils\ArrayHash;
 /**
  * @package App\Forms
  */
-class RoundFormFactory
+class SeasonFormFactory
 {
   use SmartObject;
 
@@ -28,7 +28,7 @@ class RoundFormFactory
   }
 
   /**
-   * Creates and renders sign in form
+   * Creates and renders season form
    * @param callable $onSuccess
    * @return Form
    */
@@ -36,8 +36,9 @@ class RoundFormFactory
   {
     $form = $this->formFactory->create();
     $form->addText('label', 'Názov*')
-          ->setAttribute('placeholder', '1.kolo')
-          ->setRequired();
+          ->setAttribute('placeholder', 'Archív 2018')
+          ->setRequired()
+          ->addRule(Form::MAX_LENGTH, 'Názov môže mať maximálne 255 znakov', 255);
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')

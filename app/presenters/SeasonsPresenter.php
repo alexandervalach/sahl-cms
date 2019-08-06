@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\SeasonFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -11,6 +12,7 @@ use App\Model\SeasonsTeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
 
 class SeasonsPresenter extends BasePresenter {
 
@@ -24,24 +26,31 @@ class SeasonsPresenter extends BasePresenter {
   /** @var SeasonsRepository */
   private $seasonsRepository;
 
+  /** @var SeasonFormFactory */
+  private $seasonFormFactory;
+
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     SeasonsRepository $seasonsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository
+    SeasonsTeamsRepository $seasonsTeamsRepository,
+    SeasonFormFactory $seasonFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->seasonsRepository = $seasonsRepository;
+    $this->seasonFormFactory = $seasonFormFactory;
   }
 
 
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->seasons = $this->seasonsRepository->getAll();
   }
 
-  public function actionView($id) {
+  public function actionView($id): void
+  {
     $this->seasonRow = $this->seasonsRepository->findById($id);
 
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
@@ -49,44 +58,34 @@ class SeasonsPresenter extends BasePresenter {
     }
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent(self::EDIT_FORM)->setDefaults($this->seasonRow);
+      $this['seasonForm']->setDefaults($this->seasonRow);
     }
   }
 
-  public function renderView($id) {
+  public function renderView($id): void
+  {
     $this->template->season = $this->seasonRow;
   }
 
-  protected function createComponentAddForm() {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', 'Archív 2018')
-          ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+  protected function createComponentSeasonForm(): Form
+  {
+    return $this->seasonFormFactory->create(function (Form $form, ArrayHash $values) {
+      $id = $this->getParameter('id');
+
+      if ($id) {
+        $this->seasonRow->update($values);
+        $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
+      } else {
+        $this->seasonsRepository->insert($values);
+        $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+      }
+
+      $this->redirect('all');
+    });
   }
 
-  protected function createComponentEditForm() {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', 'Archív 2018')
-          ->addRule(Form::FILLED, 'Opa, názov ešte nie je vyplnený.');
-    $form->addSubmit('edit', 'Upraviť')
-          ->setAttribute('class', self::BTN_SUCCESS);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  protected function createComponentArchiveForm() {
+  protected function createComponentArchiveForm(): Form
+  {
     $form = new Form;
     $form->addSubmit('archive', 'Archivovať')
           ->setAttribute('class', self::BTN_DEFAULT);
@@ -99,23 +98,13 @@ class SeasonsPresenter extends BasePresenter {
     return $form;
   }
 
-  public function submittedAddForm(Form $form, $values) {
-    $this->seasonsRepository->insert($values);
-    $this->flashMessage('Archív bol pridaný', self::SUCCESS);
+  public function submittedRemoveForm(): void
+  {
     $this->redirect('all');
   }
 
-  public function submittedEditForm(Form $form, $values) {
-    $this->seasonRow->update($values);
-    $this->flashMessage('Archív bol upravený', self::SUCCESS);
-    $this->redirect('view', $this->seasonRow->id);
-  }
-
-  public function submittedRemoveForm() {
-    $this->redirect('all');
-  }
-
-  public function submittedArchiveForm() {
+  public function submittedArchiveForm(): void
+  {
     /*
     $team_id = array();
     $player_id = array();

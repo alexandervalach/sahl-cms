@@ -163,10 +163,10 @@ class PostsPresenter extends BasePresenter
     $images = $this->postsRepository->getImages($this->postRow);
 
     foreach ($images as $image) {
-      $this->postImagesRepository->remove($image);
+      $this->postImagesRepository->remove($image->id);
     }
 
-    $this->postsRepository->remove($this->postRow);
+    $this->postsRepository->remove($this->postRow->id);
     $this->flashMessage('Príspevok bol odstránený', self::SUCCESS);
     $this->redirect('all');
   }

@@ -51,8 +51,8 @@ abstract class BasePresenter extends Presenter
   const ITEM_NOT_FOUND = 'Item not found.';
   const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené.';
   const ITEM_ALREADY_EXISTS = 'Záznam už existuje.';
-  const ITEM_ADDED_SUCCESSFULLY = 'Položka bola úspešne pridaná.';
-  const ITEM_REMOVED_SUCCESSFULLY = 'Položka bola úspešne odstránená.';
+  const ITEM_ADDED_SUCCESSFULLY = 'Položka bola pridaná.';
+  const ITEM_REMOVED_SUCCESSFULLY = 'Položka bola odstránená.';
 
   /** @var LinksRepository */
   protected $linksRepository;

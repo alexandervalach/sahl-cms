@@ -14,6 +14,8 @@ use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\RoundsRepository;
 use App\Model\SeasonsTeamsRepository;
+use App\Model\TablesRepository;
+use App\Model\TableEntriesRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -36,6 +38,12 @@ class RoundsPresenter extends BasePresenter
   /** @var RoundsRepository */
   private $roundsRepository;
 
+  /** @var TablesRepository */
+  private $tablesRepository;
+
+  /** @var TableEntriesRepository */
+  private $tableEntriesRepository;
+
   /** @var RoundFormFactory */
   private $roundFormFactory;
 
@@ -52,6 +60,8 @@ class RoundsPresenter extends BasePresenter
     RoundsRepository $roundsRepository,
     FightsRepository $fightsRepository,
     SeasonsTeamsRepository $seasonsTeamsRepository,
+    TablesRepository $tablesRepository,
+    TableEntriesRepository $tableEntriesRepository,
     RoundFormFactory $roundFormFactory,
     FightAddFormFactory $fightAddFormFactory,
     ModalRemoveFormFactory $modalRemoveFormFactory
@@ -59,6 +69,8 @@ class RoundsPresenter extends BasePresenter
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->roundsRepository = $roundsRepository;
     $this->fightsRepository = $fightsRepository;
+    $this->tablesRepository = $tablesRepository;
+    $this->tableEntriesRepository = $tableEntriesRepository;
     $this->roundFormFactory = $roundFormFactory;
     $this->fightAddFormFactory = $fightAddFormFactory;
     $this->modalRemoveFormFactory = $modalRemoveFormFactory;

@@ -50,6 +50,7 @@ services:
 
 	# Form factories
 	- App\Forms\AlbumFormFactory
+	- App\Forms\ArchiveFormFactory
 	- App\Forms\EventAddFormFactory
 	- App\Forms\EventEditFormFactory
 	- App\Forms\FightAddFormFactory

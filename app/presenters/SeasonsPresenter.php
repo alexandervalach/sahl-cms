@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\ArchiveFormFactory;
 use App\Forms\SeasonFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
@@ -14,17 +15,16 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
-class SeasonsPresenter extends BasePresenter {
-
-  const ARCHIVE_NOT_FOUND = 'Season not found';
-  const ARCHIVE_FORM = 'archiveForm';
-  const SUBMITTED_ARCHIVE_FORM = 'submittedArchiveForm';
-
+class SeasonsPresenter extends BasePresenter
+{
   /** @var ActiveRow */
   private $seasonRow;
 
   /** @var SeasonsRepository */
   private $seasonsRepository;
+
+  /** @var ArchiveFormFactory */
+  private $archiveFormFactory;
 
   /** @var SeasonFormFactory */
   private $seasonFormFactory;
@@ -35,26 +35,33 @@ class SeasonsPresenter extends BasePresenter {
     TeamsRepository $teamsRepository,
     SeasonsRepository $seasonsRepository,
     SeasonsTeamsRepository $seasonsTeamsRepository,
+    ArchiveFormFactory $archiveFormFactory,
     SeasonFormFactory $seasonFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
     $this->seasonsRepository = $seasonsRepository;
+    $this->archiveFormFactory = $archiveFormFactory;
     $this->seasonFormFactory = $seasonFormFactory;
   }
 
-
+  /**
+   * Prepare data for season render
+   */
   public function renderAll(): void
   {
     $this->template->seasons = $this->seasonsRepository->getAll();
   }
 
-  public function actionView($id): void
+  /**
+   * @param int $id
+   */
+  public function actionView(int $id): void
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
 
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
-      throw new BadRequestException(self::ARCHIVE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     if ($this->user->isLoggedIn()) {
@@ -62,11 +69,18 @@ class SeasonsPresenter extends BasePresenter {
     }
   }
 
-  public function renderView($id): void
+  /**
+   * @param int $id
+   */
+  public function renderView(int $id): void
   {
     $this->template->season = $this->seasonRow;
   }
 
+  /**
+   * Renders season form
+   * @return Form
+   */
   protected function createComponentSeasonForm(): Form
   {
     return $this->seasonFormFactory->create(function (Form $form, ArrayHash $values) {
@@ -84,25 +98,27 @@ class SeasonsPresenter extends BasePresenter {
     });
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentArchiveForm(): Form
   {
-    $form = new Form;
-    $form->addSubmit('archive', 'Archivovať')
-          ->setAttribute('class', self::BTN_DEFAULT);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, self::SUBMITTED_ARCHIVE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->archiveFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->submittedArchiveForm();
+    });
   }
 
+  /**
+   * Submitted remove form
+   */
   public function submittedRemoveForm(): void
   {
     $this->redirect('all');
   }
 
+  /**
+   * Submitted remove form
+   */
   public function submittedArchiveForm(): void
   {
     /*

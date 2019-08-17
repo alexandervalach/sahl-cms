@@ -62,12 +62,13 @@ class TeamsRepository extends Repository
   }
 
   /**
+   * Returns single row with given name
    * @param string $name
    * @return IRow|null
    */
   public function findByName(string $name)
   {
-    return $this->findAll()->where(self::NAME, $name);
+    return $this->findAll()->where(self::NAME, $name)->fetch();
   }
 
   /*

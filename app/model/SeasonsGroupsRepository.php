@@ -41,7 +41,7 @@ class SeasonsGroupsRepository extends Repository
    */
   public function getForSeason($seasonId = null): Selection
   {
-    return $this->getAll()->where(self::SEASON_ID, $seasonId);
+    return $this->findAll()->where(self::SEASON_ID, $seasonId);
   }
 
 }

@@ -21,41 +21,28 @@ use Nette\Utils\ArrayHash;
 abstract class BasePresenter extends Presenter
 {
   /* Defined Constants */
-  const ADD_FORM = 'addForm';
   const EDIT_FORM = 'editForm';
-  const REMOVE_FORM = 'removeForm';
-  const UPLOAD_FORM = 'uploadForm';
   const SUBMITTED_ADD_FORM = 'submittedAddForm';
   const SUBMITTED_EDIT_FORM = 'submittedEditForm';
   const SUBMITTED_REMOVE_FORM = 'submittedRemoveForm';
-  const SUBMITTED_UPLOAD_FORM = 'submittedUploadForm';
-  const SUBMITTED_ADD_IMAGE_FORM = 'submittedAddImageForm';
   const SUBMITTED_RESET_FORM = 'submittedResetForm';
   const FORM_CANCELLED = 'formCancelled';
   const BTN_WARNING = 'btn btn-large btn-warning';
   const BTN_DANGER = 'btn btn-large btn-danger';
   const BTN_SUCCESS = 'btn btn-large btn-success';
-  const BTN_PRIMARY = 'btn btn-large btn-primary';
-  const BTN_INFO = 'btn btn-large btn-info';
-  const BTN_DEFAULT = 'btn btn-large btn-default';
   const SUCCESS = 'success';
   const DANGER = 'danger';
   const WARNING = 'warning';
-  const GOALIE = 'Brankár';
   const IMAGE_FOLDER = 'images';
   const DEFAULT_IMAGE = 'sahl.png';
   const CSRF_TOKEN_EXPIRED = 'Platnosť formulára vypršala. Odošlite ho, prosím, znovu.';
-  const IMG_NOT_FOUND = 'Image not found.';
-  const PLAYER_NOT_FOUND = 'Player not found.';
-  const ROUND_NOT_FOUND = 'Round not found.';
-  const SEASON_NOT_FOUND = 'Season not found.';
-  const RULE_NOT_FOUND = 'Rule not found.';
   const ITEM_NOT_FOUND = 'Item not found.';
   const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené.';
   const ITEM_ALREADY_EXISTS = 'Záznam už existuje.';
   const ITEM_UPDATED = self::CHANGES_SAVED_SUCCESSFULLY;
   const ITEM_ADDED_SUCCESSFULLY = 'Položka bola pridaná.';
   const ITEM_REMOVED_SUCCESSFULLY = 'Položka bola odstránená.';
+  const ITEM_NOT_ADDED = 'Položka nebola pridaná';
 
   /** @var LinksRepository */
   protected $linksRepository;

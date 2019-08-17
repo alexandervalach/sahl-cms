@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Forms\ModalRemoveFormFactory;
 use App\Forms\PlayerAddFormFactory;
 use App\Forms\TeamFormFactory;
 use App\Forms\UploadFormFactory;
@@ -48,6 +48,11 @@ class TeamsPresenter extends BasePresenter
   /** @var UploadFormFactory */
   private $uploadFormFactory;
 
+  /**
+   * @var ModalRemoveFormFactory
+   */
+  private $removeFormFactory;
+
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -60,7 +65,8 @@ class TeamsPresenter extends BasePresenter
       PlayerAddFormFactory $playerAddFormFactory,
       PlayersSeasonsGroupsTeamsRepository $playersSeasonsTeamsRepository,
       UploadFormFactory $uploadFormFactory,
-      SeasonsGroupsRepository $seasonsGroupsRepository
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      ModalRemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
@@ -72,13 +78,12 @@ class TeamsPresenter extends BasePresenter
     $this->playerAddFormFactory = $playerAddFormFactory;
     $this->playersSeasonsTeamsRepository = $playersSeasonsTeamsRepository;
     $this->uploadFormFactory = $uploadFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
   }
 
-  public function actionAll(): void
-  {
-
-  }
-
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->teams = $this->teams;
@@ -86,12 +91,13 @@ class TeamsPresenter extends BasePresenter
 
   /**
    * @param int $id
+   * @throws BadRequestException
    */
   public function actionView(int $id): void
   {
     $this->teamRow = $this->teamsRepository->findById($id);
 
-    if (!$this->teamRow || !$this->teamRow->is_present) {
+    if (!$this->teamRow) {
       throw new BadRequetsException(self::ITEM_NOT_FOUND);
     }
 
@@ -150,6 +156,9 @@ class TeamsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderArchView(int $id): void
   {
     // $this->template->teams = $this->teamsRepository->getAll($id);
@@ -196,10 +205,20 @@ class TeamsPresenter extends BasePresenter
     });
   }
 
+  protected function createComponentRemoveForm(): Form
+  {
+    return $this->removeFormFactory->create( function () {
+      $seasonTeam = $this->seasonsTeamsRepository->getTeam($this->teamRow->id);
+      $this->seasonsTeamsRepository->remove($seasonTeam->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    });
+  }
+
   /**
    * Add new player and
-   * @param Nette\Application\UI\Form;
-   * @param Nette\Utils\ArrayHash;
+   * @param Form $form
+   * @param ArrayHash $values
    */
   public function submittedAddPlayerForm(Form $form, ArrayHash $values): void
   {
@@ -228,18 +247,10 @@ class TeamsPresenter extends BasePresenter
     $this->redirect('view', $this->teamRow->id);
   }
 
-  public function submittedRemoveForm(): void
-  {
-    $seasonTeam = $this->seasonsTeamsRepository->getTeam($this->teamRow->id);
-    $this->seasonsTeamsRepository->remove($seasonTeam->id);
-    $this->flashMessage('Tím bol odstránený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
   /**
    * Saves values to database and created new table entry for team in current season
    * @param Form $form
-   * @param AraryHash $values
+   * @param ArrayHash $values
    */
   public function submittedTeamForm(Form $form, ArrayHash $values): void
   {
@@ -259,15 +270,22 @@ class TeamsPresenter extends BasePresenter
       $this->teamRow = $this->teamsRepository->insert( array('name' => $values->name) );
     }
 
-    $this->seasonsTeamsRepository->insert(
-      array(
-        'team_id' => $this->teamRow->id,
-        'group_id' => $values->group_id
-      )
-    );
+    $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($values->group_id);
 
+    if ($seasonGroup && $this->teamRow) {
+      $this->seasonsGroupsTeamsRepository->insert(
+        array(
+          'season_group_id' => $seasonGroup->id,
+          'team_id' => $this->teamRow->id
+        )
+      );
+      $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+    } else {
+      $this->flashMessage(self::ITEM_NOT_ADDED, self::DANGER);
+    }
+
+    // TODO: Insert also team entry to tables
     // $this->tablesRepository->insert(array('team_id' => $team));
-    $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
     $this->redirect('all');
   }
 

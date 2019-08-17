@@ -96,7 +96,7 @@ class RoundsPresenter extends BasePresenter
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $fights = $this->roundRow->related('fights')->where('is_present', 1)->order('id DESC');
+    $fights = $this->fightsRepository->getForRound($this->roundRow->id);
     $data = [];
 
     foreach ($fights as $fight) {
@@ -269,7 +269,7 @@ class RoundsPresenter extends BasePresenter
       $this->updateTablePoints($table->id, $values);
       $this->updateScore($table->id, $values);
 
-      // Preprocessing data
+      // Processing data
       $values->offsetSet('round_id', $this->roundRow->id);
       $values->offsetUnset('table_type_id');
       $this->fightsRepository->insert($values);

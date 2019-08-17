@@ -56,6 +56,8 @@ services:
 	- App\Forms\EventEditFormFactory
 	- App\Forms\FightAddFormFactory
 	- App\Forms\FormFactory
+	- App\Forms\LinkAddFormFactory
+	- App\Forms\LinkEditFormFactory
 	- App\Forms\MultiUploadFormFactory
 	- App\Forms\ModalRemoveFormFactory
 	- App\Forms\PlayerAddFormFactory

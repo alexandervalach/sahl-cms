@@ -2,7 +2,15 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Forms\LinkAddFormFactory;
+use App\Forms\LinkEditFormFactory;
+use App\Forms\RemoveFormFactory;
+use App\Model\GroupsRepository;
+use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -15,6 +23,37 @@ class LinksPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $linkRow;
+
+  /** @var LinkAddFormFactory */
+  private $linkAddFormFactory;
+
+  /** @var LinkEditFormFactory */
+  private $linkEditFormFactory;
+
+  /**
+   * @var RemoveFormFactory
+   */
+  private $removeFormFactory;
+
+  public function __construct(
+      GroupsRepository $groupsRepository,
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      LinkAddFormFactory $linkAddFormFactory,
+      LinkEditFormFactory $linkEditFormFactory,
+      RemoveFormFactory $removeFormFactory
+  )
+  {
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
+    $this->linkAddFormFactory = $linkAddFormFactory;
+    $this->linkEditFormFactory = $linkEditFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
+  }
+
 
   public function actionAll(): void
   {
@@ -47,95 +86,58 @@ class LinksPresenter extends BasePresenter
     if (!$this->linkRow) {
       throw new BadRequestException(self::LINK_NOT_FOUND);
     }
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->linkRow);
+    $this[self::EDIT_FORM]->setDefaults($this->linkRow);
   }
 
-  public function renderEdit($id) {
+  public function renderEdit($id): void
+  {
     $this->template->link = $this->linkRow;
   }
 
   /**
+   * Creates a component for rendering add form
    * @return Form
    */
   protected function createComponentAddForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->addRule(Form::FILLED, 'Názov je povinné pole');
-    $form->addText('url', 'URL adresa');
-    $form->addSubmit('save', 'Uložiť');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->linkAddFormFactory->create( function (Form $form, ArrayHash $values) {
+      $this->userIsLogged();
+      $this->linksRepository->insert($values);
+      $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    });
   }
 
   /**
+   * Creates a component for rendering edit form
    * @return Form
    */
   protected function createComponentEditForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->addRule(Form::FILLED, 'Názov je povinné pole');
-    $form->addText('url', 'URL adresa');
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', self::BTN_SUCCESS)
-          ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, self::FORM_CANCELLED];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->linkEditFormFactory->create( function (SubmitButton $button, ArrayHash $values) {
+      $this->userIsLogged();
+      $this->linkRow->update($values);
+      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 
   /**
-   * Component for creating a remove form
+   * Creates a component for rendering remove form
    * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Form;
-    $form->addSubmit('save', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, self::FORM_CANCELLED];
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->removeFormFactory->create( function () {
+      $this->userIsLogged();
+      $this->linksRepository->remove($this->linkRow->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 
-  /**
-   * @param Form $form
-   * @param ArrayHash $values
-   */
-  public function submittedAddForm(Form $form, ArrayHash $values): void
-  {
-    $this->userIsLogged();
-    $this->linksRepository->insert($values);
-    $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  /**
-   * @param SubmitButton $button
-   * @param ArrayHash $values
-   */
-  public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
-  {
-    $this->userIsLogged();
-    $this->linkRow->update($values);
-    $this->flashMessage('Odkaz bol upravený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  public function submittedRemoveForm(): void
-  {
-    $this->userIsLogged();
-    $this->linksRepository->remove($this->linkRow->id);
-    $this->flashMessage('Odkaz bol odstránený', self::SUCCESS);
-    $this->redirect('all');
-  }
 }

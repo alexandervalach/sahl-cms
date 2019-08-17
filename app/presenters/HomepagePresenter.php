@@ -9,7 +9,7 @@ use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PostsRepository;
 use App\Model\RoundsRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use App\Model\TableTypesRepository;
 
 class HomepagePresenter extends BasePresenter
@@ -24,16 +24,16 @@ class HomepagePresenter extends BasePresenter
   private $roundsRepository;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    PostsRepository $postsRepository,
-    TableTypesRepository $tableTypesRepository,
-    RoundsRepository $roundsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      PostsRepository $postsRepository,
+      TableTypesRepository $tableTypesRepository,
+      RoundsRepository $roundsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
     $this->postsRepository = $postsRepository;
     $this->tableTypesRepository = $tableTypesRepository;
     $this->roundsRepository = $roundsRepository;

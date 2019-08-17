@@ -9,7 +9,7 @@ use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\GroupsRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -31,10 +31,10 @@ class GroupsPresenter extends BasePresenter
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     GroupsRepository $groupsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository
+    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
   }
 

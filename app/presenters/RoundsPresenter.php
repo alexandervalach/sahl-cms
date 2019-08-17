@@ -13,7 +13,7 @@ use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\RoundsRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use App\Model\TablesRepository;
 use App\Model\TableEntriesRepository;
 use Nette\Application\BadRequestException;
@@ -59,14 +59,14 @@ class RoundsPresenter extends BasePresenter
     TeamsRepository $teamsRepository,
     RoundsRepository $roundsRepository,
     FightsRepository $fightsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository,
+    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
     TablesRepository $tablesRepository,
     TableEntriesRepository $tableEntriesRepository,
     RoundFormFactory $roundFormFactory,
     FightAddFormFactory $fightAddFormFactory,
     ModalRemoveFormFactory $modalRemoveFormFactory
   ) {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
     $this->roundsRepository = $roundsRepository;
     $this->fightsRepository = $fightsRepository;
     $this->tablesRepository = $tablesRepository;

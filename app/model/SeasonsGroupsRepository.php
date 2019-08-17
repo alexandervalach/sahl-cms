@@ -5,12 +5,12 @@ namespace App\Model;
 use Nette\Database\Table\Selection;
 use Nette\Database\IRow;
 
-class SeasonsTeamsRepository extends Repository
+class SeasonsGroupsRepository extends Repository
 {
   const SEASON_ID = 'season_id';
   const TEAM_ID = 'team_id';
 
-  protected $tableName = 'seasons_teams';
+  protected $tableName = 'seasons_groups';
 
   /**
    * @param int $teamId

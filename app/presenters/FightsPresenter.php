@@ -9,7 +9,7 @@ use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -43,13 +43,13 @@ class FightsPresenter extends BasePresenter
   private $removeFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    FightsRepository $fightsRepository,
-    TablesRepository $tablesRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository,
-    RemoveFormFactory $removeFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      FightsRepository $fightsRepository,
+      TablesRepository $tablesRepository,
+      SeasonsGroupsTeamsRepository $seasonsTeamsRepository,
+      RemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);

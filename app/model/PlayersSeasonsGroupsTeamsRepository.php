@@ -6,7 +6,7 @@ namespace App\Model;
 
 use Nette\Database\Table\Selection;
 
-class PlayersSeasonsTeamsRepository extends Repository {
+class PlayersSeasonsGroupsTeamsRepository extends Repository {
 
   protected $tableName = 'players_seasons_teams';
 

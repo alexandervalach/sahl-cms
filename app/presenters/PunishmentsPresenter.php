@@ -10,7 +10,7 @@ use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PlayersRepository;
 use App\Model\PunishmentsRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
@@ -38,10 +38,10 @@ class PunishmentsPresenter extends BasePresenter
     TeamsRepository $teamsRepository,
     PlayersRepository $playersRepository,
     PunishmentsRepository $punishmentsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository
+    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
     $this->playersRepository = $playersRepository;
     $this->punishmentsRepository = $punishmentsRepository;
   }

@@ -10,7 +10,7 @@ use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\TableTypesRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Utils\ArrayHash;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -41,13 +41,13 @@ class TableTypesPresenter extends BasePresenter
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     TableTypesRepository $tableTypesRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository,
+    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
     TableTypeAddFormFactory $tableTypeAddFormFactory,
     TableTypeEditFormFactory $tableTypeEditFormFactory,
     RemoveFormFactory $removeFormFactory
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
     $this->tableTypesRepository = $tableTypesRepository;
     $this->tableTypeAddFormFactory = $tableTypeAddFormFactory;
     $this->removeFormFactory = $removeFormFactory;

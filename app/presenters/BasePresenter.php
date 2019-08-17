@@ -7,7 +7,7 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Model\LinksRepository;
 use App\Model\SponsorsRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use App\Model\TeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
@@ -60,8 +60,8 @@ abstract class BasePresenter extends Presenter
   /** @var SponsorsRepository */
   protected $sponsorsRepository;
 
-  /** @var SeasonsTeamsRepository */
-  protected $seasonsTeamsRepository;
+  /** @var SeasonsGroupsTeamsRepository */
+  protected $seasonsGroupsTeamsRepository;
 
   /** @var TeamsRepository */
   protected $teamsRepository;
@@ -69,23 +69,27 @@ abstract class BasePresenter extends Presenter
   /** @var string */
   protected $imageDir;
 
-  /** @var AraryHash */
+  /** @var Nette\Utils\AraryHash */
   protected $teams;
 
-  /**
-   * Base constructor
-   */
+    /**
+     * Base constructor
+     * @param LinksRepository $linksRepository
+     * @param SponsorsRepository $sponsorsRepository
+     * @param TeamsRepository $teamsRepository
+     * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+     */
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository)
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository)
   {
     parent::__construct();
     $this->linksRepository = $linksRepository;
     $this->sponsorsRepository = $sponsorsRepository;
     $this->teamsRepository = $teamsRepository;
-    $this->seasonsTeamsRepository = $seasonsTeamsRepository;
+    $this->seasonsGroupsTeamsRepository = $seasonsGroupsTeamsRepository;
     $this->imageDir = 'images';
   }
 
@@ -105,7 +109,7 @@ abstract class BasePresenter extends Presenter
    */
   public function beforeRender(): void
   {
-    $teams = $this->seasonsTeamsRepository->getForSeason();
+    $teams = $this->seasonsGroupsTeamsRepository->getForSeason();
     $data = [];
 
     foreach ($teams as $team) {
@@ -127,7 +131,7 @@ abstract class BasePresenter extends Presenter
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Form;
+    $form = new Nette\Application\UI\Form;
     $form->addSubmit('remove', 'Odstrániť')
           ->setAttribute('class', self::BTN_DANGER);
     $form->addSubmit('cancel', 'Zrušiť')

@@ -9,11 +9,11 @@ use App\Forms\UploadFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
-use App\Model\PlayersSeasonsTeamsRepository;
+use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\PlayerTypesRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequetsException;
 use Nette\Database\Table\ActiveRow;
@@ -39,7 +39,7 @@ class TeamsPresenter extends BasePresenter
   /** @var PlayersRepository */
   private $playersRepository;
 
-  /** @var PlayersSeasonsTeamsRepository */
+  /** @var PlayersSeasonsGroupsTeamsRepository */
   private $playersSeasonsTeamsRepository;
 
   /** @var PlayerTypesRepository */
@@ -48,27 +48,27 @@ class TeamsPresenter extends BasePresenter
   /** @var TeamFormFactory */
   private $teamFormFactory;
 
-  /** @var PlayerAddFactory */
+  /** @var PlayerAddFormFactory */
   private $playerAddFormFactory;
 
   /** @var UploadFormFactory */
   private $uploadFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository,
-    GroupsRepository $groupsRepository,
-    PlayersRepository $playersRepository,
-    PlayerTypesRepository $playerTypesRepository,
-    TeamFormFactory $teamFormFactory,
-    PlayerAddFormFactory $playerAddFormFactory,
-    PlayersSeasonsTeamsRepository $playersSeasonsTeamsRepository,
-    UploadFormFactory $uploadFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      GroupsRepository $groupsRepository,
+      PlayersRepository $playersRepository,
+      PlayerTypesRepository $playerTypesRepository,
+      TeamFormFactory $teamFormFactory,
+      PlayerAddFormFactory $playerAddFormFactory,
+      PlayersSeasonsGroupsTeamsRepository $playersSeasonsTeamsRepository,
+      UploadFormFactory $uploadFormFactory
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
@@ -111,12 +111,12 @@ class TeamsPresenter extends BasePresenter
    */
   public function actionArchAll(int $id): void
   {
-    $this->seasonRow = $this->seasonsRepository->findById($id);
+    $this->seasonRow = $this->seasonsGroupsTeamsRepository->findById($id);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
       throw new BadRequetsException(self::ITEM_NOT_FOUND);
     }
 
-    $teams = $this->seasonsTeamsRepository->getForSeason($id);
+    $teams = $this->seasonsGroupsTeamsRepository->getForSeason($id);
     $data = [];
     foreach ($teams as $team) {
       $data[$team->id] = $team->ref('teams', 'team_id');

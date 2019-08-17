@@ -12,7 +12,7 @@ use App\Model\GoalsRepository;
 use App\Model\FightsRepository;
 use App\Model\RoundsRepository;
 use App\Model\PlayersRepository;
-use App\Model\SeasonsTeamsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
@@ -55,10 +55,10 @@ class GoalsPresenter extends BasePresenter
     FightsRepository $fightsRepository,
     PlayersRepository $playersRepository,
     RoundsRepository $roundsRepository,
-    SeasonsTeamsRepository $seasonsTeamsRepository
+    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
     $this->goalsRepository = $goalsRepository;
     $this->fightsRepository = $fightsRepository;
     $this->playersRepository = $playersRepository;

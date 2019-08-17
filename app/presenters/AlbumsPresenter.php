@@ -50,6 +50,20 @@ class AlbumsPresenter extends BasePresenter
   /** @var ModalRemoveFormFactory */
   private $removeFormFactory;
 
+  /**
+   * AlbumsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param AlbumsRepository $albumsRepository
+   * @param ImagesRepository $imagesRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param AlbumFormFactory $albumFormFactory
+   * @param MultiUploadFormFactory $multiUploadFormFactory
+   * @param ModalRemoveFormFactory $removeFormFactory
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -110,6 +124,7 @@ class AlbumsPresenter extends BasePresenter
   /**
    * @param int $albumId
    * @param int $id
+   * @throws BadRequestException
    */
   public function actionSetImage(int $albumId, int $id): void
   {
@@ -130,7 +145,7 @@ class AlbumsPresenter extends BasePresenter
 
   /**
    * @param int $id
-   * @throws Nette\Application\BadRequestException
+   * @throws BadRequestException
    */
   public function actionRemoveImage(int $id): void
   {
@@ -143,7 +158,7 @@ class AlbumsPresenter extends BasePresenter
   }
 
   /**
-   * Creates add album form
+   * Generates new add album form
    * @return Form
    */
   protected function createComponentAlbumForm(): Form
@@ -162,6 +177,9 @@ class AlbumsPresenter extends BasePresenter
     });
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentRemoveForm(): Form
   {
     return $this->removeFormFactory->create(function () {
@@ -172,7 +190,7 @@ class AlbumsPresenter extends BasePresenter
       }
 
       $this->albumsRepository->remove($this->albumRow->id);
-      $this->flashMessage('Album bol odstránený', self::SUCCESS);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('all');
     });
   }
@@ -213,7 +231,7 @@ class AlbumsPresenter extends BasePresenter
   public function submittedRemoveImage(): void
   {
     $this->imagesRepository->remove($this->imageRow->id);
-    $this->flashMessage('Obrázok bol odstránený', self::SUCCESS);
+    $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
     $this->redirect('Albums:view', $this->imageRow->album_id);
   }
 

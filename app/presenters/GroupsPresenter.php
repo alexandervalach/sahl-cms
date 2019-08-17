@@ -6,6 +6,7 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\GroupsRepository;
@@ -23,14 +24,12 @@ class GroupsPresenter extends BasePresenter
   /** @var ActiveRow */
   private $groupRow;
 
-  /** @var GroupsRepository */
-  private $groupsRepository;
-
   public function __construct(
+    GroupsRepository $groupsRepository,
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
-    GroupsRepository $groupsRepository,
+    SeasonsGroupsRepository $seasonsGroupsRepository,
     SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
   )
   {

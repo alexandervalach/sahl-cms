@@ -6,8 +6,10 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Model\LinksRepository;
+use App\Model\GroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\TeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
@@ -57,8 +59,14 @@ abstract class BasePresenter extends Presenter
   /** @var LinksRepository */
   protected $linksRepository;
 
+  /** @var GroupsRepository */
+  protected $groupsRepository;
+
   /** @var SponsorsRepository */
   protected $sponsorsRepository;
+
+  /** @var SeasonsGroupsRepository */
+  protected $seasonsGroupsRepository;
 
   /** @var SeasonsGroupsTeamsRepository */
   protected $seasonsGroupsTeamsRepository;
@@ -70,68 +78,66 @@ abstract class BasePresenter extends Presenter
   protected $imageDir;
 
   /** @var Nette\Utils\AraryHash */
-  protected $teams;
+  protected $groups;
 
-    /**
-     * Base constructor
-     * @param LinksRepository $linksRepository
-     * @param SponsorsRepository $sponsorsRepository
-     * @param TeamsRepository $teamsRepository
-     * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
-     */
+  /**
+   * Base constructor
+   * @param GroupsRepository $groupsRepository
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   */
   public function __construct(
+      GroupsRepository $groupsRepository,
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
       TeamsRepository $teamsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository)
   {
     parent::__construct();
+    $this->groupsRepository = $groupsRepository;
     $this->linksRepository = $linksRepository;
     $this->sponsorsRepository = $sponsorsRepository;
     $this->teamsRepository = $teamsRepository;
+    $this->seasonsGroupsRepository = $seasonsGroupsRepository;
     $this->seasonsGroupsTeamsRepository = $seasonsGroupsTeamsRepository;
     $this->imageDir = 'images';
   }
-
-  /**
-   * Method for saving previous link
-   */
-  /*
-  protected function startup(): void
-  {
-    parent::startup();
-    $this->backlink = $this->storeRequest();
-  }
-  */
 
   /**
    * Set before content rendering
    */
   public function beforeRender(): void
   {
-    $teams = $this->seasonsGroupsTeamsRepository->getForSeason();
-    $data = [];
+    $seasonsGroups = $this->seasonsGroupsRepository->getForSeason();
+    $groups = [];
 
-    foreach ($teams as $team) {
-      $data[$team->id] = $team->ref('teams', 'team_id');
+    foreach ($seasonsGroups as $seasonGroup) {
+      $group = $this->groupsRepository->findById($seasonGroup->group_id);
+      $groups[$seasonGroup->group_id]['id'] = $group->id;
+      $groups[$seasonGroup->group_id]['label'] = $group->label;
+      $groups[$seasonGroup->group_id]['teams'] = [];
     }
 
-    $this->teams = ArrayHash::from($data);
+    $this->groups = ArrayHash::from($groups);
 
     $this->template->links = $this->linksRepository->getAll();
     $this->template->sponsors = $this->sponsorsRepository->getAll();
-    $this->template->teams = $this->teams;
+    $this->template->groups = $this->groups;
     $this->template->imageFolder = self::IMAGE_FOLDER;
     $this->template->defaultImage = self::DEFAULT_IMAGE;
   }
 
   /**
    * Component for creating a remove form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Nette\Application\UI\Form;
+    $form = new Form;
     $form->addSubmit('remove', 'Odstrániť')
           ->setAttribute('class', self::BTN_DANGER);
     $form->addSubmit('cancel', 'Zrušiť')
@@ -154,7 +160,7 @@ abstract class BasePresenter extends Presenter
   }
 
   /**
-   * Redirect user after form cancelation
+   * Redirect user after form cancellation
    */
   public function formCancelled(): void
   {

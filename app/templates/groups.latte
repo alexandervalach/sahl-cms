@@ -1,0 +1,16 @@
+{**
+ * @param string	$basePath web base path
+ * @param string 	$imageFolder images folder path
+ * @param array		$items consists of groups and teams
+*}
+
+<section id="teams" class="container-fluid hidden-xs">
+  {foreach $groups as $group}
+    <h2>{$group->label}</h2>
+    {foreach $group->teams as $team}
+      <a n:href="Teams:view $team->id" title="{$team->name}">
+        <img src="{$basePath}/{$imageFolder}/{$team->logo}" width="5%" alt="{$team->name} logo" />
+      </a>
+    {/foreach}
+  {/foreach}
+</section>

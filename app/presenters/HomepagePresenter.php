@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PostsRepository;
@@ -24,16 +26,19 @@ class HomepagePresenter extends BasePresenter
   private $roundsRepository;
 
   public function __construct(
+      GroupsRepository $groupsRepository,
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
       TeamsRepository $teamsRepository,
       PostsRepository $postsRepository,
       TableTypesRepository $tableTypesRepository,
       RoundsRepository $roundsRepository,
-      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->postsRepository = $postsRepository;
     $this->tableTypesRepository = $tableTypesRepository;
     $this->roundsRepository = $roundsRepository;

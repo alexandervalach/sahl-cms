@@ -9,27 +9,29 @@ class SeasonsGroupsRepository extends Repository
 {
   const SEASON_ID = 'season_id';
   const TEAM_ID = 'team_id';
+  const GROUP_ID = 'group_id';
 
   protected $tableName = 'seasons_groups';
 
   /**
-   * @param int $teamId
-   * @param int|null $seasonId
-   */
-  public function getTeam(int $teamId, $seasonId = null)
-  {
-    return $this->getForSeason($seasonId)->where(self::TEAM_ID, $teamId)->fetch();
-  }
-
-  /**
-   * @param int $teamId
+   * @param int $groupId
    * @param int|null $seasonId
    * @return IRow|null
    */
-  public function getSeasonTeam(int $teamId, $seasonId = null)
+  public function getGroup(int $groupId, $seasonId = null)
+  {
+    return $this->getForSeason($seasonId)->where(self::GROUP_ID, $groupId)->fetch();
+  }
+
+  /**
+   * @param int $groupId
+   * @param int|null $seasonId
+   * @return IRow|null
+   */
+  public function getSeasonGroup(int $groupId, $seasonId = null)
   {
     return $this->getForSeason($seasonId)
-      ->where(self::TEAM_ID, $teamId)
+      ->where(self::GROUP_ID, $groupId)
       ->select(self::ID)->fetch();
   }
 
@@ -39,7 +41,7 @@ class SeasonsGroupsRepository extends Repository
    */
   public function getForSeason($seasonId = null): Selection
   {
-    return $this->getAll()->where('season_id', $seasonId);
+    return $this->getAll()->where(self::SEASON_ID, $seasonId);
   }
 
 }

@@ -11,6 +11,7 @@ use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
 use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\PlayerTypesRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
@@ -23,18 +24,11 @@ use Nette\Utils\ArrayHash;
 
 class TeamsPresenter extends BasePresenter
 {
-  const TEAM_NOT_FOUND = 'Team not found';
-  const ADD_PLAYER_FORM = 'addPlayerForm';
-  const SUBMITTED_ADD_PLAYER_FORM = 'submittedAddPlayerForm';
-
   /** @var ActiveRow */
   private $teamRow;
 
   /** @var ActiveRow */
   private $seasonRow;
-
-  /** @var GroupsRepository */
-  private $groupsRepository;
 
   /** @var PlayersRepository */
   private $playersRepository;
@@ -65,10 +59,12 @@ class TeamsPresenter extends BasePresenter
       TeamFormFactory $teamFormFactory,
       PlayerAddFormFactory $playerAddFormFactory,
       PlayersSeasonsGroupsTeamsRepository $playersSeasonsTeamsRepository,
-      UploadFormFactory $uploadFormFactory
+      UploadFormFactory $uploadFormFactory,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;

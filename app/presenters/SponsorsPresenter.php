@@ -4,10 +4,19 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Forms\RemoveFormFactory;
+use App\Forms\SponsorAddFormFactory;
+use App\Forms\SponsorEditFormFactory;
+use App\Model\GroupsRepository;
+use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsGroupsTeamsRepository;
+use App\Model\SponsorsRepository;
+use App\Model\TeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\FileSystem;
 use Nette\Utils\ArrayHash;
 
@@ -18,6 +27,42 @@ class SponsorsPresenter extends BasePresenter
   /** @var ActiveRow */
   private $sponsorRow;
 
+  /**
+   * @var SponsorAddFormFactory
+   */
+  private $sponsorAddFormFactory;
+
+  /**
+   * @var SponsorEditFormFactory
+   */
+  private $sponsorEditFormFactory;
+  /**
+   * @var RemoveFormFactory
+   */
+  private $removeFormFactory;
+
+  public function __construct(
+      GroupsRepository $groupsRepository,
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      SponsorAddFormFactory $sponsorAddFormFactory,
+      SponsorEditFormFactory $sponsorEditFormFactory, 
+      RemoveFormFactory $removeFormFactory
+  )
+  {
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
+    $this->sponsorAddFormFactory = $sponsorAddFormFactory;
+    $this->sponsorEditFormFactory = $sponsorEditFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
+  }
+
+  /**
+   *
+   */
   public function actionAll(): void
   {
     $this->userIsLogged();
@@ -28,6 +73,9 @@ class SponsorsPresenter extends BasePresenter
     $this->template->sponsors = $this->sponsorsRepository->getAll();
   }
 
+  /**
+   * @param int $id
+   */
   public function actionRemove(int $id): void
   {
     $this->userIsLogged();
@@ -37,11 +85,17 @@ class SponsorsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderRemove(int $id): void
   {
     $this->template->sponsor = $this->sponsorRow;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();
@@ -49,64 +103,63 @@ class SponsorsPresenter extends BasePresenter
     if (!$this->sponsorRow || !$this->sponsorRow->is_present) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->sponsorRow);
+    $this[self::EDIT_FORM]->setDefaults($this->sponsorRow);
   }
 
-  public function renderEdit($id) {
+  /**
+   * @param int $id
+   */
+  public function renderEdit(int $id) {
     $this->template->sponsor = $this->sponsorRow;
   }
 
+  /**
+   * Generates new add form
+   * @return Form
+   */
   protected function createComponentAddForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', 'SAHL')
-          ->addRule(Form::FILLED, 'Názov je povinné pole');
-    $form->addText('url', 'URL adresa')
-          ->setAttribute('placeholder', 'https://sahl.sk')
-          ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
-    $form->addUpload('image', 'Obrázok')
-          ->addRule(Form::FILLED, 'Ešte treba doplniť obrázok')
-          ->addRule(Form::IMAGE, 'Obrázok môže byť len vo formáte JPEG, PNG alebo GIF')
-          ->addRule(Form::MAX_FILE_SIZE, 'Obrázok môže mať len 10 MB', 10 * 1024 * 1024);
-    $form->addSubmit('save', 'Uložiť');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->sponsorAddFormFactory->create( function (Form $form, ArrayHash $values) {
+      $this->submittedAddForm($form, $values);
+    });
   }
 
+  /**
+   * Generates new edit form
+   * @return Form
+   */
   protected function createComponentEditForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', 'SAHL')
-          ->addRule(Form::FILLED, 'Názov je povinné pole');
-    $form->addText('url', 'URL adresa')
-          ->setAttribute('placeholder', 'https://sahl.sk')
-          ->addRule(Form::FILLED, 'URL adresa je povinné pole.');
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', self::BTN_SUCCESS);
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->sponsorEditFormFactory->create( function (SubmitButton $button, ArrayHash $values) {
+      $this->userIsLogged();
+      $this->sponsorRow->update($values);
+      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 
   /**
    * Generates new remove form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Form;
-    $form->addSubmit('save', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, self::FORM_CANCELLED];
-    return $form;
+    return $this->removeFormFactory->create( function () {
+      $this->userIsLogged();
+      $this->sponsorsRepository->remove($this->sponsorRow->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
   }
 
+  /**
+   * @param Form $form
+   * @param ArrayHash $values
+   */
   public function submittedAddForm(Form $form, ArrayHash $values): void
   {
     $this->userIsLogged();
@@ -119,27 +172,11 @@ class SponsorsPresenter extends BasePresenter
       }
       $values->image = $name;
       $this->sponsorsRepository->insert($values);
-      $this->flashMessage('Odkaz bol pridaný', self::SUCCESS);
+      $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
     } catch (IOException $e) {
       $this->flashMessage('Obrázok ' . $name . ' sa nepodarilo nahrať', self::DANGER);
     }
 
-    $this->redirect('all');
-  }
-
-  public function submittedRemoveForm(): void
-  {
-    $this->userIsLogged();
-    $this->sponsorsRepository->remove($this->sponsorRow->id);
-    $this->flashMessage('Sponzor bol odstránený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  public function submittedEditForm(Form $form, ArrayHash $values): void
-  {
-    $this->userIsLogged();
-    $this->sponsorRow->update($values);
-    $this->flashMessage('Sponzor bol upravený', self::SUCCESS);
     $this->redirect('all');
   }
 }

@@ -68,6 +68,8 @@ services:
 	- App\Forms\RoundFormFactory
 	- App\Forms\SeasonFormFactory
 	- App\Forms\SignInFormFactory
+	- App\Forms\SponsorAddFormFactory
+	- App\Forms\SponsorEditFormFactory
 	- App\Forms\TableTypeAddFormFactory
 	- App\Forms\TableTypeEditFormFactory
 	- App\Forms\TeamFormFactory

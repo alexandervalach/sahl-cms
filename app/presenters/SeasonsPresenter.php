@@ -5,7 +5,9 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Forms\ArchiveFormFactory;
 use App\Forms\SeasonFormFactory;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\SeasonsRepository;
@@ -30,16 +32,19 @@ class SeasonsPresenter extends BasePresenter
   private $seasonFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    SeasonsRepository $seasonsRepository,
-    SeasonsGroupsTeamsRepository $seasonsTeamsGroupsRepository,
-    ArchiveFormFactory $archiveFormFactory,
-    SeasonFormFactory $seasonFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      SeasonsRepository $seasonsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      ArchiveFormFactory $archiveFormFactory,
+      SeasonFormFactory $seasonFormFactory,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      GroupsRepository $groupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsGroupsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->seasonsRepository = $seasonsRepository;
     $this->archiveFormFactory = $archiveFormFactory;
     $this->seasonFormFactory = $seasonFormFactory;

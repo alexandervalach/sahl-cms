@@ -6,7 +6,9 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Forms\SignInFormFactory;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
 use App\Model\TeamsRepository;
@@ -22,14 +24,17 @@ class SignPresenter extends BasePresenter
   private $signInFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    SignInFormFactory $signInFormFactory,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      SignInFormFactory $signInFormFactory,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->signInFormFactory = $signInFormFactory;
   }
 

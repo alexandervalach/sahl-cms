@@ -9,7 +9,9 @@ use App\Forms\RoundFormFactory;
 use App\Forms\FightAddFormFactory;
 use App\Forms\ModalRemoveFormFactory;
 use App\Model\FightsRepository;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\RoundsRepository;
@@ -23,10 +25,10 @@ use Nette\Utils\ArrayHash;
 
 class RoundsPresenter extends BasePresenter
 {
-	/** @var ActiveRow */
-	private $roundRow;
+  /** @var ActiveRow */
+  private $roundRow;
 
-	/** @var ActiveRow */
+  /** @var ActiveRow */
   private $seasonRow;
 
   /** @var ArrayHash */
@@ -54,19 +56,22 @@ class RoundsPresenter extends BasePresenter
   private $modalRemoveFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    RoundsRepository $roundsRepository,
-    FightsRepository $fightsRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    TablesRepository $tablesRepository,
-    TableEntriesRepository $tableEntriesRepository,
-    RoundFormFactory $roundFormFactory,
-    FightAddFormFactory $fightAddFormFactory,
-    ModalRemoveFormFactory $modalRemoveFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      RoundsRepository $roundsRepository,
+      FightsRepository $fightsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      TablesRepository $tablesRepository,
+      TableEntriesRepository $tableEntriesRepository,
+      RoundFormFactory $roundFormFactory,
+      FightAddFormFactory $fightAddFormFactory,
+      ModalRemoveFormFactory $modalRemoveFormFactory,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   ) {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->roundsRepository = $roundsRepository;
     $this->fightsRepository = $fightsRepository;
     $this->tablesRepository = $tablesRepository;
@@ -78,17 +83,17 @@ class RoundsPresenter extends BasePresenter
 
   public function renderAll(): void
   {
-		$this->template->rounds = $this->roundsRepository->getArchived();
-	}
+    $this->template->rounds = $this->roundsRepository->getArchived();
+  }
 
   /**
    * @param int $id
    */
   public function actionView(int $id): void
   {
-		$this->roundRow = $this->roundsRepository->findById($id);
-    if (!$this->roundRow || !$this->roundRow->is_present) {
-			throw new BadRequestException(self::ITEM_NOT_FOUND);
+    $this->roundRow = $this->roundsRepository->findById($id);
+    if (!$this->roundRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $fights = $this->roundRow->related('fights')->where('is_present', 1)->order('id DESC');
@@ -129,7 +134,7 @@ class RoundsPresenter extends BasePresenter
 
     if ($this->user->loggedIn) {
       $this['roundForm']->setDefaults($this->roundRow);
-		}
+    }
   }
 
   /**
@@ -137,9 +142,9 @@ class RoundsPresenter extends BasePresenter
    */
   public function renderView(int $id): void
   {
-		$this->template->items = $this->items;
-		$this->template->round = $this->roundRow;
-	}
+    $this->template->items = $this->items;
+    $this->template->round = $this->roundRow;
+  }
 
   /**
    * @param int $id
@@ -149,18 +154,18 @@ class RoundsPresenter extends BasePresenter
     $this->seasonRow = $this->seasonsRepository->findById($id);
 
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
-			throw new BadRequestException(self::SEASON_NOT_FOUND);
+      throw new BadRequestException(self::SEASON_NOT_FOUND);
     }
-	}
+  }
 
   /**
    * @param int $id
    */
   public function renderArchAll(int $id): void
   {
-		$this->template->rounds = $this->roundsRepository->getArchived($id);
-		$this->template->season = $this->seasonRow;
-	}
+    $this->template->rounds = $this->roundsRepository->getArchived($id);
+    $this->template->season = $this->seasonRow;
+  }
 
   /**
    * @param int $seasonId
@@ -177,7 +182,7 @@ class RoundsPresenter extends BasePresenter
     if (!$this->roundRow || !$this->seasonRow->is_present) {
       throw new BadRequestException(self::ROUND_NOT_FOUND);
     }
-	}
+  }
 
   /**
    * @param int $seasonId
@@ -212,7 +217,7 @@ class RoundsPresenter extends BasePresenter
     $this->template->i = 0;
     $this->template->round = $this->roundRow;
     $this->template->archive = $this->seasonRow;
-	}
+  }
 
   /**
    * @return Form
@@ -272,7 +277,7 @@ class RoundsPresenter extends BasePresenter
       $this->flashMessage('Zápas bol pridaný', self::SUCCESS);
       $this->redirect('view', $this->roundRow->id);
     });
-	}
+  }
 
   protected function createComponentRemoveForm(): Form
   {
@@ -304,7 +309,7 @@ class RoundsPresenter extends BasePresenter
       $this->tableEntriesRepository->updateEntryPoints($tableId, $values->team2_id);
       $this->tableEntriesRepository->updateEntryPoints($tableId, $values->team1_id);
     }
-	}
+  }
 
   /**
    * Updates score for both teams
@@ -317,6 +322,6 @@ class RoundsPresenter extends BasePresenter
     $this->tablesRepository->updateEntry($tableId, $values->team1_id, 'score2', $values->score2);
     $this->tablesRepository->updateEntry($tableId, $values->team2_id, 'score1', $values->score2);
     $this->tablesRepository->updateEntry($tableId, $values->team2_id, 'score2', $values->score1);
-	}
+  }
 
 }

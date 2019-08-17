@@ -80,6 +80,9 @@ abstract class BasePresenter extends Presenter
   /** @var Nette\Utils\AraryHash */
   protected $groups;
 
+  /** @var Nette\Utils\AraryHash */
+  protected $teams;
+
   /**
    * Base constructor
    * @param GroupsRepository $groupsRepository
@@ -114,6 +117,7 @@ abstract class BasePresenter extends Presenter
   {
     $seasonsGroups = $this->seasonsGroupsRepository->getForSeason();
     $groups = [];
+    $teams = [];
 
     foreach ($seasonsGroups as $seasonGroup) {
       $group = $this->groupsRepository->findById($seasonGroup->group_id);
@@ -123,6 +127,7 @@ abstract class BasePresenter extends Presenter
     }
 
     $this->groups = ArrayHash::from($groups);
+    $this->teams = ArrayHash::from($teams);
 
     $this->template->links = $this->linksRepository->getAll();
     $this->template->sponsors = $this->sponsorsRepository->getAll();

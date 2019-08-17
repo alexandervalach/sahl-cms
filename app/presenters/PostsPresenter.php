@@ -5,7 +5,9 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Forms\MultiUploadFormFactory;
 use App\Forms\PostFormFactory;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PostsRepository;
@@ -44,17 +46,20 @@ class PostsPresenter extends BasePresenter
   private $postFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    PostsRepository $postsRepository,
-    PostImagesRepository $postImagesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    MultiUploadFormFactory $multiUploadFormFactory,
-    PostFormFactory $postFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      PostsRepository $postsRepository,
+      PostImagesRepository $postImagesRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      MultiUploadFormFactory $multiUploadFormFactory,
+      PostFormFactory $postFormFactory,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->postsRepository = $postsRepository;
     $this->postImagesRepository = $postImagesRepository;
     $this->multiUploadFormFactory = $multiUploadFormFactory;

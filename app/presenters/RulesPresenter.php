@@ -3,7 +3,9 @@
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\RulesRepository;
@@ -28,10 +30,13 @@ class RulesPresenter extends BasePresenter {
     SponsorsRepository $sponsorsRepository,
     TeamsRepository $teamsRepository,
     RulesRepository $rulesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+    GroupsRepository $groupsRepository,
+    SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->rulesRepository = $rulesRepository;
   }
 

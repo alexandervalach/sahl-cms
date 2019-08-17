@@ -6,7 +6,9 @@ use App\FormHelper;
 use App\Forms\PlayerTypeAddFormFactory;
 use App\Forms\PlayerTypeEditFormFactory;
 use App\Forms\RemoveFormFactory;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PlayerTypesRepository;
@@ -35,17 +37,20 @@ class PlayerTypesPresenter extends BasePresenter
   private $playerTypeRow;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    PlayerTypesRepository $playerTypesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    PlayerTypeAddFormFactory $playerTypeAddFormFactory,
-    PlayerTypeEditFormFactory $playerTypeEditFormFactory,
-    RemoveFormFactory $removeFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      PlayerTypesRepository $playerTypesRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      PlayerTypeAddFormFactory $playerTypeAddFormFactory,
+      PlayerTypeEditFormFactory $playerTypeEditFormFactory,
+      RemoveFormFactory $removeFormFactory,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->playerTypesRepository = $playerTypesRepository;
     $this->playerTypeAddFormFactory = $playerTypeAddFormFactory;
     $this->playerTypeEditFormFactory = $playerTypeEditFormFactory;

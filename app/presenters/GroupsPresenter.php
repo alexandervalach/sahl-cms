@@ -33,7 +33,8 @@ class GroupsPresenter extends BasePresenter
     SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
   }
 

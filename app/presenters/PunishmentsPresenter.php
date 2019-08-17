@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PlayersRepository;
@@ -33,15 +35,18 @@ class PunishmentsPresenter extends BasePresenter
   private $playersRepository;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    PlayersRepository $playersRepository,
-    PunishmentsRepository $punishmentsRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      PlayersRepository $playersRepository,
+      PunishmentsRepository $punishmentsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->playersRepository = $playersRepository;
     $this->punishmentsRepository = $punishmentsRepository;
   }

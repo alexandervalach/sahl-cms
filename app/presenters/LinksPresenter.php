@@ -55,7 +55,7 @@ class LinksPresenter extends BasePresenter
   }
 
   /**
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentAddForm(): Form
   {
@@ -70,7 +70,7 @@ class LinksPresenter extends BasePresenter
   }
 
   /**
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentEditForm(): Form
   {
@@ -90,7 +90,7 @@ class LinksPresenter extends BasePresenter
 
   /**
    * Component for creating a remove form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {
@@ -108,8 +108,8 @@ class LinksPresenter extends BasePresenter
   }
 
   /**
-   * @param Nette\Application\UI\Form $form
-   * @param Nette\Utils\ArrayHash $values
+   * @param Form $form
+   * @param ArrayHash $values
    */
   public function submittedAddForm(Form $form, ArrayHash $values): void
   {
@@ -120,8 +120,8 @@ class LinksPresenter extends BasePresenter
   }
 
   /**
-   * @param Nette\Forms\Control\SubmitButton $button
-   * @param Nette\Utils\ArrayHash $values
+   * @param SubmitButton $button
+   * @param ArrayHash $values
    */
   public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
   {

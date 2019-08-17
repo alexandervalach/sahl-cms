@@ -40,7 +40,7 @@ abstract class Repository
   }
 
   /**
-   * Vrací objekt reprezentující databázovou tabulku.
+   * Returns object that represents table
    * @return Selection
    */
   protected function getTable(): Selection
@@ -48,7 +48,7 @@ abstract class Repository
     if (isset($this->tableName)) {
       return $this->database->table($this->tableName);
     } else {
-      // název tabulky odvodíme z názvu třídy
+      // table name is derived from repository class name
       preg_match('#(\w+)Repository$#', get_class($this), $m);
       return $this->database->table(lcfirst($m[1]));
     }
@@ -71,6 +71,7 @@ abstract class Repository
   }
 
   /**
+   * @param null|int $seasonId
    * @return Selection
    */
   public function getArchived($seasonId = null): Selection
@@ -84,7 +85,7 @@ abstract class Repository
    */
   public function findAll(): Selection
   {
-    return $this->getTable();
+    return $this->getTable()->where(self::IS_PRESENT, 1);
   }
 
   /**
@@ -114,7 +115,7 @@ abstract class Repository
    */
   public function findById(int $id): ActiveRow
   {
-    return $this->getTable()->get($id);
+    return $this->findAll()->get($id);
   }
 
   /**
@@ -125,7 +126,7 @@ abstract class Repository
    */
   public function update(int $id, array $data): ActiveRow
   {
-    $this->getTable()->wherePrimary($id)->update($data);
+    $this->findAll()->wherePrimary($id)->update($data);
   }
 
   /**
@@ -143,9 +144,7 @@ abstract class Repository
    */
   public function remove(int $id): void
   {
-    $this->getTable()->wherePrimary($id)->update(
-      array(self::IS_PRESENT => 0)
-    );
+    $this->findAll()->wherePrimary($id)->update( array(self::IS_PRESENT => 0) );
   }
 
   /**
@@ -156,29 +155,5 @@ abstract class Repository
   {
     return $this->getAll()->select($data);
   }
-
-  /*
-  public function getAsArray($id)
-  {
-    $checkRows = $this->findByValue('season_id', $id);
-
-    if ($checkRows->count()) {
-      return null;
-    }
-
-    $rows = $this->findByValue('season_id', null);
-    $data = array();
-    if (!$rows->count()) {
-      return null;
-    } else {
-      $i = 0;
-      foreach ($rows as $row) {
-        $data[$i] = $row;
-        $i++;
-      }
-    }
-    return $data;
-  }
-  */
 
 }

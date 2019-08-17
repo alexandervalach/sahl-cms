@@ -5,7 +5,9 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Forms\RemoveFormFactory;
 use App\Model\FightsRepository;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
@@ -48,11 +50,14 @@ class FightsPresenter extends BasePresenter
       TeamsRepository $teamsRepository,
       FightsRepository $fightsRepository,
       TablesRepository $tablesRepository,
-      SeasonsGroupsTeamsRepository $seasonsTeamsRepository,
-      RemoveFormFactory $removeFormFactory
+      RemoveFormFactory $removeFormFactory,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->fightsRepository = $fightsRepository;
     $this->tablesRepository = $tablesRepository;
     $this->removeFormFactory = $removeFormFactory;

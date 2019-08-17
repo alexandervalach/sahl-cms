@@ -8,7 +8,9 @@ use App\FormHelper;
 use App\Forms\AlbumFormFactory;
 use App\Forms\MultiUploadFormFactory;
 use App\Forms\ModalRemoveFormFactory;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\AlbumsRepository;
@@ -49,18 +51,21 @@ class AlbumsPresenter extends BasePresenter
   private $removeFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    AlbumsRepository $albumsRepository,
-    ImagesRepository $imagesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    AlbumFormFactory $albumFormFactory,
-    MultiUploadFormFactory $multiUploadFormFactory,
-    ModalRemoveFormFactory $removeFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      AlbumsRepository $albumsRepository,
+      ImagesRepository $imagesRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      AlbumFormFactory $albumFormFactory,
+      MultiUploadFormFactory $multiUploadFormFactory,
+      ModalRemoveFormFactory $removeFormFactory,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->albumsRepository = $albumsRepository;
     $this->imagesRepository = $imagesRepository;
     $this->albumFormFactory = $albumFormFactory;
@@ -103,7 +108,7 @@ class AlbumsPresenter extends BasePresenter
   }
 
   /**
-   * @param int $album_id
+   * @param int $albumId
    * @param int $id
    */
   public function actionSetImage(int $albumId, int $id): void
@@ -139,7 +144,7 @@ class AlbumsPresenter extends BasePresenter
 
   /**
    * Creates add album form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentAlbumForm(): Form
   {
@@ -174,7 +179,7 @@ class AlbumsPresenter extends BasePresenter
 
   /**
    * Creates add image form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentAddImageForm(): Form
   {
@@ -203,7 +208,7 @@ class AlbumsPresenter extends BasePresenter
   }
 
   /**
-   * Removes an image from database and filesystem
+   * Removes an image from database
    */
   public function submittedRemoveImage(): void
   {

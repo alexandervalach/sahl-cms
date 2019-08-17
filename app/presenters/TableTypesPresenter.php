@@ -6,7 +6,9 @@ use App\FormHelper;
 use App\Forms\TableTypeAddFormFactory;
 use App\Forms\TableTypeEditFormFactory;
 use App\Forms\RemoveFormFactory;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\TableTypesRepository;
@@ -37,17 +39,20 @@ class TableTypesPresenter extends BasePresenter
   private $removeFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    TableTypesRepository $tableTypesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    TableTypeAddFormFactory $tableTypeAddFormFactory,
-    TableTypeEditFormFactory $tableTypeEditFormFactory,
-    RemoveFormFactory $removeFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      TableTypesRepository $tableTypesRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      TableTypeAddFormFactory $tableTypeAddFormFactory,
+      TableTypeEditFormFactory $tableTypeEditFormFactory,
+      RemoveFormFactory $removeFormFactory,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->tableTypesRepository = $tableTypesRepository;
     $this->tableTypeAddFormFactory = $tableTypeAddFormFactory;
     $this->removeFormFactory = $removeFormFactory;

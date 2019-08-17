@@ -8,7 +8,9 @@ use App\FormHelper;
 use App\Forms\EventAddFormFactory;
 use App\Forms\EventEditFormFactory;
 use App\Forms\RemoveFormFactory;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\EventsRepository;
@@ -42,17 +44,20 @@ class EventsPresenter extends BasePresenter
   private $removeFormFactory;
 
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    EventsRepository $eventsRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    EventAddFormFactory $eventAddFormFactory,
-    EventEditFormFactory $eventEditFormFactory,
-    RemoveFormFactory $removeFormFactory
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      EventsRepository $eventsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      EventAddFormFactory $eventAddFormFactory,
+      EventEditFormFactory $eventEditFormFactory,
+      RemoveFormFactory $removeFormFactory,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository
   )
   {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->eventsRepository = $eventsRepository;
     $this->eventAddFormFactory = $eventAddFormFactory;
     $this->eventEditFormFactory = $eventEditFormFactory;
@@ -138,7 +143,7 @@ class EventsPresenter extends BasePresenter
 
   /**
    * Creates add form component
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentAddForm(): Form
   {
@@ -152,7 +157,7 @@ class EventsPresenter extends BasePresenter
 
   /**
    * Creates edit form component
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentEditForm(): Form
   {

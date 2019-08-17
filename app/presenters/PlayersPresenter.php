@@ -5,7 +5,9 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PlayersRepository;
@@ -45,10 +47,12 @@ class PlayersPresenter extends BasePresenter
     TeamsRepository $teamsRepository,
     PlayersRepository $playersRepository,
     PlayerTypesRepository $playerTypesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
-  )
-  {
-    parent::__construct($linksRepository, $sponsorsRepository, $teamsRepository, $seasonsGroupsTeamsRepository);
+    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+    GroupsRepository $groupsRepository,
+    SeasonsGroupsRepository $seasonsGroupsRepository
+  ) {
+    parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
+        $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
   }
@@ -180,8 +184,8 @@ class PlayersPresenter extends BasePresenter
 
   public function submittedRemoveForm(): void
   {
-    $team = $this->teamsRepository->getForPlayer($this->playerRow);
-    $this->playersRepository->remove($this->playerRow);
+    $team = $this->teamsRepository->getForPlayer($this->playerRow->id);
+    $this->playersRepository->remove($this->playerRow->id);
     $this->flashMessage('Hráč bol odstránený.', self::SUCCESS);
     $this->redirect('Teams:view', $team);
   }

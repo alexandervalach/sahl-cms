@@ -74,6 +74,16 @@ class TeamsPresenter extends BasePresenter
     $this->uploadFormFactory = $uploadFormFactory;
   }
 
+  public function actionAll(): void
+  {
+
+  }
+
+  public function renderAll(): void
+  {
+    $this->template->teams = $this->teams;
+  }
+
   /**
    * @param int $id
    */

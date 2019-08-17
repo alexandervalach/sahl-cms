@@ -116,14 +116,6 @@ class SeasonsPresenter extends BasePresenter
   /**
    * Submitted remove form
    */
-  public function submittedRemoveForm(): void
-  {
-    $this->redirect('all');
-  }
-
-  /**
-   * Submitted remove form
-   */
   public function submittedArchiveForm(): void
   {
     /*

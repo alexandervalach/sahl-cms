@@ -125,24 +125,6 @@ abstract class BasePresenter extends Presenter
   }
 
   /**
-   * Component for creating a remove form
-   * @return Form
-   */
-  protected function createComponentRemoveForm(): Form
-  {
-    $form = new Form;
-    $form->addSubmit('remove', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
    * Checks whether User is logged
    */
   protected function userIsLogged(): void

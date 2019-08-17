@@ -4,17 +4,20 @@ namespace App\Model;
 
 use Nette\Database\Table\Selection;
 use Nette\Database\IRow;
+use Nette\Database\ResultSet;
 
 class SeasonsGroupsTeamsRepository extends Repository
 {
   const SEASON_ID = 'season_id';
   const TEAM_ID = 'team_id';
+  const NAME = 'name';
 
   protected $tableName = 'seasons_groups_teams';
 
   /**
    * @param int $teamId
    * @param int|null $seasonId
+   * @return IRow|null
    */
   public function getTeam(int $teamId, $seasonId = null)
   {
@@ -34,12 +37,12 @@ class SeasonsGroupsTeamsRepository extends Repository
   }
 
   /**
-   * @param int|null $seasonId
+   * @param int $seasonGroupId
    * @return Selection
    */
-  public function getForSeason($seasonId = null): Selection
+  public function getForSeason(int $seasonGroupId): Selection
   {
-    return $this->getAll()->where('season_group_id', $seasonId);
+    return $this->findAll()->where('season_group_id', $seasonGroupId);
   }
 
 }

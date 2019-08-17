@@ -24,7 +24,9 @@ class FightAddFormFactory
   /** @var TableTypesRepository */
   private $tableTypesRepository;
 
-  /** @var TeamsRepository */
+  /**
+   * @var TeamsRepository
+   */
   private $teamsRepository;
 
   /**
@@ -33,9 +35,9 @@ class FightAddFormFactory
    * @param TeamsRepository $teamsRepository
    */
   public function __construct(
-    FormFactory $factory,
-    TableTypesRepository $tableTypesRepository,
-    TeamsRepository $teamsRepository)
+      FormFactory $factory,
+      TableTypesRepository $tableTypesRepository,
+      TeamsRepository $teamsRepository)
   {
     $this->formFactory = $factory;
     $this->tableTypesRepository = $tableTypesRepository;
@@ -49,8 +51,8 @@ class FightAddFormFactory
    */
   public function create(callable $onSuccess): Form
   {
-    $teams = $this->teamsRepository->getTeams();
-    $tableTypes = $this->tableTypesRepository->getTableTypes();
+    $teams = $this->teamsRepository->fetchForSeason();
+    $tableTypes = $this->tableTypesRepository->fetchForSeason();
 
     $form = $this->formFactory->create();
     $form->addSelect('team1_id', 'Tím 1', $teams);

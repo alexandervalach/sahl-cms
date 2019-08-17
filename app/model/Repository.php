@@ -111,9 +111,9 @@ abstract class Repository
   /**
    * Returns row identified by ID
    * @param int $id primary key
-   * @return ActiveRow
+   * @return ActiveRow|mixed
    */
-  public function findById(int $id): ActiveRow
+  public function findById(int $id)
   {
     return $this->findAll()->get($id);
   }
@@ -122,9 +122,9 @@ abstract class Repository
    * Add data to table
    * @param int $id data to be inserted
    * @param array $data data to be inserted
-   * @return ActiveRow
+   * @return int
    */
-  public function update(int $id, array $data): ActiveRow
+  public function update(int $id, array $data): int
   {
     $this->findAll()->wherePrimary($id)->update($data);
   }
@@ -132,9 +132,10 @@ abstract class Repository
   /**
    * Add data to table
    * @param array|ArrayHash $data data to be inserted
-   * @return ActiveRow
+   * @return ActiveRow|int|bool
    */
-  public function insert($data) {
+  public function insert($data)
+  {
     return $this->getTable()->insert($data);
   }
 

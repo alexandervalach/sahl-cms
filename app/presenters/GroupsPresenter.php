@@ -19,11 +19,19 @@ use Nette\Utils\ArrayHash;
 
 class GroupsPresenter extends BasePresenter
 {
-  const TYPE_NOT_FOUND = 'Player type not found';
 
   /** @var ActiveRow */
   private $groupRow;
 
+  /**
+   * GroupsPresenter constructor.
+   * @param GroupsRepository $groupsRepository
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   */
   public function __construct(
     GroupsRepository $groupsRepository,
     LinksRepository $linksRepository,
@@ -38,16 +46,25 @@ class GroupsPresenter extends BasePresenter
     $this->groupsRepository = $groupsRepository;
   }
 
+  /**
+   *
+   */
   public function actionAll(): void
   {
     $this->userIsLogged();
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
-    $this->template->groups = $this->groupsRepository->getAll();
+    $this->template->groups = $this->groups;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();
@@ -57,14 +74,20 @@ class GroupsPresenter extends BasePresenter
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->groupRow);
+    $this[self::EDIT_FORM]->setDefaults($this->groupRow);
   }
 
+  /**
+   * @param int $id
+   */
   public function renderEdit(int $id): void
   {
     $this->template->group = $this->groupRow;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionRemove(int $id): void
   {
     $this->userIsLogged();
@@ -75,11 +98,17 @@ class GroupsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderRemove(int $id): void
   {
     $this->template->group = $this->groupRow;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentAddForm(): Form
   {
     $form = new Form;
@@ -96,6 +125,9 @@ class GroupsPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentEditForm(): Form
   {
     $form = new Form;
@@ -115,7 +147,7 @@ class GroupsPresenter extends BasePresenter
 
   /**
    * Component for creating a remove form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {
@@ -135,8 +167,15 @@ class GroupsPresenter extends BasePresenter
   public function submittedAddForm(Form $form, ArrayHash $values): void
   {
     $this->userIsLogged();
-    $this->groupsRepository->insert($values);
-    $this->flashMessage('Skupina bol pridaná', self::SUCCESS);
+    $this->groupRow = $this->groupsRepository->getByLabel($values->label);
+
+    if (!$this->groupRow) {
+      $this->groupRow = $this->groupsRepository->insert($values);
+    }
+
+    $this->seasonsGroupsRepository->insert( array('group_id' => $this->groupRow->id) );
+
+    $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
     $this->redirect('all');
   }
 
@@ -144,15 +183,21 @@ class GroupsPresenter extends BasePresenter
   {
     $this->userIsLogged();
     $this->groupRow->update($values);
-    $this->flashMessage('Skupina bola upravená', self::SUCCESS);
+    $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
     $this->redirect('all');
   }
 
   public function submittedRemoveForm(): void
   {
     $this->userIsLogged();
+    $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($this->groupRow->id);
+
+    if ($seasonGroup) {
+      $this->seasonsGroupsRepository->remove($seasonGroup->id);
+    }
+
     $this->groupsRepository->remove($this->groupRow->id);
-    $this->flashMessage('Skupina bola odstránená', self::SUCCESS);
+    $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
     $this->redirect('all');
   }
 }

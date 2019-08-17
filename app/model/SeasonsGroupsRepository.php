@@ -8,7 +8,6 @@ use Nette\Database\IRow;
 class SeasonsGroupsRepository extends Repository
 {
   const SEASON_ID = 'season_id';
-  const TEAM_ID = 'team_id';
   const GROUP_ID = 'group_id';
 
   protected $tableName = 'seasons_groups';

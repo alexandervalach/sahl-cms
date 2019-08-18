@@ -23,9 +23,7 @@ abstract class BasePresenter extends Presenter
   const EDIT_FORM = 'editForm';
   const SUBMITTED_ADD_FORM = 'submittedAddForm';
   const SUBMITTED_EDIT_FORM = 'submittedEditForm';
-  const SUBMITTED_REMOVE_FORM = 'submittedRemoveForm';
   const SUBMITTED_RESET_FORM = 'submittedResetForm';
-  const FORM_CANCELLED = 'formCancelled';
   const BTN_WARNING = 'btn btn-large btn-warning';
   const BTN_DANGER = 'btn btn-large btn-danger';
   const BTN_SUCCESS = 'btn btn-large btn-success';
@@ -41,7 +39,8 @@ abstract class BasePresenter extends Presenter
   const ITEM_UPDATED = self::CHANGES_SAVED_SUCCESSFULLY;
   const ITEM_ADDED_SUCCESSFULLY = 'Položka bola pridaná.';
   const ITEM_REMOVED_SUCCESSFULLY = 'Položka bola odstránená.';
-  const ITEM_NOT_ADDED = 'Položka nebola pridaná';
+  const ITEM_NOT_ADDED = 'Položka nebola pridaná.';
+  const ITEM_NOT_REMOVED = 'Položku sa nepodarilo odstrániť.';
 
   /** @var LinksRepository */
   protected $linksRepository;

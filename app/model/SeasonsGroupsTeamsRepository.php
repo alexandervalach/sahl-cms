@@ -16,12 +16,12 @@ class SeasonsGroupsTeamsRepository extends Repository
 
   /**
    * @param int $teamId
-   * @param int|null $seasonId
+   * @param int $seasonGroupId
    * @return IRow|null
    */
-  public function getTeam(int $teamId, $seasonId = null)
+  public function getByTeam(int $teamId, int $seasonGroupId)
   {
-    return $this->getForSeason($seasonId)->where(self::TEAM_ID, $teamId)->fetch();
+    return $this->getForSeason($seasonGroupId)->where(self::TEAM_ID, $teamId)->fetch();
   }
 
   /**

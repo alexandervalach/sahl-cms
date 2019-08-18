@@ -237,10 +237,16 @@ class TeamsPresenter extends BasePresenter
   protected function createComponentRemoveForm(): Form
   {
     return $this->removeFormFactory->create( function () {
-      $seasonTeam = $this->seasonsTeamsRepository->getTeam($this->teamRow->id);
-      $this->seasonsTeamsRepository->remove($seasonTeam->id);
-      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
-      $this->redirect('all');
+      $seasonGroupTeam = $this->seasonsGroupsTeamsRepository->getByTeam($this->teamRow->id, $this->seasonGroup->id);
+
+      if ($seasonGroupTeam) {
+        $this->seasonsGroupsTeamsRepository->remove($seasonGroupTeam->id);
+        $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      } else {
+        $this->flashMessage(self::ITEM_NOT_REMOVED, self::DANGER);
+      }
+
+      $this->redirect('all', $this->groupRow->id);
     });
   }
 
@@ -315,7 +321,7 @@ class TeamsPresenter extends BasePresenter
 
     // TODO: Insert also team entry to tables
     // $this->tablesRepository->insert(array('team_id' => $team));
-    $this->redirect('all');
+    $this->redirect('all', $this->groupRow->id);
   }
 
 }

@@ -26,12 +26,24 @@
               Hráči <span class="caret"></span>
           </a>
           <ul class="dropdown-menu">
-              <li><a n:href="Players:all">Štatistiky</a></li>
-              <li><a n:href="Teams:all">Tímy</a></li>
-              <li><a n:href="Punishments:all">Tresty hráčov</a></li>
+              {foreach $groups as $group}
+                <li class="dropdown-header">{$group->label}</li>
+                <li><a n:href="Players:all $group->id">Štatistiky</a></li>
+                <li><a n:href="Teams:all $group->id">Tímy</a></li>
+                <li><a n:href="Punishments:all $group->id">Tresty hráčov</a></li>
+              {/foreach}
           </ul>
         </li>
-        <li><a n:href="Tables:all">Tabuľky</a></li>
+        <li>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            Tabuľky <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            {foreach $groups as $group}
+              <li><a n:href="Tables:all $group->id">{$group->label}</a></li>
+            {/foreach}
+          </ul>
+        </li>
         <li><a n:href="Posts:all">Články</a></li>
         <li><a n:href="Rules:all">Pravidlá a smernice</a></li>
         <li><a n:href="Albums:all">Galéria</a></li>

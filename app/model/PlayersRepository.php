@@ -21,39 +21,31 @@ class PlayersRepository extends Repository
 
   /**
    * @param int $teamId
-   * @param int|null $seasonId
+   * @param int $seasonGroupId
    * @return ResultSet
    */
-  public function getForTeam(int $teamId, $seasonId = null): ResultSet
+  public function getForTeam(int $teamId, int $seasonGroupId): ResultSet
   {
-    $con = $this->getConnection();
+    $db = $this->getConnection();
+    return $db->query('SELECT t.name as team_name, t.logo as team_logo, t.id as team_id, 
+        pt.label as type_label, pt.abbr as type_abbr, 
+        p.id, p.name, p.number, 
+        psgt.goals, psgt.is_transfer FROM seasons_groups_teams AS sgt 
+          INNER JOIN teams AS t ON t.id = sgt.team_id 
+          INNER JOIN players_seasons_groups_teams AS psgt ON psgt.season_group_team_id = sgt.id 
+          INNER JOIN players AS p ON p.id = psgt.player_id 
+          INNER JOIN player_types AS pt ON pt.id = psgt.player_type_id 
+        WHERE sgt.season_group_id = ? AND sgt.team_id = ? AND sgt.is_present = ?', $seasonGroupId, $teamId, 1);
+  }
 
-    $query = 'SELECT t.name as team_name, t.logo as team_logo, t.id as team_id,
-      pt.label as type_label, pt.abbr as type_abbr,
-      p.id, p.name, p.number, pst.goals, pst.is_transfer
-      FROM seasons_teams AS st
-      INNER JOIN teams AS t
-      ON t.id = st.team_id
-      INNER JOIN players_seasons_teams AS pst
-      ON pst.seasons_teams_id = st.id
-      INNER JOIN players AS p
-      ON p.id = pst.player_id
-      INNER JOIN player_types AS pt
-      ON pt.id = pst.player_type_id ';
-
-    if ($seasonId === null) {
-      return $con->query($query .
-        'WHERE st.season_id IS NULL
-        AND st.team_id = ?
-        AND t.is_present = ?
-        AND p.is_present = ?', $teamId, 1, 1);
-    }
-
-    return $con->query($query .
-      'WHERE st.season_id = ?
-      AND st.team_id = ?
-      AND t.is_present = ?
-      AND p.is_present = ?', $seasonId, $teamId, 1, 1);
+  /**
+   * @param int $teamId
+   * @param int $seasonGroupId
+   * @return array
+   */
+  public function fetchForTeam(int $teamId, int $seasonGroupId): array
+  {
+    return $this->getForTeam($teamId, $seasonGroupId)->fetchAll();
   }
 
   /**

@@ -72,7 +72,7 @@ class PlayersPresenter extends BasePresenter
   /**
    *
    */
-  public function renderAll(): void
+  public function renderAll(int $groupId): void
   {
     $this->template->players = $this->playersRepository->getForSeason();
     $this->template->i = 0;

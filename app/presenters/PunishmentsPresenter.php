@@ -67,17 +67,17 @@ class PunishmentsPresenter extends BasePresenter
   }
 
   /**
-   *
+   * @param int $groupId
    */
-  public function actionAll(): void
+  public function actionAll(int $groupId): void
   {
     $this->punishments = array();
   }
 
   /**
-   *
+   * @param int $groupId
    */
-  public function renderAll(): void
+  public function renderAll(int $groupId): void
   {
     $this->template->punishments = $this->punishmentsRepository->getForSeason();
   }

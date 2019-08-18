@@ -18,6 +18,7 @@ class RouterFactory {
     {
       $router = new RouteList();
       $router[] = new Route('admin', 'Sign:in');
+      // $router[] = new Route('<presenter>/<action>[/<groupId>]', 'Teams:all');
       $router[] = new Route('<presenter>/<action>[/<id>][/<param>]', 'Homepage:all');
       return $router;
     }

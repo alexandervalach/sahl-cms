@@ -11,13 +11,13 @@
     </div>
   {/if}
   <div class="clearfix">
-    <h1 n:block="title">Tímy</h1>
+    <h1 n:block="title">{$group->label}</h1>
   </div>
-  <div id="teams" n:foreach="$teams as $team">
+  <div id="teams" n:foreach="$group->teams as $team">
     <figure class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
       <figcaption>{$team->name}</figcaption>
       <div>
-        <a n:href="view $team->id">
+        <a n:href="Teams:view $team->id, $group->id">
           {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
             <img src="{$basePath}/{$imageFolder}/{$team->logo}" class="img-responsive" style="margin: 0 auto;" />
           {else}

@@ -59,9 +59,9 @@ class TablesPresenter extends BasePresenter
   }
 
   /**
-   *
+   * @param int $groupId
    */
-  public function actionAll(): void
+  public function actionAll(int $groupId): void
   {
     $tables = $this->tablesRepository->getForSeason();
 
@@ -73,9 +73,9 @@ class TablesPresenter extends BasePresenter
   }
 
   /**
-   *
+   * @param int $groupId
    */
-  public function renderAll(): void
+  public function renderAll(int $groupId): void
   {
     $this->template->tables = $this->tables;
   }

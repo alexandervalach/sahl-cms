@@ -34,6 +34,11 @@ class TeamsPresenter extends BasePresenter
   /** @var ActiveRow */
   private $seasonRow;
 
+  /** @var ActiveRow */
+  private $groupRow;
+
+  private $seasonGroup;
+
   /** @var PlayersRepository */
   private $playersRepository;
 
@@ -86,32 +91,40 @@ class TeamsPresenter extends BasePresenter
   }
 
   /**
-   *
+   * @param int $groupId
    */
-  public function actionAll(): void
+  public function actionAll(int $groupId): void
   {
     $this->userIsLogged();
+    $this->groupRow = $this->groupsRepository->findById($groupId);
+
+    if (!$this->groupRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
   }
 
   /**
-   *
+   * @param int $groupId
    */
-  public function renderAll(): void
+  public function renderAll(int $groupId): void
   {
-    $this->template->teams = $this->teamsRepository->findAll();
+    $this->template->group = ArrayHash::from($this->groups[$this->groupRow->id]);
   }
 
   /**
    * @param int $id
-   * @throws BadRequestException
+   * @param int $groupId
    */
-  public function actionView(int $id): void
+  public function actionView(int $id, int $groupId): void
   {
     $this->teamRow = $this->teamsRepository->findById($id);
+    $this->groupRow = $this->groupsRepository->findById($groupId);
 
-    if (!$this->teamRow) {
+    if (!$this->teamRow || !$this->groupRow) {
       throw new BadRequetsException(self::ITEM_NOT_FOUND);
     }
+
+    $this->seasonGroup = $this->seasonsGroupsRepository->getGroup($groupId);
 
     if ($this->user->isLoggedIn()) {
       $this['teamForm']->setDefaults($this->teamRow);
@@ -120,10 +133,11 @@ class TeamsPresenter extends BasePresenter
 
   /**
    * @param int $id
+   * @param int $groupId
    */
-  public function renderView(int $id): void
+  public function renderView(int $id, int $groupId): void
   {
-    $this->template->players = $this->playersRepository->getForTeam($id);
+    $this->template->players = $this->playersRepository->getForTeam($id, $this->seasonGroup->id);
     $this->template->goalies = []; // $this->playersRepository->getArchived()->where('team_id', $id);
     $this->template->team = $this->teamRow;
     $this->template->i = 0;

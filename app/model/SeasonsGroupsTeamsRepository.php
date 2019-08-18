@@ -29,7 +29,7 @@ class SeasonsGroupsTeamsRepository extends Repository
    * @param int|null $seasonId
    * @return IRow|null
    */
-  public function getSeasonTeam(int $teamId, $seasonId = null)
+  public function getTeam(int $teamId, $seasonId = null)
   {
     return $this->getForSeason($seasonId)
       ->where(self::TEAM_ID, $teamId)

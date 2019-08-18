@@ -8,7 +8,7 @@ use Nette\Database\Table\Selection;
 
 class PlayersSeasonsGroupsTeamsRepository extends Repository {
 
-  protected $tableName = 'players_seasons_teams';
+  protected $tableName = 'players_seasons_groups_teams';
 
   public function getAll(): Selection
   {

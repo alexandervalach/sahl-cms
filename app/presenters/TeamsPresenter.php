@@ -264,22 +264,20 @@ class TeamsPresenter extends BasePresenter
         array( 'name' => $values->name, 'number' => $values->number )
       );
       $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
-    } else {
-      $this->flashMessage(self::ITEM_ALREADY_EXISTS, self::WARNING);
     }
 
-    $seasonTeam = $this->seasonsTeamsRepository->getSeasonTeam($this->teamRow->id);
+    $seasonGroupTeam = $this->seasonsGroupsTeamsRepository->getTeam($this->teamRow->id, $this->seasonGroup->id);
 
     $this->playersSeasonsTeamsRepository->insert(
       array(
-        'seasons_teams_id' => $seasonTeam->id,
+        'season_group_team_id' => $seasonGroupTeam->id,
         'player_id' => $player->id,
         'is_transfer' => $values->is_transfer,
         'player_type_id' => $values->player_type_id
       )
     );
 
-    $this->redirect('view', $this->teamRow->id);
+    $this->redirect('view', $this->teamRow->id, $this->groupRow->id);
   }
 
   /**

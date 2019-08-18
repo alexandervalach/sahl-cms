@@ -4,6 +4,7 @@ namespace App;
 
 use Nette\Application\Routers\RouteList;
 use Nette\Application\Routers\Route;
+use Nette\Application\IRouter;
 
 /**
  * Router factory.
@@ -11,13 +12,14 @@ use Nette\Application\Routers\Route;
 class RouterFactory {
 
     /**
-     * @return \Nette\Application\IRouter
+     * @return IRouter
      */
-    public function createRouter() {
-        $router = new RouteList();
-        $router[] = new Route('admin', 'Sign:in');
-        $router[] = new Route('<presenter>/<action>[/<id>][/<param>]', 'Homepage:all');
-        return $router;
+    public function createRouter(): IRouter
+    {
+      $router = new RouteList();
+      $router[] = new Route('admin', 'Sign:in');
+      $router[] = new Route('<presenter>/<action>[/<id>][/<param>]', 'Homepage:all');
+      return $router;
     }
 
 }

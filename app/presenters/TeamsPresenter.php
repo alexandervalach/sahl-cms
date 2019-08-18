@@ -81,12 +81,14 @@ class TeamsPresenter extends BasePresenter
     $this->removeFormFactory = $removeFormFactory;
   }
 
-  /**
-   *
-   */
+  public function actionAll(): void
+  {
+    $this->userIsLogged();
+  }
+
   public function renderAll(): void
   {
-    $this->template->teams = $this->teams;
+    $this->template->teams = $this->teamsRepository->findAll();
   }
 
   /**
@@ -177,7 +179,7 @@ class TeamsPresenter extends BasePresenter
         $imgName = $img->getSanitizedName();
         $img->move($this->imageDir . '/' . $imgName);
         $this->teamRow->update( array('logo' => $imgName) );
-        $this->flashMessage('Obrázok bol pridaný', self::SUCCESS);
+        $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
       } else {
         $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
       }

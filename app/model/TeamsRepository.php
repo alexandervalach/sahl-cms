@@ -71,19 +71,21 @@ class TeamsRepository extends Repository
     return $this->findAll()->where(self::NAME, $name)->fetch();
   }
 
-  /*
-  public function getForSeason($seasonId = null): ResultSet
+  /**
+   * @param int $seasonGroupId
+   * @return ResultSet
+   */
+  public function getForSeasonGroup(int $seasonGroupId): ResultSet
   {
-    $con = $this->getConnection();
+    $db = $this->getConnection();
+    $query = 'SELECT t.id AS id, photo, logo, name 
+      FROM seasons_groups_teams AS sgt
+      INNER JOIN teams AS t
+      ON sgt.team_id = t.id 
+      WHERE sgt.is_present = ?';
 
-    $query = 'SELECT t.id, t.name, t.logo FROM seasons_teams as st
-      INNER JOIN teams as t ON st.team_id = t.id ';
-
-    return $seasonId === null ? $con->query($query .
-        'WHERE st.season_id IS NULL AND t.is_present = ? ORDER BY name', 1) : $con->query($query .
-        'WHERE st.season_id = ? AND t.is_present = ? ORDER BY name', $seasonId, 1);
+    return $db->query($query . ' AND sgt.season_group_id = ? ORDER BY name', 1, $seasonGroupId);
   }
-  */
 
   /**
    * @param int $playerId

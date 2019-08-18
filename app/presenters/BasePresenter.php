@@ -65,11 +65,8 @@ abstract class BasePresenter extends Presenter
   /** @var string */
   protected $imageDir;
 
-  /** @var Nette\Utils\AraryHash */
+  /** @var array */
   protected $groups;
-
-  /** @var Nette\Utils\AraryHash */
-  protected $teams;
 
   /**
    * Base constructor
@@ -104,22 +101,17 @@ abstract class BasePresenter extends Presenter
   public function beforeRender(): void
   {
     $seasonsGroups = $this->seasonsGroupsRepository->getForSeason();
-    $groups = [];
-    $teams = [];
 
     foreach ($seasonsGroups as $seasonGroup) {
       $group = $this->groupsRepository->findById($seasonGroup->group_id);
-      $groups[$seasonGroup->group_id]['id'] = $group->id;
-      $groups[$seasonGroup->group_id]['label'] = $group->label;
-      $groups[$seasonGroup->group_id]['teams'] = [];
+      $this->groups[$seasonGroup->group_id]['id'] = $group->id;
+      $this->groups[$seasonGroup->group_id]['label'] = $group->label;
+      $this->groups[$seasonGroup->group_id]['teams'] = $this->teamsRepository->getForSeasonGroup($seasonGroup->id);
     }
-
-    $this->groups = ArrayHash::from($groups);
-    $this->teams = ArrayHash::from($teams);
 
     $this->template->links = $this->linksRepository->getAll();
     $this->template->sponsors = $this->sponsorsRepository->getAll();
-    $this->template->groups = $this->groups;
+    $this->template->groups = ArrayHash::from($this->groups);
     $this->template->imageFolder = self::IMAGE_FOLDER;
     $this->template->defaultImage = self::DEFAULT_IMAGE;
   }

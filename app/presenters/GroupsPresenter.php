@@ -65,6 +65,30 @@ class GroupsPresenter extends BasePresenter
   /**
    * @param int $id
    */
+  public function actionView(int $id): void
+  {
+    $this->groupRow = $this->groupsRepository->findById($id);
+
+    if (!$this->groupRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
+
+    if (!$this->user->loggedIn()) {
+      $this[self::EDIT_FORM]->setDefaults($this->groupRow);
+    }
+  }
+
+  /**
+   * @param int $id
+   */
+  public function renderView(int $id): void
+  {
+    $this->template->teams = $this->groups;
+  }
+
+  /**
+   * @param int $id
+   */
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();

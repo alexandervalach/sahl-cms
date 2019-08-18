@@ -20,6 +20,10 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class GoalsPresenter
+ * @package App\Presenters
+ */
 class GoalsPresenter extends BasePresenter
 {
   /** @var ActiveRow */
@@ -49,6 +53,19 @@ class GoalsPresenter extends BasePresenter
   /** @var PlayersRepository */
   private $playersRepository;
 
+  /**
+   * GoalsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param GoalsRepository $goalsRepository
+   * @param FightsRepository $fightsRepository
+   * @param PlayersRepository $playersRepository
+   * @param RoundsRepository $roundsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -70,12 +87,18 @@ class GoalsPresenter extends BasePresenter
     $this->roundsRepository = $roundsRepository;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionView(int $id): void
   {
     $this->fightRow = $this->fightsRepository->findById($id);
     $this->roundRow = $this->roundsRepository->findById($this->fightRow->round_id);
   }
 
+  /**
+   * @param int $id
+   */
   public function renderView(int $id): void
   {
     $this->template->fight = $this->fightRow;
@@ -85,6 +108,9 @@ class GoalsPresenter extends BasePresenter
     $this->template->team2 = $this->fightRow->ref('team2_id');
   }
 
+  /**
+   * @param int $id
+   */
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();
@@ -92,6 +118,9 @@ class GoalsPresenter extends BasePresenter
     $this->fightRow = $this->goalRow->ref('fight_id');
   }
 
+  /**
+   * @param int $id
+   */
   public function renderEdit(int $id): void
   {
     if (!$this->goalRow || !$this->goalRow->is_present) {
@@ -105,6 +134,9 @@ class GoalsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function actionRemove(int $id): void
   {
     $this->userIsLogged();
@@ -137,6 +169,9 @@ class GoalsPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentEditForm(): Form
   {
     $form = new Form;
@@ -154,6 +189,11 @@ class GoalsPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @param Form $form
+   * @param ArrayHash $values
+   * @return Form
+   */
   public function submittedAddForm(Form $form, ArrayHash $values): Form
   {
     $this->goalsRepository->insert($values);
@@ -166,6 +206,11 @@ class GoalsPresenter extends BasePresenter
     $this->redirect('view', $this->fightRow->id);
   }
 
+  /**
+   * @param Form $form
+   * @param ArrayHash $values
+   * @return Form
+   */
   public function submittedEditForm(Form $form, ArrayHash $values): Form
   {
     $goalDifference = $values->goals - $this->goalRow->goals;
@@ -180,6 +225,9 @@ class GoalsPresenter extends BasePresenter
     $this->redirect('view', $this->fightRow->id);
   }
 
+  /**
+   * @return Form
+   */
   public function submittedRemove(): Form
   {
     $player = $this->playersRepository->findById($this->goalRow->player_id);
@@ -192,11 +240,18 @@ class GoalsPresenter extends BasePresenter
     $this->redirect('view', $this->fightRow->id);
   }
 
+  /**
+   *
+   */
   public function formCancelled(): void
   {
     $this->redirect('view', $this->goalRow->fight_id);
   }
 
+  /**
+   * @param ActiveRow $row
+   * @return array
+   */
   protected function teamPlayersHelper(ActiveRow $row): array
   {
     $team1 = $this->teamsRepository->findById($row->team1_id);

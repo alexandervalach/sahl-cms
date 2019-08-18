@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\SignInFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
@@ -12,17 +11,30 @@ use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
 use App\Model\TeamsRepository;
-use App\Model\TablesRepository;
 use Nette\Application\UI\Form;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class SignPresenter
+ * @package App\Presenters
+ */
 class SignPresenter extends BasePresenter
 {
 
   /** @var SignInFormFactory */
   private $signInFormFactory;
 
+  /**
+   * SignPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param SignInFormFactory $signInFormFactory
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -38,6 +50,9 @@ class SignPresenter extends BasePresenter
     $this->signInFormFactory = $signInFormFactory;
   }
 
+  /**
+   *
+   */
   public function actionIn(): void
   {
     if ($this->user->isLoggedIn()) {

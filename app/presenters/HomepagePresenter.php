@@ -14,6 +14,10 @@ use App\Model\RoundsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
 use App\Model\TableTypesRepository;
 
+/**
+ * Class HomepagePresenter
+ * @package App\Presenters
+ */
 class HomepagePresenter extends BasePresenter
 {
   /** @var PostsRepository */
@@ -25,6 +29,18 @@ class HomepagePresenter extends BasePresenter
   /** @var RoundsRepository */
   private $roundsRepository;
 
+  /**
+   * HomepagePresenter constructor.
+   * @param GroupsRepository $groupsRepository
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param PostsRepository $postsRepository
+   * @param TableTypesRepository $tableTypesRepository
+   * @param RoundsRepository $roundsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       GroupsRepository $groupsRepository,
       LinksRepository $linksRepository,
@@ -44,11 +60,17 @@ class HomepagePresenter extends BasePresenter
     $this->roundsRepository = $roundsRepository;
   }
 
+  /**
+   *
+   */
   public function actionAll(): void
   {
 
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $posts = $this->postsRepository->getLatestPosts();

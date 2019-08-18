@@ -22,6 +22,10 @@ use Nette\Utils\FileSystem;
 use Nette\IOException;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class TeamsPresenter
+ * @package App\Presenters
+ */
 class TeamsPresenter extends BasePresenter
 {
   /** @var ActiveRow */
@@ -81,11 +85,17 @@ class TeamsPresenter extends BasePresenter
     $this->removeFormFactory = $removeFormFactory;
   }
 
+  /**
+   *
+   */
   public function actionAll(): void
   {
     $this->userIsLogged();
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->teams = $this->teamsRepository->findAll();
@@ -207,6 +217,9 @@ class TeamsPresenter extends BasePresenter
     });
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentRemoveForm(): Form
   {
     return $this->removeFormFactory->create( function () {

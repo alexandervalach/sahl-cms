@@ -17,10 +17,12 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class LinksPresenter
+ * @package App\Presenters
+ */
 class LinksPresenter extends BasePresenter
 {
-  const LINK_NOT_FOUND = 'Link not found';
-
   /** @var ActiveRow */
   private $linkRow;
 
@@ -35,6 +37,18 @@ class LinksPresenter extends BasePresenter
    */
   private $removeFormFactory;
 
+  /**
+   * LinksPresenter constructor.
+   * @param GroupsRepository $groupsRepository
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param LinkAddFormFactory $linkAddFormFactory
+   * @param LinkEditFormFactory $linkEditFormFactory
+   * @param RemoveFormFactory $removeFormFactory
+   */
   public function __construct(
       GroupsRepository $groupsRepository,
       LinksRepository $linksRepository,
@@ -55,40 +69,58 @@ class LinksPresenter extends BasePresenter
   }
 
 
+  /**
+   *
+   */
   public function actionAll(): void
   {
     $this->userIsLogged();
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->links = $this->linksRepository->getAll();
   }
 
+  /**
+   * @param $id
+   */
   public function actionRemove($id): void
   {
     $this->userIsLogged();
     $this->linkRow = $this->linksRepository->findById($id);
     if (!$this->linkRow) {
-      throw new BadRequestException(self::LINK_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }
 
+  /**
+   * @param $id
+   */
   public function renderRemove($id): void
   {
     $this->template->link = $this->linkRow;
   }
 
+  /**
+   * @param $id
+   */
   public function actionEdit($id): void
   {
     $this->userIsLogged();
     $this->linkRow = $this->linksRepository->findById($id);
     if (!$this->linkRow) {
-      throw new BadRequestException(self::LINK_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
     $this[self::EDIT_FORM]->setDefaults($this->linkRow);
   }
 
+  /**
+   * @param $id
+   */
   public function renderEdit($id): void
   {
     $this->template->link = $this->linkRow;

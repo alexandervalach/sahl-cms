@@ -15,10 +15,12 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
+/**
+ * Class TablesPresenter
+ * @package App\Presenters
+ */
 class TablesPresenter extends BasePresenter
 {
-  const TABLE_NOT_FOUND = 'Table not found';
-
   /** @var array */
   private $tables;
 
@@ -31,6 +33,16 @@ class TablesPresenter extends BasePresenter
   /** @var TablesRepository */
   private $tablesRepository;
 
+  /**
+   * TablesPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param TablesRepository $tablesRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
@@ -46,6 +58,9 @@ class TablesPresenter extends BasePresenter
     $this->tablesRepository = $tablesRepository;
   }
 
+  /**
+   *
+   */
   public function actionAll(): void
   {
     $tables = $this->tablesRepository->getForSeason();
@@ -57,11 +72,17 @@ class TablesPresenter extends BasePresenter
     }
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->tables = $this->tables;
   }
 
+  /**
+   * @param $id
+   */
   public function actionAddToSidebar($id): void
   {
     $this->userIsLogged();
@@ -74,11 +95,17 @@ class TablesPresenter extends BasePresenter
     $this->submittedSetVisible();
   }
 
+  /**
+   * @param int $id
+   */
   public function actionArchAll(int $id): void
   {
     $this->archRow = $this->seasonsRepository->findById($id);
   }
 
+  /**
+   * @param int $id
+   */
   public function renderArchAll(int $id): void
   {
     $tableTypes = $this->tableTypesRepository->findAll();
@@ -96,6 +123,9 @@ class TablesPresenter extends BasePresenter
     $this->template->archive = $this->archRow;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentEditForm(): Form
   {
     $form = new Form;
@@ -111,6 +141,9 @@ class TablesPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentResetForm(): Form
   {
     $form = new Form;
@@ -125,6 +158,10 @@ class TablesPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @param Form $form
+   * @param $values
+   */
   public function submittedEditForm(Form $form, $values): void
   {
     $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
@@ -133,6 +170,9 @@ class TablesPresenter extends BasePresenter
     $this->redirect('all');
   }
 
+  /**
+   *
+   */
   public function submittedRemoveForm(): void
   {
     $this->tableRow->delete();
@@ -140,6 +180,9 @@ class TablesPresenter extends BasePresenter
     $this->redirect('all');
   }
 
+  /**
+   *
+   */
   public function submittedSetVisible(): void
   {
     $this->tableRow->update(array('is_visible' => 1));
@@ -147,6 +190,9 @@ class TablesPresenter extends BasePresenter
     $this->redirect('all');
   }
 
+  /**
+   *
+   */
   public function submittedResetForm(): void
   {
     $rows = $this->tablesRepository->getArchived();
@@ -168,6 +214,9 @@ class TablesPresenter extends BasePresenter
     $this->redirect('all');
   }
 
+  /**
+   *
+   */
   public function formCancelled(): void
   {
     $this->redirect('all');

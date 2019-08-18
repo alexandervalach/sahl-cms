@@ -16,6 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 
+/**
+ * Class FightsPresenter
+ * @package App\Presenters
+ */
 class FightsPresenter extends BasePresenter
 {
   const FIGHT_NOT_FOUND = 'Fight not found';
@@ -44,6 +48,18 @@ class FightsPresenter extends BasePresenter
   /** @var RemoveFormFactory */
   private $removeFormFactory;
 
+  /**
+   * FightsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param FightsRepository $fightsRepository
+   * @param TablesRepository $tablesRepository
+   * @param RemoveFormFactory $removeFormFactory
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -63,6 +79,9 @@ class FightsPresenter extends BasePresenter
     $this->removeFormFactory = $removeFormFactory;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();
@@ -74,12 +93,18 @@ class FightsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderEdit(int $id): void
   {
     $this->template->round = $this->roundRow;
     $this[self::EDIT_FORM]->setDefaults($this->fightRow);
   }
 
+  /**
+   * @param int $id
+   */
   public function actionRemove(int $id): void
   {
     $this->userIsLogged();
@@ -91,11 +116,18 @@ class FightsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderRemove(int $id): void
   {
     $this->template->fight = $this->fightRow;
   }
 
+  /**
+   * @param int $id
+   * @param $param
+   */
   public function actionArchView(int $id, $param): void
   {
     $this->roundRow = $this->roundsRepository->findById($param);
@@ -106,6 +138,10 @@ class FightsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   * @param $param
+   */
   public function renderArchView(int $id, $param): void
   {
     $this->template->fights = $this->fightsRepository
@@ -115,6 +151,9 @@ class FightsPresenter extends BasePresenter
     $this->template->archive = $this->roundRow->ref('archive', 'archive_id');
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentEditForm(): Form
   {
     $teams = $this->teamsRepository->getTeams();
@@ -145,6 +184,11 @@ class FightsPresenter extends BasePresenter
     });
   }
 
+  /**
+   * @param Form $form
+   * @param ArrayHash $values
+   * @return bool
+   */
   public function submittedAddForm(Form $form, ArrayHash $values)
   {
     if ($values->team1_id === $values->team2_id)
@@ -164,6 +208,11 @@ class FightsPresenter extends BasePresenter
     $this->redirect('Rounds:view', $round->id);
   }
 
+  /**
+   * @param Form $form
+   * @param ArrayHash $values
+   * @return bool
+   */
   public function submittedEditForm(Form $form, ArrayHash $values)
   {
     if ($values->team1_id == $values->team2_id) {
@@ -175,6 +224,11 @@ class FightsPresenter extends BasePresenter
     $this->redirect('Rounds:view', $this->roundRow->id);
   }
 
+  /**
+   * @param $values
+   * @param $type
+   * @param int $value
+   */
   public function updateTableRows($values, $type, $value = 1): void
   {
     $state1 = 'tram';
@@ -193,6 +247,11 @@ class FightsPresenter extends BasePresenter
     $this->tablesRepository->updateFights($values['team2_id'], $type);
   }
 
+  /**
+   * @param $values
+   * @param $type
+   * @param string $column
+   */
   public function updateTablePoints($values, $type, $column = 'points'): void
   {
     if ($values['score1'] > $values['score2']) {
@@ -207,6 +266,10 @@ class FightsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param $values
+   * @param $type
+   */
   public function updateTableGoals($values, $type): void
   {
     $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score1', $values['score1']);

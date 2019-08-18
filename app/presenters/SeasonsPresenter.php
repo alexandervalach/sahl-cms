@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\ArchiveFormFactory;
 use App\Forms\SeasonFormFactory;
 use App\Model\GroupsRepository;
@@ -17,6 +16,10 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class SeasonsPresenter
+ * @package App\Presenters
+ */
 class SeasonsPresenter extends BasePresenter
 {
   /** @var ActiveRow */
@@ -31,6 +34,18 @@ class SeasonsPresenter extends BasePresenter
   /** @var SeasonFormFactory */
   private $seasonFormFactory;
 
+  /**
+   * SeasonsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param SeasonsRepository $seasonsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param ArchiveFormFactory $archiveFormFactory
+   * @param SeasonFormFactory $seasonFormFactory
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param GroupsRepository $groupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,

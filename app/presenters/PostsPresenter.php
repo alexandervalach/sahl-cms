@@ -2,9 +2,9 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\MultiUploadFormFactory;
 use App\Forms\PostFormFactory;
+use App\Forms\RemoveFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
@@ -21,12 +21,12 @@ use Nette\Utils\ArrayHash;
 use Nette\IOException;
 use Nette\InvalidArgumentException;
 
+/**
+ * Class PostsPresenter
+ * @package App\Presenters
+ */
 class PostsPresenter extends BasePresenter
 {
-  const POST_NOT_FOUND = 'Post not found';
-  const IMAGE_NOT_FOUND = 'Image not found';
-  const ADD_IMG_FORM = 'addImgForm';
-
   /** @var ActiveRow */
   private $postRow;
 
@@ -45,6 +45,25 @@ class PostsPresenter extends BasePresenter
   /** @var PostFormFactory */
   private $postFormFactory;
 
+  /**
+   * @var RemoveFormFactory
+   */
+  private $removeFormFactory;
+
+  /**
+   * PostsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param PostsRepository $postsRepository
+   * @param PostImagesRepository $postImagesRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param MultiUploadFormFactory $multiUploadFormFactory
+   * @param PostFormFactory $postFormFactory
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param RemoveFormFactory $removeFormFactory
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -55,7 +74,8 @@ class PostsPresenter extends BasePresenter
       MultiUploadFormFactory $multiUploadFormFactory,
       PostFormFactory $postFormFactory,
       GroupsRepository $groupsRepository,
-      SeasonsGroupsRepository $seasonsGroupsRepository
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      RemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
@@ -64,18 +84,25 @@ class PostsPresenter extends BasePresenter
     $this->postImagesRepository = $postImagesRepository;
     $this->multiUploadFormFactory = $multiUploadFormFactory;
     $this->postFormFactory = $postFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->posts = $this->postsRepository->getAll()->order('id DESC');
   }
 
+  /**
+   * @param int $id
+   */
   public function actionView(int $id): void
   {
     $this->postRow = $this->postsRepository->findById($id);
 
-    if (!$this->postRow || !$this->postRow->is_present) {
+    if (!$this->postRow) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
@@ -84,12 +111,19 @@ class PostsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderView(int $id): void
   {
     $this->template->post = $this->postRow;
     $this->template->images = $this->postsRepository->getImages($this->postRow);
   }
 
+  /**
+   * @param $postId
+   * @param $id
+   */
   public function actionSetImg($postId, $id): void
   {
     $this->imgRow = $this->postImagesRepository->findById($id);
@@ -106,6 +140,10 @@ class PostsPresenter extends BasePresenter
     $this->submittedSetImgForm();
   }
 
+  /**
+   * @param $postId
+   * @param $id
+   */
   public function actionRemoveImg($postId, $id): void
   {
     $this->imgRow = $this->postImagesRepository->findById($id);
@@ -122,6 +160,9 @@ class PostsPresenter extends BasePresenter
     $this->submittedRemoveImgForm();
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentPostForm(): Form
   {
     return $this->postFormFactory->create(function (Form $form, ArrayHash $values) {
@@ -140,7 +181,27 @@ class PostsPresenter extends BasePresenter
   }
 
   /**
-   * @return Nette\Application\UI\Form
+   * @return Form
+   */
+  protected function createComponentRemoveForm(): Form
+  {
+    return $this->removeFormFactory->create(function () {
+      $images = $this->postsRepository->getImages($this->postRow);
+
+      foreach ($images as $image) {
+        $this->postImagesRepository->remove($image->id);
+      }
+
+      $this->postsRepository->remove($this->postRow->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
+  }
+
+  /**
+   * @return Form
    */
   protected function createComponentAddImageForm(): Form
   {
@@ -163,19 +224,9 @@ class PostsPresenter extends BasePresenter
     });
   }
 
-  public function submittedRemoveForm(): void
-  {
-    $images = $this->postsRepository->getImages($this->postRow);
-
-    foreach ($images as $image) {
-      $this->postImagesRepository->remove($image->id);
-    }
-
-    $this->postsRepository->remove($this->postRow->id);
-    $this->flashMessage('Príspevok bol odstránený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
+  /**
+   *
+   */
   public function submittedSetImgForm(): void
   {
     $values['thumbnail'] = $this->imgRow->name;
@@ -184,6 +235,9 @@ class PostsPresenter extends BasePresenter
     $this->redirect('view', $this->postRow->id);
   }
 
+  /**
+   *
+   */
   public function submittedRemoveImgForm(): void
   {
     try {
@@ -194,11 +248,6 @@ class PostsPresenter extends BasePresenter
       $this->flashMessage('Obrázok sa nepodarilo odstrániť', self::DANGER);
     }
     $this->redirect('view', $this->postRow->id);
-  }
-
-  public function submittedAddImageForm(Form $form, ArrayHash $values): void
-  {
-
   }
 
 }

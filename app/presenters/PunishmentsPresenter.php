@@ -17,6 +17,10 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class PunishmentsPresenter
+ * @package App\Presenters
+ */
 class PunishmentsPresenter extends BasePresenter
 {
   /** @var ActiveRow */
@@ -34,6 +38,17 @@ class PunishmentsPresenter extends BasePresenter
   /** @var PlayersRepository */
   private $playersRepository;
 
+  /**
+   * PunishmentsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param PlayersRepository $playersRepository
+   * @param PunishmentsRepository $punishmentsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -51,16 +66,25 @@ class PunishmentsPresenter extends BasePresenter
     $this->punishmentsRepository = $punishmentsRepository;
   }
 
+  /**
+   *
+   */
   public function actionAll(): void
   {
     $this->punishments = array();
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->punishments = $this->punishmentsRepository->getForSeason();
   }
 
+  /**
+   * @param int $id
+   */
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();
@@ -73,11 +97,17 @@ class PunishmentsPresenter extends BasePresenter
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->punishmentRow);
   }
 
+  /**
+   * @param int $id
+   */
   public function renderEdit(int $id): void
   {
     $this->template->player = $this->punishmentRow->ref('players', 'player_id');
   }
 
+  /**
+   * @param $id
+   */
   public function actionRemove($id): void
   {
     $this->userIsLogged();
@@ -88,16 +118,25 @@ class PunishmentsPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderRemove(int $id): void
   {
     $this->template->punishment = $this->punishmentRow;
   }
 
+  /**
+   * @param int $id
+   */
   public function actionArchAll(int $id): void
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
   }
 
+  /**
+   * @param int $id
+   */
   public function renderArchAll(int $id): void
   {
     $this->template->season = $this->seasonRow;
@@ -124,6 +163,9 @@ class PunishmentsPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentAddForm(): Form
   {
     $players = $this->playersRepository->getNonEmptyPlayers();
@@ -143,6 +185,10 @@ class PunishmentsPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @param Form $form
+   * @param ArrayHash $values
+   */
   public function submittedEditForm(Form $form, ArrayHash $values): void
   {
     $this->userIsLogged();
@@ -151,6 +197,10 @@ class PunishmentsPresenter extends BasePresenter
     $this->redirect('all');
   }
 
+  /**
+   * @param Form $form
+   * @param ArrayHash $values
+   */
   public function submittedAddForm(Form $form, ArrayHash $values): void
   {
     $this->userIsLogged();
@@ -159,6 +209,9 @@ class PunishmentsPresenter extends BasePresenter
     $this->redirect('all');
   }
 
+  /**
+   *
+   */
   public function submittedRemoveForm(): void
   {
     $this->userIsLogged();

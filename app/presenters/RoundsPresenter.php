@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\RoundFormFactory;
 use App\Forms\FightAddFormFactory;
 use App\Forms\ModalRemoveFormFactory;
@@ -23,6 +22,10 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class RoundsPresenter
+ * @package App\Presenters
+ */
 class RoundsPresenter extends BasePresenter
 {
   /** @var ActiveRow */
@@ -55,6 +58,22 @@ class RoundsPresenter extends BasePresenter
   /** @var ModalRemoveFormFactory */
   private $modalRemoveFormFactory;
 
+  /**
+   * RoundsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param RoundsRepository $roundsRepository
+   * @param FightsRepository $fightsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param TablesRepository $tablesRepository
+   * @param TableEntriesRepository $tableEntriesRepository
+   * @param RoundFormFactory $roundFormFactory
+   * @param FightAddFormFactory $fightAddFormFactory
+   * @param ModalRemoveFormFactory $modalRemoveFormFactory
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -81,6 +100,9 @@ class RoundsPresenter extends BasePresenter
     $this->modalRemoveFormFactory = $modalRemoveFormFactory;
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->rounds = $this->roundsRepository->getArchived();
@@ -279,6 +301,9 @@ class RoundsPresenter extends BasePresenter
     });
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentRemoveForm(): Form
   {
     return $this->modalRemoveFormFactory->create(function () {

@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\AlbumFormFactory;
 use App\Forms\MultiUploadFormFactory;
 use App\Forms\ModalRemoveFormFactory;
@@ -24,11 +23,12 @@ use Nette\IOException;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class AlbumsPresenter
+ * @package App\Presenters
+ */
 class AlbumsPresenter extends BasePresenter
 {
-  const ALBUM_NOT_FOUND = 'Album not found';
-  const IMAGE_NOT_FOUND = 'Image not found';
-
   /** @var ActiveRow */
   private $albumRow;
 
@@ -104,7 +104,7 @@ class AlbumsPresenter extends BasePresenter
     $this->albumRow = $this->albumsRepository->findById($id);
 
     if (!$this->albumRow || !$this->albumRow->is_present) {
-      throw new BadRequestException(self::ALBUM_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     if ($this->user->isLoggedIn()) {
@@ -133,11 +133,11 @@ class AlbumsPresenter extends BasePresenter
     $this->imageRow = $this->imagesRepository->findById($id);
 
     if (!$this->albumRow || !$this->albumRow->is_present) {
-      throw new BadRequestException(self::ALBUM_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     if (!$this->imageRow || !$this->imageRow->is_present) {
-      throw new BadRequestException(self::IMAGE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this->submittedSetImage();
@@ -152,7 +152,7 @@ class AlbumsPresenter extends BasePresenter
     $this->userIsLogged();
     $this->imageRow = $this->imagesRepository->findById($id);
     if (!$this->imageRow) {
-      throw new BadRequestException(self::IMAGE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
     $this->submittedRemoveImage();
   }
@@ -235,6 +235,9 @@ class AlbumsPresenter extends BasePresenter
     $this->redirect('Albums:view', $this->imageRow->album_id);
   }
 
+  /**
+   *
+   */
   public function submittedSetImage(): void
   {
     $data = array('thumbnail' => $this->imageRow->name);

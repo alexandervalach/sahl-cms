@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\PlayerTypeAddFormFactory;
 use App\Forms\PlayerTypeEditFormFactory;
 use App\Forms\RemoveFormFactory;
@@ -19,6 +18,10 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class PlayerTypesPresenter
+ * @package App\Presenters
+ */
 class PlayerTypesPresenter extends BasePresenter
 {
   /** @var PlayerTypesRepository */
@@ -36,6 +39,19 @@ class PlayerTypesPresenter extends BasePresenter
   /** @var ActiveRow */
   private $playerTypeRow;
 
+  /**
+   * PlayerTypesPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param PlayerTypesRepository $playerTypesRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param PlayerTypeAddFormFactory $playerTypeAddFormFactory
+   * @param PlayerTypeEditFormFactory $playerTypeEditFormFactory
+   * @param RemoveFormFactory $removeFormFactory
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,

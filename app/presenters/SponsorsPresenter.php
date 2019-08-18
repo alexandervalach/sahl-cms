@@ -20,10 +20,12 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\FileSystem;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class SponsorsPresenter
+ * @package App\Presenters
+ */
 class SponsorsPresenter extends BasePresenter
 {
-  const ITEM_NOT_FOUND = 'Sponsor not found';
-
   /** @var ActiveRow */
   private $sponsorRow;
 
@@ -41,6 +43,18 @@ class SponsorsPresenter extends BasePresenter
    */
   private $removeFormFactory;
 
+  /**
+   * SponsorsPresenter constructor.
+   * @param GroupsRepository $groupsRepository
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param SponsorAddFormFactory $sponsorAddFormFactory
+   * @param SponsorEditFormFactory $sponsorEditFormFactory
+   * @param RemoveFormFactory $removeFormFactory
+   */
   public function __construct(
       GroupsRepository $groupsRepository,
       LinksRepository $linksRepository,
@@ -68,6 +82,9 @@ class SponsorsPresenter extends BasePresenter
     $this->userIsLogged();
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->sponsors = $this->sponsorsRepository->getAll();

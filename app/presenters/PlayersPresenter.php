@@ -18,11 +18,12 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class PlayersPresenter
+ * @package App\Presenters
+ */
 class PlayersPresenter extends BasePresenter
 {
-  const PLAYER_NOT_FOUND = "Player not found";
-  const TEAM_NOT_FOUND = "Team not found";
-
   /** @var ActiveRow */
   private $playerRow;
 
@@ -41,6 +42,17 @@ class PlayersPresenter extends BasePresenter
   /** @var PlayerTypesRepository */
   private $playerTypesRepository;
 
+  /**
+   * PlayersPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param PlayersRepository $playersRepository
+   * @param PlayerTypesRepository $playerTypesRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
@@ -57,6 +69,9 @@ class PlayersPresenter extends BasePresenter
     $this->playerTypesRepository = $playerTypesRepository;
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->players = $this->playersRepository->getForSeason();
@@ -68,13 +83,13 @@ class PlayersPresenter extends BasePresenter
 
   /**
    * @param int $id
-   * @throws Nette\Application\BadRequestException
+   * @throws BadRequestException
    */
   public function actionView(int $id): void
   {
     $this->playerRow = $this->playersRepository->findById($id);
     if (!$this->playerRow || !$this->playerRow->is_present) {
-      throw new BadRequestException(self::PLAYER_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $data = [];
@@ -99,6 +114,9 @@ class PlayersPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   */
   public function renderView(int $id): void
   {
     $this->template->player = $this->playerData->player;
@@ -106,11 +124,17 @@ class PlayersPresenter extends BasePresenter
     $this->template->type = $this->playerData->type;
   }
 
+  /**
+   * @param $id
+   */
   public function actionArchAll($id): void
   {
     $this->archRow = $this->seasonsRepository->findById($id);
   }
 
+  /**
+   * @param $id
+   */
   public function renderArchAll($id): void
   {
     $this->template->stats = $this->playersRepository->getArchived($id)
@@ -123,6 +147,10 @@ class PlayersPresenter extends BasePresenter
     $this->template->previous = 0;
   }
 
+  /**
+   * @param int $id
+   * @param $param
+   */
   public function actionArchView(int $id, $param): void
   {
     $this->teamRow = $this->teamsRepository->findById($param);
@@ -131,6 +159,10 @@ class PlayersPresenter extends BasePresenter
     }
   }
 
+  /**
+   * @param int $id
+   * @param $param
+   */
   public function renderArchView(int $id, $param): void
   {
     $this->template->players = $this->playersRepository->findByValue('team_id', $param)->where('archive_id', $id)->where('NOT type_id', 2);
@@ -139,6 +171,9 @@ class PlayersPresenter extends BasePresenter
     $this->template->archive = $this->teamRow->ref('archive', 'archive_id');
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentEditForm(): Form
   {
     $types = $this->playerTypesRepository->getTypes();
@@ -162,6 +197,9 @@ class PlayersPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentResetForm(): Form
   {
     $form = new Form;
@@ -175,6 +213,10 @@ class PlayersPresenter extends BasePresenter
     return $form;
   }
 
+  /**
+   * @param Form $form
+   * @param $values
+   */
   public function submittedEditForm(Form $form, $values): void
   {
     $this->playerRow->update($values);
@@ -182,6 +224,9 @@ class PlayersPresenter extends BasePresenter
     $this->redirect('view', $this->playerRow);
   }
 
+  /**
+   *
+   */
   public function submittedRemoveForm(): void
   {
     $team = $this->teamsRepository->getForPlayer($this->playerRow->id);
@@ -190,6 +235,9 @@ class PlayersPresenter extends BasePresenter
     $this->redirect('Teams:view', $team);
   }
 
+  /**
+   *
+   */
   public function submittedResetForm(): void
   {
     $players = $this->playersRepository

@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\TableTypeAddFormFactory;
 use App\Forms\TableTypeEditFormFactory;
 use App\Forms\RemoveFormFactory;
@@ -19,10 +18,12 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 
+/**
+ * Class TableTypesPresenter
+ * @package App\Presenters
+ */
 class TableTypesPresenter extends BasePresenter
 {
-  const TYPE_NOT_FOUND = 'Type not found';
-
   /** @var ActiveRow */
   private $tableTypeRow;
 
@@ -38,6 +39,19 @@ class TableTypesPresenter extends BasePresenter
   /** @var RemoveFormFactory */
   private $removeFormFactory;
 
+  /**
+   * TableTypesPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param TableTypesRepository $tableTypesRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param TableTypeAddFormFactory $tableTypeAddFormFactory
+   * @param TableTypeEditFormFactory $tableTypeEditFormFactory
+   * @param RemoveFormFactory $removeFormFactory
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -59,11 +73,17 @@ class TableTypesPresenter extends BasePresenter
     $this->tableTypeEditFormFactory = $tableTypeEditFormFactory;
   }
 
+  /**
+   *
+   */
   public function actionAll(): void
   {
     $this->userIsLogged();
   }
 
+  /**
+   *
+   */
   public function renderAll(): void
   {
     $this->template->types = $this->tableTypesRepository->getAll();
@@ -78,7 +98,7 @@ class TableTypesPresenter extends BasePresenter
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
     if (!$this->tableTypeRow || !$this->tableTypeRow->is_present) {
-      throw new BadRequestException(self::TYPE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this[self::EDIT_FORM]->setDefaults($this->tableTypeRow);
@@ -101,7 +121,7 @@ class TableTypesPresenter extends BasePresenter
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
     if (!$this->tableTypeRow || !$this->tableTypeRow->is_present) {
-      throw new BadRequestException(self::TYPE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }
 
@@ -115,7 +135,7 @@ class TableTypesPresenter extends BasePresenter
 
   /**
    * Creates add table types form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentAddForm(): Form
   {
@@ -136,13 +156,13 @@ class TableTypesPresenter extends BasePresenter
 
   /**
    * Creates edit table types form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentEditForm(): Form
   {
     return $this->tableTypeEditFormFactory->create(function (SubmitButton $button, ArrayHash $values) {
       $this->tableTypeRow->update($values);
-      $this->flashMessage('Záznam bol upravený', self::SUCCESS);
+      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
       $this->redirect('all');
     }, function () {
       $this->redirect('all');
@@ -151,7 +171,7 @@ class TableTypesPresenter extends BasePresenter
 
   /**
    * Component for creating a remove form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {
@@ -173,12 +193,15 @@ class TableTypesPresenter extends BasePresenter
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
     if (!$this->tableTypeRow || !$this->tableTypeRow->is_pesent) {
-      throw new BadRequestException(self::TYPE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this->submittedShowTable();
   }
 
+  /**
+   *
+   */
   public function submittedShowTable(): void
   {
     /*
@@ -197,12 +220,15 @@ class TableTypesPresenter extends BasePresenter
     $this->tableTypeRow = $this->tableTypesRepository->findById($id);
 
     if (!$this->tableTypeRow || !$this->tableTypeRow->is_pesent) {
-      throw new BadRequestException(self::TYPE_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this->submittedHideTable();
   }
 
+  /**
+   *
+   */
   public function submittedHideTable(): void
   {
     /*

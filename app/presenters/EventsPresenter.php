@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Forms\EventAddFormFactory;
 use App\Forms\EventEditFormFactory;
 use App\Forms\RemoveFormFactory;
@@ -23,8 +22,6 @@ use Nette\Forms\Controls\SubmitButton;
 
 class EventsPresenter extends BasePresenter
 {
-  const EVENT_NOT_FOUND = 'Event not found';
-
   /** @var ActiveRow */
   private $eventRow;
 
@@ -43,6 +40,19 @@ class EventsPresenter extends BasePresenter
   /** @var RemoveFormFactory */
   private $removeFormFactory;
 
+  /**
+   * EventsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param EventsRepository $eventsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param EventAddFormFactory $eventAddFormFactory
+   * @param EventEditFormFactory $eventEditFormFactory
+   * @param RemoveFormFactory $removeFormFactory
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -82,7 +92,7 @@ class EventsPresenter extends BasePresenter
     $this->eventRow = $this->eventsRepository->findById($id);
 
     if (!$this->eventRow || !$this->eventRow->is_present) {
-      throw new BadRequestException(self::EVENT_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     if ($this->user->isLoggedIn()) {
@@ -109,7 +119,7 @@ class EventsPresenter extends BasePresenter
     $this->eventRow = $this->eventsRepository->findById($id);
 
     if (!$this->eventRow || !$this->eventRow->is_present) {
-      throw new BadRequestException(self::EVENT_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }
 

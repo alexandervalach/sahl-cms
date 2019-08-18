@@ -14,6 +14,10 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 
+/**
+ * Class RulesPresenter
+ * @package App\Presenters
+ */
 class RulesPresenter extends BasePresenter {
 
   /** @var ActiveRow */
@@ -25,6 +29,16 @@ class RulesPresenter extends BasePresenter {
   /** @var RulesRepository */
   private $rulesRepository;
 
+  /**
+   * RulesPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param RulesRepository $rulesRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupsRepository $groupsRepository
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   */
   public function __construct(
     LinksRepository $linksRepository,
     SponsorsRepository $sponsorsRepository,
@@ -40,6 +54,9 @@ class RulesPresenter extends BasePresenter {
     $this->rulesRepository = $rulesRepository;
   }
 
+  /**
+   *
+   */
   public function actionAll() {
     $this->ruleRow = $this->rulesRepository->getArchived()->order('id DESC')->fetch();
 
@@ -50,10 +67,16 @@ class RulesPresenter extends BasePresenter {
     $this->getComponent(self::EDIT_FORM)->setDefaults($this->ruleRow);
   }
 
+  /**
+   *
+   */
   public function renderAll() {
     $this->template->rule = $this->ruleRow;
   }
 
+  /**
+   * @param $id
+   */
   public function actionArchView($id) {
     $this->seasonRow = $this->seasonsRepository->findById($id);
 
@@ -64,11 +87,17 @@ class RulesPresenter extends BasePresenter {
     $this->ruleRow = $this->rulesRepository->getArchived($id)->order('id DESC')->fetch();
   }
 
+  /**
+   * @param $id
+   */
   public function renderArchView($id) {
     $this->template->rule = $this->ruleRow;
     $this->template->season = $this->seasonRow;
   }
 
+  /**
+   * @return Form
+   */
   protected function createComponentEditForm() {
     $form = new Form;
     $form->addTextArea('content', 'Obsah')
@@ -83,6 +112,10 @@ class RulesPresenter extends BasePresenter {
     return $form;
   }
 
+  /**
+   * @param Form $form
+   * @param $values
+   */
   public function submittedEditForm(Form $form, $values) {
     $this->ruleRow->update($values);
     $this->flashMessage('Pravidlá a smernice boli upravené', self::SUCCESS);

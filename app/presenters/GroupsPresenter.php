@@ -178,7 +178,7 @@ class GroupsPresenter extends BasePresenter
         $team = $this->teamsRepository->insert( array('name' => $values->name) );
       }
 
-      $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($values->group_id);
+      $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($this->groupRow->id);
 
       if ($seasonGroup && $team) {
         $this->seasonsGroupsTeamsRepository->insert(

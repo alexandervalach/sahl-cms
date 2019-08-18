@@ -184,7 +184,7 @@ class GroupsPresenter extends BasePresenter
         $this->seasonsGroupsTeamsRepository->insert(
           array(
             'season_group_id' => $seasonGroup->id,
-            'team_id' => $this->teamRow->id
+            'team_id' => $team->id
           )
         );
         $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
@@ -194,7 +194,7 @@ class GroupsPresenter extends BasePresenter
 
       // TODO: Insert also team entry to tables
       // $this->tablesRepository->insert(array('team_id' => $team));
-      $this->redirect('all');
+      $this->redirect('view', $this->groupRow->id);
     });
   }
 

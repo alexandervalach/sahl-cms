@@ -22,4 +22,12 @@ class RulesRepository extends Repository {
     }
   }
 
+  /**
+   * @return IRow|null
+   */
+  public function getLatest()
+  {
+    return $this->getArchived()->order('id DESC')->fetch();
+  }
+
 }

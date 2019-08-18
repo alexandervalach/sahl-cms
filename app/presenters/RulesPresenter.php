@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Forms\RuleFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
@@ -13,6 +13,7 @@ use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class RulesPresenter
@@ -30,6 +31,11 @@ class RulesPresenter extends BasePresenter {
   private $rulesRepository;
 
   /**
+   * @var RuleFormFactory
+   */
+  private $ruleFormFactory;
+
+  /**
    * RulesPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
@@ -40,37 +46,41 @@ class RulesPresenter extends BasePresenter {
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
    */
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    RulesRepository $rulesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    GroupsRepository $groupsRepository,
-    SeasonsGroupsRepository $seasonsGroupsRepository
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      RulesRepository $rulesRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      RuleFormFactory $ruleFormFactory
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->rulesRepository = $rulesRepository;
+    $this->ruleFormFactory = $ruleFormFactory;
   }
 
   /**
    *
    */
-  public function actionAll() {
-    $this->ruleRow = $this->rulesRepository->getArchived()->order('id DESC')->fetch();
+  public function actionAll(): void
+  {
+    $this->ruleRow = $this->rulesRepository->getLatest();
 
-    if (!$this->ruleRow || !$this->ruleRow->is_present) {
-      throw new BadRequestException(self::RULE_NOT_FOUND);
+    if (!$this->ruleRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->ruleRow);
+    $this['ruleForm']->setDefaults($this->ruleRow);
   }
 
   /**
    *
    */
-  public function renderAll() {
+  public function renderAll(): void
+  {
     $this->template->rule = $this->ruleRow;
   }
 
@@ -98,27 +108,13 @@ class RulesPresenter extends BasePresenter {
   /**
    * @return Form
    */
-  protected function createComponentEditForm() {
-    $form = new Form;
-    $form->addTextArea('content', 'Obsah')
-          ->setAttribute('id', 'ckeditor');
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', self::BTN_SUCCESS);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+  protected function createComponentRuleForm(): Form
+  {
+    return $this->ruleFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->ruleRow->update($values);
+      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+      $this->redirect('all');
+    });
   }
 
-  /**
-   * @param Form $form
-   * @param $values
-   */
-  public function submittedEditForm(Form $form, $values) {
-    $this->ruleRow->update($values);
-    $this->flashMessage('Pravidlá a smernice boli upravené', self::SUCCESS);
-    $this->redirect('all');
-  }
 }

@@ -45,7 +45,6 @@ class TeamFormFactory
           ->setAttribute('placeholder', 'SKV Aligators')
           ->setRequired()
           ->addRule(Form::MAX_LENGTH, 'Dĺžka názvu smie byť len 255 znakov.', 255);
-    $form->addSelect('group_id', 'Divízia*', $this->groupsRepository->getGroups());
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')

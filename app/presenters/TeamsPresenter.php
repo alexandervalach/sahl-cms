@@ -207,7 +207,7 @@ class TeamsPresenter extends BasePresenter
       } else {
         $this->flashMessage('Nastala chyba. Skúste znova', self::DANGER);
       }
-      $this->redirect('view', $this->teamRow->id);
+      $this->redirect('view', $this->teamRow->id, $this->groupRow->id);
     });
   }
 
@@ -287,19 +287,19 @@ class TeamsPresenter extends BasePresenter
 
     if ($id) {
       $this->teamRow = $this->teamsRepository->findById($id);
-      $this->teamRow->update( array('name' => $values->name) );
+      $this->teamRow->update($values);
 
-      $this->flashMessage(self::CHANGES_SAVED_SUCCESSFULLY, self::SUCCESS);
-      $this->redirect('view', $this->teamRow->id);
+      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+      $this->redirect('view', $this->teamRow->id, $this->groupRow->id);
     }
 
     $this->teamRow = $this->teamsRepository->findByName($values->name);
 
     if (!$this->teamRow) {
-      $this->teamRow = $this->teamsRepository->insert( array('name' => $values->name) );
+      $this->teamRow = $this->teamsRepository->insert($values);
     }
 
-    $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($values->group_id);
+    $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($this->groupRow->id);
 
     if ($seasonGroup && $this->teamRow) {
       $this->seasonsGroupsTeamsRepository->insert(

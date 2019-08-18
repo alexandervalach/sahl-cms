@@ -88,6 +88,16 @@ class TeamsRepository extends Repository
   }
 
   /**
+   * Fetches a team for a group in the current season
+   * @param int $seasonGroup
+   * @return array
+   */
+  public function fetchForSeasonGroup (int $seasonGroup): array
+  {
+    return $this->getForSeasonGroup($seasonGroup)->fetchAll();
+  }
+
+  /**
    * @param int $playerId
    * @return IRow|null
    */

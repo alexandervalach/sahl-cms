@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Forms\GroupFormFactory;
+use App\Forms\ModalRemoveFormFactory;
+use App\Forms\TeamFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
@@ -17,11 +19,30 @@ use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 
+/**
+ * Class GroupsPresenter
+ * @package App\Presenters
+ */
 class GroupsPresenter extends BasePresenter
 {
 
   /** @var ActiveRow */
   private $groupRow;
+
+  /**
+   * @var GroupFormFactory
+   */
+  private $groupFormFactory;
+
+  /**
+   * @var ModalRemoveFormFactory
+   */
+  private $removeFormFactory;
+
+  /**
+   * @var TeamFormFactory
+   */
+  private $teamFormFactory;
 
   /**
    * GroupsPresenter constructor.
@@ -31,19 +52,28 @@ class GroupsPresenter extends BasePresenter
    * @param TeamsRepository $teamsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupFormFactory $groupFormFactory
+   * @param ModalRemoveFormFactory $removeFormFactory
+   * @param TeamFormFactory $teamFormFactory
    */
   public function __construct(
-    GroupsRepository $groupsRepository,
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    SeasonsGroupsRepository $seasonsGroupsRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+      GroupsRepository $groupsRepository,
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      GroupFormFactory $groupFormFactory,
+      ModalRemoveFormFactory $removeFormFactory,
+      TeamFormFactory $teamFormFactory
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
+    $this->groupFormFactory = $groupFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
+    $this->teamFormFactory = $teamFormFactory;
   }
 
   /**
@@ -59,7 +89,7 @@ class GroupsPresenter extends BasePresenter
    */
   public function renderAll(): void
   {
-    $this->template->groups = $this->groups;
+    $this->template->groups = ArrayHash::from($this->groups);
   }
 
   /**
@@ -73,8 +103,8 @@ class GroupsPresenter extends BasePresenter
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    if (!$this->user->loggedIn()) {
-      $this[self::EDIT_FORM]->setDefaults($this->groupRow);
+    if ($this->user->isLoggedIn()) {
+      $this['groupForm']->setDefaults($this->groupRow);
     }
   }
 
@@ -83,145 +113,89 @@ class GroupsPresenter extends BasePresenter
    */
   public function renderView(int $id): void
   {
-    $this->template->teams = $this->groups;
+    $this->template->group = ArrayHash::from($this->groups[$this->groupRow->id]);
   }
 
   /**
-   * @param int $id
-   */
-  public function actionEdit(int $id): void
-  {
-    $this->userIsLogged();
-    $this->groupRow = $this->groupsRepository->findById($id);
-
-    if (!$this->groupRow || !$this->groupRow->is_present) {
-      throw new BadRequestException(self::ITEM_NOT_FOUND);
-    }
-
-    $this[self::EDIT_FORM]->setDefaults($this->groupRow);
-  }
-
-  /**
-   * @param int $id
-   */
-  public function renderEdit(int $id): void
-  {
-    $this->template->group = $this->groupRow;
-  }
-
-  /**
-   * @param int $id
-   */
-  public function actionRemove(int $id): void
-  {
-    $this->userIsLogged();
-    $this->groupRow = $this->groupsRepository->findById($id);
-
-    if (!$this->groupRow || !$this->groupRow->is_present) {
-      throw new BadRequestException(self::ITEM_NOT_FOUND);
-    }
-  }
-
-  /**
-   * @param int $id
-   */
-  public function renderRemove(int $id): void
-  {
-    $this->template->group = $this->groupRow;
-  }
-
-  /**
+   * Generates new add/edit group form
    * @return Form
    */
-  protected function createComponentAddForm(): Form
+  protected function createComponentGroupForm(): Form
   {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-          ->setAttribute('placeholder', 'Skupina A')
-          ->addRule(Form::FILLED, 'Ešte vyplňte názov')
-          ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    FormHelper::setBootstrapFormRenderer($form);
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    return $form;
+    return $this->groupFormFactory->create( function (Form $form, ArrayHash $values) {
+      $this->userIsLogged();
+      $id = $this->getParameter('id');
+
+      if ($id) {
+        $this->groupRow->update($values);
+        $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+        $this->redirect('view', $this->groupRow->id);
+      } else {
+        $this->groupRow = $this->groupsRepository->getByLabel($values->label);
+
+        if (!$this->groupRow) {
+          $this->groupRow = $this->groupsRepository->insert($values);
+        }
+
+        $this->seasonsGroupsRepository->insert( array('group_id' => $this->groupRow->id) );
+        $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+        $this->redirect('all');
+      }
+    });
   }
 
   /**
-   * @return Form
-   */
-  protected function createComponentEditForm(): Form
-  {
-    $form = new Form;
-    $form->addText('label', 'Názov')
-        ->setAttribute('placeholder', 'Skupina A')
-        ->addRule(Form::FILLED, 'Ešte vyplňte názov')
-        ->addRule(Form::MAX_LENGTH, 'Názov môže mať len 50 znakov.', 50);
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', self::BTN_SUCCESS)
-          ->onClick[] = [$this, self::SUBMITTED_EDIT_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, self::FORM_CANCELLED];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
-   * Component for creating a remove form
+   * Generates new remove group form
    * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {
-    $form = new Form;
-    $form->addSubmit('save', 'Odstrániť')
-          ->setAttribute('class', self::BTN_DANGER)
-          ->onClick[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->onClick[] = [$this, self::FORM_CANCELLED];
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, self::SUBMITTED_REMOVE_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->removeFormFactory->create( function() {
+      $this->userIsLogged();
+      $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($this->groupRow->id);
+
+      if ($seasonGroup) {
+        $this->seasonsGroupsRepository->remove($seasonGroup->id);
+      }
+
+      // $this->groupsRepository->remove($this->groupRow->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    });
   }
 
-  public function submittedAddForm(Form $form, ArrayHash $values): void
+  /**
+   * Generates new team form
+   * @return Form
+   */
+  protected function createComponentTeamForm(): Form
   {
-    $this->userIsLogged();
-    $this->groupRow = $this->groupsRepository->getByLabel($values->label);
+    return $this->teamFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->userIsLogged();
+      $team = $this->teamsRepository->findByName($values->name);
 
-    if (!$this->groupRow) {
-      $this->groupRow = $this->groupsRepository->insert($values);
-    }
+      if (!$team) {
+        $team = $this->teamsRepository->insert( array('name' => $values->name) );
+      }
 
-    $this->seasonsGroupsRepository->insert( array('group_id' => $this->groupRow->id) );
+      $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($values->group_id);
 
-    $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
-    $this->redirect('all');
+      if ($seasonGroup && $team) {
+        $this->seasonsGroupsTeamsRepository->insert(
+          array(
+            'season_group_id' => $seasonGroup->id,
+            'team_id' => $this->teamRow->id
+          )
+        );
+        $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+      } else {
+        $this->flashMessage(self::ITEM_NOT_ADDED, self::DANGER);
+      }
+
+      // TODO: Insert also team entry to tables
+      // $this->tablesRepository->insert(array('team_id' => $team));
+      $this->redirect('all');
+    });
   }
 
-  public function submittedEditForm(SubmitButton $button, ArrayHash $values): void
-  {
-    $this->userIsLogged();
-    $this->groupRow->update($values);
-    $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  public function submittedRemoveForm(): void
-  {
-    $this->userIsLogged();
-    $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($this->groupRow->id);
-
-    if ($seasonGroup) {
-      $this->seasonsGroupsRepository->remove($seasonGroup->id);
-    }
-
-    $this->groupsRepository->remove($this->groupRow->id);
-    $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
-    $this->redirect('all');
-  }
 }

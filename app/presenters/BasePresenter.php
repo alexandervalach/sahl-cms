@@ -105,7 +105,7 @@ abstract class BasePresenter extends Presenter
       $group = $this->groupsRepository->findById($seasonGroup->group_id);
       $this->groups[$seasonGroup->group_id]['id'] = $group->id;
       $this->groups[$seasonGroup->group_id]['label'] = $group->label;
-      $this->groups[$seasonGroup->group_id]['teams'] = $this->teamsRepository->getForSeasonGroup($seasonGroup->id);
+      $this->groups[$seasonGroup->group_id]['teams'] = $this->teamsRepository->fetchForSeasonGroup($seasonGroup->id);
     }
 
     $this->template->links = $this->linksRepository->getAll();

@@ -9,7 +9,7 @@
     </div>
   </div>
   <div class="clearfix">
-    <h1 n:block="title">Skupiny</h1>
+    <h1 n:block="title">Divízie</h1>
   </div>
 </section>
 
@@ -18,20 +18,17 @@
     <thead>
       <tr>
         <th>Názov</th>
-        <th colspan="2">Akcia</th>
+        <th>Akcia</th>
       </tr>
     </thead>
     <tbody>
       <tr n:foreach="$groups as $group">
-        <td>{$group->label}</td>
         <td>
-          <a n:href="edit $group->id" class="text-success">
-            <span class="glyphicon glyphicon-pencil"></span>
-          </a>
+          <a n:href="view, $group->id">{$group->label}</a>
         </td>
         <td>
-          <a n:if="$iterator->counter > 1" n:href="remove $group->id" class="text-danger">
-            <span class="glyphicon glyphicon-trash"></span>
+          <a n:href="view $group->id">
+            <span class="glyphicon glyphicon-pencil"></span>
           </a>
         </td>
         </tr>
@@ -44,10 +41,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3 class="modal-title">Pridať skupinu</h3>
+        <h3 class="modal-title">Pridať divíziu</h3>
       </div>
       <div class="modal-body">
-        {control addForm}
+        {control groupForm}
       </div>
     </div>
   </div>

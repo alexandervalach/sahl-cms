@@ -13,6 +13,9 @@ use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\PlayerTypesRepository;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
+use App\Model\TableEntriesRepository;
+use App\Model\TablesRepository;
+use App\Model\TableTypesRepository;
 use App\Model\TeamsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\UI\Form;
@@ -62,6 +65,23 @@ class TeamsPresenter extends BasePresenter
    */
   private $removeFormFactory;
 
+  private $teams;
+
+  /**
+   * @var TablesRepository
+   */
+  private $tablesRepository;
+
+  /**
+   * @var TableTypesRepository
+   */
+  private $tableTypesRepository;
+
+  /**
+   * @var TableEntriesRepository
+   */
+  private $tableEntriesRepository;
+
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -75,7 +95,10 @@ class TeamsPresenter extends BasePresenter
       PlayersSeasonsGroupsTeamsRepository $playersSeasonsTeamsRepository,
       UploadFormFactory $uploadFormFactory,
       SeasonsGroupsRepository $seasonsGroupsRepository,
-      ModalRemoveFormFactory $removeFormFactory
+      ModalRemoveFormFactory $removeFormFactory,
+      TablesRepository $tablesRepository,
+      TableTypesRepository $tableTypesRepository,
+      TableEntriesRepository $tableEntriesRepository
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
@@ -83,6 +106,9 @@ class TeamsPresenter extends BasePresenter
     $this->groupsRepository = $groupsRepository;
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
+    $this->tablesRepository = $tablesRepository;
+    $this->tableTypesRepository = $tableTypesRepository;
+    $this->tableEntriesRepository = $tableEntriesRepository;
     $this->teamFormFactory = $teamFormFactory;
     $this->playerAddFormFactory = $playerAddFormFactory;
     $this->playersSeasonsTeamsRepository = $playersSeasonsTeamsRepository;
@@ -317,8 +343,9 @@ class TeamsPresenter extends BasePresenter
       $this->flashMessage(self::ITEM_NOT_ADDED, self::DANGER);
     }
 
-    // TODO: Insert also team entry to tables
-    // $this->tablesRepository->insert(array('team_id' => $team));
+    $tableType = $this->tableTypesRepository->findByLabel('Základná časť');
+    $table = $this->tablesRepository->getByType($tableType->id, $seasonGroup->id);
+    $this->tableEntriesRepository->insert( array('team_id' => $this->teamRow->id, 'table_id' => $table->id) );
     $this->redirect('all', $this->groupRow->id);
   }
 

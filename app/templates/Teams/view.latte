@@ -47,9 +47,9 @@
             {if $player->name}
               <td>{$iterator->counter}.</td>
               <td>
-                <a n:href="Players:view $player->id">
+                {*<a n:href="Players:view $player->id">*}
                   {$player->name}{if $player->type_abbr} - {$player->type_abbr}{/if}
-                </a>
+                {*</a>*}
               </td>
               <td>{if $player->number != 0}{$player->number}{/if}</td>
             {else}
@@ -64,7 +64,11 @@
           <tr {if $player->is_transfer}class="borrowed-player"{/if}>
             <td>{$iterator->counter + $i}.</td>
             <td>
-              <a n:href="Players:view $goalie">{$goalie->name}</a>
+              {*
+              <a n:href="Players:view $goalie">
+                  {$goalie->name}
+              </a>
+              *}
             </td>
             <td>Brankár, {$goalie->number}</td>
           </tr>

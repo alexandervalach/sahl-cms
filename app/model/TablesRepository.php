@@ -25,6 +25,17 @@ class TablesRepository extends Repository
 
   /**
    * @param int $tableTypeId
+   * @param int $seasonGroupId
+   * @return IRow|null
+   */
+  public function getByType(int $tableTypeId, int $seasonGroupId)
+  {
+    return $this->findByValue('table_type_id', $tableTypeId)
+        ->where('season_group_id', $seasonGroupId)->fetch();
+  }
+
+  /**
+   * @param int $tableTypeId
    * @param int|null $seasonId
    * @return IRow|null
    */

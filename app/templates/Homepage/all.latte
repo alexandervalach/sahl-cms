@@ -15,6 +15,7 @@
 </div>
 
 <aside class="container-fluid">
+  {*
   <section class="col-xs-12 col-sm-12 col-md-6 col-lg-6" n:if="$sideFightsCount" id="side-fights">
     <div class="table-responsive">
       <table class='table'>
@@ -47,7 +48,8 @@
       </table>
     </div>
   </section>
-
+  *}
+  {*
   <section n:foreach="$sideTableTypes as $type">
     <div class='table-responsive'>
       <table class='table leaderboard'>
@@ -55,7 +57,6 @@
           <h2>{$type}</h2>
         </caption>
         <tbody>
-          {*
             <tr n:foreach="$sideTables[$type->name] as $row" {if $iterator->first}class="first"{/if}>
                 {var $team = $row->ref('teams', 'team_id')}
                 <td>{$iterator->counter}.</td>
@@ -69,11 +70,11 @@
                     <strong class="text-danger">{$row->points}</strong>
                 </td>
             </tr>
-            *}
         </tbody>
       </table>
     </div>
   </section>
+  *}
 </aside>
 
 <div class="content container-fluid">

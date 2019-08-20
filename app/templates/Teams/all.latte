@@ -11,7 +11,10 @@
     </div>
   {/if}
   <div class="clearfix">
-    <h1 n:block="title">{$group->label}</h1>
+      {block title}
+        <h1>Tímy</h1>
+        <h2>{$group->label}</h2>
+      {/block}
   </div>
   <div id="teams" n:foreach="$group->teams as $team">
     <figure class="col-xs-12 col-sm-12 col-md-4 col-lg-4">

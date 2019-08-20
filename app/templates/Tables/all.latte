@@ -11,7 +11,7 @@
     *}
   </div>
   <div class="clearfix">
-    <h1 n:block="title">Tabuľky</h1>
+    <h1 n:block="title">{$group->label}</h1>
   </div>
 </section>
 
@@ -38,9 +38,9 @@
           {var $team = $entry->ref('teams','team_id')}
           <td>{$iterator->counter}.</td>
           <td>
-            <a n:href="Teams:view $team->id">
-              {if $team->logo and file_exists($imgFolder . '/' . $team->logo)}
-                <img src="{$basePath}/{$imgFolder}/{$team->logo}" width="30px" />
+            <a n:href="Teams:view $team->id, $group->id">
+              {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
+                <img src="{$basePath}/{$imageFolder}/{$team->logo}" width="30px" />
               {/if}
               {$team->name}
             </a>

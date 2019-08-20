@@ -14,6 +14,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class TablesPresenter
@@ -32,6 +33,16 @@ class TablesPresenter extends BasePresenter
 
   /** @var TablesRepository */
   private $tablesRepository;
+
+  /**
+   * @var IRow|null
+   */
+  private $seasonGroup;
+
+  /**
+   * @var ActiveRow
+   */
+  private $groupRow;
 
   /**
    * TablesPresenter constructor.
@@ -56,6 +67,7 @@ class TablesPresenter extends BasePresenter
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->tablesRepository = $tablesRepository;
+    $this->tables = [];
   }
 
   /**
@@ -63,7 +75,9 @@ class TablesPresenter extends BasePresenter
    */
   public function actionAll(int $groupId): void
   {
-    $tables = $this->tablesRepository->getForSeason();
+    $this->groupRow = $this->groupsRepository->findById($groupId);
+    $this->seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($groupId);
+    $tables = $this->tablesRepository->findByValue('season_group_id', $this->seasonGroup->id);
 
     foreach ($tables as $table) {
       $this->tables[$table->id]['data'] = $table;
@@ -77,7 +91,8 @@ class TablesPresenter extends BasePresenter
    */
   public function renderAll(int $groupId): void
   {
-    $this->template->tables = $this->tables;
+    $this->template->tables = ArrayHash::from($this->tables);
+    $this->template->group = $this->groupRow;
   }
 
   /**

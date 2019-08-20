@@ -11,7 +11,10 @@
     *}
   </div>
   <div class="clearfix">
-    <h1 n:block="title">Štatistiky</h1>
+      {block title}
+        <h1>Štatistiky</h1>
+        <h2>{$group->label}</h2>
+      {/block}
   </div>
 </section>
 

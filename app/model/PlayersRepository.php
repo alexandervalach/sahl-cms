@@ -49,40 +49,32 @@ class PlayersRepository extends Repository
   }
 
   /**
-   * @param int|null $seasonId
+   * @param null $seasonGroupId
    * @return ResultSet
    */
-  public function getForSeason($seasonId = null): ResultSet
+  public function getForSeasonGroup($seasonGroupId = null): ResultSet
   {
-    $con = $this->getConnection();
+    $db = $this->getConnection();
 
     $query = 'SELECT t.name as team_name, t.logo as team_logo, t.id as team_id,
       pt.label as type_label, pt.abbr as type_abbr,
-      p.id, p.name, p.number, pst.goals, pst.is_transfer
-      FROM seasons_teams as st
-      INNER JOIN players_seasons_teams as pst
-      ON pst.seasons_teams_id = st.id
+      p.id, p.name, p.number, psgt.goals, psgt.is_transfer
+      FROM seasons_groups_teams as sgt
+      INNER JOIN players_seasons_groups_teams as psgt
+      ON psgt.season_group_team_id = sgt.id
       INNER JOIN players as p
-      ON p.id = pst.player_id
+      ON p.id = psgt.player_id
       INNER JOIN teams as t
-      ON t.id = st.team_id
+      ON t.id = sgt.team_id
       INNER JOIN player_types as pt
-      ON pst.player_type_id = pt.id ';
-
-    if ($seasonId === null) {
-      return $con->query($query .
-        'WHERE season_id IS NULL
-        AND p.name != ?
-        AND p.name NOT LIKE ?
-        AND p.is_present = ?
-        AND t.is_present = ?', ' ', '%voľné miesto%', 1, 1);
-    }
-
-    return $con->query($query .
-      'AND p.name != ?
+      ON psgt.player_type_id = pt.id 
+      WHERE p.name != ?
       AND p.name NOT LIKE ?
       AND p.is_present = ?
-      AND t.is_present = ?', $seasonId, ' ', '%voľné miesto%', 1, 1);
+      AND t.is_present = ? ';
+
+    return $seasonGroupId === null ? $db->query($query . 'AND season_group_id IS NULL', ' ', '%voľné miesto%', 1, 1) :
+        $db->query($query . 'AND season_group_id = ?', $seasonGroupId, ' ', '%voľné miesto%', 1, 1);
   }
 
   /**

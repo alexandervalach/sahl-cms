@@ -36,11 +36,23 @@ class PlayersPresenter extends BasePresenter
   /** @var ArrayHash */
   private $playerData;
 
+  private $players;
+
   /** @var PlayersRepository */
   private $playersRepository;
 
   /** @var PlayerTypesRepository */
   private $playerTypesRepository;
+
+  /**
+   * @var ActiveRow
+   */
+  private $groupRow;
+
+  /**
+   * @var IRow|null
+   */
+  private $seasonGroup;
 
   /**
    * PlayersPresenter constructor.
@@ -70,11 +82,22 @@ class PlayersPresenter extends BasePresenter
   }
 
   /**
-   *
+   * @param int $groupId
+   */
+  public function actionAll(int $groupId): void
+  {
+    $this->groupRow = $this->groupsRepository->findById($groupId);
+    $this->seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($groupId);
+    $this->players = $this->playersRepository->getForSeasonGroup();
+  }
+
+  /**
+   * @param int $groupId
    */
   public function renderAll(int $groupId): void
   {
-    $this->template->players = $this->playersRepository->getForSeason();
+    $this->template->players = $this->players;
+    $this->template->group = $this->groupRow;
     $this->template->i = 0;
     $this->template->j = 0;
     $this->template->current = 0;

@@ -88,7 +88,7 @@ class PlayersPresenter extends BasePresenter
   public function actionView(int $id): void
   {
     $this->playerRow = $this->playersRepository->findById($id);
-    if (!$this->playerRow || !$this->playerRow->is_present) {
+    if (!$this->playerRow) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 

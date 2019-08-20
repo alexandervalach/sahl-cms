@@ -97,23 +97,4 @@ class TeamsRepository extends Repository
     return $this->getForSeasonGroup($seasonGroup)->fetchAll();
   }
 
-  /**
-   * @param int $playerId
-   * @return IRow|null
-   */
-  public function getForPlayer(int $playerId)
-  {
-    $con = $this->getConnection();
-    return $con->query('SELECT st.team_id as team_id, t.name as team_name, t.logo as team_logo,
-      pt.label as type_label, pt.abbr as type_abbr,
-      pst.goals, pst.is_transfer, p.photo,
-      g.label as group_label
-      FROM seasons_teams AS st
-      INNER JOIN teams AS t ON st.team_id = t.id
-      INNER JOIN players_seasons_teams AS pst ON pst.seasons_teams_id = st.id
-      INNER JOIN player_types AS pt ON pst.player_type_id = pt.id
-      INNER JOIN players AS p ON pst.player_id = p.id
-      INNER JOIN groups AS g ON st.group_id = g.id
-      WHERE st.season_id IS NULL AND pst.player_id = ?', $playerId)->fetch();
-  }
 }

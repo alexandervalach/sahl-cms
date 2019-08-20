@@ -117,7 +117,7 @@ class PostsPresenter extends BasePresenter
   public function renderView(int $id): void
   {
     $this->template->post = $this->postRow;
-    $this->template->images = $this->postsRepository->getImages($this->postRow);
+    $this->template->images = $this->postsRepository->getImages($this->postRow->id);
   }
 
   /**

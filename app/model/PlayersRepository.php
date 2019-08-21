@@ -28,14 +28,14 @@ class PlayersRepository extends Repository
   {
     $db = $this->getConnection();
     return $db->query('SELECT t.name as team_name, t.logo as team_logo, t.id as team_id, 
-        pt.label as type_label, pt.abbr as type_abbr, 
+        pt.label as type_label, pt.abbr as type_abbr, pt.priority as type_priority,
         p.id, p.name, p.number, 
         psgt.goals, psgt.is_transfer FROM seasons_groups_teams AS sgt 
           INNER JOIN teams AS t ON t.id = sgt.team_id 
           INNER JOIN players_seasons_groups_teams AS psgt ON psgt.season_group_team_id = sgt.id 
           INNER JOIN players AS p ON p.id = psgt.player_id 
           INNER JOIN player_types AS pt ON pt.id = psgt.player_type_id 
-        WHERE sgt.season_group_id = ? AND sgt.team_id = ? AND sgt.is_present = ?', $seasonGroupId, $teamId, 1);
+        WHERE sgt.season_group_id = ? AND sgt.team_id = ? AND sgt.is_present = ? ORDER BY type_priority', $seasonGroupId, $teamId, 1);
   }
 
   /**

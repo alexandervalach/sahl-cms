@@ -11,7 +11,7 @@
           <span class="glyphicon glyphicon-pencil"></span> Upraviť
         </button>
         <button type="button" class="btn btn-large btn-info" data-target="#upload" data-toggle="modal">
-          <span class="glyphicon glyphicon-upload"></span> Nahrať
+          <span class="glyphicon glyphicon-picture"></span> Logo
         </button>
         <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
           <span class="glyphicon glyphicon-trash"></span> Odstrániť
@@ -20,13 +20,19 @@
     </div>
   {/if}
   <div class="col-xs-12 col-md-12 col-sm-12 col-lg-12">
-    <div class="clearfix">
-      <h1 n:block="title">{$team->name}</h1>
+    <div class="clearfix text-center" style="margin: 10px 5px">
+      <h1 n:block="title" style="display: inline">{$team->name}</h1>
+      {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
+        <figure style="margin: 0 auto; width: 150px">
+          <img class="img img-responsive" src="{$basePath}/{$imageFolder}/{$team->logo}" alt="{$team->name}
+          style="width: 150px" />
+        </figure>
+      {/if}
     </div>
   </div>
-  {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
+  {if $team->photo and file_exists($imageFolder . '/' . $team->photo)}
     <figure style="margin-top: 1em">
-      <img class="img img-responsive" src="{$basePath}/{$imageFolder}/{$team->logo}" alt="{$team->name}" style="margin: 0 auto" />
+      <img class="img img-responsive" src="{$basePath}/{$imageFolder}/{$team->photo}" alt="{$team->name}" style="margin: 0 auto" />
     </figure>
   {/if}
 </section>
@@ -113,7 +119,7 @@
           <div class="modal-content">
               <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  <h3 class="modal-title">Nastaviť obrázok tímu</h3>
+                  <h3 class="modal-title">Nahrať logo tímu</h3>
               </div>
               <div class="modal-body">
                   {control uploadForm}

@@ -164,7 +164,6 @@ class TeamsPresenter extends BasePresenter
   public function renderView(int $id, int $groupId): void
   {
     $this->template->players = $this->playersRepository->getForTeam($id, $this->seasonGroup->id);
-    $this->template->goalies = []; // $this->playersRepository->getArchived()->where('team_id', $id);
     $this->template->team = $this->teamRow;
     $this->template->i = 0;
     $this->template->j = 0;

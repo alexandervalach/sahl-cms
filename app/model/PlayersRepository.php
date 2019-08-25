@@ -78,6 +78,15 @@ class PlayersRepository extends Repository
   }
 
   /**
+   * @param int $seasonGroupId
+   * @return array
+   */
+  public function fetchForSeasonGroup (int $seasonGroupId): array
+  {
+    return $this->getForSeasonGroup($seasonGroupId)->fetchAll();
+  }
+
+  /**
    * @param string $name
    * @param int $number
    * @return IRow|null

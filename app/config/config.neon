@@ -65,6 +65,7 @@ services:
 	- App\Forms\PlayerTypeAddFormFactory
 	- App\Forms\PlayerTypeEditFormFactory
 	- App\Forms\PostFormFactory
+	- App\Forms\PunishmentAddFormFactory
 	- App\Forms\RemoveFormFactory
 	- App\Forms\RoundFormFactory
 	- App\Forms\RuleFormFactory

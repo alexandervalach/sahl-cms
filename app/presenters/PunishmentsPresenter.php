@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\PunishmentAddFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
@@ -38,6 +39,16 @@ class PunishmentsPresenter extends BasePresenter
   /** @var PlayersRepository */
   private $playersRepository;
 
+  /** @var PunishmentAddFormFactory */
+  private $punishmentAddFormFactory;
+
+  /**
+   * @var ActiveRow
+   */
+  private $groupRow;
+
+  private $seasonGroup;
+
   /**
    * PunishmentsPresenter constructor.
    * @param LinksRepository $linksRepository
@@ -48,6 +59,7 @@ class PunishmentsPresenter extends BasePresenter
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
    * @param GroupsRepository $groupsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param PunishmentAddFormFactory $punishmentAddFormFactory
    */
   public function __construct(
       LinksRepository $linksRepository,
@@ -57,21 +69,29 @@ class PunishmentsPresenter extends BasePresenter
       PunishmentsRepository $punishmentsRepository,
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
       GroupsRepository $groupsRepository,
-      SeasonsGroupsRepository $seasonsGroupsRepository
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      PunishmentAddFormFactory $punishmentAddFormFactory
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->playersRepository = $playersRepository;
     $this->punishmentsRepository = $punishmentsRepository;
+    $this->punishmentAddFormFactory = $punishmentAddFormFactory;
   }
 
   /**
    * @param int $groupId
+   * @throws BadRequestException
    */
   public function actionAll(int $groupId): void
   {
-    $this->punishments = array();
+    $this->groupRow = $this->groupsRepository->findById($groupId);
+    $this->seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($groupId);
+
+    if (!$this->groupRow || !$this->seasonGroup) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
   }
 
   /**
@@ -79,7 +99,8 @@ class PunishmentsPresenter extends BasePresenter
    */
   public function renderAll(int $groupId): void
   {
-    $this->template->punishments = $this->punishmentsRepository->getForSeason();
+    // TODO: Implement get punishments for season group
+    $this->template->punishments = [];
   }
 
   /**
@@ -90,11 +111,11 @@ class PunishmentsPresenter extends BasePresenter
     $this->userIsLogged();
     $this->punishmentRow = $this->punishmentsRepository->findById($id);
 
-    if (!$this->punishmentRow || !$this->punishmentRow->is_present) {
+    if (!$this->punishmentRow) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $this->getComponent(self::EDIT_FORM)->setDefaults($this->punishmentRow);
+    $this[self::EDIT_FORM]->setDefaults($this->punishmentRow);
   }
 
   /**
@@ -144,7 +165,7 @@ class PunishmentsPresenter extends BasePresenter
   }
 
   /**
-   * @return Nette\Application\UI\Form;
+   * @return Form
    */
   protected function createComponentEditForm(): Form
   {
@@ -168,21 +189,12 @@ class PunishmentsPresenter extends BasePresenter
    */
   protected function createComponentAddForm(): Form
   {
-    $players = $this->playersRepository->getNonEmptyPlayers();
-    $form = new Form;
-    $form->addSelect('player_id', 'Hráč*', $players);
-    $form->addText('text', 'Dôvod')
-          ->setAttribute('placeholder', 'Nešportové správanie');
-    $form->addText('round', 'Stop na kolo')
-          ->setAttribute('placeholder', '3. kolo');
-    $form->addCheckbox('condition', ' Podmienka');
-    $form->addSubmit('save', 'Uložiť');
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_ADD_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->punishmentAddFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->userIsLogged();
+      $this->punishmentsRepository->insert($values);
+      $this->flashMessage('Trest bol pridaný', self::SUCCESS);
+      $this->redirect('all');
+    }, $this->seasonGroup->id);
   }
 
   /**
@@ -194,18 +206,6 @@ class PunishmentsPresenter extends BasePresenter
     $this->userIsLogged();
     $this->punishmentRow->update($values);
     $this->flashMessage('Trest bol upravený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  /**
-   * @param Form $form
-   * @param ArrayHash $values
-   */
-  public function submittedAddForm(Form $form, ArrayHash $values): void
-  {
-    $this->userIsLogged();
-    $this->punishmentsRepository->insert($values);
-    $this->flashMessage('Trest bol pridaný', self::SUCCESS);
     $this->redirect('all');
   }
 

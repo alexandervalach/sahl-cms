@@ -18,12 +18,12 @@
 
   {foreach $punishments as $punishment}
     <div style="margin-top: 2em" class="text-center">
-      <h2>{$punishment->player_name} ({$punishment->player_num})</h2>
+      <h2>{$punishment->player->name} ({$punishment->player->number})</h2>
       <h3>
-        {if $punishment->team_logo and file_exists($imgFolder . '/' . $punishment->team_logo)}
-          <img src="{$basePath}/{$imgFolder}/{$punishment->team_logo}" width="40px" />
+        {if $punishment->team->logo and file_exists($imageFolder . '/' . $punishment->team->logo)}
+          <img src="{$basePath}/{$imageFolder}/{$punishment->team->logo}" width="40px" />
         {/if}
-        {$punishment->team_name}
+        {$punishment->team->name}
       </h3>
 
       <ul>

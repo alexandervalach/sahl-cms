@@ -101,6 +101,19 @@ class PunishmentsPresenter extends BasePresenter
     if (!$this->groupRow || !$this->seasonGroup) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
+
+    $punishments = $this->punishmentsRepository->getForSeasonGroup($this->seasonGroup->id);
+
+    foreach ($punishments as $punishment) {
+      $this->punishments[$punishment->id]['id'] = $punishment->id;
+      $this->punishments[$punishment->id]['content'] = $punishment->content;
+      $this->punishments[$punishment->id]['round'] = $punishment->round;
+      $this->punishments[$punishment->id]['condition'] = $punishment->condition;
+      $this->punishments[$punishment->id]['player']['name'] = $punishment->player_name;
+      $this->punishments[$punishment->id]['player']['number'] = $punishment->player_number;
+      $this->punishments[$punishment->id]['team']['name'] = $punishment->team_name;
+      $this->punishments[$punishment->id]['team']['logo'] = $punishment->team_logo;
+    }
   }
 
   /**
@@ -109,7 +122,7 @@ class PunishmentsPresenter extends BasePresenter
   public function renderAll(int $groupId): void
   {
     // TODO: Implement get punishments for season group
-    $this->template->punishments = [];
+    $this->template->punishments = ArrayHash::from($this->punishments);
   }
 
   /**
@@ -202,9 +215,9 @@ class PunishmentsPresenter extends BasePresenter
       $this->userIsLogged();
       $this->punishmentsRepository->remove($this->punishmentRow->id);
       $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
-      $this->redirect('all');
+      $this->redirect('all', $this->groupRow->id);
     }, function () {
-      $this->redirect('all');
+      $this->redirect('all', $this->groupRow->id);
     });
   }
 
@@ -216,7 +229,7 @@ class PunishmentsPresenter extends BasePresenter
     return $this->punishmentAddFormFactory->create(function (Form $form, ArrayHash $values) {
       $this->userIsLogged();
       $this->punishmentsRepository->insert($values);
-      $this->flashMessage('Trest bol pridaný', self::SUCCESS);
+      $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('all', $this->groupRow->id);
     }, $this->seasonGroup->id);
   }
@@ -229,18 +242,8 @@ class PunishmentsPresenter extends BasePresenter
   {
     $this->userIsLogged();
     $this->punishmentRow->update($values);
-    $this->flashMessage('Trest bol upravený', self::SUCCESS);
-    $this->redirect('all');
+    $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+    $this->redirect('all', $this->groupRow->id);
   }
 
-  /**
-   *
-   */
-  public function submittedRemoveForm(): void
-  {
-    $this->userIsLogged();
-    $this->punishmentsRepository->remove($this->punishmentRow->id);
-    $this->flashMessage('Trest bol odstránený', self::SUCCESS);
-    $this->redirect('all');
-  }
 }

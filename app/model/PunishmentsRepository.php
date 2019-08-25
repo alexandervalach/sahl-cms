@@ -11,39 +11,35 @@ class PunishmentsRepository extends Repository {
 
   /**
    * Finds punishments for specified player
-   * @param $id holds the player id
+   * @param int $id holds the player id
+   * @return Selection
    */
   public function getForPlayer(int $id): Selection
   {
     return $this->getAll()->where('players_seasons_teams_id', $id)->order('id DESC');
   }
 
-  public function getForSeason($id = null): ResultSet
+  public function getForSeasonGroup(int $seasonGroupId): ResultSet
   {
     $con = $this->getConnection();
 
-    $query = 'SELECT t.name as team_name, t.logo as team_logo,
-      p.id as player_id, p.name as player_name, p.number as player_num,
-      pn.content, pn.condition, pn.id, pn.round
-      FROM seasons_teams as st
-      INNER JOIN players_seasons_teams as pst ON st.id = pst.seasons_teams_id
-      INNER JOIN players as p ON p.id = pst.player_id
-      INNER JOIN punishments as pn ON pst.id = pn.players_seasons_teams_id
-      INNER JOIN teams as t ON t.id = st.team_id ';
+    $query = 'SELECT pn.id AS id, pn.content, pn.round, pn.condition, 
+       p.number AS player_number, p.name AS player_name, 
+       t.name AS team_name, t.logo AS team_logo
+      FROM punishments AS pn
+      INNER JOIN players_seasons_groups_teams AS psgt
+      ON pn.player_season_group_team_id = psgt.id
+      INNER JOIN seasons_groups_teams AS sgt
+      ON psgt.season_group_team_id = sgt.id
+      INNER JOIN seasons_groups AS sg
+      ON sgt.season_group_id = sg.id
+      INNER JOIN players AS p
+      ON psgt.player_id = p.id
+      INNER JOIN teams AS t
+      ON sgt.team_id = t.id
+      WHERE sgt.season_group_id = ?';
 
-    if ($id === null) {
-      return $con->query($query .
-        'WHERE st.season_id IS NULL
-        AND p.is_present = ?
-        AND pn.is_present = ?
-        ORDER BY pn.id DESC', 1, 1);
-    }
-
-    return $con->query($query .
-      'WHERE st.season_id = ?
-      AND p.is_present = ?
-      AND pn.is_present = ?
-      ORDER BY pn.id DESC', $seasonId, 1, 1);
+      return $con->query($query, $seasonGroupId);
   }
 
 }

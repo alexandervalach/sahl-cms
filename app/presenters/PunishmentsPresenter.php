@@ -87,6 +87,7 @@ class PunishmentsPresenter extends BasePresenter
     $this->punishmentsRepository = $punishmentsRepository;
     $this->punishmentAddFormFactory = $punishmentAddFormFactory;
     $this->removeFormFactory = $removeFormFactory;
+    $this->punishments = [];
   }
 
   /**
@@ -109,8 +110,10 @@ class PunishmentsPresenter extends BasePresenter
       $this->punishments[$punishment->id]['content'] = $punishment->content;
       $this->punishments[$punishment->id]['round'] = $punishment->round;
       $this->punishments[$punishment->id]['condition'] = $punishment->condition;
+      $this->punishments[$punishment->id]['player']['id'] = $punishment->player_id;
       $this->punishments[$punishment->id]['player']['name'] = $punishment->player_name;
       $this->punishments[$punishment->id]['player']['number'] = $punishment->player_number;
+      $this->punishments[$punishment->id]['team']['id'] = $punishment->team_id;
       $this->punishments[$punishment->id]['team']['name'] = $punishment->team_name;
       $this->punishments[$punishment->id]['team']['logo'] = $punishment->team_logo;
     }
@@ -123,6 +126,7 @@ class PunishmentsPresenter extends BasePresenter
   {
     // TODO: Implement get punishments for season group
     $this->template->punishments = ArrayHash::from($this->punishments);
+    $this->template->group = $this->groupRow;
   }
 
   /**

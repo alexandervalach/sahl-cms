@@ -13,18 +13,21 @@
   {/if}
 
   <div class="clearfix">
-    <h1 n:block="title">Tresty hráčov</h1>
+      {block title}
+        <h1>Tresty hráčov</h1>
+        <h2>{$group->label}</h2>
+      {/block}
   </div>
 
   {foreach $punishments as $punishment}
     <div style="margin-top: 2em" class="text-center">
       <h2>{$punishment->player->name} ({$punishment->player->number})</h2>
-      <h3>
+      <div>
         {if $punishment->team->logo and file_exists($imageFolder . '/' . $punishment->team->logo)}
           <img src="{$basePath}/{$imageFolder}/{$punishment->team->logo}" width="40px" />
         {/if}
-        {$punishment->team->name}
-      </h3>
+        <a n:href="Teams:view, $punishment->team->id, $group->id">{$punishment->team->name}</a>
+      </div>
 
       <ul>
         {if !empty($punishment->round) && isset($punishment->round)}

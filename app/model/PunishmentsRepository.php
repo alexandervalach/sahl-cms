@@ -24,8 +24,8 @@ class PunishmentsRepository extends Repository {
     $con = $this->getConnection();
 
     $query = 'SELECT pn.id AS id, pn.content, pn.round, pn.condition, 
-       p.number AS player_number, p.name AS player_name, 
-       t.name AS team_name, t.logo AS team_logo
+       p.number AS player_number, p.name AS player_name, p.id AS player_id,
+       t.name AS team_name, t.logo AS team_logo, t.id AS team_id
       FROM punishments AS pn
       INNER JOIN players_seasons_groups_teams AS psgt
       ON pn.player_season_group_team_id = psgt.id

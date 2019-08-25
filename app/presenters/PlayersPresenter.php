@@ -88,7 +88,12 @@ class PlayersPresenter extends BasePresenter
   {
     $this->groupRow = $this->groupsRepository->findById($groupId);
     $this->seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($groupId);
-    $this->players = $this->playersRepository->getForSeasonGroup();
+
+    if (!$this->groupRow || !$this->seasonGroup) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
+
+    $this->players = $this->playersRepository->getForSeasonGroup($this->seasonGroup->id);
   }
 
   /**

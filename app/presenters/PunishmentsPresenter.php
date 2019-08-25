@@ -6,6 +6,7 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Forms\PunishmentAddFormFactory;
+use App\Forms\RemoveFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
@@ -50,6 +51,11 @@ class PunishmentsPresenter extends BasePresenter
   private $seasonGroup;
 
   /**
+   * @var RemoveFormFactory
+   */
+  private $removeFormFactory;
+
+  /**
    * PunishmentsPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
@@ -60,6 +66,7 @@ class PunishmentsPresenter extends BasePresenter
    * @param GroupsRepository $groupsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
    * @param PunishmentAddFormFactory $punishmentAddFormFactory
+   * @param RemoveFormFactory $removeFormFactory
    */
   public function __construct(
       LinksRepository $linksRepository,
@@ -70,7 +77,8 @@ class PunishmentsPresenter extends BasePresenter
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
       GroupsRepository $groupsRepository,
       SeasonsGroupsRepository $seasonsGroupsRepository,
-      PunishmentAddFormFactory $punishmentAddFormFactory
+      PunishmentAddFormFactory $punishmentAddFormFactory,
+      RemoveFormFactory $removeFormFactory
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
@@ -78,6 +86,7 @@ class PunishmentsPresenter extends BasePresenter
     $this->playersRepository = $playersRepository;
     $this->punishmentsRepository = $punishmentsRepository;
     $this->punishmentAddFormFactory = $punishmentAddFormFactory;
+    $this->removeFormFactory = $removeFormFactory;
   }
 
   /**
@@ -187,13 +196,28 @@ class PunishmentsPresenter extends BasePresenter
   /**
    * @return Form
    */
+  protected function createComponentRemoveForm(): Form
+  {
+    return $this->removeFormFactory->create(function () {
+      $this->userIsLogged();
+      $this->punishmentsRepository->remove($this->punishmentRow->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('all');
+    }, function () {
+      $this->redirect('all');
+    });
+  }
+
+  /**
+   * @return Form
+   */
   protected function createComponentAddForm(): Form
   {
     return $this->punishmentAddFormFactory->create(function (Form $form, ArrayHash $values) {
       $this->userIsLogged();
       $this->punishmentsRepository->insert($values);
       $this->flashMessage('Trest bol pridaný', self::SUCCESS);
-      $this->redirect('all');
+      $this->redirect('all', $this->groupRow->id);
     }, $this->seasonGroup->id);
   }
 

@@ -45,9 +45,9 @@ class PunishmentAddFormFactory
   {
     $players = $this->playersRepository->fetchForSeasonGroup($seasonGroupId);
     $form = $this->formFactory->create();
-    $form->addSelect('player_id', 'Hráč*', $players)
+    $form->addSelect('player_season_group_team_id', 'Hráč*', $players)
         ->setRequired();
-    $form->addText('text', 'Dôvod')
+    $form->addText('content', 'Dôvod')
         ->setAttribute('placeholder', 'Nešportové správanie')
         ->addRule(Form::MAX_LENGTH, 'Dôvod môže mať najviac 255 znakov.', 255);
     $form->addText('round', 'Stop na kolo')

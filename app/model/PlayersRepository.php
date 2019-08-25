@@ -49,16 +49,16 @@ class PlayersRepository extends Repository
   }
 
   /**
-   * @param null $seasonGroupId
+   * @param int $seasonGroupId
    * @return ResultSet
    */
-  public function getForSeasonGroup($seasonGroupId = null): ResultSet
+  public function getForSeasonGroup(int $seasonGroupId): ResultSet
   {
     $db = $this->getConnection();
 
     $query = 'SELECT t.name as team_name, t.logo as team_logo, t.id as team_id,
       pt.label as type_label, pt.abbr as type_abbr,
-      p.id, p.name, p.number, psgt.goals, psgt.is_transfer
+      p.id, p.name, p.number, psgt.goals, psgt.is_transfer, psgt.id as player_season_group_team_id
       FROM seasons_groups_teams as sgt
       INNER JOIN players_seasons_groups_teams as psgt
       ON psgt.season_group_team_id = sgt.id
@@ -71,10 +71,11 @@ class PlayersRepository extends Repository
       WHERE p.name != ?
       AND p.name NOT LIKE ?
       AND p.is_present = ?
-      AND t.is_present = ? ';
+      AND t.is_present = ? 
+      AND season_group_id = ? 
+      ORDER BY name';
 
-    return $seasonGroupId === null ? $db->query($query . 'AND season_group_id IS NULL', ' ', '%voľné miesto%', 1, 1) :
-        $db->query($query . 'AND season_group_id = ?', $seasonGroupId, ' ', '%voľné miesto%', 1, 1);
+    return $db->query($query, ' ', 'voľné miesto%', 1, 1, $seasonGroupId);
   }
 
   /**
@@ -83,7 +84,7 @@ class PlayersRepository extends Repository
    */
   public function fetchForSeasonGroup (int $seasonGroupId): array
   {
-    return $this->getForSeasonGroup($seasonGroupId)->fetchAll();
+    return $this->getForSeasonGroup($seasonGroupId)->fetchPairs('player_season_group_team_id', self::NAME);
   }
 
   /**

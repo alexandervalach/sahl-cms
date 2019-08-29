@@ -33,7 +33,8 @@
       <tr n:foreach="$players as $player" class="{if $i == 0}first{/if}">
         {var $current = $player->goals}
         <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}</td>
-        <td><a n:href="view $player->id">{$player->name}</a></td>
+        <td>
+          {*<a n:href="view $player->id">*}{$player->name}{*</a></td>*}
         <td>{$player->number}</td>
         <td>
           {*<a n:href="Teams:view $player->team_id">*}

@@ -3,11 +3,11 @@
 <section class="content">
   <div n:if="$user->loggedIn" class="clearfix">
     <div class="pull-right">
+      <button type="button" class="btn btn-large btn-primary" data-toggle="modal" data-target="#add-fight" title="Pridať zápas">
+        <span class="glyphicon glyphicon-plus"></span> Zápas
+      </button>
       <button type="button" class="btn btn-large btn-success" data-toggle="modal" data-target="#edit" title="Upraviť kolo">
         <span class="glyphicon glyphicon-pencil"></span> Upraviť
-      </button>
-      <button type="button" class="btn btn-large btn-info" data-toggle="modal" data-target="#add-fight" title="Pridať zápas">
-        <span class="glyphicon glyphicon-plus"></span> Zápas
       </button>
       <button type="button" class="btn btn-large btn-danger" data-toggle="modal" data-target="#remove" title="Odstrániť kolo">
         <span class="glyphicon glyphicon-trash"></span> Odstrániť

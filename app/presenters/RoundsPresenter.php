@@ -34,6 +34,11 @@ class RoundsPresenter extends BasePresenter
   /** @var ActiveRow */
   private $seasonRow;
 
+  /** @var ActiveRow */
+  private $groupRow;
+
+  private $seasonGroup;
+
   /** @var ArrayHash */
   private $items;
 
@@ -266,12 +271,17 @@ class RoundsPresenter extends BasePresenter
   protected function createComponentAddFightForm(): Form
   {
     return $this->fightAddFormFactory->create(function (Form $form, ArrayHash $values) {
-      if ($values->team1_id === $values->team2_id)
-      {
+      if ($values->team1_id === $values->team2_id) {
         $form->addError('Zvoľte dva rozdielne tímy.');
         return false;
       }
 
+      if (($this->groupRow = $this->findGroup($values->team1_id, $values->team2_id)) === null) {
+        $form->addError('Zvoľte dva tímy z tej istej skupiny.');
+        return false;
+      }
+
+      /*
       $table = $this->tablesRepository->getByTableTypeId($values->table_type_id);
 
       if ($values->score1 > $values->score2) {
@@ -296,7 +306,8 @@ class RoundsPresenter extends BasePresenter
       $values->offsetUnset('table_type_id');
       $this->fightsRepository->insert($values);
 
-      $this->flashMessage('Zápas bol pridaný', self::SUCCESS);
+       */
+      $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('view', $this->roundRow->id);
     });
   }
@@ -347,6 +358,24 @@ class RoundsPresenter extends BasePresenter
     $this->tablesRepository->updateEntry($tableId, $values->team1_id, 'score2', $values->score2);
     $this->tablesRepository->updateEntry($tableId, $values->team2_id, 'score1', $values->score2);
     $this->tablesRepository->updateEntry($tableId, $values->team2_id, 'score2', $values->score1);
+  }
+
+  /**
+   * @param $team1
+   * @param $team2
+   * @return ActiveRow|null
+   */
+  public function findGroup($team1, $team2)
+  {
+    $seasonGroupTeam1 = $this->seasonsGroupsTeamsRepository->getSeasonGroupForTeam($team1);
+    $seasonGroupTeam2 = $this->seasonsGroupsTeamsRepository->getSeasonGroupForTeam($team2);
+
+    if ($seasonGroupTeam1->season_group_id !== $seasonGroupTeam2->season_group_id) {
+      return null;
+    }
+
+    $this->seasonGroup = $this->seasonsGroupsRepository->findById($seasonGroupTeam1->season_group_id);
+    return $this->groupsRepository->findById($this->seasonGroup->group_id);
   }
 
 }

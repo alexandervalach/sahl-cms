@@ -26,14 +26,27 @@ class SeasonsGroupsTeamsRepository extends Repository
 
   /**
    * @param int $teamId
-   * @param int|null $seasonId
+   * @param int $seasonGroupId
    * @return IRow|null
    */
-  public function getTeam(int $teamId, $seasonId = null)
+  public function getTeam(int $teamId, int $seasonGroupId)
   {
-    return $this->getForSeason($seasonId)
+    return $this->getForSeason($seasonGroupId)
       ->where(self::TEAM_ID, $teamId)
       ->select(self::ID)->fetch();
+  }
+
+  /**
+   * @param int $teamId
+   * @return IRow|null
+   */
+  public function getSeasonGroupForTeam(int $teamId)
+  {
+    return $this->findAll()
+        ->where(self::TEAM_ID, $teamId)
+        ->order('id DESC')
+        ->limit(1)
+        ->fetch();
   }
 
   /**

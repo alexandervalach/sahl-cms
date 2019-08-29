@@ -55,13 +55,17 @@ class FightAddFormFactory
     $tableTypes = $this->tableTypesRepository->fetchForSeason();
 
     $form = $this->formFactory->create();
-    $form->addSelect('team1_id', 'Tím 1', $teams);
-    $form->addText('score1', 'Skóre tímu 1')
+    $form->addSelect('team1_id', 'Tím 1*', $teams);
+    $form->addText('score1', 'Skóre tímu 1*')
+          ->setHtmlType('number')
+          ->setDefaultValue(0)
           ->setAttribute('placeholder', '1');
-    $form->addSelect('team2_id', 'Tím 2', $teams);
-    $form->addText('score2', 'Skóre tímu 2')
+    $form->addSelect('team2_id', 'Tím 2*', $teams);
+    $form->addText('score2', 'Skóre tímu 2*')
+          ->setHtmlType('number')
+          ->setDefaultValue(0)
           ->setAttribute('placeholder', '0');
-    $form->addSelect('table_type_id', 'Tabuľka', $tableTypes);
+    $form->addSelect('table_type_id', 'Tabuľka*', $tableTypes);
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', 'btn btn-large btn-warning')

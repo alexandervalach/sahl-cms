@@ -11,6 +11,7 @@ use Nette\Database\Table\Selection;
 class TablesRepository extends Repository
 {
   const TABLE_TYPE_ID = 'table_type_id';
+  const SEASON_GROUP_ID = 'season_group_id';
 
   /**
    * @param int|null $seasonId
@@ -36,14 +37,14 @@ class TablesRepository extends Repository
 
   /**
    * @param int $tableTypeId
-   * @param int|null $seasonId
+   * @param int $seasonGroupId
    * @return IRow|null
    */
-  public function getByTableTypeId(int $tableTypeId, $seasonId = null)
+  public function getByTableTypeId(int $tableTypeId, int $seasonGroupId)
   {
     return $this->getAll()
       ->where(self::TABLE_TYPE_ID, $tableTypeId)
-      ->where(self::SEASON_ID, $seasonId)
+      ->where(self::SEASON_GROUP_ID, $seasonGroupId)
       ->select(self::ID)
       ->fetch();
   }

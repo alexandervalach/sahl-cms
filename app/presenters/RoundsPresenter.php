@@ -281,8 +281,7 @@ class RoundsPresenter extends BasePresenter
         return false;
       }
 
-      /*
-      $table = $this->tablesRepository->getByTableTypeId($values->table_type_id);
+      $table = $this->tablesRepository->getByTableTypeId($values->table_type_id, $this->seasonGroup->id);
 
       if ($values->score1 > $values->score2) {
         $state1 = 'win';
@@ -306,7 +305,6 @@ class RoundsPresenter extends BasePresenter
       $values->offsetUnset('table_type_id');
       $this->fightsRepository->insert($values);
 
-       */
       $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('view', $this->roundRow->id);
     });
@@ -325,7 +323,7 @@ class RoundsPresenter extends BasePresenter
       }
 
       $this->roundsRepository->remove($this->roundRow->id);
-      $this->flashMessage('Kolo bolo odstránené', self::SUCCESS);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('all');
     });
   }
@@ -338,12 +336,12 @@ class RoundsPresenter extends BasePresenter
   protected function updateTablePoints(int $tableId, ArrayHash $values): void
   {
     if ($values->score1 > $values->score2) {
-      $this->tableEntriesRepository->updateEntryPoints($tableId, $values->team1_id, 2);
+      $this->tableEntriesRepository->updatePoints($tableId, $values->team1_id, 2);
     } elseif ($values->score2 > $values->score1) {
-      $this->tableEntriesRepository->updateEntryPoints($tableId, $values->team2_id, 2);
+      $this->tableEntriesRepository->updatePoints($tableId, $values->team2_id, 2);
     } else {
-      $this->tableEntriesRepository->updateEntryPoints($tableId, $values->team2_id);
-      $this->tableEntriesRepository->updateEntryPoints($tableId, $values->team1_id);
+      $this->tableEntriesRepository->updatePoints($tableId, $values->team2_id, 1);
+      $this->tableEntriesRepository->updatePoints($tableId, $values->team1_id, 1);
     }
   }
 
@@ -354,10 +352,10 @@ class RoundsPresenter extends BasePresenter
    */
   protected function updateScore(int $tableId, ArrayHash $values): void
   {
-    $this->tablesRepository->updateEntry($tableId, $values->team1_id, 'score1', $values->score1);
-    $this->tablesRepository->updateEntry($tableId, $values->team1_id, 'score2', $values->score2);
-    $this->tablesRepository->updateEntry($tableId, $values->team2_id, 'score1', $values->score2);
-    $this->tablesRepository->updateEntry($tableId, $values->team2_id, 'score2', $values->score1);
+    $this->tableEntriesRepository->updateEntry($tableId, $values->team1_id, 'score1', (int) $values->score1);
+    $this->tableEntriesRepository->updateEntry($tableId, $values->team1_id, 'score2', (int) $values->score2);
+    $this->tableEntriesRepository->updateEntry($tableId, $values->team2_id, 'score1', (int) $values->score2);
+    $this->tableEntriesRepository->updateEntry($tableId, $values->team2_id, 'score2', (int) $values->score1);
   }
 
   /**

@@ -171,7 +171,7 @@ class FightsPresenter extends BasePresenter
 
   /**
    * Component for creating a remove form
-   * @return Nette\Application\UI\Form
+   * @return Form
    */
   protected function createComponentRemoveForm(): Form
   {

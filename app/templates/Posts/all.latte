@@ -24,19 +24,17 @@
       </a>
     </header>
     <main class="clearfix overflow-container">
-      <a n:href="view $post->id">
-        <figure class="col-md-5 col-lg-5">
-          {if $post->thumbnail and file_exists($imageFolder . "/" . $post->thumbnail)}
-            <img src="{$basePath}/{$imageFolder}/{$post->thumbnail}" class="img img-responsive" alt="Miniatúra článku {$post->title}" />
-          {else}
-            <img src="{$basePath}/{$imageFolder}/{$defaultImage}" class="img img-responsive" alt="Logo sahl" />
-          {/if}
-        </figure>
-      </a>
-      <div class="hidden-xs col-md-7 col-lg-7">
+      <figure class="col-md-5 col-lg-5">
+        {if $post->thumbnail and file_exists($imageFolder . "/" . $post->thumbnail)}
+          <img src="{$basePath}/{$imageFolder}/{$post->thumbnail}" class="img img-responsive" alt="Miniatúra článku {$post->title}" />
+        {else}
+          <img src="{$basePath}/{$imageFolder}/{$defaultImage}" class="img img-responsive" alt="Logo SAHL" />
+        {/if}
+      </figure>
+      <div class="hidden-xs col-md-7 col-lg-7 article-content">
         {$post->content|noescape|truncate:600}
       </div>
-      <div class="hidden-sm hidden-md hidden-lg">
+      <div class="hidden-sm hidden-md hidden-lg article-content">
         {$post->content|noescape|truncate:150}
       </div>
     </main>

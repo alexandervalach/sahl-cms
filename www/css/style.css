@@ -379,6 +379,10 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
     padding-bottom: 1rem;
 }
 
+.article-content {
+    overflow-wrap: break-word
+}
+
 .image-centered {
     display: block;
     margin: 0 auto;

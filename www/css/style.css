@@ -357,26 +357,26 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
 
 .content {
     background-color: #fff;
-    padding: 3em;
+    padding: 3rem;
     border-radius: 6px;
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
 }
 
 .content article {
-    padding: 2em;
+    padding: 1.5rem;
 }
 
 .content article main {
-    padding-bottom: 3em;
+    padding-bottom: 1.5rem;
 }
 
 .content article header {
-    padding-bottom: 1em;
+    padding-bottom: 0.75rem;
 }
 
 .content article main figure img {
-    padding-bottom: 2em;
+    padding-bottom: 1rem;
 }
 
 .image-centered {

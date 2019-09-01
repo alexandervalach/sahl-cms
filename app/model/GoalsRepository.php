@@ -8,10 +8,16 @@ class GoalsRepository extends Repository {
 
   const PLAYER_ID = 'player_id';
 
+  /*
   public function getPlayerGoalsCount($playerId) {
     return $this->getAll()->where(self::PLAYER_ID, $playerId)->sum('goals');
   }
+  */
 
+  /**
+   * @param int $fightId
+   * @return ResultSet
+   */
   public function getForFight(int $fightId): ResultSet
   {
     $db = $this->getConnection();
@@ -24,6 +30,15 @@ class GoalsRepository extends Repository {
       ON psgt.player_id = p.id
       WHERE fight_id = ? AND g.is_present = ?
       ORDER BY is_home_player DESC', $fightId, 1);
+  }
+
+  /**
+   * @param int $fightId
+   * @return array
+   */
+  public function fetchForFight(int $fightId): array
+  {
+    return $this->getForFight($fightId)->fetchAll();
   }
 
 }

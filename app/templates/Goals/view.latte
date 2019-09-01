@@ -32,7 +32,7 @@
             <tr n:foreach="$goals as $goal">
                 <td>{$goal->player_name} ({$goal->player_number})</td>
                 <td>{$goal->goals}</td>
-                <td>{if $goal->is_home_player == 1}DOMÁCI{else}HOSTIA{/if}</td>
+                <td>{if $goal->is_home_player}DOMÁCI{else}HOSTIA{/if}</td>
                 {if $user->loggedIn}
                   <td>
                     <a n:href="Goals:edit $goal->id" class="text-success">

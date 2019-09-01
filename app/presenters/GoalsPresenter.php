@@ -119,7 +119,7 @@ class GoalsPresenter extends BasePresenter
   public function renderView(int $id): void
   {
     $this->template->fight = $this->fightRow;
-    $this->template->goals = ArrayHash::from($this->goalsRepository->getForFight($this->fightRow->id)->fetchAll());
+    $this->template->goals = ArrayHash::from($this->goalsRepository->fetchForFight($this->fightRow->id));
     $this->template->team1 = $this->fightRow->ref('team1_id');
     $this->template->team2 = $this->fightRow->ref('team2_id');
   }
@@ -131,7 +131,7 @@ class GoalsPresenter extends BasePresenter
   {
     $this->userIsLogged();
     $this->goalRow = $this->goalsRepository->findById($id);
-    $this->fightRow = $this->goalRow->ref('fight_id');
+    $this->fightRow = $this->goalRow->ref('fights', 'fight_id');
   }
 
   /**
@@ -195,7 +195,7 @@ class GoalsPresenter extends BasePresenter
           ->setAttribute('placeholder', 0)
           ->addRule(Form::FILLED, 'Ešte treba vyplniť počet gólov.')
           ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
-    $form->addCheckbox('home', ' Hráč domáceho tímu');
+    $form->addCheckbox('is_home_player', ' Hráč domáceho tímu');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
@@ -244,12 +244,10 @@ class GoalsPresenter extends BasePresenter
    */
   public function submittedRemove(): Form
   {
-    $player = $this->playersRepository->findById($this->goalRow->player_id);
-    $numOfGoals = $player->goals - $this->goalRow->goals;
-    $goals = array('goals' => $numOfGoals);
-    $player->update($goals);
+    $player = $this->playersSeasonsGroupsTeamsRepository->findById($this->goalRow->player_season_group_team_id);
+    $player->update(array('goals' => $player->goals - $this->goalRow->number));
 
-    $this->goalRow->delete();
+    $this->goalsRepository->remove($this->goalRow->id);
     $this->flashMessage('Góly boli odpočítané', self::SUCCESS);
     $this->redirect('view', $this->fightRow->id);
   }

@@ -1,52 +1,49 @@
 {block content}
 
 <section class="content">
-
-    <div class="clearfix" n:if="$user->loggedIn">
-        <div class="pull-right">
-            <button type="button" class='{$btnPrimary}' 
-                    data-toggle="modal" data-target="#add-goal" title="Pridať góly hráčom">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
+    {if $user->loggedIn}
+        <div class="clearfix">
+            <div class="pull-right">
+                <button type="button" class='btn btn-large btn-primary' data-toggle="modal" data-target="#add-goal" title="Pridať góly hráčom">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
         </div>
-    </div>
-
+    {/if}
     <div class="cleafix">
         <h1 n:block="title">Zobrazenie gólov</h1>
     </div>
-
 </section>
 
-<div n:if="$goals->count()" class="table-responsive text-center">
+<div n:if="$goals" class="table-responsive text-center">
     <table class="table">
         <caption>
-            <h1>{$team1->name} : {$team2->name}</h1>
+            <h2>{$team1->name} : {$team2->name}</h2>
         </caption>
         <thead>
             <tr>
                 <th class="text-center">Hráč</th>
                 <th class="text-center">Počet gólov</th>
                 <th class="text-center">Domáci/Hostia</th>
-                <th n:if="$user->loggedIn" class="text-center" colspan="2"></th>
+                <th n:if="$user->loggedIn" class="text-center" colspan="2">Akcia</th>
             </tr>
         </thead>
         <tbody>
             <tr n:foreach="$goals as $goal">
-                {var $player = $goal->ref('players', 'player_id')}
-                <td>{$player->name}</td>
+                <td>{$goal->player_name} ({$goal->player_number})</td>
                 <td>{$goal->goals}</td>
-                <td>{if $goal->home == 1}DOMÁCI{else}HOSTIA{/if}</td>
+                <td>{if $goal->is_home_player == 1}DOMÁCI{else}HOSTIA{/if}</td>
                 {if $user->loggedIn}
-                    <td>
-                        <a n:href="Goals:edit $goal" class="text-success">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a n:href="Goals:remove $goal" class="text-danger">
-                            <span class="glyphicon glyphicon-trash"></span>
-                        </a>
-                    </td>
+                  <td>
+                    <a n:href="Goals:edit $goal->id" class="text-success">
+                      <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                  </td>
+                  <td>
+                    <a n:href="Goals:remove $goal->id" class="text-danger">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                  </td>
                 {/if}
             </tr>
         </tbody>

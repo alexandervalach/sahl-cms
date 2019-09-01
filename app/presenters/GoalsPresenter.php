@@ -7,6 +7,7 @@ namespace App\Presenters;
 use App\FormHelper;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -54,6 +55,11 @@ class GoalsPresenter extends BasePresenter
   private $playersRepository;
 
   /**
+   * @var PlayersSeasonsGroupsTeamsRepository
+   */
+  private $playersSeasonsGroupsTeamsRepository;
+
+  /**
    * GoalsPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
@@ -65,6 +71,7 @@ class GoalsPresenter extends BasePresenter
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
    * @param GroupsRepository $groupsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository
    */
   public function __construct(
       LinksRepository $linksRepository,
@@ -76,7 +83,8 @@ class GoalsPresenter extends BasePresenter
       RoundsRepository $roundsRepository,
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
       GroupsRepository $groupsRepository,
-      SeasonsGroupsRepository $seasonsGroupsRepository
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
@@ -85,6 +93,7 @@ class GoalsPresenter extends BasePresenter
     $this->fightsRepository = $fightsRepository;
     $this->playersRepository = $playersRepository;
     $this->roundsRepository = $roundsRepository;
+    $this->playersSeasonsGroupsTeamsRepository = $playersSeasonsGroupsTeamsRepository;
   }
 
   /**
@@ -94,6 +103,14 @@ class GoalsPresenter extends BasePresenter
   {
     $this->fightRow = $this->fightsRepository->findById($id);
     $this->roundRow = $this->roundsRepository->findById($this->fightRow->round_id);
+
+    if (!$this->fightRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
+
+    if (!$this->roundRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
   }
 
   /**
@@ -102,8 +119,7 @@ class GoalsPresenter extends BasePresenter
   public function renderView(int $id): void
   {
     $this->template->fight = $this->fightRow;
-    $this->template->goals = $this->goalsRepository->findByValue('fight_id', $this->fightRow)
-            ->order('home DESC, goals DESC');
+    $this->template->goals = ArrayHash::from($this->goalsRepository->getForFight($this->fightRow->id)->fetchAll());
     $this->template->team1 = $this->fightRow->ref('team1_id');
     $this->template->team2 = $this->fightRow->ref('team2_id');
   }
@@ -146,20 +162,20 @@ class GoalsPresenter extends BasePresenter
   }
 
   /**
-   * @return Nette\Aplication\UI\Form
+   * @return Form
    */
   protected function createComponentAddForm(): Form
   {
     $players = $this->teamPlayersHelper($this->fightRow);
     $form = new Form;
     $form->addHidden('fight_id', (string) $this->fightRow->id);
-    $form->addSelect('player_id', 'Hráči', $players);
+    $form->addSelect('player_season_group_team_id', 'Hráči', $players);
     $form->addText('number', 'Počet gólov')
           ->setDefaultValue(1)
           ->setAttribute('placeholder', 0)
           ->addRule(Form::FILLED, 'Ešte treba vyplniť počet gólov')
           ->addRule(Form::INTEGER, 'Počet gólov musí byť celé číslo.');
-    $form->addCheckbox('home', ' Hráč domáceho tímu');
+    // $form->addCheckbox('is_home_player', ' Hráč domáceho tímu');
     $form->addSubmit('save', 'Uložiť');
     $form->addSubmit('cancel', 'Zrušiť')
           ->setAttribute('class', self::BTN_WARNING)
@@ -197,12 +213,10 @@ class GoalsPresenter extends BasePresenter
   public function submittedAddForm(Form $form, ArrayHash $values): Form
   {
     $this->goalsRepository->insert($values);
-    $player = $this->playersRepository->findById($values->player_id);
-    $numOfGoals = $player->goals + $values->number;
-    $goals = array('number' => $numOfGoals);
-    $player->update($goals);
+    $player = $this->playersSeasonsGroupsTeamsRepository->findById($values->player_season_group_team_id);
+    $player->update(array('goals' => $player->goals + $values->number));
 
-    $this->flashMessage("Góly boli pridané", self::SUCCESS);
+    $this->flashMessage('Góly boli pridané', self::SUCCESS);
     $this->redirect('view', $this->fightRow->id);
   }
 
@@ -254,12 +268,7 @@ class GoalsPresenter extends BasePresenter
    */
   protected function teamPlayersHelper(ActiveRow $row): array
   {
-    $team1 = $this->teamsRepository->findById($row->team1_id);
-    $team2 = $this->teamsRepository->findById($row->team2_id);
-    $players1 = $this->teamsRepository->getPlayersForTeam($team1->id);
-    $players2 = $this->teamsRepository->getPlayersForTeam($team2->id);
-    $players = array_replace($players1, $players2);
-    return $players;
+    return $this->teamsRepository->fetchPlayersForTeams($row->team1_id, $row->team2_id);
   }
 
 }

@@ -53,12 +53,33 @@ class TeamsRepository extends Repository
   }
 
   /**
-   * @param int $id
+   * @param int $team1Id
+   * @param int $team2Id
+   * @return ResultSet
+   */
+  public function getPlayersForTeams(int $team1Id, int $team2Id): ResultSet
+  {
+    $db = $this->getConnection();
+    return $db->query('SELECT psgt.id, p.name, p.number
+      FROM teams AS t
+      INNER JOIN seasons_groups_teams AS sgt
+      ON sgt.team_id = t.id
+      INNER JOIN players_seasons_groups_teams AS psgt
+      ON psgt.season_group_team_id = sgt.id
+      INNER JOIN players AS p
+      ON psgt.player_id = p.id
+      WHERE p.name NOT LIKE ? AND
+      (t.id = ? OR t.id = ?) AND psgt.is_present = ?', 'voľné miesto %', $team1Id, $team2Id, 1);
+  }
+
+  /**
+   * @param int $team1Id
+   * @param int $team2Id
    * @return array
    */
-  public function getPlayers(int $id): array
+  public function fetchPlayersForTeams(int $team1Id, int $team2Id): array
   {
-    return ($this->findById($id))->related('players')->fetchPairs(self::ID, self::NAME);
+    return $this->getPlayersForTeams($team1Id, $team2Id)->fetchPairs('id', 'name');
   }
 
   /**

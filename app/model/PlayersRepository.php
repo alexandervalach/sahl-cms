@@ -118,4 +118,25 @@ class PlayersRepository extends Repository
       INNER JOIN groups AS g ON st.group_id = g.id
       WHERE st.season_id IS NULL AND pst.player_id = ?', $playerId)->fetch();
   }
+
+  /**
+   * @param int $playerId
+   * @return IRow|null
+   */
+  public function getPlayerInfo(int $playerId)
+  {
+    $db = $this->getConnection();
+    return $db->query('SELECT player_id AS id, 
+       is_transfer, psgt.is_present, name, number, 
+       label AS type_label, abbr AS type_abbr
+      FROM players_seasons_groups_teams AS psgt
+      INNER JOIN players AS p
+      ON psgt.player_id = p.id
+      INNER JOIN player_types AS pt
+      ON pt.id = psgt.player_type_id
+      WHERE psgt.player_id = ? AND psgt.is_present = ?
+      ORDER BY psgt.id DESC 
+      LIMIT ?', $playerId, 1, 1)->fetch();
+  }
+
 }

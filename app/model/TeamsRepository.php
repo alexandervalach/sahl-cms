@@ -70,7 +70,7 @@ class TeamsRepository extends Repository
   {
     return $this->findAll()->where(self::NAME, $name)->fetch();
   }
-
+  
   /**
    * @param int $seasonGroupId
    * @return ResultSet

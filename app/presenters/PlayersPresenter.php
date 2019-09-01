@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Presenters;
 
 use App\FormHelper;
+use App\Forms\ModalRemoveFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
@@ -55,6 +56,11 @@ class PlayersPresenter extends BasePresenter
   private $seasonGroup;
 
   /**
+   * @var ModalRemoveFormFactory
+   */
+  private $modalRemoveFormFactory;
+
+  /**
    * PlayersPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
@@ -64,6 +70,7 @@ class PlayersPresenter extends BasePresenter
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
    * @param GroupsRepository $groupsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param ModalRemoveFormFactory $modalRemoveFormFactory
    */
   public function __construct(
     LinksRepository $linksRepository,
@@ -73,12 +80,14 @@ class PlayersPresenter extends BasePresenter
     PlayerTypesRepository $playerTypesRepository,
     SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
     GroupsRepository $groupsRepository,
-    SeasonsGroupsRepository $seasonsGroupsRepository
+    SeasonsGroupsRepository $seasonsGroupsRepository,
+    ModalRemoveFormFactory $modalRemoveFormFactory
   ) {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
+    $this->modalRemoveFormFactory = $modalRemoveFormFactory;
   }
 
   /**
@@ -111,29 +120,34 @@ class PlayersPresenter extends BasePresenter
 
   /**
    * @param int $id
-   * @throws BadRequestException
+   * @param int $teamId
    */
-  public function actionView(int $id): void
+  public function actionView(int $id, int $teamId): void
   {
+    $player = $this->playersRepository->getPlayerInfo($id);
     $this->playerRow = $this->playersRepository->findById($id);
+    $this->teamRow = $this->teamsRepository->findById($teamId);
+
     if (!$this->playerRow) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $data = [];
-    $row = $this->teamsRepository->getForPlayer($this->playerRow->id);
+    if (!$this->teamRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
 
-    $data['player']['name'] = $this->playerRow->name;
-    $data['player']['number'] = $this->playerRow->number;
-    $data['player']['photo'] = $this->playerRow->photo;
-    $data['player']['goals'] = $row->offsetGet('goals');
-    $data['player']['is_transfer'] = $row->offsetGet('is_transfer');
-    $data['team']['id'] = $row->offsetGet('team_id');
-    $data['team']['name'] = $row->offsetGet('team_name');
-    $data['team']['logo'] = $row->offsetGet('team_logo');
-    $data['type']['label'] = $row->offsetGet('type_label');
-    $data['type']['abbr'] = $row->offsetGet('type_abbr');
-    $data['group']['label'] = $row->offsetGet('group_label');
+    $data = [];
+
+    $data['player']['name'] = $player->name;
+    $data['player']['number'] = $player->number;
+    // $data['player']['goals'] = $row->offsetGet('goals');
+    $data['player']['is_transfer'] = $player->is_transfer;
+    $data['team']['id'] = $this->teamRow->id;
+    $data['team']['name'] = $this->teamRow->name;
+    $data['team']['logo'] = $this->teamRow->logo;
+    $data['type']['label'] = $player->type_label;
+    $data['type']['abbr'] = $player->type_abbr;
+    // $data['group']['label'] = $this->playerRow->group_label;
 
     $this->playerData = ArrayHash::from($data);
 
@@ -212,9 +226,9 @@ class PlayersPresenter extends BasePresenter
           ->addRule(Form::FILLED, 'Meno musí byť vyplnené');
     $form->addText('number', 'Číslo')
           ->setAttribute('placeholder', 14);
-    $form->addText('goals', 'Góly');
-    $form->addSelect('type_id', 'Typ hráča', $types);
-    $form->addCheckbox('is_transfer', ' Prestupový hráč');
+    // $form->addText('goals', 'Góly');
+    // $form->addSelect('type_id', 'Typ hráča', $types);
+    // $form->addCheckbox('is_transfer', ' Prestupový hráč');
     $form->addSubmit('save', 'Uložiť')
           ->setAttribute('class', self::BTN_SUCCESS);
     $form->addSubmit('cancel', 'Zrušiť')
@@ -241,6 +255,16 @@ class PlayersPresenter extends BasePresenter
     return $form;
   }
 
+  protected function createComponentRemoveForm(): Form
+  {
+    return $this->modalRemoveFormFactory->create(function () {
+      $team = $this->teamsRepository->getForPlayer($this->playerRow->id);
+      $this->playersRepository->remove($this->playerRow->id);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
+      $this->redirect('Teams:view', $team);
+    });
+  }
+
   /**
    * @param Form $form
    * @param $values
@@ -248,19 +272,8 @@ class PlayersPresenter extends BasePresenter
   public function submittedEditForm(Form $form, $values): void
   {
     $this->playerRow->update($values);
-    $this->flashMessage('Hráč bol upravený', self::SUCCESS);
-    $this->redirect('view', $this->playerRow);
-  }
-
-  /**
-   *
-   */
-  public function submittedRemoveForm(): void
-  {
-    $team = $this->teamsRepository->getForPlayer($this->playerRow->id);
-    $this->playersRepository->remove($this->playerRow->id);
-    $this->flashMessage('Hráč bol odstránený.', self::SUCCESS);
-    $this->redirect('Teams:view', $team);
+    $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+    $this->redirect('view', $this->playerRow->id, $this->teamRow->id);
   }
 
   /**

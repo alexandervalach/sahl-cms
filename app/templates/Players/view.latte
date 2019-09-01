@@ -14,19 +14,21 @@
         </button>
       </div>
       <h2>
-        <a n:href="Teams:view $team->id">
+        {*<a n:href="Teams:view $team->id">*}
           {if $team->logo && file_exists($imageFolder . '/' . $team->logo)}
             <img src="{$basePath}/{$imageFolder}/{$team->logo}" />
           {/if}
-        </a>
+        {*</a>*}
       </h2>
   </div>
 
+  {*
   <div class="clearfix">
     {if $player->photo && file_exists($imageFolder . '/' . $player->photo)}
       <img src="{$basePath}/{$imageFolder}/{$player->photo}" />
     {/if}
   </div>
+  *}
 
   <div class="clearfix table-responsive">
     <table class="table">
@@ -35,10 +37,12 @@
           <td>Funkcia</td>
           <td>{$type->label}</td>
         </tr>
+        {*
         <tr n:if="$type->label != 'Brankár'">
           <td>Počet inkasovaných gólov</td>
           <td>{$player->goals}</td>
         </tr>
+        *}
         <tr n:if="$player->is_transfer">
           <td colspan="2">Prestupový hráč</td>
         </tr>

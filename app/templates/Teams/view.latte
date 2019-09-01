@@ -53,9 +53,9 @@
             {if $player->name}
               <td>{$iterator->counter}{if $player->type_abbr == "B"}-B{/if}.</td>
               <td>
-                {*<a n:href="Players:view $player->id">*}
+                <a n:href="Players:view $player->id, $team->id">
                   {$player->name}{if $player->type_abbr && $player->type_abbr != "B"} - {$player->type_abbr}{/if}
-                {*</a>*}
+                </a>
               </td>
               <td>{if $player->number != 0}{$player->number}{/if}</td>
             {else}

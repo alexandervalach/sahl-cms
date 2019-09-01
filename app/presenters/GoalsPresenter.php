@@ -139,9 +139,10 @@ class GoalsPresenter extends BasePresenter
    */
   public function renderEdit(int $id): void
   {
-    if (!$this->goalRow || !$this->goalRow->is_present) {
-      throw new BadRequestException(self::PLAYER_NOT_FOUND);
+    if (!$this->goalRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
+
     $this->template->goal = $this->goalRow;
     $this->template->player = $this->goalRow->ref('players', 'player_id');
 

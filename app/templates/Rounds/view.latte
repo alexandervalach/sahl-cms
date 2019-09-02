@@ -43,12 +43,10 @@
           <h2>{$item->team1->name}</h2>
           <h3>{$item->fight->score1}</h3>
           <ul n:if="count($item->homeGoals)" class="clearfix">
-            {*
             <li><strong>Domáci</strong> </li>
             <li n:foreach="$item->homeGoals as $goal">
-              {$goal->player->name} {if $goal->number > 1}{$goal->number}{/if}
+              {$goal->player->name} {if $goal->number > 1}x {$goal->number}{/if}
             </li>
-            *}
           </ul>
         </div>
 
@@ -62,11 +60,9 @@
           <h3>{$item->fight->score2}</h3>
           <ul n:if="count($item->guestGoals)">
             <li><strong>Hostia</strong></li>
-            {*
             <li n:foreach="$item->guestGoals as $goal">
-              {$goal->player->name} {if $goal->number > 1}{$goal->number}{/if}
+              {$goal->player->name} {if $goal->number > 1}x {$goal->number}{/if}
             </li>
-            *}
           </ul>
         </div>
       </div>

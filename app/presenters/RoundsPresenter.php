@@ -10,6 +10,8 @@ use App\Forms\ModalRemoveFormFactory;
 use App\Model\FightsRepository;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\PlayersRepository;
+use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -64,12 +66,24 @@ class RoundsPresenter extends BasePresenter
   private $modalRemoveFormFactory;
 
   /**
+   * @var PlayersSeasonsGroupsTeamsRepository
+   */
+  private $playersSeasonsGroupsTeamsRepository;
+
+  /**
+   * @var PlayersRepository
+   */
+  private $playersRepository;
+
+  /**
    * RoundsPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
    * @param TeamsRepository $teamsRepository
    * @param RoundsRepository $roundsRepository
    * @param FightsRepository $fightsRepository
+   * @param PlayersRepository $playersRepository
+   * @param PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
    * @param TablesRepository $tablesRepository
    * @param TableEntriesRepository $tableEntriesRepository
@@ -85,6 +99,8 @@ class RoundsPresenter extends BasePresenter
       TeamsRepository $teamsRepository,
       RoundsRepository $roundsRepository,
       FightsRepository $fightsRepository,
+      PlayersRepository $playersRepository,
+      PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository,
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
       TablesRepository $tablesRepository,
       TableEntriesRepository $tableEntriesRepository,
@@ -103,6 +119,8 @@ class RoundsPresenter extends BasePresenter
     $this->roundFormFactory = $roundFormFactory;
     $this->fightAddFormFactory = $fightAddFormFactory;
     $this->modalRemoveFormFactory = $modalRemoveFormFactory;
+    $this->playersSeasonsGroupsTeamsRepository = $playersSeasonsGroupsTeamsRepository;
+    $this->playersRepository = $playersRepository;
   }
 
   /**
@@ -129,20 +147,28 @@ class RoundsPresenter extends BasePresenter
     foreach ($fights as $fight) {
       $data[$fight->id]['fight'] = $fight;
       $data[$fight->id]['team1'] = $fight->ref('teams', 'team1_id');
-      $data[$fight->id]['team2'] = $fight->ref('teams', 'team2_id');;
-      $homeGoals = $fight->related('goals')->where('is_home_player', 1)->order('number DESC');
-      $guestGoals = $fight->related('goals')->where('is_home_player', 0)->order('number DESC');
+      $data[$fight->id]['team2'] = $fight->ref('teams', 'team2_id');
+      $homeGoals = $fight->related('goals')
+          ->where('is_home_player', 1)
+          ->where('is_present', 1)
+          ->order('number DESC');
+      $guestGoals = $fight->related('goals')
+          ->where('is_home_player', 0)
+          ->where('is_present', 1)
+          ->order('number DESC');
       $data[$fight->id]['homeGoals'] = [];
       $data[$fight->id]['guestGoals'] = [];
 
       foreach ($homeGoals as $goal) {
-        $data[$fight->id]['homeGoals'][$goal->id]['goal'] = $goal;
-        $data[$fight->id]['homeGoals'][$goal->id]['player'] = 'Hráč SAHL'; // $goal->ref('players', 'player_id');
+        $playerSeasonGroupTeam = $this->playersSeasonsGroupsTeamsRepository->findById($goal->player_season_group_team_id);
+        $data[$fight->id]['homeGoals'][$goal->id]['number'] = $goal->number;
+        $data[$fight->id]['homeGoals'][$goal->id]['player'] = $this->playersRepository->findById($playerSeasonGroupTeam->player_id);
       }
 
       foreach ($guestGoals as $goal) {
-        $data[$fight->id]['guestGoals'][$goal->id]['goal'] = $goal;
-        $data[$fight->id]['guestGoals'][$goal->id]['player'] = 'Hráč SAHL'; // $goal->ref('players', 'player_id');
+        $playerSeasonGroupTeam = $this->playersSeasonsGroupsTeamsRepository->findById($goal->player_season_group_team_id);
+        $data[$fight->id]['guestGoals'][$goal->id]['number'] = $goal->number;
+        $data[$fight->id]['guestGoals'][$goal->id]['player'] = $this->playersRepository->findById($playerSeasonGroupTeam->player_id);
       }
 
       // Determining CSS bootstrap classes

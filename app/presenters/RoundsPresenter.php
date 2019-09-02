@@ -137,12 +137,12 @@ class RoundsPresenter extends BasePresenter
 
       foreach ($homeGoals as $goal) {
         $data[$fight->id]['homeGoals'][$goal->id]['goal'] = $goal;
-        $data[$fight->id]['homeGoals'][$goal->id]['player'] = $goal->ref('players', 'player_id');
+        $data[$fight->id]['homeGoals'][$goal->id]['player'] = 'Hráč SAHL'; // $goal->ref('players', 'player_id');
       }
 
       foreach ($guestGoals as $goal) {
         $data[$fight->id]['guestGoals'][$goal->id]['goal'] = $goal;
-        $data[$fight->id]['guestGoals'][$goal->id]['player'] = $goal->ref('players', 'player_id');
+        $data[$fight->id]['guestGoals'][$goal->id]['player'] = 'Hráč SAHL'; // $goal->ref('players', 'player_id');
       }
 
       // Determining CSS bootstrap classes

@@ -213,8 +213,14 @@ class GoalsPresenter extends BasePresenter
    */
   public function submittedAddForm(Form $form, ArrayHash $values): Form
   {
-    $this->goalsRepository->insert($values);
     $player = $this->playersSeasonsGroupsTeamsRepository->findById($values->player_season_group_team_id);
+    $seasonGroupTeam = $this->seasonsGroupsTeamsRepository->findById($player->season_group_team_id);
+
+    if ($seasonGroupTeam->team_id === $this->fightRow->team1_id) {
+      $values['is_home_player'] = 1;
+    }
+
+    $this->goalsRepository->insert($values);
     $player->update(array('goals' => $player->goals + $values->number));
 
     $this->flashMessage('Góly boli pridané', self::SUCCESS);

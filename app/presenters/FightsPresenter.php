@@ -15,6 +15,7 @@ use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\UI\Form;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
+use Nette\Utils\ArrayHash;
 
 /**
  * Class FightsPresenter

@@ -33,7 +33,9 @@ class SeasonsGroupsTeamsRepository extends Repository
   {
     return $this->getForSeason($seasonGroupId)
       ->where(self::TEAM_ID, $teamId)
-      ->select(self::ID)->fetch();
+      ->order('id DESC')
+      ->limit(1)
+      ->fetch();
   }
 
   /**

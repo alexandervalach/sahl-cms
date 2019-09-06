@@ -6,6 +6,7 @@ namespace App\Presenters;
 
 use App\FormHelper;
 use App\Forms\ModalRemoveFormFactory;
+use App\Model\GoalsRepository;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersSeasonsGroupsTeamsRepository;
@@ -67,6 +68,11 @@ class PlayersPresenter extends BasePresenter
   private $playersSeasonsGroupsTeamsRepository;
 
   /**
+   * @var GoalsRepository
+   */
+  private $goalsRepository;
+
+  /**
    * PlayersPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
@@ -78,18 +84,20 @@ class PlayersPresenter extends BasePresenter
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
    * @param ModalRemoveFormFactory $modalRemoveFormFactory
    * @param PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository
+   * @param GoalsRepository $goalsRepository
    */
   public function __construct(
-    LinksRepository $linksRepository,
-    SponsorsRepository $sponsorsRepository,
-    TeamsRepository $teamsRepository,
-    PlayersRepository $playersRepository,
-    PlayerTypesRepository $playerTypesRepository,
-    SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
-    GroupsRepository $groupsRepository,
-    SeasonsGroupsRepository $seasonsGroupsRepository,
-    ModalRemoveFormFactory $modalRemoveFormFactory,
-    PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository
+      LinksRepository $linksRepository,
+      SponsorsRepository $sponsorsRepository,
+      TeamsRepository $teamsRepository,
+      PlayersRepository $playersRepository,
+      PlayerTypesRepository $playerTypesRepository,
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      GroupsRepository $groupsRepository,
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      ModalRemoveFormFactory $modalRemoveFormFactory,
+      PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository,
+      GoalsRepository $goalsRepository
   ) {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
@@ -97,6 +105,7 @@ class PlayersPresenter extends BasePresenter
     $this->playerTypesRepository = $playerTypesRepository;
     $this->modalRemoveFormFactory = $modalRemoveFormFactory;
     $this->playersSeasonsGroupsTeamsRepository = $playersSeasonsGroupsTeamsRepository;
+    $this->goalsRepository = $goalsRepository;
   }
 
   /**
@@ -267,18 +276,36 @@ class PlayersPresenter extends BasePresenter
   protected function createComponentRemoveForm(): Form
   {
     return $this->modalRemoveFormFactory->create(function () {
-      $seasonTeamGroup = $this->playersSeasonsGroupsTeamsRepository->findByPlayer($this->playerRow->id);
+      $playerSeasonTeamGroup = $this->playersSeasonsGroupsTeamsRepository->findByPlayer($this->playerRow->id);
+
+      if (!$playerSeasonTeamGroup) {
+        $this->flashMessage(self::ITEM_NOT_REMOVED, self::DANGER);
+        $this->redirect('view', $this->playerRow->id);
+      }
+
+      $seasonTeamGroup = $this->seasonsGroupsTeamsRepository->findById($playerSeasonTeamGroup->season_group_team_id);
 
       if (!$seasonTeamGroup) {
         $this->flashMessage(self::ITEM_NOT_REMOVED, self::DANGER);
         $this->redirect('view', $this->playerRow->id);
       }
 
-      $team = $this->seasonsGroupsTeamsRepository->findById($seasonTeamGroup->season_group_team_id);
-      $seasonGroup = $this->seasonsGroupsRepository->findById($team->season_group_id);
+      $seasonGroup = $this->seasonsGroupsRepository->findById($seasonTeamGroup->season_group_id);
+
+      if (!$seasonGroup) {
+        $this->flashMessage(self::ITEM_NOT_REMOVED, self::DANGER);
+        $this->redirect('view', $this->playerRow->id);
+      }
+
+      $goals = $this->goalsRepository->findByValue('player_season_group_team_id', $playerSeasonTeamGroup->id);
+
+      foreach ($goals as $goal) {
+        $this->goalsRepository->remove($goal->id);
+      }
+
       $this->playersSeasonsGroupsTeamsRepository->remove($seasonTeamGroup->id);
       $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
-      $this->redirect('Teams:view', $team->team_id, $seasonGroup->group_id);
+      $this->redirect('Teams:view', $seasonTeamGroup->team_id, $seasonGroup->group_id);
     });
   }
 

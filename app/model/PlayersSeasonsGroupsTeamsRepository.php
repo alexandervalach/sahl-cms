@@ -15,19 +15,22 @@ class PlayersSeasonsGroupsTeamsRepository extends Repository {
     return $this->findAll();
   }
 
-  public function getForSeason($id = null): Selection
+  /**
+   * @param int $playerId
+   * @return mixed
+   */
+  public function findByPlayer(int $playerId)
   {
-    return $this->findAll()->where(self::SEASON_ID, $id);
+    return $this->findAll()->where('player_id', $playerId)->order('id DESC')->limit(1)->fetch();
   }
 
-  public function getTeam(int $id): Selection
+  /**
+   * @param int $seasonGroupTeamId
+   * @return Selection
+   */
+  public function findBySeasonGroupTeam(int $seasonGroupTeamId): Selection
   {
-    return $this->findAll()->where('team_id', $id);
-  }
-
-  public function getPlayers(int $id): Selection
-  {
-    return $this->getAll()->where('seasons_teams_id', $id);
+    return $this->getAll()->where('season_group_team_id', $seasonGroupTeamId);
   }
 
 }

@@ -35,7 +35,11 @@ class PlayersRepository extends Repository
           INNER JOIN players_seasons_groups_teams AS psgt ON psgt.season_group_team_id = sgt.id 
           INNER JOIN players AS p ON p.id = psgt.player_id 
           INNER JOIN player_types AS pt ON pt.id = psgt.player_type_id 
-        WHERE sgt.season_group_id = ? AND sgt.team_id = ? AND sgt.is_present = ? ORDER BY type_priority', $seasonGroupId, $teamId, 1);
+        WHERE sgt.season_group_id = ? 
+          AND sgt.team_id = ? 
+          AND sgt.is_present = ?
+          AND psgt.is_present = ?
+        ORDER BY type_priority', $seasonGroupId, $teamId, 1, 1);
   }
 
   /**
@@ -70,8 +74,8 @@ class PlayersRepository extends Repository
       ON psgt.player_type_id = pt.id 
       WHERE p.name != ?
       AND p.name NOT LIKE ?
-      AND p.is_present = ?
-      AND t.is_present = ? 
+      AND psgt.is_present = ?
+      AND sgt.is_present = ? 
       AND season_group_id = ? 
       ORDER BY goals DESC, psgt.id DESC';
 

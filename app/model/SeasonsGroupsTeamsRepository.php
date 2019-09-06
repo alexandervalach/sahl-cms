@@ -57,5 +57,4 @@ class SeasonsGroupsTeamsRepository extends Repository
   {
     return $this->findAll()->where('season_group_id', $seasonGroupId);
   }
-
 }

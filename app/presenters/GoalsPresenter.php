@@ -101,14 +101,11 @@ class GoalsPresenter extends BasePresenter
    */
   public function actionView(int $id): void
   {
+    $this->userIsLogged();
     $this->fightRow = $this->fightsRepository->findById($id);
     $this->roundRow = $this->roundsRepository->findById($this->fightRow->round_id);
 
-    if (!$this->fightRow) {
-      throw new BadRequestException(self::ITEM_NOT_FOUND);
-    }
-
-    if (!$this->roundRow) {
+    if (!$this->fightRow || !$this->roundRow) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }

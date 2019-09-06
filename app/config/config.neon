@@ -55,6 +55,7 @@ services:
 	- App\Forms\EventAddFormFactory
 	- App\Forms\EventEditFormFactory
 	- App\Forms\FightAddFormFactory
+	- App\Forms\FightEditFormFactory
 	- App\Forms\FormFactory
 	- App\Forms\GroupFormFactory
 	- App\Forms\LinkAddFormFactory

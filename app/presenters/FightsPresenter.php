@@ -189,38 +189,15 @@ class FightsPresenter extends BasePresenter
    * @param ArrayHash $values
    * @return bool
    */
-  public function submittedAddForm(Form $form, ArrayHash $values)
-  {
-    if ($values->team1_id === $values->team2_id)
-    {
-      $form->addError('Zvoľte dva rozdielne tímy.');
-      return false;
-    }
-
-    $fight = $this->fightsRepository->insert($values);
-    /*
-    $round = $fight->ref('rounds', 'round_id');
-    $this->updateTableRows($values, $type);
-    $this->updateTablePoints($values, $type);
-    $this->updateTableGoals($values, $type);
-    */
-    $this->flashMessage('Zápas bol pridaný', 'success');
-    $this->redirect('Rounds:view', $round->id);
-  }
-
-  /**
-   * @param Form $form
-   * @param ArrayHash $values
-   * @return bool
-   */
   public function submittedEditForm(Form $form, ArrayHash $values)
   {
     if ($values->team1_id == $values->team2_id) {
       $form->addError('Zvoľte dva rozdielne tímy.');
       return false;
     }
+    $values['round_id'] = $this->roundRow->id;
     $this->fightRow->update($values);
-    $this->flashMessage('Zápas bol upravený', 'success');
+    $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
     $this->redirect('Rounds:view', $this->roundRow->id);
   }
 

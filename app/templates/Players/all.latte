@@ -34,7 +34,7 @@
         {var $current = $player->goals}
         <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}</td>
         <td>
-          {*<a n:href="view $player->id">*}{$player->name}{*</a></td>*}
+          <a n:href="view $player->id, $player->team_id">{$player->name}</a></td>
         <td>{$player->number}</td>
         <td>
           {*<a n:href="Teams:view $player->team_id">*}

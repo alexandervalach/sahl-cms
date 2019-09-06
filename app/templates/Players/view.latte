@@ -16,7 +16,7 @@
       <h2>
         {*<a n:href="Teams:view $team->id">*}
           {if $team->logo && file_exists($imageFolder . '/' . $team->logo)}
-            <img src="{$basePath}/{$imageFolder}/{$team->logo}" />
+            <img src="{$basePath}/{$imageFolder}/{$team->logo}" style="max-width: 150px" />
           {/if}
         {*</a>*}
       </h2>

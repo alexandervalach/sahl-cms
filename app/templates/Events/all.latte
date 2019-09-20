@@ -12,16 +12,18 @@
     <h1 n:block="title">Rozpis zápasov</h1>
   </div>
   <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
+    <div n:if="$user->loggedIn" class="clearfix" style="margin-bottom: 15px">
+      <div style="float: right">
+        <a n:href="edit $event->id" class="btn btn-large btn-success">
+          <span class="glyphicon glyphicon-pencil"></span> Upraviť
+        </a>
+        <a n:href="remove $event->id" class="btn btn-large btn-danger">
+          <span class="glyphicon glyphicon-trash"></span> Odstrániť
+        </a>
+      </div>
+    </div>
     <div class="overflow-container">
       {$event->content|noescape}
-    </div>
-    <div n:if="$user->loggedIn" class="clearfix" style="margin-top: 1em">
-      <a n:href="edit $event->id" class="btn btn-large btn-success">
-        <span class="glyphicon glyphicon-pencil"></span> Upraviť
-      </a>
-      <a n:href="remove $event->id" class="btn btn-large btn-danger">
-        <span class="glyphicon glyphicon-trash"></span> Odstrániť
-      </a>
     </div>
     <hr n:if="!$iterator->last" />
   </article>

@@ -9,6 +9,7 @@ use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
+use App\Model\TableEntriesRepository;
 use App\Model\TablesRepository;
 use App\Model\TeamsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
@@ -49,6 +50,9 @@ class FightsPresenter extends BasePresenter
   /** @var RemoveFormFactory */
   private $removeFormFactory;
 
+  /** @var TableEntriesRepository */
+  private $tableEntriesRepository;
+
   /**
    * FightsPresenter constructor.
    * @param LinksRepository $linksRepository
@@ -60,6 +64,7 @@ class FightsPresenter extends BasePresenter
    * @param GroupsRepository $groupsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param TableEntriesRepository $tableEntriesRepository
    */
   public function __construct(
       LinksRepository $linksRepository,
@@ -70,7 +75,8 @@ class FightsPresenter extends BasePresenter
       RemoveFormFactory $removeFormFactory,
       GroupsRepository $groupsRepository,
       SeasonsGroupsRepository $seasonsGroupsRepository,
-      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+      SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      TableEntriesRepository $tableEntriesRepository
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
@@ -78,6 +84,7 @@ class FightsPresenter extends BasePresenter
     $this->fightsRepository = $fightsRepository;
     $this->tablesRepository = $tablesRepository;
     $this->removeFormFactory = $removeFormFactory;
+    $this->tableEntriesRepository = $tableEntriesRepository;
   }
 
   /**
@@ -177,8 +184,26 @@ class FightsPresenter extends BasePresenter
   protected function createComponentRemoveForm(): Form
   {
     return $this->removeFormFactory->create(function () {
+      $state1 = $state2 = 'tram';
+
+      if ($this->fightRow->score1 > $this->fightRow->score2) {
+        $state1 = 'win';
+        $state2 = 'lost';
+      } else if ($this->fightRow->score2 > $this->fightRow->score1) {
+        $state1 = 'lost';
+        $state2 = 'win';
+      }
+
+      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team1_id, $state1, -1);
+      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team2_id, $state2, -1);
+
+      /*
+      $this->updateTablePoints($this->fightRow->table_id, $values);
+      $this->updateScore($this->fightRow->table_id, $values);
+      */
+
       $this->fightsRepository->remove($this->fightRow->id);
-      $this->flashMessage('Zápas bol odstránený', self::SUCCESS);
+      $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('Rounds:view', $this->roundRow->id);
     }, function () {
       $this->redirect('Rounds:view', $this->roundRow->id);

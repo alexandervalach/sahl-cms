@@ -326,8 +326,10 @@ class RoundsPresenter extends BasePresenter
       $this->updateTablePoints($table->id, $values);
       $this->updateScore($table->id, $values);
 
-      // Processing data
+      // Add new elements to ArrayHash to correspondent with DB columns
       $values->offsetSet('round_id', $this->roundRow->id);
+      $values->offsetSet('table_id', $table->id);
+      // Unset some offset
       $values->offsetUnset('table_type_id');
       $this->fightsRepository->insert($values);
 

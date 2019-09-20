@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Forms;
 
-use App\FormHelper;
+use App\Helpers\FormHelper;
 use App\Model\PlayerTypesRepository;
 use Nette\SmartObject;
 use Nette\Application\UI\Form;

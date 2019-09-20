@@ -1,15 +1,22 @@
 <?php
 
-namespace App;
+namespace App\Helpers;
 
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextInput;
 
+/**
+ * Class FormHelper
+ * @package App\Helpers
+ */
 class FormHelper {
 
-    public static function setBootstrapFormRenderer(Form $form) {
+  /**
+   * @param Form $form
+   */
+  public static function setBootstrapFormRenderer(Form $form) {
         $renderer = $form->getRenderer();
         $renderer->wrappers['controls']['container'] = NULL;
         $renderer->wrappers['form']['container'] = NULL;

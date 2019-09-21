@@ -197,10 +197,8 @@ class FightsPresenter extends BasePresenter
       $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team1_id, $state1, -1);
       $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team2_id, $state2, -1);
 
-      /*
-      $this->updateTablePoints($this->fightRow->table_id, $values);
-      $this->updateScore($this->fightRow->table_id, $values);
-      */
+      $this->updateTablePoints();
+      $this->updateScore();
 
       $this->fightsRepository->remove($this->fightRow->id);
       $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
@@ -228,57 +226,33 @@ class FightsPresenter extends BasePresenter
   }
 
   /**
-   * @param $values
-   * @param $type
-   * @param int $value
+   * Updates points based on fight result
    */
-  public function updateTableRows($values, $type, $value = 1): void
+  protected function updateTablePoints(): void
   {
-    $state1 = 'tram';
-    $state2 = 'tram';
-
-    if ($values['score1'] > $values['score2']) {
-        $state1 = 'win';
-        $state2 = 'lost';
-    } elseif ($values['score1'] < $values['score2']) {
-        $state1 = 'lost';
-        $state2 = 'win';
-    }
-    $this->tablesRepository->incTabVal($values['team1_id'], $type, $state1, $value);
-    $this->tablesRepository->incTabVal($values['team2_id'], $type, $state2, $value);
-    $this->tablesRepository->updateFights($values['team1_id'], $type);
-    $this->tablesRepository->updateFights($values['team2_id'], $type);
-  }
-
-  /**
-   * @param $values
-   * @param $type
-   * @param string $column
-   */
-  public function updateTablePoints($values, $type, $column = 'points'): void
-  {
-    if ($values['score1'] > $values['score2']) {
-      $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 2);
-      $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 0);
-    } elseif ($values['score1'] < $values['score2']) {
-      $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 2);
-      $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 0);
-    } else {
-      $this->tablesRepository->incTabVal($values['team2_id'], $type, $column, 1);
-      $this->tablesRepository->incTabVal($values['team1_id'], $type, $column, 1);
+    if ($this->fightRow) {
+      if ($this->fightRow->score1 > $this->fightRow->score2) {
+        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team1_id, -2);
+      } elseif ($this->fightRow->score2 > $this->fightRow->score1) {
+        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team2_id, -2);
+      } else {
+        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team2_id, -1);
+        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team1_id, -1);
+      }
     }
   }
 
   /**
-   * @param $values
-   * @param $type
+   * Updates score for both teams
    */
-  public function updateTableGoals($values, $type): void
+  protected function updateScore(): void
   {
-    $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score1', $values['score1']);
-    $this->tablesRepository->incTabVal($values['team1_id'], $type, 'score2', $values['score2']);
-    $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score1', $values['score2']);
-    $this->tablesRepository->incTabVal($values['team2_id'], $type, 'score2', $values['score1']);
+    if ($this->fightRow) {
+      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team1_id, 'score1', -$this->fightRow->score1);
+      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team1_id, 'score2', -$this->fightRow->score2);
+      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team2_id, 'score1', -$this->fightRow->score2);
+      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team2_id, 'score2', -$this->fightRow->score1);
+    }
   }
 
 }

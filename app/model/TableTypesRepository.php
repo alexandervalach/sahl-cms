@@ -6,9 +6,17 @@ namespace App\Model;
 
 use Nette\Database\IRow;
 use Nette\Database\ResultSet;
+use Nette\Database\Table\ActiveRow;
 
+/**
+ * Class TableTypesRepository
+ * @package App\Model
+ */
 class TableTypesRepository extends Repository
 {
+  /**
+   * @var string
+   */
   protected $tableName = 'table_types';
 
   /**
@@ -19,6 +27,10 @@ class TableTypesRepository extends Repository
     return $this->getAll()->fetchPairs(self::ID, self::LABEL);
   }
 
+  /**
+   * @param null $seasonId
+   * @return ResultSet
+   */
   public function getForSeason($seasonId = null): ResultSet
   {
     $db = $this->getConnection();
@@ -32,6 +44,9 @@ class TableTypesRepository extends Repository
         $db->query($query . 'AND sg.season_id = ?', 1, $seasonId);
   }
 
+  /**
+   * @return array
+   */
   public function fetchForSeason(): array
   {
     return ($this->getForSeason(null))->fetchPairs('table_type_id', self::LABEL);
@@ -44,6 +59,15 @@ class TableTypesRepository extends Repository
   public function findByLabel(string $label)
   {
     return $this->getAll()->where(self::LABEL, $label)->fetch();
+  }
+
+  /**
+   * @param string $label
+   * @return bool|int|ActiveRow
+   */
+  public function insertData(string $label)
+  {
+    return $this->insert( array(self::LABEL => $label) );
   }
 
 }

@@ -2,7 +2,6 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
@@ -139,53 +138,6 @@ class TablesPresenter extends BasePresenter
   }
 
   /**
-   * @return Form
-   */
-  protected function createComponentEditForm(): Form
-  {
-    $form = new Form;
-    $form->addText('win', 'Výhry');
-    $form->addText('tram', 'Remízy');
-    $form->addText('lost', 'Prehry');
-    $form->addText('score1', 'Skóre 1');
-    $form->addText('score2', 'Skóre 2');
-    $form->addText('points', 'Body');
-    $form->addSubmit('edit', 'Upraviť');
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
-   * @return Form
-   */
-  protected function createComponentResetForm(): Form
-  {
-    $form = new Form;
-    $form->addSubmit('reset', 'Vynulovať')
-          ->setAttribute('class', self::BTN_DANGER);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->addProtection(self::CSRF_TOKEN_EXPIRED);
-    $form->onSuccess[] = [$this, self::SUBMITTED_RESET_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
-  /**
-   * @param Form $form
-   * @param $values
-   */
-  public function submittedEditForm(Form $form, $values): void
-  {
-    $values['counter'] = $values['lost'] + $values['tram'] + $values['win'];
-    $this->tableRow->update($values);
-    $this->flashMessage('Záznam bol upravený', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  /**
    *
    */
   public function submittedRemoveForm(): void
@@ -202,38 +154,6 @@ class TablesPresenter extends BasePresenter
   {
     $this->tableRow->update(array('is_visible' => 1));
     $this->flashMessage('Tabuľka bola pridaná na domovskú stránku', self::SUCCESS);
-    $this->redirect('all');
-  }
-
-  /**
-   *
-   */
-  public function submittedResetForm(): void
-  {
-    $rows = $this->tablesRepository->getArchived();
-
-    $values = array(
-      'counter' => 0,
-      'win' => 0,
-      'tram' => 0,
-      'lost' => 0,
-      'score1' => 0,
-      'score2' => 0,
-      'points' => 0
-    );
-
-    foreach ($rows as $row) {
-      $row->update($values);
-    }
-
-    $this->redirect('all');
-  }
-
-  /**
-   *
-   */
-  public function formCancelled(): void
-  {
     $this->redirect('all');
   }
 

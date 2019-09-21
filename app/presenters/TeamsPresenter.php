@@ -3,7 +3,7 @@
 namespace App\Presenters;
 
 use App\Forms\ModalRemoveFormFactory;
-use App\Forms\PlayerAddFormFactory;
+use App\Forms\PlayerFormFactory;
 use App\Forms\TeamFormFactory;
 use App\Forms\UploadFormFactory;
 use App\Model\GroupsRepository;
@@ -54,7 +54,7 @@ class TeamsPresenter extends BasePresenter
   /** @var TeamFormFactory */
   private $teamFormFactory;
 
-  /** @var PlayerAddFormFactory */
+  /** @var PlayerFormFactory */
   private $playerAddFormFactory;
 
   /** @var UploadFormFactory */
@@ -82,6 +82,25 @@ class TeamsPresenter extends BasePresenter
    */
   private $tableEntriesRepository;
 
+  /**
+   * TeamsPresenter constructor.
+   * @param LinksRepository $linksRepository
+   * @param SponsorsRepository $sponsorsRepository
+   * @param TeamsRepository $teamsRepository
+   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param GroupsRepository $groupsRepository
+   * @param PlayersRepository $playersRepository
+   * @param PlayerTypesRepository $playerTypesRepository
+   * @param TeamFormFactory $teamFormFactory
+   * @param PlayerFormFactory $playerAddFormFactory
+   * @param PlayersSeasonsGroupsTeamsRepository $playersSeasonsTeamsRepository
+   * @param UploadFormFactory $uploadFormFactory
+   * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param ModalRemoveFormFactory $removeFormFactory
+   * @param TablesRepository $tablesRepository
+   * @param TableTypesRepository $tableTypesRepository
+   * @param TableEntriesRepository $tableEntriesRepository
+   */
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
@@ -91,7 +110,7 @@ class TeamsPresenter extends BasePresenter
       PlayersRepository $playersRepository,
       PlayerTypesRepository $playerTypesRepository,
       TeamFormFactory $teamFormFactory,
-      PlayerAddFormFactory $playerAddFormFactory,
+      PlayerFormFactory $playerAddFormFactory,
       PlayersSeasonsGroupsTeamsRepository $playersSeasonsTeamsRepository,
       UploadFormFactory $uploadFormFactory,
       SeasonsGroupsRepository $seasonsGroupsRepository,

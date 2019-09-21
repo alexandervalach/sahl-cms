@@ -62,7 +62,7 @@ services:
 	- App\Forms\LinkEditFormFactory
 	- App\Forms\MultiUploadFormFactory
 	- App\Forms\ModalRemoveFormFactory
-	- App\Forms\PlayerAddFormFactory
+	- App\Forms\PlayerFormFactory
 	- App\Forms\PlayerTypeAddFormFactory
 	- App\Forms\PlayerTypeEditFormFactory
 	- App\Forms\PostFormFactory

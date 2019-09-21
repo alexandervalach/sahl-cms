@@ -4,7 +4,8 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Forms\PlayerFormFactory;
+use App\Helpers\FormHelper;
 use App\Forms\ModalRemoveFormFactory;
 use App\Model\GoalsRepository;
 use App\Model\GroupsRepository;
@@ -39,6 +40,9 @@ class PlayersPresenter extends BasePresenter
   /** @var ArrayHash */
   private $playerData;
 
+  /**
+   * @var
+   */
   private $players;
 
   /** @var PlayersRepository */
@@ -73,6 +77,11 @@ class PlayersPresenter extends BasePresenter
   private $goalsRepository;
 
   /**
+   * @var PlayerFormFactory
+   */
+  private $playerFormFactory;
+
+  /**
    * PlayersPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
@@ -97,7 +106,8 @@ class PlayersPresenter extends BasePresenter
       SeasonsGroupsRepository $seasonsGroupsRepository,
       ModalRemoveFormFactory $modalRemoveFormFactory,
       PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository,
-      GoalsRepository $goalsRepository
+      GoalsRepository $goalsRepository,
+      PlayerFormFactory $playerFormFactory
   ) {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
@@ -106,6 +116,7 @@ class PlayersPresenter extends BasePresenter
     $this->modalRemoveFormFactory = $modalRemoveFormFactory;
     $this->playersSeasonsGroupsTeamsRepository = $playersSeasonsGroupsTeamsRepository;
     $this->goalsRepository = $goalsRepository;
+    $this->playerFormFactory = $playerFormFactory;
   }
 
   /**
@@ -236,43 +247,16 @@ class PlayersPresenter extends BasePresenter
    */
   protected function createComponentEditForm(): Form
   {
-    $types = $this->playerTypesRepository->getTypes();
-
-    $form = new Form;
-    $form->addText('name', 'Meno a priezvisko')
-          ->setAttribute('placeholder', 'Zdeno Chára')
-          ->addRule(Form::FILLED, 'Meno musí byť vyplnené');
-    $form->addText('number', 'Číslo')
-          ->setAttribute('placeholder', 14);
-    // $form->addText('goals', 'Góly');
-    // $form->addSelect('type_id', 'Typ hráča', $types);
-    // $form->addCheckbox('is_transfer', ' Prestupový hráč');
-    $form->addSubmit('save', 'Uložiť')
-          ->setAttribute('class', self::BTN_SUCCESS);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
+    return $this->playerFormFactory->create(function (Form $form, ArrayHash $values) {
+      $this->playerRow->update($values);
+      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+      $this->redirect('view', $this->playerRow->id, $this->teamRow->id);
+    });
   }
 
   /**
    * @return Form
    */
-  protected function createComponentResetForm(): Form
-  {
-    $form = new Form;
-    $form->addSubmit('reset', 'Vynulovať')
-          ->setAttribute('class', self::BTN_DANGER);
-    $form->addSubmit('cancel', 'Zrušiť')
-          ->setAttribute('class', self::BTN_WARNING)
-          ->setAttribute('data-dismiss', 'modal');
-    $form->onSuccess[] = [$this, self::SUBMITTED_RESET_FORM];
-    FormHelper::setBootstrapFormRenderer($form);
-    return $form;
-  }
-
   protected function createComponentRemoveForm(): Form
   {
     return $this->modalRemoveFormFactory->create(function () {
@@ -307,17 +291,6 @@ class PlayersPresenter extends BasePresenter
       $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('Teams:view', $seasonTeamGroup->team_id, $seasonGroup->group_id);
     });
-  }
-
-  /**
-   * @param Form $form
-   * @param $values
-   */
-  public function submittedEditForm(Form $form, $values): void
-  {
-    $this->playerRow->update($values);
-    $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
-    $this->redirect('view', $this->playerRow->id, $this->teamRow->id);
   }
 
   /**

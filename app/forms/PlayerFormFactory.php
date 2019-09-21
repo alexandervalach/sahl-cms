@@ -13,7 +13,7 @@ use Nette\Utils\ArrayHash;
 /**
  * @package App\Forms
  */
-class PlayerAddFormFactory
+class PlayerFormFactory
 {
   use SmartObject;
 
@@ -25,6 +25,7 @@ class PlayerAddFormFactory
 
   /**
    * @param FormFactory $factory
+   * @param PlayerTypesRepository $playerTypesRepository
    */
   public function __construct(FormFactory $factory, PlayerTypesRepository $playerTypesRepository)
   {
@@ -44,7 +45,7 @@ class PlayerAddFormFactory
     $form->addText('name', 'Meno a priezvisko*')
           ->setAttribute('placeholder', 'Zdeno Chára')
           ->setRequired();
-    $form->addText('number', 'Číslo*')
+    $form->addInteger('number', 'Číslo*')
           ->setAttribute('placeholder', 14)
           ->setRequired();
     $form->addSelect('player_type_id', 'Typ hráča*', $types);

@@ -25,8 +25,8 @@
         <figcaption>{$team->name}</figcaption>
         <div>
           <a n:href="Teams:view $team->id, $group->id">
-              {if $team->logo and file_exists($basePath . '/' . $imageFolder . '/' . $team->logo)}
-                <img src="{$basePath}/{$imageFolder}/{$team->logo}" class="img-responsive" style="margin: 0 auto;" />
+              {if $team->logo}
+                <img src="{$basePath}/{$imageFolder}/{$team->logo}" class="img-responsive" style="margin: 0 auto; max-width: 200px" />
               {else}
                 <img src="{$basePath}/{$imageFolder}/{$defaultImage}" class="img-responsive" style="margin: 0 auto;" />
               {/if}

@@ -132,6 +132,7 @@ class PlayersRepository extends Repository
     $db = $this->getConnection();
     return $db->query('SELECT player_id AS id, 
        is_transfer, psgt.is_present, name, number, 
+       psgt.player_type_id, psgt.goals,
        label AS type_label, abbr AS type_abbr
       FROM players_seasons_groups_teams AS psgt
       INNER JOIN players AS p

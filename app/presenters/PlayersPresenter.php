@@ -157,31 +157,25 @@ class PlayersPresenter extends BasePresenter
     $this->playerRow = $this->playersRepository->findById($id);
     $this->teamRow = $this->teamsRepository->findById($teamId);
 
-    if (!$this->playerRow) {
+    if (!$this->playerRow || !$this->teamRow || !$player) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
-
-    if (!$this->teamRow) {
-      throw new BadRequestException(self::ITEM_NOT_FOUND);
-    }
-
-    $data = [];
 
     $data['player']['name'] = $player->name;
     $data['player']['number'] = $player->number;
-    // $data['player']['goals'] = $row->offsetGet('goals');
+    $data['player']['goals'] = $player->goals;
     $data['player']['is_transfer'] = $player->is_transfer;
+    $data['player']['player_type_id'] = $player->player_type_id;
     $data['team']['id'] = $this->teamRow->id;
     $data['team']['name'] = $this->teamRow->name;
     $data['team']['logo'] = $this->teamRow->logo;
     $data['type']['label'] = $player->type_label;
     $data['type']['abbr'] = $player->type_abbr;
-    // $data['group']['label'] = $this->playerRow->group_label;
 
     $this->playerData = ArrayHash::from($data);
 
     if ($this->user->isLoggedIn()) {
-      $this->getComponent(self::EDIT_FORM)->setDefaults($this->playerData->player);
+      $this[self::EDIT_FORM]->setDefaults($this->playerData->player);
     }
   }
 
@@ -248,7 +242,22 @@ class PlayersPresenter extends BasePresenter
   protected function createComponentEditForm(): Form
   {
     return $this->playerFormFactory->create(function (Form $form, ArrayHash $values) {
-      $this->playerRow->update($values);
+      // Update player row
+      $playerData['number'] = $values->number;
+      $playerData['name'] = $values->name;
+      $this->playerRow->update(ArrayHash::from($playerData));
+
+      $playerInSeason = $this->playersSeasonsGroupsTeamsRepository->findByPlayer($this->playerRow->id);
+
+      if ($playerInSeason) {
+        $playerSeasonGroupTeam = $this->playersSeasonsGroupsTeamsRepository->findById($playerInSeason->id);
+        if ($playerSeasonGroupTeam) {
+          $playerSeasonData['player_type_id'] = $values->player_type_id;
+          $playerSeasonData['is_transfer'] = $values->is_transfer;
+          $playerSeasonGroupTeam->update(ArrayHash::from($playerSeasonData));
+        }
+      }
+
       $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
       $this->redirect('view', $this->playerRow->id, $this->teamRow->id);
     });

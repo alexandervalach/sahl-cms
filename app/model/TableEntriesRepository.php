@@ -17,7 +17,7 @@ class TableEntriesRepository extends Repository
    * @param int $teamId
    * @return IRow|null
    */
-  public function getByTableAndTeam(int $tableId, int $teamId)
+  public function getByTableAndTeam(int $teamId, int $tableId)
   {
     return $this->getAll()
       ->where(self::TABLE_ID, $tableId)
@@ -35,7 +35,7 @@ class TableEntriesRepository extends Repository
    */
   public function updateEntry(int $tableId, int $teamId, string $column, int $value = 1): void
   {
-    $entry = $this->getByTableAndTeam($tableId, $teamId);
+    $entry = $this->getByTableAndTeam($teamId, $tableId);
     $entryRow = $this->findById($entry->id);
     $entryRow->update( array($column => $entry[$column] + $value) );
   }
@@ -47,8 +47,13 @@ class TableEntriesRepository extends Repository
    */
   public function updatePoints(int $tableId, int $teamId, int $value = 1): void
   {
-    $entry = $this->getByTableAndTeam($tableId, $teamId);
+    $entry = $this->getByTableAndTeam($teamId, $tableId);
     $entryRow = $this->findById($entry->id);
-    $entryRow->update( array('points' => $entry->points + $value) );
+    $entryRow->update( array(self::POINTS => $entry->points + $value) );
+  }
+
+  public function insertData(int $teamId, int $tableId)
+  {
+    return $this->insert( array(self::TEAM_ID => $teamId, self::TABLE_ID => $tableId) );
   }
 }

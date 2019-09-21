@@ -8,10 +8,6 @@ use Nette\Database\ResultSet;
 
 class SeasonsGroupsTeamsRepository extends Repository
 {
-  const SEASON_ID = 'season_id';
-  const TEAM_ID = 'team_id';
-  const NAME = 'name';
-
   protected $tableName = 'seasons_groups_teams';
 
   /**
@@ -58,5 +54,12 @@ class SeasonsGroupsTeamsRepository extends Repository
   public function getForSeason(int $seasonGroupId): Selection
   {
     return $this->findAll()->where('season_group_id', $seasonGroupId);
+  }
+
+  public function insertData(int $teamId, int $seasonGroupId) {
+    $this->insert( array(
+      self::SEASON_GROUP_ID => $seasonGroupId,
+      self::TEAM_ID => $teamId
+    ));
   }
 }

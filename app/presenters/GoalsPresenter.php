@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Helpers\FormHelper;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersSeasonsGroupsTeamsRepository;

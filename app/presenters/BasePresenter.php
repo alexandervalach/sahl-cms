@@ -23,16 +23,12 @@ abstract class BasePresenter extends Presenter
   const EDIT_FORM = 'editForm';
   const SUBMITTED_ADD_FORM = 'submittedAddForm';
   const SUBMITTED_EDIT_FORM = 'submittedEditForm';
-  const SUBMITTED_RESET_FORM = 'submittedResetForm';
   const BTN_WARNING = 'btn btn-large btn-warning';
-  const BTN_DANGER = 'btn btn-large btn-danger';
-  const BTN_SUCCESS = 'btn btn-large btn-success';
   const SUCCESS = 'success';
   const DANGER = 'danger';
   const WARNING = 'warning';
   const IMAGE_FOLDER = 'images';
   const DEFAULT_IMAGE = 'sahl.png';
-  const CSRF_TOKEN_EXPIRED = 'Platnosť formulára vypršala. Odošlite ho, prosím, znovu.';
   const ITEM_NOT_FOUND = 'Item not found.';
   const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené.';
   const ITEM_ALREADY_EXISTS = 'Záznam už existuje.';
@@ -41,6 +37,7 @@ abstract class BasePresenter extends Presenter
   const ITEM_REMOVED_SUCCESSFULLY = 'Položka bola odstránená.';
   const ITEM_NOT_ADDED = 'Položka nebola pridaná.';
   const ITEM_NOT_REMOVED = 'Položku sa nepodarilo odstrániť.';
+  const BASE_TABLE_LABEL = 'Základná časť';
 
   /** @var LinksRepository */
   protected $linksRepository;
@@ -91,6 +88,7 @@ abstract class BasePresenter extends Presenter
     $this->seasonsGroupsRepository = $seasonsGroupsRepository;
     $this->seasonsGroupsTeamsRepository = $seasonsGroupsTeamsRepository;
     $this->imageDir = 'images';
+    $this->groups = [];
   }
 
   /**

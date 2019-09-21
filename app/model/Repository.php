@@ -20,10 +20,15 @@ abstract class Repository
   use SmartObject;
 
   const IS_PRESENT = 'is_present';
-  const IS_VISIBLE = 'is_visible';
-  const SEASON_ID = 'season_id';
   const ID = 'id';
   const LABEL = 'label';
+  const TEAM_ID = 'team_id';
+  const SEASON_ID = 'season_id';
+  const GROUP_ID = 'group_id';
+  const SEASON_GROUP_ID = 'season_group_id';
+  const TABLE_TYPE_ID = 'table_type_id';
+  const POINTS = 'points';
+
 
   /** @var Context */
   protected $database;

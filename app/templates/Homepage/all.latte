@@ -77,33 +77,34 @@
   *}
 </aside>
 
-<div class="content container-fluid">
-  <article n:foreach="$posts as $post" class="clearfix">
-    <header class="clearfix">
-      <a n:href="Posts:view $post->id">
-        <h2>{$post->title}</h2>
-      </a>
-    </header>
-    <main class="clearfix">
-      <figure class="col-md-5 col-lg-5">
-        {if $post->thumbnail and file_exists($imageFolder . "/" . $post->thumbnail)}
-          <img src='{$basePath}/{$imageFolder}/{$post->thumbnail}' class="img img-responsive" />
-        {else}
-          <img src='{$basePath}/{$imageFolder}/{$defaultImage}' class="img img-responsive" />
-        {/if}
-      </figure>
-      <div class="col-md-7 col-lg-7">
-        {$post->content|noescape|truncate:600}
-      </div>
-    </main>
-    <hr n:if="!$iterator->last" />
-  </article>
+{if $posts->count()}
+  <div class="content container-fluid">
+    <article n:foreach="$posts as $post" class="clearfix">
+      <header class="clearfix">
+        <a n:href="Posts:view $post->id">
+          <h2>{$post->title}</h2>
+        </a>
+      </header>
+      <main class="clearfix">
+        <figure class="col-md-5 col-lg-5">
+          {if $post->thumbnail and file_exists($imageFolder . "/" . $post->thumbnail)}
+            <img src='{$basePath}/{$imageFolder}/{$post->thumbnail}' class="img img-responsive" />
+          {else}
+            <img src='{$basePath}/{$imageFolder}/{$defaultImage}' class="img img-responsive" />
+          {/if}
+        </figure>
+        <div class="col-md-7 col-lg-7">
+          {$post->content|noescape|truncate:600}
+        </div>
+      </main>
+      <hr n:if="!$iterator->last" />
+    </article>
 
-  <div class="clearfix text-center">
-    <a n:href="Posts:all" class="btn btn-primary">Zobraziť staršie články</a>
+    <div class="clearfix text-center">
+      <a n:href="Posts:all" class="btn btn-primary">Zobraziť staršie články</a>
+    </div>
   </div>
-
-</div>
+{/if}
 
 {/block}
 

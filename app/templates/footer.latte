@@ -3,41 +3,43 @@
 *}
 
 <footer class='container-fluid text-center'>
-	<section>
-		<h2>Navštívte aj tieto stránky</h2>
-		<p n:foreach="$links as $footerLink">
-			<a href='{$footerLink->url}' target="_blank">{$footerLink->label}</a>
-		</p>
-	</section>
+  {if $links->count()}
+    <section id="links">
+      <h2>Navštívte aj tieto stránky</h2>
+      <p n:foreach="$links as $footerLink">
+        <a href='{$footerLink->url}' target="_blank">{$footerLink->label}</a>
+      </p>
+    </section>
+  {/if}
 
-	<section id="authors">
-		<h2>Na vylepšení stránky stále pracujú</h2>
+  <section id="authors">
+    <h2>Autori</h2>
 
-		<div>
-			<ul class="col-md-4 col-lg-4">
-				<li><strong>Návrh dizajnu</strong></li>
-				<li>Tomáš Hudák</li>
-			</ul>
+    <div>
+      <ul class="col-md-4 col-lg-4">
+        <li><strong>Návrh dizajnu</strong></li>
+        <li>Tomáš Hudák</li>
+      </ul>
 
-			<ul class="col-md-4 col-lg-4">
-				<li><strong>Pozadie stránky</strong></li>
-				<li>Michal Tarabík</li>
-			</ul>
+      <ul class="col-md-4 col-lg-4">
+        <li><strong>Pozadie stránky</strong></li>
+        <li>Michal Tarabík</li>
+      </ul>
 
-			<ul>
-				<li><strong>Systém vytvoril a udržiava</strong></li>
-				<li>
-					<a href="https://www.linkedin.com/in/alexander-valach-351019107"
-						target="_blank" title="Profil autora">
-						Alexander Valach
-					</a>
-				</li>
-			</ul>
-		</div>
-		<div>
-			&copy; 2014 - {date('Y')}, Postavené na
-			<a target="_blank" href="https://nette.org/" title="Stránka frameworku">Nette</a>
-		</div>
-	</section>
+      <ul>
+        <li><strong>Systém vytvoril a udržiava</strong></li>
+        <li>
+          <a href="https://www.linkedin.com/in/alexander-valach-351019107"
+             target="_blank" title="Profil autora">
+            Alexander Valach
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div>
+      &copy; 2014 - {date('Y')}, Postavené na
+      <a target="_blank" href="https://nette.org/" title="Stránka frameworku">Nette</a>
+    </div>
+  </section>
 </footer>
 

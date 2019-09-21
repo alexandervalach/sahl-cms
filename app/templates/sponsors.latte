@@ -4,21 +4,23 @@
 * @param array    	$sponsors  array of sponsors
 *}
 
-<section id="sponsors" class="col-md-11 col-lg-8 content hidden-xs">
-  <div class="clearfix">
-    <h2>Sponzori</h2>
-  </div>
-  <div>
-    {foreach $sponsors as $sideSponsor}
-      <div style="width: 100%; display: block">
-        <figure class="col-md-4 col-lg-4">
-          <a href="{$sideSponsor->url}" target="_blank" title="Prejsť na {$sideSponsor->label}">
-            {if file_exists($imageFolder . '/' . $sideSponsor->image)}
-              <img class="img img-responsive" alt="{$sideSponsor->label}" src="{$basePath}/{$imageFolder}/{$sideSponsor->image}" />
-            {/if}
-          </a>
-        </figure>
-      </div>
-    {/foreach}
-  </div>
-</section>
+{if $sponsors->count()}
+  <section id="sponsors" class="col-md-11 col-lg-8 content hidden-xs">
+    <div class="clearfix">
+      <h2>Sponzori</h2>
+    </div>
+    <div>
+      {foreach $sponsors as $sideSponsor}
+        <div style="width: 100%; display: block">
+          <figure class="col-md-4 col-lg-4">
+            <a href="{$sideSponsor->url}" target="_blank" title="Prejsť na {$sideSponsor->label}">
+              {if file_exists($imageFolder . '/' . $sideSponsor->image)}
+                <img class="img img-responsive" alt="{$sideSponsor->label}" src="{$basePath}/{$imageFolder}/{$sideSponsor->image}" />
+              {/if}
+            </a>
+          </figure>
+        </div>
+      {/foreach}
+    </div>
+  </section>
+{/if}

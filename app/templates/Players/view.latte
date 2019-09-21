@@ -2,24 +2,24 @@
 
 <section class="content">
   <div class="clearfix">
-      <h1>
-        {block title}{$player->name}{/block}, {$player->number}
-      </h1>
-      <div n:if="$user->loggedIn" class="pull-right hidden-xs">
-        <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
-          <span class="glyphicon glyphicon-pencil"></span>
-        </button>
-        <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
-          <span class="glyphicon glyphicon-trash"></span>
-        </button>
-      </div>
-      <h2>
-        {*<a n:href="Teams:view $team->id">*}
-          {if $team->logo && file_exists($imageFolder . '/' . $team->logo)}
-            <img src="{$basePath}/{$imageFolder}/{$team->logo}" style="max-width: 150px" />
-          {/if}
-        {*</a>*}
-      </h2>
+    <div n:if="$user->loggedIn" class="pull-right hidden-xs">
+      <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
+        <span class="glyphicon glyphicon-pencil"></span> Upraviť
+      </button>
+      <button type="button" class="btn btn-large btn-danger" data-target="#remove" data-toggle="modal">
+        <span class="glyphicon glyphicon-trash"></span> Odstrániť
+      </button>
+    </div>
+  </div>
+  <div class="clearfix">
+    <h1>{block title}{$player->name}{/block}, {$player->number}</h1>
+  </div>
+  <div class="clearfix" style="margin: 0 auto;">
+    {*<a n:href="Teams:view $team->id">*}
+    {if $team->logo && file_exists($imageFolder . '/' . $team->logo)}
+      <img src="{$basePath}/{$imageFolder}/{$team->logo}" style="max-width: 150px" />
+    {/if}
+    {*</a>*}
   </div>
 
   {*

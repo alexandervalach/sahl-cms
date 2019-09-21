@@ -22,27 +22,32 @@
           </ul>
         </li>
         <li>
+          {var $groupsCount = $groups->count()}
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              Hráči <span class="caret"></span>
+              Hráči {if $groupsCount}<span class="caret"></span>{/if}
           </a>
-          <ul class="dropdown-menu">
-              {foreach $groups as $group}
-                <li class="dropdown-header">{$group->label}</li>
-                <li><a n:href="Players:all $group->id">Štatistiky</a></li>
-                <li><a n:href="Teams:all $group->id">Tímy</a></li>
-                <li><a n:href="Punishments:all $group->id">Tresty hráčov</a></li>
-              {/foreach}
-          </ul>
+          {if $groupsCount}
+            <ul class="dropdown-menu">
+                {foreach $groups as $group}
+                  <li class="dropdown-header">{$group->label}</li>
+                  <li><a n:href="Players:all $group->id">Štatistiky</a></li>
+                  <li><a n:href="Teams:all $group->id">Tímy</a></li>
+                  <li><a n:href="Punishments:all $group->id">Tresty hráčov</a></li>
+                {/foreach}
+            </ul>
+          {/if}
         </li>
         <li>
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Tabuľky <span class="caret"></span>
+            Tabuľky {if $groupsCount}<span class="caret"></span>{/if}
           </a>
-          <ul class="dropdown-menu">
-            {foreach $groups as $group}
-              <li><a n:href="Tables:all $group->id">{$group->label}</a></li>
-            {/foreach}
-          </ul>
+          {if $groupsCount}
+            <ul class="dropdown-menu">
+              {foreach $groups as $group}
+                <li><a n:href="Tables:all $group->id">{$group->label}</a></li>
+              {/foreach}
+            </ul>
+          {/if}
         </li>
         <li><a n:href="Posts:all">Články</a></li>
         <li><a n:href="Rules:all">Pravidlá a smernice</a></li>

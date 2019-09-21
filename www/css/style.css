@@ -6,6 +6,14 @@ body {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
     box-sizing : border-box;
+    background-image: url("../images/all.jpg");
+    background-size: cover;
+    -moz-background-size: cover;
+    -webkit-background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-origin: border-box;
+    background-position: top left;
 }
 
 #main hr {
@@ -226,6 +234,7 @@ div.table-responsive .table {
 
 footer {
     background-color: #286090;
+    width: 100%;
     color: #fff;
     padding: 2em;
 }
@@ -336,16 +345,9 @@ nav.navbar-default .navbar-nav > .open .dropdown-menu > li > a:target {
 }
 
 #main {
-    background-image: url("../images/all.jpg");
-    background-size: cover;
-    -moz-background-size: cover;
-    -webkit-background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-origin: border-box;
-    background-position: top left;
     padding: 0;
     width: 100%;
+    min-height: 60vh;
 }
 
 #main > main {
@@ -457,7 +459,7 @@ table.leaderboard tr:nth-child(9) {
 
 #authors > div,
 footer > section {
-    margin-top: 2em;
+    padding: 0.75rem;
     clear: both;
 }
 

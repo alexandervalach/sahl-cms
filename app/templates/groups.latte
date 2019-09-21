@@ -11,7 +11,11 @@
     </a>
     {foreach $group->teams as $team}
       <a n:href="Teams:view $team->id, $group->id" title="{$team->name}">
-        <img src="{$basePath}/{$imageFolder}/{$team->logo}" width="5%" alt="{$team->name} logo" />
+        {if file_exists($basePath . '/' . $imageFolder . '/' . $team->logo)}
+          <img src="{$basePath}/{$imageFolder}/{$team->logo}" width="5%" alt="{$team->name} logo" />
+        {else}
+          <img src="{$basePath}/{$imageFolder}/{$defaultImage}" width="5%" alt="{$team->name} logo" />
+        {/if}
       </a>
     {/foreach}
   {/foreach}

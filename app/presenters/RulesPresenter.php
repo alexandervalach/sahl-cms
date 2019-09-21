@@ -44,6 +44,7 @@ class RulesPresenter extends BasePresenter {
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
    * @param GroupsRepository $groupsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param RuleFormFactory $ruleFormFactory
    */
   public function __construct(
       LinksRepository $linksRepository,
@@ -70,7 +71,8 @@ class RulesPresenter extends BasePresenter {
     $this->ruleRow = $this->rulesRepository->getLatest();
 
     if (!$this->ruleRow) {
-      throw new BadRequestException(self::ITEM_NOT_FOUND);
+      $this->rulesRepository->insert( array('content' => '') );
+      // throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this['ruleForm']->setDefaults($this->ruleRow);

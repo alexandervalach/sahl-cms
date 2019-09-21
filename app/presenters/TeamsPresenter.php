@@ -142,27 +142,6 @@ class TeamsPresenter extends BasePresenter
   }
 
   /**
-   * @param int $groupId
-   */
-  public function actionAll(int $groupId): void
-  {
-    $this->userIsLogged();
-    $this->groupRow = $this->groupsRepository->findById($groupId);
-
-    if (!$this->groupRow) {
-      throw new BadRequestException(self::ITEM_NOT_FOUND);
-    }
-  }
-
-  /**
-   * @param int $groupId
-   */
-  public function renderAll(int $groupId): void
-  {
-    $this->template->group = ArrayHash::from($this->groups[$this->groupRow->id]);
-  }
-
-  /**
    * @param int $id
    * @param int $groupId
    */

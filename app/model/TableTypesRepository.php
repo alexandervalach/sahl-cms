@@ -58,7 +58,11 @@ class TableTypesRepository extends Repository
    */
   public function findByLabel(string $label)
   {
-    return $this->getAll()->where(self::LABEL, $label)->fetch();
+    return $this->getAll()
+        ->where(self::LABEL, $label)
+        ->order('id DESC')
+        ->limit(1)
+        ->fetch();
   }
 
   /**

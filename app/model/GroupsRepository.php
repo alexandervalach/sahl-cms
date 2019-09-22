@@ -27,4 +27,9 @@ class GroupsRepository extends Repository {
     return $this->findAll()->where(self::LABEL, $label)->fetch();
   }
 
+  public function insertData (string $label)
+  {
+    return $this->insert( array(self::LABEL => $label) );
+  }
+
 }

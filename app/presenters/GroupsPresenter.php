@@ -10,6 +10,8 @@ use App\Forms\TeamFormFactory;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
+use App\Model\TablesRepository;
+use App\Model\TableTypesRepository;
 use App\Model\TeamsRepository;
 use App\Model\GroupsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
@@ -25,24 +27,23 @@ use Nette\Utils\ArrayHash;
  */
 class GroupsPresenter extends BasePresenter
 {
-
   /** @var ActiveRow */
   private $groupRow;
 
-  /**
-   * @var GroupFormFactory
-   */
+  /** @var GroupFormFactory */
   private $groupFormFactory;
 
-  /**
-   * @var ModalRemoveFormFactory
-   */
+  /** @var ModalRemoveFormFactory */
   private $removeFormFactory;
 
-  /**
-   * @var TeamFormFactory
-   */
+  /** @var TeamFormFactory  */
   private $teamFormFactory;
+
+  /** @var TableTypesRepository */
+  private $tableTypesRepository;
+
+  /** @var TablesRepository */
+  private $tablesRepository;
 
   /**
    * GroupsPresenter constructor.
@@ -52,6 +53,8 @@ class GroupsPresenter extends BasePresenter
    * @param TeamsRepository $teamsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
    * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
+   * @param TableTypesRepository $tableTypesRepository
+   * @param TablesRepository $tablesRepository
    * @param GroupFormFactory $groupFormFactory
    * @param ModalRemoveFormFactory $removeFormFactory
    * @param TeamFormFactory $teamFormFactory
@@ -63,6 +66,8 @@ class GroupsPresenter extends BasePresenter
       TeamsRepository $teamsRepository,
       SeasonsGroupsRepository $seasonsGroupsRepository,
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      TableTypesRepository $tableTypesRepository,
+      TablesRepository $tablesRepository,
       GroupFormFactory $groupFormFactory,
       ModalRemoveFormFactory $removeFormFactory,
       TeamFormFactory $teamFormFactory
@@ -71,6 +76,8 @@ class GroupsPresenter extends BasePresenter
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
+    $this->tableTypesRepository = $tableTypesRepository;
+    $this->tablesRepository = $tablesRepository;
     $this->groupFormFactory = $groupFormFactory;
     $this->removeFormFactory = $removeFormFactory;
     $this->teamFormFactory = $teamFormFactory;
@@ -93,30 +100,6 @@ class GroupsPresenter extends BasePresenter
   }
 
   /**
-   * @param int $id
-   */
-  public function actionView(int $id): void
-  {
-    $this->groupRow = $this->groupsRepository->findById($id);
-
-    if (!$this->groupRow) {
-      throw new BadRequestException(self::ITEM_NOT_FOUND);
-    }
-
-    if ($this->user->isLoggedIn()) {
-      $this['groupForm']->setDefaults($this->groupRow);
-    }
-  }
-
-  /**
-   * @param int $id
-   */
-  public function renderView(int $id): void
-  {
-    $this->template->group = ArrayHash::from($this->groups[$this->groupRow->id]);
-  }
-
-  /**
    * Generates new add/edit group form
    * @return Form
    */
@@ -127,19 +110,9 @@ class GroupsPresenter extends BasePresenter
       $id = $this->getParameter('id');
 
       if ($id) {
-        $this->groupRow->update($values);
-        $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
-        $this->redirect('view', $this->groupRow->id);
+        $this->updateGroup($values);
       } else {
-        $this->groupRow = $this->groupsRepository->getByLabel($values->label);
-
-        if (!$this->groupRow) {
-          $this->groupRow = $this->groupsRepository->insert($values);
-        }
-
-        $this->seasonsGroupsRepository->insert( array('group_id' => $this->groupRow->id) );
-        $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
-        $this->redirect('all');
+        $this->addGroup($values);
       }
     });
   }
@@ -165,37 +138,66 @@ class GroupsPresenter extends BasePresenter
   }
 
   /**
-   * Generates new team form
-   * @return Form
+   * @param ArrayHash $values
    */
-  protected function createComponentTeamForm(): Form
+  private function addGroup (ArrayHash $values): void
   {
-    return $this->teamFormFactory->create(function (Form $form, ArrayHash $values) {
-      $this->userIsLogged();
-      $team = $this->teamsRepository->findByName($values->name);
+    $this->groupRow = $this->getGroup($values->label);
+    $seasonGroup = $this->seasonsGroupsRepository->insertData($this->groupRow->id);
 
-      if (!$team) {
-        $team = $this->teamsRepository->insert( array('name' => $values->name) );
+    if ($seasonGroup) {
+      $tableType = $this->getTableType(self::BASE_TABLE_LABEL);
+
+      if ($tableType) {
+        $this->getTable($tableType->id, $seasonGroup->id);
       }
+    }
 
-      $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($this->groupRow->id);
+    $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
+    $this->redirect('all');
+  }
 
-      if ($seasonGroup && $team) {
-        $this->seasonsGroupsTeamsRepository->insert(
-          array(
-            'season_group_id' => $seasonGroup->id,
-            'team_id' => $team->id
-          )
-        );
-        $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
-      } else {
-        $this->flashMessage(self::ITEM_NOT_ADDED, self::DANGER);
-      }
-
-      // TODO: Insert also team entry to tables
-      // $this->tablesRepository->insert(array('team_id' => $team));
+  /**
+   * @param ArrayHash $values
+   */
+  private function updateGroup (ArrayHash $values): void
+  {
+    if ($this->groupRow) {
+      $this->groupRow->update($values);
+      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
       $this->redirect('view', $this->groupRow->id);
-    });
+    }
+  }
+
+  /**
+   * @param string $label
+   * @return bool|int|\Nette\Database\IRow|ActiveRow|null
+   */
+  private function getGroup (string $label)
+  {
+    $group = $this->groupsRepository->getByLabel($label);
+    return $group ? $group : $this->groupsRepository->insertData($label);
+  }
+
+  /**
+   * @param string $label
+   * @return bool|int|\Nette\Database\IRow|ActiveRow|null
+   */
+  private function getTableType (string $label)
+  {
+    $tableType = $this->tableTypesRepository->findByLabel($label);
+    return $tableType ? $tableType : $this->tableTypesRepository->insertData($label);
+  }
+
+  /**
+   * @param int $tableTypeId
+   * @param int $seasonGroupId
+   * @return bool|int|\Nette\Database\IRow|ActiveRow|null
+   */
+  private function getTable(int $tableTypeId, int $seasonGroupId)
+  {
+    $table = $this->tablesRepository->getByType($tableTypeId, $seasonGroupId);
+    return $table ? $table : $this->tablesRepository->insertData($tableTypeId, $seasonGroupId);
   }
 
 }

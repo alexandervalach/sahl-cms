@@ -118,4 +118,9 @@ class TeamsRepository extends Repository
     return $this->getForSeasonGroup($seasonGroup)->fetchAll();
   }
 
+  public function insertData (string $name)
+  {
+    return $this->insert( array(self::NAME => $name) );
+  }
+
 }

@@ -43,4 +43,9 @@ class SeasonsGroupsRepository extends Repository
     return $this->findAll()->where(self::SEASON_ID, $seasonId);
   }
 
+  public function insertData (int $groupId)
+  {
+    return $this->insert( array(self::GROUP_ID => $groupId) );
+  }
+
 }

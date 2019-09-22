@@ -6,7 +6,7 @@
 
 <section id="teams" class="container-fluid hidden-xs">
   {foreach $groups as $group}
-    <a n:href="Groups:view $group->id">
+    <a n:href="Teams:all $group->id">
       <h2>{$group->label}</h2>
     </a>
     {foreach $group->teams as $team}

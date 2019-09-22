@@ -142,6 +142,26 @@ class TeamsPresenter extends BasePresenter
   }
 
   /**
+   * @param int $groupId
+   */
+  public function actionAll (int $groupId): void
+  {
+    $this->groupRow = $this->groupsRepository->findById($groupId);
+
+    if (!$this->groupRow || !$this->groupRow->is_present) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
+  }
+
+  /**
+   * @param int $groupId
+   */
+  public function renderAll (int $groupId): void
+  {
+    $this->template->group = ArrayHash::from($this->groups[$groupId]);
+  }
+
+  /**
    * @param int $id
    * @param int $groupId
    */
@@ -246,7 +266,12 @@ class TeamsPresenter extends BasePresenter
   protected function createComponentTeamForm(): Form
   {
     return $this->teamFormFactory->create(function (Form $form, ArrayHash $values) {
-      $this->submittedTeamForm($form, $values);
+      $id = $this->getParameter('id');
+      if ($id) {
+        $this->updateTeam($id, $values);
+      } else {
+        $this->addTeam($values);
+      }
     });
   }
 
@@ -310,46 +335,26 @@ class TeamsPresenter extends BasePresenter
   }
 
   /**
-   * Saves values to database and created new table entry for team in current season
-   * @param Form $form
-   * @param ArrayHash $values
-   */
-  public function submittedTeamForm(Form $form, ArrayHash $values): void
-  {
-    $id = $this->getParameter('id');
-
-    // UPDATE existing team
-    if ($id) {
-      $this->updateTeam($id, $values);
-    }
-
-    // CREATE new entry
-    $this->createTeam($values);
-  }
-
-  /**
    * Updates existing team
    * @param int $id
    * @param ArrayHash $values
    */
   private function updateTeam(int $id, ArrayHash $values): void
   {
-    if ($this->teamRow) {
-      $this->teamRow = $this->teamsRepository->findById($id);
-      $this->teamRow->update($values);
-      $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
-      $this->redirect('view', $this->teamRow->id, $this->groupRow->id);
-    }
+    $this->teamRow = $this->teamsRepository->findById($id);
+    $this->teamRow->update($values);
+    $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
+    $this->redirect('view', $this->teamRow->id, $this->groupRow->id);
   }
 
   /**
    * Creates new entry
    * @param ArrayHash $values
    */
-  private function createTeam(ArrayHash $values): void
+  private function addTeam(ArrayHash $values): void
   {
     // Check if team already exists
-    $team = $this->getTeam($values);
+    $team = $this->getTeam($values->name);
 
     // Add team to season and group
     $seasonGroup = $this->seasonsGroupsRepository->getSeasonGroup($this->groupRow->id);
@@ -359,9 +364,14 @@ class TeamsPresenter extends BasePresenter
       $this->setSeasonGroupTeam($team->id, $seasonGroup->id);
 
       // Add team entry to tables
-      $tableType = $this->getTableType(self::BASE_TABLE_LABEL);
-      $table = $this->getTable($tableType->id, $seasonGroup->id);
-      $this->setTableEntry($team->id, $table->id);
+      $tableType = $this->tableTypesRepository->findByLabel(self::BASE_TABLE_LABEL);
+
+      if ($tableType) {
+        $table = $this->tablesRepository->getByType($tableType->id, $seasonGroup->id);
+        if ($table) {
+          $this->setTableEntry($team->id, $table->id);
+        }
+      }
 
       $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
     } else {
@@ -396,33 +406,12 @@ class TeamsPresenter extends BasePresenter
   }
 
   /**
-   * @param string $label
+   * @param string $name
    * @return bool|int|\Nette\Database\IRow|ActiveRow|null
    */
-  private function getTableType(string $label)
+  private function getTeam (string $name)
   {
-    $tableType = $this->tableTypesRepository->findByLabel($label);
-    return (!$tableType) ? $this->tableTypesRepository->insertData($label) : $tableType;
-  }
-
-  /**
-   * @param int $tableTypeId
-   * @param int $seasonGroupId
-   * @return bool|int|\Nette\Database\IRow|ActiveRow|null
-   */
-  private function getTable(int $tableTypeId, int $seasonGroupId)
-  {
-    $table = $this->tablesRepository->getByType($tableTypeId, $seasonGroupId);
-    return (!$table) ? $this->tablesRepository->insertData($tableTypeId, $seasonGroupId) : $table;
-  }
-
-  /**
-   * @param ArrayHash $values
-   * @return bool|int|\Nette\Database\IRow|ActiveRow|null
-   */
-  private function getTeam (ArrayHash $values)
-  {
-    $team = $this->teamsRepository->findByName($values->name);
-    return (!$team) ? $this->teamsRepository->insert($values) : $team;
+    $team = $this->teamsRepository->findByName($name);
+    return $team ? $team : $this->teamsRepository->insertData($name);
   }
 }

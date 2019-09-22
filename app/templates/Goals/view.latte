@@ -25,7 +25,7 @@
         <th class="text-center">Hráč</th>
         <th class="text-center">Počet gólov</th>
         <th class="text-center">Domáci/Hostia</th>
-        <th class="text-center" colspan="2">Akcia</th>
+        <th class="text-center" {* colspan="2" *}>Akcia</th>
       </tr>
     </thead>
     <tbody>
@@ -34,11 +34,13 @@
       <td>{$goal->goals}</td>
       <td>{if $goal->is_home_player}DOMÁCI{else}HOSTIA{/if}</td>
         {if $user->loggedIn}
+          {*
           <td>
             <a n:href="Goals:edit $goal->id" class="text-success">
               <span class="glyphicon glyphicon-pencil"></span>
             </a>
           </td>
+           *}
           <td>
             <a n:href="Goals:remove $goal->id" class="text-danger">
               <span class="glyphicon glyphicon-trash"></span>

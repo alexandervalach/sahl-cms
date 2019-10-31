@@ -8,6 +8,7 @@ use App\Forms\RoundFormFactory;
 use App\Forms\FightAddFormFactory;
 use App\Forms\ModalRemoveFormFactory;
 use App\Model\FightsRepository;
+use App\Model\GoalsRepository;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
@@ -76,6 +77,11 @@ class RoundsPresenter extends BasePresenter
   private $playersRepository;
 
   /**
+   * @var GoalsRepository
+   */
+  private $goalsRepository;
+
+  /**
    * RoundsPresenter constructor.
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
@@ -92,6 +98,7 @@ class RoundsPresenter extends BasePresenter
    * @param ModalRemoveFormFactory $modalRemoveFormFactory
    * @param GroupsRepository $groupsRepository
    * @param SeasonsGroupsRepository $seasonsGroupsRepository
+   * @param GoalsRepository $goalsRepository
    */
   public function __construct(
       LinksRepository $linksRepository,
@@ -108,7 +115,8 @@ class RoundsPresenter extends BasePresenter
       FightAddFormFactory $fightAddFormFactory,
       ModalRemoveFormFactory $modalRemoveFormFactory,
       GroupsRepository $groupsRepository,
-      SeasonsGroupsRepository $seasonsGroupsRepository
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      GoalsRepository $goalsRepository
   ) {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
@@ -121,6 +129,7 @@ class RoundsPresenter extends BasePresenter
     $this->modalRemoveFormFactory = $modalRemoveFormFactory;
     $this->playersSeasonsGroupsTeamsRepository = $playersSeasonsGroupsTeamsRepository;
     $this->playersRepository = $playersRepository;
+    $this->goalsRepository = $goalsRepository;
   }
 
   /**
@@ -148,6 +157,8 @@ class RoundsPresenter extends BasePresenter
       $data[$fight->id]['fight'] = $fight;
       $data[$fight->id]['team1'] = $fight->ref('teams', 'team1_id');
       $data[$fight->id]['team2'] = $fight->ref('teams', 'team2_id');
+      $goals = $this->goalsRepository->fetchForFight($fight->id);
+      /*
       $homeGoals = $fight->related('goals')
           ->where('is_home_player', 1)
           ->where('is_present', 1)
@@ -156,20 +167,41 @@ class RoundsPresenter extends BasePresenter
           ->where('is_home_player', 0)
           ->where('is_present', 1)
           ->order('number DESC');
+      */
       $data[$fight->id]['homeGoals'] = [];
       $data[$fight->id]['guestGoals'] = [];
 
+      foreach ($goals as $goal) {
+        /*
+        $playerSeasonGroupTeam = $this->playersSeasonsGroupsTeamsRepository->findById($goal->player_season_group_team_id);
+        // Continue when inconsistent data
+        if (empty($playerSeasonGroupTeam) || !$playerSeasonGroupTeam) {
+          continue;
+        }
+        */
+
+        $goalType = $goal->is_home_player ? 'homeGoals' : 'guestGoals';
+        $data[$fight->id][$goalType][$goal->id]['number'] = $goal->goals;
+        $data[$fight->id][$goalType][$goal->id]['player']['name'] = $goal->player_name;
+      }
+
+      /*
       foreach ($homeGoals as $goal) {
         $playerSeasonGroupTeam = $this->playersSeasonsGroupsTeamsRepository->findById($goal->player_season_group_team_id);
-        $data[$fight->id]['homeGoals'][$goal->id]['number'] = $goal->number;
-        $data[$fight->id]['homeGoals'][$goal->id]['player'] = $this->playersRepository->findById($playerSeasonGroupTeam->player_id);
+        if ($playerSeasonGroupTeam) {
+          $data[$fight->id]['homeGoals'][$goal->id]['number'] = $goal->number;
+          $data[$fight->id]['homeGoals'][$goal->id]['player'] = $this->playersRepository->findById($playerSeasonGroupTeam->player_id);
+        }
       }
 
       foreach ($guestGoals as $goal) {
         $playerSeasonGroupTeam = $this->playersSeasonsGroupsTeamsRepository->findById($goal->player_season_group_team_id);
-        $data[$fight->id]['guestGoals'][$goal->id]['number'] = $goal->number;
-        $data[$fight->id]['guestGoals'][$goal->id]['player'] = $this->playersRepository->findById($playerSeasonGroupTeam->player_id);
+        if ($playerSeasonGroupTeam) {
+          $data[$fight->id]['guestGoals'][$goal->id]['number'] = $goal->number;
+          $data[$fight->id]['guestGoals'][$goal->id]['player'] = $this->playersRepository->findById($playerSeasonGroupTeam->player_id);
+        }
       }
+      */
 
       // Determining CSS bootstrap classes
       if ($fight->score1 > $fight->score2) {
@@ -204,11 +236,13 @@ class RoundsPresenter extends BasePresenter
    */
   public function actionArchAll(int $id): void
   {
+    /*
     $this->seasonRow = $this->seasonsRepository->findById($id);
 
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
-      throw new BadRequestException(self::SEASON_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
+    */
   }
 
   /**
@@ -216,8 +250,10 @@ class RoundsPresenter extends BasePresenter
    */
   public function renderArchAll(int $id): void
   {
+    /*
     $this->template->rounds = $this->roundsRepository->getArchived($id);
     $this->template->season = $this->seasonRow;
+    */
   }
 
   /**
@@ -226,6 +262,7 @@ class RoundsPresenter extends BasePresenter
    */
   public function actionArchView(int $seasonId, int $id): void
   {
+    /*
     $this->seasonRow = $this->seasonsRepository->findById($seasonId);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
       throw new BadRequestException(self::SEASON_NOT_FOUND);
@@ -235,6 +272,7 @@ class RoundsPresenter extends BasePresenter
     if (!$this->roundRow || !$this->seasonRow->is_present) {
       throw new BadRequestException(self::ROUND_NOT_FOUND);
     }
+    */
   }
 
   /**
@@ -243,6 +281,7 @@ class RoundsPresenter extends BasePresenter
    */
   public function renderArchView(int $seasonId, int $id): void
   {
+    /*
     $i = 0;
     $fightData = array();
     $fights = $this->roundRow->related('fights');
@@ -270,6 +309,7 @@ class RoundsPresenter extends BasePresenter
     $this->template->i = 0;
     $this->template->round = $this->roundRow;
     $this->template->archive = $this->seasonRow;
+    */
   }
 
   /**

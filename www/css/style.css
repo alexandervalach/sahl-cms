@@ -463,6 +463,19 @@ footer > section {
   clear: both;
 }
 
+#players-wrapper {
+  margin-top: 25px;
+  background: white;
+}
+
+#players-wrapper .row:first-child {
+  padding: 10px 10px 0 10px;
+}
+
+#players-wrapper .row:last-child {
+  padding: 0 10px 0 10px;
+}
+
 @media screen and (min-width: 280px) and (max-width: 800px) {
 
   #main {

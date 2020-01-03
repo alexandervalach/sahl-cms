@@ -290,13 +290,16 @@ class PlayersPresenter extends BasePresenter
         $this->redirect('view', $this->playerRow->id);
       }
 
+      // Fetch goals for selected player in selected team, group and season
       $goals = $this->goalsRepository->findByValue('player_season_group_team_id', $playerSeasonTeamGroup->id);
 
+      // Remove goals
       foreach ($goals as $goal) {
-        $this->goalsRepository->remove($goal->id);
+        $this->goalsRepository->softDelete($goal->id);
       }
 
-      $this->playersSeasonsGroupsTeamsRepository->remove($seasonTeamGroup->id);
+      // Remove player from team
+      $this->playersSeasonsGroupsTeamsRepository->remove($playerSeasonTeamGroup->id);
       $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('Teams:view', $seasonTeamGroup->team_id, $seasonGroup->group_id);
     });

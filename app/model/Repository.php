@@ -154,6 +154,16 @@ abstract class Repository
   }
 
   /**
+   * Mark item as not present
+   * @param int $id
+   * @return void
+   */
+  public function softDelete(int $id): void
+  {
+    $this->findAll()->wherePrimary($id)->update( array(self::IS_PRESENT => 0) );
+  }
+
+  /**
    * @param type $data
    * @return Selection
    */

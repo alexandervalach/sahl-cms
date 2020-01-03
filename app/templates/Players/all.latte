@@ -2,15 +2,15 @@
 
 <section class="content">
   <div class="clearfix">
-      {block title}
-        <h1>Štatistiky</h1>
-        <h2>{$group->label}</h2>
-      {/block}
+    {block title}
+      <h1>Štatistiky</h1>
+      <h2>{$group->label}</h2>
+    {/block}
   </div>
 </section>
 
 <div n:if="$players->getRowCount()" class='table-responsive'>
-  <table class='table'>
+  <table id="players" class="table" style="width: 100%">
     <thead>
       <tr>
         <th>P.č.</th>
@@ -40,7 +40,38 @@
         {var $previous = $player->goals}
       </tr>
     </tbody>
+    <tfoot>
+      <tr>
+        <th>P.č.</th>
+        <th>Meno a priezvisko</th>
+        <th>Číslo</th>
+        <th>Tím</th>
+        <th>Góly</th>
+      </tr>
+    </tfoot>
   </table>
 </div>
 
+{/block}
+
+{block styles}
+  {include parent}
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" type="text/css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css" type="text/css">
+{/block}
+
+{block scripts}
+  {include parent}
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
+  <script href="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
+  <!--
+  <script type="text/javascript">
+    $(document).ready(() => {
+      const table = $('#players')
+      if (table) {
+        table.DataTable();
+      }
+    });
+  </script>
+  -->
 {/block}

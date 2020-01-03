@@ -11,11 +11,13 @@
     <meta name="description" content="Informačný systém pre fanúšikov Spišskej amatérskej hokejovej ligy">
     <meta name="keywords" content="Hokej,Spiš,Spišská Nová Ves,Amatérska hokejová liga">
     <title>{ifset #title}{include title|striptags} | {/ifset}Spišská amatérska hokejová liga</title>
-    <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style.css?v=1.1.7" type="text/css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    {block styles}
+      <link rel="stylesheet" media="screen,projection,tv" href="{$basePath}/css/style.css?v=1.1.7" type="text/css">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" type="text/css">
+    {/block}
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   </head>
   <body>
     {include 'navigation.latte'}

@@ -27,16 +27,16 @@ class PlayersRepository extends Repository
   public function getForTeam(int $teamId, int $seasonGroupId): ResultSet
   {
     $db = $this->getConnection();
-    return $db->query('SELECT t.name as team_name, t.logo as team_logo, t.id as team_id, 
+    return $db->query('SELECT t.name as team_name, t.logo as team_logo, t.id as team_id,
         pt.label as type_label, pt.abbr as type_abbr, pt.priority as type_priority,
-        p.id, p.name, p.number, 
-        psgt.goals, psgt.is_transfer FROM seasons_groups_teams AS sgt 
-          INNER JOIN teams AS t ON t.id = sgt.team_id 
-          INNER JOIN players_seasons_groups_teams AS psgt ON psgt.season_group_team_id = sgt.id 
-          INNER JOIN players AS p ON p.id = psgt.player_id 
-          INNER JOIN player_types AS pt ON pt.id = psgt.player_type_id 
-        WHERE sgt.season_group_id = ? 
-          AND sgt.team_id = ? 
+        p.id, p.name, p.number,
+        psgt.goals, psgt.is_transfer FROM seasons_groups_teams AS sgt
+          INNER JOIN teams AS t ON t.id = sgt.team_id
+          INNER JOIN players_seasons_groups_teams AS psgt ON psgt.season_group_team_id = sgt.id
+          INNER JOIN players AS p ON p.id = psgt.player_id
+          INNER JOIN player_types AS pt ON pt.id = psgt.player_type_id
+        WHERE sgt.season_group_id = ?
+          AND sgt.team_id = ?
           AND sgt.is_present = ?
           AND psgt.is_present = ?
         ORDER BY type_priority', $seasonGroupId, $teamId, 1, 1);
@@ -62,7 +62,7 @@ class PlayersRepository extends Repository
 
     $query = 'SELECT t.name as team_name, t.logo as team_logo, t.id as team_id,
       pt.label as type_label, pt.abbr as type_abbr,
-      p.id, p.name, p.number, psgt.goals, psgt.is_transfer, psgt.id as player_season_group_team_id
+      p.id, p.name, p.number, psgt.goals, psgt.assistances, psgt.is_transfer, psgt.id as player_season_group_team_id
       FROM seasons_groups_teams as sgt
       INNER JOIN players_seasons_groups_teams as psgt
       ON psgt.season_group_team_id = sgt.id
@@ -71,13 +71,13 @@ class PlayersRepository extends Repository
       INNER JOIN teams as t
       ON t.id = sgt.team_id
       INNER JOIN player_types as pt
-      ON psgt.player_type_id = pt.id 
+      ON psgt.player_type_id = pt.id
       WHERE p.name != ?
       AND p.name NOT LIKE ?
       AND psgt.is_present = ?
-      AND sgt.is_present = ? 
-      AND season_group_id = ? 
-      ORDER BY goals DESC, psgt.id DESC';
+      AND sgt.is_present = ?
+      AND season_group_id = ?
+      ORDER BY goals DESC, assistances DESC, psgt.id DESC';
 
     return $db->query($query, ' ', 'voľné miesto%', 1, 1, $seasonGroupId);
   }
@@ -130,8 +130,8 @@ class PlayersRepository extends Repository
   public function getPlayerInfo(int $playerId)
   {
     $db = $this->getConnection();
-    return $db->query('SELECT player_id AS id, 
-       is_transfer, psgt.is_present, name, number, 
+    return $db->query('SELECT player_id AS id,
+       is_transfer, psgt.is_present, name, number,
        psgt.player_type_id, psgt.goals,
        label AS type_label, abbr AS type_abbr
       FROM players_seasons_groups_teams AS psgt
@@ -140,7 +140,7 @@ class PlayersRepository extends Repository
       INNER JOIN player_types AS pt
       ON pt.id = psgt.player_type_id
       WHERE psgt.player_id = ? AND psgt.is_present = ?
-      ORDER BY psgt.id DESC 
+      ORDER BY psgt.id DESC
       LIMIT ?', $playerId, 1, 1)->fetch();
   }
 

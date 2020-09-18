@@ -24,10 +24,10 @@ class TeamsRepository extends Repository
       FROM seasons_groups AS sg
       INNER JOIN seasons_groups_teams AS sgt
       ON sgt.season_group_id = sg.id
-      INNER JOIN teams as t 
+      INNER JOIN teams as t
       ON t.id = sgt.team_id
-      INNER JOIN groups as g 
-      ON g.id = sg.group_id 
+      INNER JOIN groups as g
+      ON g.id = sg.group_id
       WHERE sgt.is_present = ? ";
     return $seasonId === null ? $db->query($query . "AND sg.season_id IS NULL", 1) :
         $db->query($query . "AND sg.season_id = ?", 1, $seasonId);
@@ -55,9 +55,10 @@ class TeamsRepository extends Repository
   /**
    * @param int $team1Id
    * @param int $team2Id
+   * @param array $seasonGroupTeamIds
    * @return ResultSet
    */
-  public function getPlayersForTeams(int $team1Id, int $team2Id): ResultSet
+  public function getPlayersForTeams(int $team1Id, int $team2Id, array $seasonGroupTeamIds): ResultSet
   {
     $db = $this->getConnection();
     return $db->query('SELECT psgt.id, p.name, p.number
@@ -69,17 +70,27 @@ class TeamsRepository extends Repository
       INNER JOIN players AS p
       ON psgt.player_id = p.id
       WHERE p.name NOT LIKE ? AND
-      (t.id = ? OR t.id = ?) AND psgt.is_present = ?', 'voľné miesto %', $team1Id, $team2Id, 1);
+      (t.id = ? OR t.id = ?) AND
+      psgt.season_group_team_id IN (?) AND
+      psgt.is_present = ?', 'voľné miesto %', $team1Id, $team2Id, $seasonGroupTeamIds, 1);
   }
 
   /**
    * @param int $team1Id
    * @param int $team2Id
+   * @param Selection $seasonGroups
    * @return array
    */
-  public function fetchPlayersForTeams(int $team1Id, int $team2Id): array
+  public function fetchPlayersForTeams(int $team1Id, int $team2Id, Selection $seasonGroups): array
   {
-    return $this->getPlayersForTeams($team1Id, $team2Id)->fetchPairs('id', 'name');
+    $db = $this->getConnection();
+
+    $seasonGroupTeamIds = $db->query('SELECT id FROM seasons_groups_teams AS sgt
+      WHERE sgt.season_group_id IN (?) AND
+      (sgt.team_id = ? OR sgt.team_id = ?) AND
+      sgt.is_present = 1', $seasonGroups, $team1Id, $team2Id)->fetchFields();
+
+    return $this->getPlayersForTeams($team1Id, $team2Id, $seasonGroupTeamIds)->fetchPairs('id', 'name');
   }
 
   /**
@@ -91,7 +102,7 @@ class TeamsRepository extends Repository
   {
     return $this->findAll()->where(self::NAME, $name)->fetch();
   }
-  
+
   /**
    * @param int $seasonGroupId
    * @return ResultSet
@@ -99,10 +110,10 @@ class TeamsRepository extends Repository
   public function getForSeasonGroup(int $seasonGroupId): ResultSet
   {
     $db = $this->getConnection();
-    $query = 'SELECT t.id AS id, photo, logo, name 
+    $query = 'SELECT t.id AS id, photo, logo, name
       FROM seasons_groups_teams AS sgt
       INNER JOIN teams AS t
-      ON sgt.team_id = t.id 
+      ON sgt.team_id = t.id
       WHERE sgt.is_present = ?';
 
     return $db->query($query . ' AND sgt.season_group_id = ? ORDER BY name', 1, $seasonGroupId);

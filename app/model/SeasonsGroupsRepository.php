@@ -48,4 +48,15 @@ class SeasonsGroupsRepository extends Repository
     return $this->insert( array(self::GROUP_ID => $groupId) );
   }
 
+  /**
+   * Returns selection
+   * @param string $columnName
+   * @param type $value
+   * @return Selection
+   */
+  public function getIdsByValue(string $columnName, $value): Selection
+  {
+    return $this->findBy( array($columnName => $value) )->select('id');
+  }
+
 }

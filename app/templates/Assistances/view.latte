@@ -11,11 +11,11 @@
       </div>
     {/if}
   <div class="cleafix">
-    <h1 n:block="title">Zobrazenie gólov</h1>
+    <h1 n:block="title">Asistencie gólov</h1>
   </div>
 </section>
 
-<div n:if="$goals->count()" class="table-responsive text-center">
+<div n:if="$assistances->count()" class="table-responsive text-center">
   <table class="table text-center">
     <caption>
       <h2>{$team1->name} : {$team2->name}</h2>
@@ -29,10 +29,10 @@
       </tr>
     </thead>
     <tbody>
-    <tr n:foreach="$goals as $goal">
-      <td>{$goal->player_name} ({$goal->player_number})</td>
-      <td>{$goal->goals}</td>
-      <td>{if $goal->is_home_player}DOMÁCI{else}HOSTIA{/if}</td>
+    <tr n:foreach="$assistances as $assistance">
+      <td>{$assistance->player_name} ({$assistance->player_number})</td>
+      <td>{$assistance->assistances}</td>
+      <td>{if $assistance->is_home_player}DOMÁCI{else}HOSTIA{/if}</td>
         {if $user->loggedIn}
           {*
           <td>
@@ -42,7 +42,7 @@
           </td>
            *}
           <td>
-            <a n:href="Goals:remove $goal->id" class="text-danger">
+            <a n:href="Assistances:remove $assistance->id" class="text-danger">
               <span class="glyphicon glyphicon-trash"></span>
             </a>
           </td>
@@ -57,7 +57,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3 class="modal-title">Pridať góly hráčom</h3>
+        <h3 class="modal-title">Pridať asistencie hráčovi</h3>
       </div>
       <div class="modal-body">
           {control addForm}

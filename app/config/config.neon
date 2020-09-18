@@ -25,6 +25,7 @@ services:
 
 	# Model repositories
 	- App\Model\AlbumsRepository
+	- App\Model\AssistancesRepository
 	- App\Model\EventsRepository
 	- App\Model\FightsRepository
 	- App\Model\ImagesRepository

@@ -6,12 +6,13 @@ namespace App\Presenters;
 
 use App\Helpers\FormHelper;
 use App\Model\GroupsRepository;
+use App\Model\AssistancesRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
-use App\Model\GoalsRepository;
+use App\Model\Assistance;
 use App\Model\FightsRepository;
 use App\Model\RoundsRepository;
 use App\Model\PlayersRepository;
@@ -25,10 +26,10 @@ use Nette\Utils\ArrayHash;
  * Class GoalsPresenter
  * @package App\Presenters
  */
-class GoalsPresenter extends BasePresenter
+class AssistancesPresenter extends BasePresenter
 {
   /** @var ActiveRow */
-  private $goalRow;
+  private $assistanceRow;
 
   /** @var ActiveRow */
   private $fightRow;
@@ -42,8 +43,8 @@ class GoalsPresenter extends BasePresenter
   /** @var ActiveRow */
   private $team2;
 
-  /** @var GoalsRepository */
-  private $goalsRepository;
+  /** @var AssistancesRepository */
+  private $assistancesRepository;
 
   /** @var FightsRepository */
   private $fightsRepository;
@@ -54,7 +55,9 @@ class GoalsPresenter extends BasePresenter
   /** @var PlayersRepository */
   private $playersRepository;
 
-  /** @var PlayersSeasonsGroupsTeamsRepository */
+  /**
+   * @var PlayersSeasonsGroupsTeamsRepository
+   */
   private $playersSeasonsGroupsTeamsRepository;
 
   /**
@@ -62,7 +65,7 @@ class GoalsPresenter extends BasePresenter
    * @param LinksRepository $linksRepository
    * @param SponsorsRepository $sponsorsRepository
    * @param TeamsRepository $teamsRepository
-   * @param GoalsRepository $goalsRepository
+   * @param AssistancesRepository $AssistancesRepository
    * @param FightsRepository $fightsRepository
    * @param PlayersRepository $playersRepository
    * @param RoundsRepository $roundsRepository
@@ -75,7 +78,7 @@ class GoalsPresenter extends BasePresenter
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
       TeamsRepository $teamsRepository,
-      GoalsRepository $goalsRepository,
+      AssistancesRepository $assistancesRepository,
       FightsRepository $fightsRepository,
       PlayersRepository $playersRepository,
       RoundsRepository $roundsRepository,
@@ -87,7 +90,7 @@ class GoalsPresenter extends BasePresenter
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
-    $this->goalsRepository = $goalsRepository;
+    $this->assistancesRepository = $assistancesRepository;
     $this->fightsRepository = $fightsRepository;
     $this->playersRepository = $playersRepository;
     $this->roundsRepository = $roundsRepository;
@@ -114,7 +117,7 @@ class GoalsPresenter extends BasePresenter
   public function renderView(int $id): void
   {
     $this->template->fight = $this->fightRow;
-    $this->template->goals = ArrayHash::from($this->goalsRepository->fetchForFight($this->fightRow->id));
+    $this->template->assistances = ArrayHash::from($this->assistancesRepository->fetchForFight($this->fightRow->id));
     $this->template->team1 = $this->fightRow->ref('team1_id');
     $this->template->team2 = $this->fightRow->ref('team2_id');
   }
@@ -125,8 +128,8 @@ class GoalsPresenter extends BasePresenter
   public function actionEdit(int $id): void
   {
     $this->userIsLogged();
-    $this->goalRow = $this->goalsRepository->findById($id);
-    $this->fightRow = $this->goalRow->ref('fights', 'fight_id');
+    $this->assistanceRow = $this->assistancesRepository->findById($id);
+    $this->fightRow = $this->assistanceRow->ref('fights', 'fight_id');
   }
 
   /**
@@ -134,15 +137,15 @@ class GoalsPresenter extends BasePresenter
    */
   public function renderEdit(int $id): void
   {
-    if (!$this->goalRow) {
+    if (!$this->assistanceRow) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $this->template->goal = $this->goalRow;
-    $this->template->player = $this->goalRow->ref('players', 'player_id');
+    $this->template->goal = $this->assistanceRow;
+    $this->template->player = $this->assistanceRow->ref('players', 'player_id');
 
     if ($this->isLoggedIn()) {
-      $this->getComponent(self::EDIT_FORM)->setDefaults($this->goalRow);
+      $this->getComponent(self::EDIT_FORM)->setDefaults($this->assistanceRow);
     }
   }
 
@@ -152,8 +155,8 @@ class GoalsPresenter extends BasePresenter
   public function actionRemove(int $id): void
   {
     $this->userIsLogged();
-    $this->goalRow = $this->goalsRepository->findById($id);
-    $this->fightRow = $this->goalRow->ref('fights', 'fight_id');
+    $this->assistanceRow = $this->assistancesRepository->findById($id);
+    $this->fightRow = $this->assistanceRow->ref('fights', 'fight_id');
     $this->submittedRemove();
   }
 
@@ -166,7 +169,7 @@ class GoalsPresenter extends BasePresenter
     $form = new Form;
     $form->addHidden('fight_id', (string) $this->fightRow->id);
     $form->addSelect('player_season_group_team_id', 'Hráči', $players);
-    $form->addText('number', 'Počet gólov')
+    $form->addText('number', 'Počet asistencií')
           ->setDefaultValue(1)
           ->setAttribute('placeholder', 0)
           ->addRule(Form::FILLED, 'Ešte treba vyplniť počet gólov')
@@ -218,10 +221,10 @@ class GoalsPresenter extends BasePresenter
       $values['is_home_player'] = 1;
     }
 
-    $this->goalsRepository->insert($values);
-    $player->update(array('goals' => $player->goals + $values->number));
+    $this->assistancesRepository->insert($values);
+    $player->update(array('assistances' => $player->assistances + $values->number));
 
-    $this->flashMessage('Góly boli pridané', self::SUCCESS);
+    $this->flashMessage('Asistancie boli pridané', self::SUCCESS);
     $this->redirect('view', $this->fightRow->id);
   }
 
@@ -234,13 +237,12 @@ class GoalsPresenter extends BasePresenter
   /*
   public function submittedEditForm(Form $form, ArrayHash $values): Form
   {
-    $goalDifference = $values->goals - $this->goalRow->goals;
-    $this->goalRow->update($values);
+    $assistanceDiff = $values->assistances - $this->assistanceRow->assistances;
+    $this->assistanceRow->update($values);
 
-    $player = $this->playersRepository->findById($this->goalRow->player_id);
-    $numOfGoals = $player->goals + $goalDifference;
-    $goals = array('number' => $numOfGoals);
-    $player->update($goals);
+    $player = $this->playersRepository->findById($this->assistanceRow->player_id);
+    $numOfAssistances = $player->assistances + $assistanceDiff;
+    $player->update(array('number' => $numOfAssistances));
 
     $this->flashMessage('Góly boli upravené', self::SUCCESS);
     $this->redirect('view', $this->fightRow->id);
@@ -252,11 +254,11 @@ class GoalsPresenter extends BasePresenter
    */
   public function submittedRemove(): Form
   {
-    $player = $this->playersSeasonsGroupsTeamsRepository->findById($this->goalRow->player_season_group_team_id);
-    $player->update(array('goals' => $player->goals - $this->goalRow->number));
+    $player = $this->playersSeasonsGroupsTeamsRepository->findById($this->assistanceRow->player_season_group_team_id);
+    $player->update(array('assistances' => $player->assistances - $this->assistanceRow->number));
 
-    $this->goalsRepository->remove($this->goalRow->id);
-    $this->flashMessage('Góly boli odpočítané', self::SUCCESS);
+    $this->assistancesRepository->remove($this->assistanceRow->id);
+    $this->flashMessage('Asistencie boli odpočítané', self::SUCCESS);
     $this->redirect('view', $this->fightRow->id);
   }
 
@@ -265,7 +267,7 @@ class GoalsPresenter extends BasePresenter
    */
   public function formCancelled(): void
   {
-    $this->redirect('view', $this->goalRow->fight_id);
+    $this->redirect('view', $this->assistanceRow->fight_id);
   }
 
   /**

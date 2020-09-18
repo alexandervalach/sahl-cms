@@ -4,8 +4,8 @@
             {foreach $nav_teams as $nav_team}
                 {if $nav_team->logo != NULL}
                     <a n:href="Player:view, $nav_team->id">
-                        <img src="{$basePath}/{$imgFolder}/{$nav_team->logo}" 
-                            width="12%" alt="{$nav_team->name} Logo"/>
+                        <img src="{$basePath}/{$imgFolder}/{$nav_team->logo}"
+                            width="{if $nav_team->id === 133}4%{else}12%{/if}" alt="{$nav_team->name} Logo"/>
                     </a>
                 {/if}
             {/foreach}

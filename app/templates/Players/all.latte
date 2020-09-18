@@ -18,6 +18,7 @@
         <th>Číslo</th>
         <th>Tím</th>
         <th>Góly</th>
+        <th>Asistencie</th>
       </tr>
     </thead>
     <tbody>
@@ -36,6 +37,7 @@
           {*</a>*}
         </td>
         <td>{$player->goals}</td>
+        <td>{$player->assistances}</td>
         {var $j = $j + 1}
         {var $previous = $player->goals}
       </tr>
@@ -47,6 +49,7 @@
         <th>Číslo</th>
         <th>Tím</th>
         <th>Góly</th>
+        <th>Asistencie</th>
       </tr>
     </tfoot>
   </table>

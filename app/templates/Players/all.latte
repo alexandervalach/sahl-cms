@@ -19,12 +19,14 @@
         <th>Tím</th>
         <th>Góly</th>
         <th>Asistencie</th>
+        <th>Kanadské bodovanie</th>
       </tr>
     </thead>
     <tbody>
+      {var $previousPoints = -1}
       <tr n:foreach="$players as $player" class="{if $i == 0}first{/if}">
-        {var $current = $player->goals}
-        <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}</td>
+        {var $currentPoints = $player->goals + $player->assistances}
+        <td>{if $currentPoints == $previousPoints}{$i}.{else}{$i = $j + 1}.{/if}</td>
         <td>
           <a n:href="view $player->id, $player->team_id">{$player->name}</a></td>
         <td>{$player->number}</td>
@@ -38,8 +40,9 @@
         </td>
         <td>{$player->goals}</td>
         <td>{$player->assistances}</td>
+        <td>{$currentPoints}</td>
         {var $j = $j + 1}
-        {var $previous = $player->goals}
+        {var $previousPoints = $player->goals + $player->assistances}
       </tr>
     </tbody>
     <tfoot>
@@ -50,6 +53,7 @@
         <th>Tím</th>
         <th>Góly</th>
         <th>Asistencie</th>
+        <th>Kanadské bodovanie</th>
       </tr>
     </tfoot>
   </table>

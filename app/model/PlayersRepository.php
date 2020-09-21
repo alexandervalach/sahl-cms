@@ -77,7 +77,7 @@ class PlayersRepository extends Repository
       AND psgt.is_present = ?
       AND sgt.is_present = ?
       AND season_group_id = ?
-      ORDER BY goals DESC, assistances DESC, psgt.id DESC';
+      ORDER BY (goals + assistances) DESC, goals DESC, assistances DESC, psgt.id DESC';
 
     return $db->query($query, ' ', 'voľné miesto%', 1, 1, $seasonGroupId);
   }

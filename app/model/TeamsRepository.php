@@ -72,7 +72,8 @@ class TeamsRepository extends Repository
       WHERE p.name NOT LIKE ? AND
       (t.id = ? OR t.id = ?) AND
       psgt.season_group_team_id IN (?) AND
-      psgt.is_present = ?', 'voľné miesto %', $team1Id, $team2Id, $seasonGroupTeamIds, 1);
+      psgt.is_present = ?
+      ORDER BY p.name', 'voľné miesto %', $team1Id, $team2Id, $seasonGroupTeamIds, 1);
   }
 
   /**
@@ -88,9 +89,17 @@ class TeamsRepository extends Repository
     $seasonGroupTeamIds = $db->query('SELECT id FROM seasons_groups_teams AS sgt
       WHERE sgt.season_group_id IN (?) AND
       (sgt.team_id = ? OR sgt.team_id = ?) AND
-      sgt.is_present = 1', $seasonGroups, $team1Id, $team2Id)->fetchFields();
+      sgt.is_present = 1', $seasonGroups, $team1Id, $team2Id)->fetchPairs('id', 'id');
 
-    return $this->getPlayersForTeams($team1Id, $team2Id, $seasonGroupTeamIds)->fetchPairs('id', 'name');
+    // return $this->getPlayersForTeams($team1Id, $team2Id, $seasonGroupTeamIds)->fetchPairs('id', 'name');
+    $rows = $this->getPlayersForTeams($team1Id, $team2Id, $seasonGroupTeamIds)->fetchAll();
+    $players = [];
+
+    foreach ($rows as $row) {
+      $players[$row['id']] = $row['name'] . ' (' . $row['number'] . ')';
+    }
+
+    return $players;
   }
 
   /**

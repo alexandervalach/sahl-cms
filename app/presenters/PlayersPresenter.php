@@ -164,6 +164,7 @@ class PlayersPresenter extends BasePresenter
     $data['player']['name'] = $player->name;
     $data['player']['number'] = $player->number;
     $data['player']['goals'] = $player->goals;
+    $data['player']['assistances'] = $player->assistances;
     $data['player']['is_transfer'] = $player->is_transfer;
     $data['player']['player_type_id'] = $player->player_type_id;
     $data['team']['id'] = $this->teamRow->id;

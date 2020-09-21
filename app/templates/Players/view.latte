@@ -39,10 +39,20 @@
           <td>Funkcia</td>
           <td>{$type->label}</td>
         </tr>
-        <tr n:if="$type->abbr != 'B'">
-          <td>Počet inkasovaných gólov</td>
-          <td>{$player->goals}</td>
-        </tr>
+        {if $type->abbr != 'B'}
+          <tr>
+            <td>Počet inkasovaných gólov</td>
+            <td>{$player->goals}</td>
+          </tr>
+          <tr>
+            <td>Počet asistencií</td>
+            <td>{$player->assistances}</td>
+          </tr>
+          <tr>
+            <td>Kanadské body</td>
+            <td>{$player->goals + $player->assistances}</td>
+          </tr>
+        {/if}
         <tr n:if="$player->is_transfer">
           <td colspan="2">Prestupový hráč</td>
         </tr>

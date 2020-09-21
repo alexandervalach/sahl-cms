@@ -40,7 +40,7 @@
         </td>
         <td>{$player->goals}</td>
         <td>{$player->assistances}</td>
-        <td>{$currentPoints}</td>
+        <td class="text-danger">{$currentPoints}</td>
         {var $j = $j + 1}
         {var $previousPoints = $player->goals + $player->assistances}
       </tr>

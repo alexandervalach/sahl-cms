@@ -28,7 +28,7 @@ abstract class BasePresenter extends Presenter
   const DANGER = 'danger';
   const WARNING = 'warning';
   const IMAGE_FOLDER = 'images';
-  const DEFAULT_IMAGE = 'sahl.png';
+  const DEFAULT_IMAGE = 'sahl.svg';
   const ITEM_NOT_FOUND = 'Item not found.';
   const CHANGES_SAVED_SUCCESSFULLY = 'Zmeny boli uložené.';
   const ITEM_ALREADY_EXISTS = 'Záznam už existuje.';

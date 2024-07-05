@@ -15,7 +15,7 @@ Required packages:
    Clone the project repository to your local machine.
 
     ```bash
-    git clone -b master git@bitbucket.org:tandie/sahl.git /path/to/your/local/sahl
+    git clone -b master https://github.com/alexandervalach/sahl-cms.git /path/to/your/local/sahl
     cd /path/to/your/local/sahl
     ```
 

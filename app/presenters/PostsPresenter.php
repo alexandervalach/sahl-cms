@@ -92,7 +92,7 @@ class PostsPresenter extends BasePresenter
    */
   public function renderAll(): void
   {
-    $this->template->posts = $this->postsRepository->getAll()->order('id DESC');
+    $this->template->posts = $this->postsRepository->getAll()->order('id DESC')->limit(20);
   }
 
   /**

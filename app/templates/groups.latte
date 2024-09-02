@@ -6,7 +6,7 @@
 
 <section id="teams" class="container-fluid hidden-xs">
   {foreach $groups as $group}
-    <a n:href="Teams:all $group->id">
+    <a n:href="Teams:all $group->id" n:if="$groups->count() > 2">
       <h2>{$group->label}</h2>
     </a>
     {foreach $group->teams as $team}

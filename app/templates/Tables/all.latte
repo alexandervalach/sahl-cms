@@ -4,7 +4,7 @@
   <div class="clearfix">
     {block title}
       <h1>Tabuľky</h1>
-      <h2>{$group->label}</h2>
+      <h2 n:if="$tables->count() > 2">{$group->label}</h2>
     {/block}
   </div>
 </section>

@@ -1,0 +1,56 @@
+{block content}
+
+<section class="content">
+  <div class="clearfix">
+    {block title}
+      <h1>Tabuľky</h1>
+      <h2 n:if="$tables->count() > 2">{$group->label}</h2>
+    {/block}
+  </div>
+</section>
+
+<div n:foreach="$tables as $table" class='table-responsive'>
+  {if $table['entries']->count() && $table['data']->is_visible}
+    <table class='table'>
+      <caption>
+        <h2 class="text-center">{$table['type']->label}</h2>
+      </caption>
+      <thead>
+        <tr>
+          <th>P.č.</th>
+          <th>Tím</th>
+          <th title="Výhry"><span class="glyphicon glyphicon-thumbs-up"></span></th>
+          <th>Remízy</th>
+          <th title="Prehry"><span class="glyphicon glyphicon-thumbs-down"></span></th>
+          <th>Skóre</th>
+          <th>Rozdiel</th>
+          <th>Body</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr n:foreach="$table['entries'] as $entry" {if $iterator->first}class="first"{/if}>
+          {var $team = $entry->ref('teams','team_id')}
+          <td>{$iterator->counter}.</td>
+          <td>
+            <a n:href="Teams:view $team->id, $group->id">
+              {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
+                <img src="{$basePath}/{$imageFolder}/{$team->logo}" width="30px" />
+              {/if}
+              {$team->name}
+            </a>
+          </td>
+          <td>{$entry->win}</td>
+          <td>{$entry->tram}</td>
+          <td>{$entry->lost}</td>
+          <td>{$entry->score1}:{$entry->score2}</td>
+          <td>{$entry->score1 - $entry->score2}</td>
+          <td>
+            <strong class="text-danger">{$entry->points}</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  {/if}
+</div>
+
+{/block}

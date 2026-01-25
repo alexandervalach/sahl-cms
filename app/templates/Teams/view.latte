@@ -24,7 +24,7 @@
       <h1 n:block="title" style="display: inline">{$team->name}</h1>
       {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
         <figure style="margin: 0 auto; width: 150px">
-          <img class="img img-responsive" src="{$basePath}/{$imageFolder}/{$team->logo}" alt="{$team->name}
+          <img class="img img-responsive" src="{$basePath}/{$imageFolder}/{$team->logo}" alt="{$team->name}"
           style="width: 150px" />
         </figure>
       {/if}

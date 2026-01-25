@@ -2,10 +2,10 @@ FROM php:8.3-apache
 
 # Install needed PHP extensions
 RUN apt-get update && apt-get install -y \
-    libpq-dev libjpeg-dev libpng-dev libfreetype6-dev \
+    libpq-dev libjpeg-dev libpng-dev libfreetype6-dev libicu-dev \
     git unzip \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo pdo_pgsql gd \
+    && docker-php-ext-install pdo pdo_pgsql gd intl \
     && a2enmod rewrite
 
 # Copy Apache vhost config

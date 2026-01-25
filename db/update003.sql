@@ -1,9 +1,8 @@
 -- =====================================
 -- USERS
 -- =====================================
-INSERT INTO users (id, username, password, role, is_present)
+INSERT INTO users (username, password, role, is_present)
 VALUES (
-    1,
     'admin',
     '$2y$15$TvrUBr503tDKiWnus21GZOI9gjp7KT/8F/Hd336BtzI/4MuQjvk2W',
     'admin',
@@ -13,152 +12,162 @@ VALUES (
 -- =====================================
 -- SEASONS (ARCHIVE ONLY)
 -- =====================================
-INSERT INTO seasons (id, label, is_present)
-VALUES (1, '2024/2025', true);
+INSERT INTO seasons (label, is_present)
+VALUES ('2024/2025', true);
 
 -- =====================================
 -- GROUPS
 -- =====================================
-INSERT INTO groups (id, label, is_present)
-VALUES (1, 'A', true);
+INSERT INTO groups (label, is_present)
+VALUES ('A', true);
 
 -- =====================================
 -- SEASONS ↔ GROUPS
 -- =====================================
-INSERT INTO seasons_groups (id, season_id, group_id, is_present)
-VALUES
-    (1, 1, 1, true),      -- archived
-    (2, NULL, 1, true);   -- current
+-- archived
+INSERT INTO seasons_groups (season_id, group_id, is_present)
+VALUES (1, 1, true);
+
+-- current
+INSERT INTO seasons_groups (season_id, group_id, is_present)
+VALUES (NULL, 1, true);
 
 -- =====================================
 -- TEAMS
 -- =====================================
-INSERT INTO teams (id, name, is_present)
+INSERT INTO teams (name, is_present)
 VALUES
-    (1, 'HC Docker', true),
-    (2, 'HC Localhost', true);
+    ('HC Docker', true),
+    ('HC Localhost', true);
 
 -- =====================================
 -- SEASONS ↔ GROUPS ↔ TEAMS
 -- =====================================
-INSERT INTO seasons_groups_teams (id, season_group_id, team_id, is_present)
+-- archive
+INSERT INTO seasons_groups_teams (season_group_id, team_id, is_present)
 VALUES
-    (1, 1, 1, true),
-    (2, 1, 2, true),
-    (3, 2, 1, true),
-    (4, 2, 2, true);
+    (1, 1, true),
+    (1, 2, true);
+
+-- current
+INSERT INTO seasons_groups_teams (season_group_id, team_id, is_present)
+VALUES
+    (2, 1, true),
+    (2, 2, true);
 
 -- =====================================
--- PLAYER TYPES (PREDEFINED)
+-- PLAYER TYPES
 -- =====================================
-INSERT INTO player_types (id, label, abbr, priority, is_present) VALUES
-    (1, 'Hráč', '', 30, true),
-    (2, 'Brankár', 'B', 40, true),
-    (5, 'Kapitán', 'C', 10, true),
-    (7, 'Asistent kapitána', 'A', 20, true);
+INSERT INTO player_types (label, abbr, priority, is_present) VALUES
+    ('Hráč', '', 30, true),
+    ('Brankár', 'B', 40, true),
+    ('Kapitán', 'C', 10, true),
+    ('Asistent kapitána', 'A', 20, true);
 
 -- =====================================
--- TABLE TYPES (PREDEFINED)
+-- TABLE TYPES
 -- =====================================
-INSERT INTO table_types (id, label, is_present) VALUES
-    (1, 'Základná časť', true),
-    (2, 'Play Off', true);
+INSERT INTO table_types (label, is_present) VALUES
+    ('Základná časť', true),
+    ('Play Off', true);
 
 -- =====================================
 -- TABLES
 -- =====================================
-INSERT INTO tables (id, table_type_id, season_group_id, is_present, is_visible)
-VALUES
-    (1, 1, 1, true, true), -- archive
-    (2, 1, 2, true, true); -- current
+-- archive
+INSERT INTO tables (table_type_id, season_group_id, is_present, is_visible)
+VALUES (1, 1, true, true);
+
+-- current
+INSERT INTO tables (table_type_id, season_group_id, is_present, is_visible)
+VALUES (1, 2, true, true);
 
 -- =====================================
 -- TABLE ENTRIES
 -- =====================================
-INSERT INTO table_entries (id, team_id, table_id, is_present)
+INSERT INTO table_entries (team_id, table_id, is_present)
 VALUES
-    (1, 1, 1, true),
-    (2, 2, 1, true),
-    (3, 1, 2, true),
-    (4, 2, 2, true);
+    (1, 1, true),
+    (2, 1, true),
+    (1, 2, true),
+    (2, 2, true);
 
 -- =====================================
 -- ROUNDS
 -- =====================================
-INSERT INTO rounds (id, season_id, label, is_present)
+INSERT INTO rounds (season_id, label, is_present)
 VALUES
-    (1, 1, 'Round 1', true),     -- archive
-    (2, NULL, 'Round 1', true);  -- current
+    (1, 'Round 1', true),
+    (NULL, 'Round 1', true);
 
 -- =====================================
 -- FIGHTS
 -- =====================================
-INSERT INTO fights (id, round_id, team1_id, team2_id, table_id, score1, score2, is_present)
+INSERT INTO fights (round_id, team1_id, team2_id, table_id, score1, score2, is_present)
 VALUES
-    (1, 1, 1, 2, 1, 3, 2, true), -- archive
-    (2, 2, 1, 2, 2, 0, 0, true); -- current
+    (1, 1, 2, 1, 3, 2, true),
+    (2, 1, 2, 2, 0, 0, true);
 
 -- =====================================
 -- PLAYERS
 -- =====================================
-INSERT INTO players (id, name, number, born, is_present)
+INSERT INTO players (name, number, born, is_present)
 VALUES
-    (1, 'John Doe', 9, '1995', true),
-    (2, 'Max Power', 88, '1992', true);
+    ('John Doe', 9, '1995', true),
+    ('Max Power', 88, '1992', true);
 
 -- =====================================
 -- PLAYERS ↔ SEASONS ↔ GROUPS ↔ TEAMS
 -- =====================================
 INSERT INTO players_seasons_groups_teams
-    (id, season_group_team_id, player_id, player_type_id, goals, assistances, is_present)
+    (season_group_team_id, player_id, player_type_id, goals, assistances, is_present)
 VALUES
-    (1, 1, 1, 5, 1, 0, true), -- archive captain
-    (2, 1, 2, 1, 0, 1, true),
-    (3, 3, 1, 5, 0, 0, true), -- current captain
-    (4, 3, 2, 1, 0, 0, true);
+    (1, 1, 3, 1, 0, true), -- archive captain
+    (1, 2, 1, 0, 1, true),
+    (3, 1, 3, 0, 0, true), -- current captain
+    (3, 2, 1, 0, 0, true);
 
 -- =====================================
 -- GOALS
 -- =====================================
-INSERT INTO goals (id, fight_id, player_season_group_team_id, number, is_home_player, is_present)
+INSERT INTO goals (fight_id, player_season_group_team_id, number, is_home_player, is_present)
 VALUES
-    (1, 1, 1, 1, true, true);
+    (1, 1, 1, true, true);
 
 -- =====================================
 -- ASSISTANCES
 -- =====================================
-INSERT INTO assistances (id, fight_id, player_season_group_team_id, number, is_home_player, is_present)
+INSERT INTO assistances (fight_id, player_season_group_team_id, number, is_home_player, is_present)
 VALUES
-    (1, 1, 2, 1, true, true);
+    (1, 2, 1, true, true);
 
 -- =====================================
 -- PUNISHMENTS
 -- =====================================
-INSERT INTO punishments (id, player_season_group_team_id, content, round, condition, is_present)
+INSERT INTO punishments (player_season_group_team_id, content, round, condition, is_present)
 VALUES
-    (1, 2, 'Minor penalty', 'Round 1', false, true);
+    (2, 'Minor penalty', 'Round 1', false, true);
 
 -- =====================================
 -- EVENTS
 -- =====================================
-INSERT INTO events (id, season_id, content, is_present)
+INSERT INTO events (season_id, content, is_present)
 VALUES
-    (1, 1, 'Season 2024/2025 finished', true),
-    (2, NULL, 'Season 2025/2026 started', true);
+    (1, 'Season 2024/2025 finished', true),
+    (NULL, 'Season 2025/2026 started', true);
 
 -- =====================================
 -- RULES
 -- =====================================
-INSERT INTO rules (id, season_id, content, is_present)
+INSERT INTO rules (season_id, content, is_present)
 VALUES
-    (1, NULL, 'Standard SAHL rules apply.', true);
+    (NULL, 'Standard SAHL rules apply.', true);
 
 -- =====================================
 -- POSTS
 -- =====================================
-INSERT INTO posts (id, title, content, author, is_present)
+INSERT INTO posts (title, content, author, is_present)
 VALUES (
-    1,
     'Welcome to SAHL',
     'Local development environment is running successfully.',
     'System',
@@ -168,31 +177,31 @@ VALUES (
 -- =====================================
 -- POST IMAGES
 -- =====================================
-INSERT INTO post_images (id, post_id, name, is_present)
+INSERT INTO post_images (post_id, name, is_present)
 VALUES
-    (1, 1, 'welcome.jpg', true);
+    (1, 'welcome.jpg', true);
 
 -- =====================================
 -- ALBUMS & IMAGES
 -- =====================================
-INSERT INTO albums (id, name, is_present)
-VALUES (1, 'Season Gallery', true);
+INSERT INTO albums (name, is_present)
+VALUES ('Season Gallery', true);
 
-INSERT INTO images (id, album_id, name, is_present)
+INSERT INTO images (album_id, name, is_present)
 VALUES
-    (1, 1, 'photo1.jpg', true);
+    (1, 'photo1.jpg', true);
 
 -- =====================================
 -- LINKS
 -- =====================================
-INSERT INTO links (id, label, url, is_present)
+INSERT INTO links (label, url, is_present)
 VALUES
-    (1, 'SAHL', 'https://sahl.sk', true),
-    (2, 'GitHub', 'https://github.com/alexandervalach/sahl-cms', true);
+    ('SAHL', 'https://sahl.sk', true),
+    ('GitHub', 'https://github.com/alexandervalach/sahl-cms', true);
 
 -- =====================================
 -- SPONSORS
 -- =====================================
-INSERT INTO sponsors (id, label, url, is_present)
+INSERT INTO sponsors (label, url, is_present)
 VALUES
-    (1, 'Local Sponsor', 'https://example.com', true);
+    ('Local Sponsor', 'https://example.com', true);

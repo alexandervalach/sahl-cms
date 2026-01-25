@@ -1,165 +1,208 @@
-# SAHL Web Management Application
+# SAHL CMS
 
-## System Requirements
-Ensure you have Docker and Docker Compose installed on a clean Ubuntu server 22.04.
+SAHL CMS is a web management application for hockey players, teams, and competitions used by the Slovak Amateur Hockey League.
 
-Required packages:
+The application is built with **PHP (Nette Framework)** and is containerized using **Docker** for local development and deployment.
 
-    sudo apt-get update
-    sudo apt-get install docker.io docker-compose
+---
 
-## Project Setup
+## Features
 
-1. **Clone the Repository:**
-   
-   Clone the project repository to your local machine.
+1. Player management
+2. Team and roster administration
+3. League and competition management
+4. Match results and statistics
+5. Administrative backend
 
-    ```bash
-    git clone -b master https://github.com/alexandervalach/sahl-cms.git /path/to/your/local/sahl
-    cd /path/to/your/local/sahl
-    ```
+---
 
-2. **Create Docker Configuration Files:**
+## Technology Stack
 
-    Create a `Dockerfile` in the project root with the following content:
+1. PHP
+2. Nette Framework
+3. Nginx
+4. PostgreSQL
+5. Docker & Docker Compose
+6. Composer
+7. pgAdmin
 
-    ```Dockerfile
-    FROM php:8.2-apache
 
-    # Install necessary PHP extensions
-    RUN docker-php-ext-install pdo pdo_mysql mysqli
+## Getting Started
 
-    # Enable Apache mod_rewrite and SSL
-    RUN a2enmod rewrite
-    RUN a2enmod ssl
+### 1. Clone the Repository
 
-    # Copy application source
-    COPY . /var/www/html/
+```bash
+git clone https://github.com/alexandervalach/sahl-cms.git
+cd sahl-cms
+```
 
-    # Set the correct permissions
-    RUN chown -R www-data:www-data /var/www/html
-    RUN chmod -R 755 /var/www/html
+---
 
-    # Expose port 80
-    EXPOSE 80
-    ```
+### 2. Environment Configuration
 
-    Create a `docker-compose.yml` file in the project root with the following content:
+Create a `.env` file in the project root:
 
-    ```yaml
-    version: '3.8'
+```env
+# Web
+WEB_PORT=8080
+APACHE_RUN_USER=www-data
+APACHE_RUN_GROUP=www-data
+# Development for Debug
+NETTE_DEBUG=1
 
-    services:
-      web:
-        build: .
-        ports:
-          - "80:80"
-        volumes:
-          - .:/var/www/html
-        environment:
-          MYSQL_HOST: db
-          MYSQL_USER: root
-          MYSQL_PASSWORD: example
-          MYSQL_DB: sahl
-        depends_on:
-          - db
+# Database
+DB_HOST=db
+DB_PORT=5432
+DB_USER=sahl
+# Update the password
+DB_PASSWORD=secret
+DB_NAME=sahl
 
-      db:
-        image: mysql:8.0
-        restart: always
-        environment:
-          MYSQL_ROOT_PASSWORD: example
-          MYSQL_DATABASE: sahl
-        ports:
-          - "3306:3306"
-        volumes:
-          - db_data:/var/lib/mysql
+# PostgreSQL
+POSTGRES_PORT=5432
 
-    volumes:
-      db_data:
-    ```
+# pgAdmin
+PGADMIN_PORT=5050
+PGADMIN_DEFAULT_EMAIL=admin@sample.com
+# Update the password
+PGADMIN_DEFAULT_PASSWORD=admin
+```
 
-3. **Build and Run Containers:**
+---
 
-    In the project root directory, build and start the containers:
+### 3. Build and Start Containers
 
-    ```bash
-    sudo docker-compose up --build -d
-    ```
+```bash
+docker-compose up --build -d
+```
 
-4. **Configure Hosts File:**
+The application will be available at:
 
-    Edit the `/etc/hosts` file and add the following line, where `X` is any unused number from 0 - 255:
+```
+http://localhost:8080
+```
 
-    ```bash
-    127.0.0.X sahl
-    ```
+pgAdmin (optional) will be available at:
 
-    Access the application in your browser at `http://sahl/`.
+```
+http://localhost:5050
+```
 
-5. **Database Setup:**
+---
 
-    Import your database using a tool like phpMyAdmin or directly through MySQL CLI inside the `db` container.
+## Database
 
-    ```bash
-    sudo docker exec -it <db_container_id> mysql -u root -p sahl < /path/to/your/database.sql
-    ```
+### Automatic Initialization
 
-6. **Local Configuration:**
+Any `.sql` files placed in the `/db` directory will be executed automatically when the PostgreSQL container is created for the first time.
 
-    Add your `config.local.neon` to the `app/config` directory inside the `web` container.
+---
 
-    ```bash
-    sudo docker exec -it <web_container_id> bash
-    cd /var/www/html/app/config
-    nano config.local.neon
-    ```
+### Manual Import
 
-## Updating the Application
+```bash
+docker exec -i postgres psql \
+  -U sahl \
+  -d sahl < database.sql
+```
 
-To update the application with the latest changes from the repository:
+---
 
-1. Pull the latest changes:
+## Application Configuration
 
-    ```bash
-    git pull
-    ```
+### Local Configuration File
 
-2. Rebuild and restart the containers:
+Create:
 
-    ```bash
-    sudo docker-compose up --build -d
-    ```
+```
+app/config/config.local.neon
+```
 
-3. Clear the cache:
+Example:
 
-    ```bash
-    sudo docker exec -it <web_container_id> rm -r /var/www/html/temp/cache
-    ```
+```neon
+database:
+    dsn: "pgsql:host=db;port=5432;dbname=sahl"
+    user: %env.DB_USER%
+    password: %env.DB_PASSWORD%
+
+parameters:
+    debugMode: true
+```
+
+---
+
+## Writable Directories
+
+The following directories must be writable by the web server:
+
+```
+/log
+/temp
+```
+
+These are mapped to Docker volumes:
+
+* `log_data`
+* `temp_data`
+
+No manual permission changes are required.
+
+---
+
+## Development Workflow
+
+### Updating the Application
+
+```bash
+git pull
+docker-compose up --build -d
+```
+
+### Clearing Cache
+
+```bash
+docker exec -it sahl-cms rm -rf /var/www/html/temp/cache
+```
+
+---
 
 ## Useful Docker Commands
 
-- **Start Containers:**
+**View logs**
 
-    ```bash
-    sudo docker-compose up -d
-    ```
+```bash
+docker-compose logs -f
+```
 
-- **Stop Containers:**
+**Access web container**
 
-    ```bash
-    sudo docker-compose down
-    ```
+```bash
+docker exec -it sahl-cms bash
+```
 
-- **View Logs:**
+**Stop containers**
 
-    ```bash
-    sudo docker-compose logs -f
-    ```
+```bash
+docker-compose down
+```
 
-- **Access Shell in Web Container:**
+---
 
-    ```bash
-    sudo docker exec -it <web_container_id> bash
-    ```
-    
+## Docker Services
+
+### Web
+
+1. PHP with Nginx
+2. Nette application
+3. Composer dependencies installed during image build
+
+### Database
+
+1. PostgreSQL
+2. Persistent storage via `pgdata` volume
+
+### pgAdmin
+
+1. Web-based PostgreSQL administration tool
+2. Intended for development use

@@ -1,0 +1,55 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/sahl-cms/Dockerfile
+    container_name: sahl-cms
+    volumes:
+      - .:/var/www/html
+      - log_data:/var/www/html/log
+      - temp_data:/var/www/html/temp
+    ports:
+      - "${WEB_PORT}:80"
+    depends_on:
+      - db
+    environment:
+      - APACHE_RUN_USER=${APACHE_RUN_USER}
+      - APACHE_RUN_GROUP=${APACHE_RUN_GROUP}
+      - NETTE_DEBUG=${NETTE_DEBUG}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+    restart: unless-stopped
+
+  db:
+    image: postgres:14
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "${PGADMIN_PORT}:80"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
+  log_data:
+  temp_data:

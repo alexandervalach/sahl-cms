@@ -5,7 +5,7 @@
     <div class="clearfix">
       <div class="pull-right">
         <button type="button" class="btn btn-large btn-primary" data-target="#add" data-toggle="modal">
-          <span class="glyphicon glyphicon-plus"></span> Tím
+          <span class="glyphicon glyphicon-plus"></span> Divíziu
         </button>
         <button type="button" class="btn btn-large btn-success" data-target="#edit" data-toggle="modal">
           <span class="glyphicon glyphicon-pencil"></span> Upraviť
@@ -20,7 +20,7 @@
     <h1 n:block="title">{$group->label}</h1>
   </div>
   <div id="teams">
-    {foreach $group->teams as $team}
+    {*foreach $group->teams as $team}
       <figure class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
         <figcaption>{$team->name}</figcaption>
         <div>
@@ -33,7 +33,7 @@
           </a>
         </div>
       </figure>
-    {/foreach}
+    {/foreach*}
   </div>
 </section>
 
@@ -44,10 +44,10 @@
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h3 class="modal-title">Pridať tím</h3>
+          <h3 class="modal-title">Pridať skupinu</h3>
         </div>
         <div class="modal-body">
-          {control teamForm}
+          {control groupForm}
         </div>
       </div>
     </div>

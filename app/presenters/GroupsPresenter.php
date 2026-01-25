@@ -100,6 +100,32 @@ class GroupsPresenter extends BasePresenter
   }
 
   /**
+   * Authenticates user and loads data from repository
+   * @param int $id
+   */
+  public function actionView(int $id): void
+  {
+    $this->groupRow = $this->groupsRepository->findById($id);
+
+    if (!$this->groupRow || !$this->groupRow->is_present) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
+
+    if ($this->user->isLoggedIn()) {
+      $this['groupForm']->setDefaults($this->groupRow);
+    }
+  }
+
+  /**
+   * Passes data to template
+   * @param int $id
+   */
+  public function renderView(int $id): void
+  {
+    $this->template->group = $this->groupRow;
+  }
+
+  /**
    * Generates new add/edit group form
    * @return Form
    */

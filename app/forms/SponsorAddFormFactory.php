@@ -46,7 +46,7 @@ class SponsorAddFormFactory
     $form->addUpload('image', 'Obrázok*')
         ->setRequired()
         ->addRule(Form::IMAGE, 'Obrázok môže byť len vo formáte JPEG, PNG alebo GIF')
-        ->addRule(Form::MAX_FILE_SIZE, 'Obrázok môže mať najviac 10 MB', 8 * 1024 * 1024);
+        ->addRule(Form::MAX_FILE_SIZE, 'Obrázok môže mať najviac 2 MiB', 2 * 1024 * 1024);
     $form->addSubmit('save', 'Uložiť');
     FormHelper::setBootstrapFormRenderer($form);
 

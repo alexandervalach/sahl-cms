@@ -73,7 +73,7 @@ class SignPresenter extends BasePresenter
         $this->redirect('Homepage:all');
       } catch (AuthenticationException $e) {
         $this->flashMessage('Nesprávne meno alebo heslo', self::DANGER);
-        $this->redirect('Homepage:all');
+        $this->redirect('Sign:in');
       }
     });
   }

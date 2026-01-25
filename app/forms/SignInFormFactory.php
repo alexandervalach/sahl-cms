@@ -11,7 +11,7 @@ use Nette\Security\User;
 use Nette\Utils\ArrayHash;
 
 /**
- * Továrna na přihlašovací formulář.
+ * Sign In form factory
  * @package App\Forms
  */
 class SignInFormFactory
@@ -46,17 +46,11 @@ class SignInFormFactory
           ->setRequired();
     $form->addPassword('password', 'Heslo*')
           ->setRequired();
-    $form->addCheckbox('remember', ' Zapamätať si ma na 7 dní');
     $form->addSubmit('login', 'Prihlásiť');
-    // $form->addProtection(self::CSRF_TOKEN_EXPIRED);
     FormHelper::setBootstrapFormRenderer($form);
 
     $form->onSuccess[] = function (Form $form, ArrayHash $values) use ($onSuccess) {
-      if ($values->remember) {
-        $this->user->setExpiration(null, 0);
-      } else {
-        $this->user->setExpiration('30 minutes', 0);
-      }
+      $this->user->setExpiration('60 minutes');
       $onSuccess($form, $values);
     };
 

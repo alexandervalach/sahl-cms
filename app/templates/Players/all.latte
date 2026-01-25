@@ -63,18 +63,19 @@
 
 {block styles}
   {include parent}
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap.min.css" type="text/css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/dataTables.bootstrap.min.css" type="text/css">
 {/block}
 
 {block scripts}
   {include parent}
-  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" type="text/javascript"></script>
-  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js" type="text/javascript"></script>
+  <script src="https://cdn.datatables.net/1.13.8/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
   <script type="text/javascript">
-    $(document).ready(() => {
-      const table = $('#players')
-      if (table) {
-        table.DataTable();
+    $(function () {
+      const $table = $('#players');
+
+      if ($table.length) {
+        $table.DataTable();
       }
     });
   </script>

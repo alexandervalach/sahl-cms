@@ -55,4 +55,20 @@
 {block scripts}
   <script src="{$basePath}/js/main.js"></script>
   <script src="{$basePath}/js/netteForms.js"></script>
+
+  {if $user->isLoggedIn()}
+    <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js" crossorigin="anonymous"></script>
+
+    <script>
+      const textarea = document.getElementById('ckeditor');
+
+      if (textarea && window.CKEDITOR && !CKEDITOR.instances.ckeditor) {
+        CKEDITOR.replace('ckeditor', {
+          versionCheck: false,
+          height: 300,
+          removePlugins: 'uploadimage,uploadfile,image2,flash'
+        });
+      }
+    </script>
+  {/if}
 {/block}

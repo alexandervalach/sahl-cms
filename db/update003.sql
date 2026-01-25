@@ -202,6 +202,6 @@ VALUES
 -- =====================================
 -- SPONSORS
 -- =====================================
-INSERT INTO sponsors (label, url, is_present)
+INSERT INTO sponsors (label, url, image, is_present)
 VALUES
-    ('Local Sponsor', 'https://example.com', true);
+    ('Local Sponsor', 'https://example.com', 'sahl.svg', true);

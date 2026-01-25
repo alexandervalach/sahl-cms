@@ -15,7 +15,7 @@
     <h1 n:block="title">Pravidlá a smernice</h1>
   </div>
 
-  <div class="overflow-container">
+  <div class="overflow-container" n:ifset="$rule">
     {$rule->content|noescape}
   </div>
 

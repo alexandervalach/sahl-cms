@@ -75,7 +75,9 @@ class RulesPresenter extends BasePresenter {
       // throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $this['ruleForm']->setDefaults($this->ruleRow);
+    if (isset($this->ruleRow)) {
+      $this['ruleForm']->setDefaults($this->ruleRow);
+    }
   }
 
   /**

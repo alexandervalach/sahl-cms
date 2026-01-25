@@ -21,7 +21,7 @@ class FormHelper {
         $renderer->wrappers['controls']['container'] = NULL;
         $renderer->wrappers['form']['container'] = NULL;
         $renderer->wrappers['pair']['container'] = 'div class="form-group"';
-        $rednerer->wrappers['label']['container'] = NULL;
+        $renderer->wrappers['label']['container'] = NULL;
         $renderer->wrappers['control']['cotainer'] = NULL;
         $renderer->wrappers['group']['label'] = NULL;
         $renderer->wrappers['group']['container'] = NULL;

@@ -26,3 +26,6 @@
 /app/config/
 /vendor/
 /.idea
+.DS_Store
+.env
+www/.DS_Store

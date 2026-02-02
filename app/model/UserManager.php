@@ -45,9 +45,9 @@ class UserManager implements IAuthenticator
     $row = $this->usersRepository->findByValue(self::COLUMN_NAME, $username)->fetch();
 
     if (!$row) {
-      throw new AuthenticationException('Používateľ neexistuje.', self::IDENTITY_NOT_FOUND);
+      throw new AuthenticationException('Nesprávne meno alebo heslo.', self::IDENTITY_NOT_FOUND);
     } elseif (!$this->passwords->verify($password, $row[self::COLUMN_PASSWORD_HASH])) {
-      throw new AuthenticationException('Nesprávne heslo', self::INVALID_CREDENTIAL);
+      throw new AuthenticationException('Nesprávne meno alebo heslo.', self::INVALID_CREDENTIAL);
     } elseif ($this->passwords->needsRehash($row[self::COLUMN_PASSWORD_HASH])) {
       $row->update([
 			  self::COLUMN_PASSWORD_HASH => $this->passwords->hash($password),

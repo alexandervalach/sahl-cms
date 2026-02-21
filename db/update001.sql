@@ -9,6 +9,8 @@ CREATE TABLE albums (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE albums ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS assistances CASCADE;
 CREATE TABLE assistances (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -18,6 +20,8 @@ CREATE TABLE assistances (
     is_home_player boolean NOT NULL DEFAULT false,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE assistances ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_assistances_fight_id ON assistances(fight_id);
 CREATE INDEX idx_assistances_psgt_id ON assistances(player_season_group_team_id);
@@ -29,6 +33,8 @@ CREATE TABLE events (
     content text NOT NULL,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE events ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_events_season_id ON events(season_id);
 
@@ -43,6 +49,8 @@ CREATE TABLE fights (
     score2 integer NOT NULL DEFAULT 0,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE fights ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_fights_round_id ON fights(round_id);
 CREATE INDEX idx_fights_team1_id ON fights(team1_id);
@@ -59,6 +67,8 @@ CREATE TABLE goals (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE goals ADD PRIMARY KEY (id);
+
 CREATE INDEX idx_goals_fight_id ON goals(fight_id);
 CREATE INDEX idx_goals_psgt_id ON goals(player_season_group_team_id);
 
@@ -69,6 +79,8 @@ CREATE TABLE groups (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE groups ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS images CASCADE;
 CREATE TABLE images (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -76,6 +88,8 @@ CREATE TABLE images (
     name text NOT NULL,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE images ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_images_album_id ON images(album_id);
 
@@ -87,6 +101,8 @@ CREATE TABLE links (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE links ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS players CASCADE;
 CREATE TABLE players (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -95,6 +111,8 @@ CREATE TABLE players (
     born varchar(10),
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE players ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_players_name ON players(name);
 CREATE INDEX idx_players_number ON players(number);
@@ -108,6 +126,8 @@ CREATE TABLE player_types (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE player_types ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS posts CASCADE;
 CREATE TABLE posts (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -119,6 +139,8 @@ CREATE TABLE posts (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE posts ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS post_images CASCADE;
 CREATE TABLE post_images (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -126,6 +148,8 @@ CREATE TABLE post_images (
     name text NOT NULL,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE post_images ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_post_images_post_id ON post_images(post_id);
 
@@ -139,6 +163,8 @@ CREATE TABLE punishments (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE punishments ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS rounds CASCADE;
 CREATE TABLE rounds (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -146,6 +172,8 @@ CREATE TABLE rounds (
     label text NOT NULL,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE rounds ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_rounds_season_id ON rounds(season_id);
 
@@ -157,12 +185,16 @@ CREATE TABLE rules (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE rules ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS seasons CASCADE;
 CREATE TABLE seasons (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     label text NOT NULL,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE seasons ADD PRIMARY KEY (id);
 
 DROP TABLE IF EXISTS seasons_groups CASCADE;
 CREATE TABLE seasons_groups (
@@ -172,6 +204,8 @@ CREATE TABLE seasons_groups (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE seasons_groups ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS seasons_groups_teams CASCADE;
 CREATE TABLE seasons_groups_teams (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -179,6 +213,8 @@ CREATE TABLE seasons_groups_teams (
     team_id integer NOT NULL,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE seasons_groups_teams ADD PRIMARY KEY (id);
 
 DROP TABLE IF EXISTS sponsors CASCADE;
 CREATE TABLE sponsors (
@@ -189,12 +225,16 @@ CREATE TABLE sponsors (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE sponsors ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS table_types CASCADE;
 CREATE TABLE table_types (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     label text NOT NULL,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE table_types ADD PRIMARY KEY (id);
 
 DROP TABLE IF EXISTS tables CASCADE;
 CREATE TABLE tables (
@@ -204,6 +244,8 @@ CREATE TABLE tables (
     is_present boolean NOT NULL DEFAULT true,
     is_visible boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE tables ADD PRIMARY KEY (id);
 
 DROP TABLE IF EXISTS table_entries CASCADE;
 CREATE TABLE table_entries (
@@ -220,6 +262,8 @@ CREATE TABLE table_entries (
     is_present boolean NOT NULL DEFAULT true
 );
 
+ALTER TABLE table_entries ADD PRIMARY KEY (id);
+
 DROP TABLE IF EXISTS teams CASCADE;
 CREATE TABLE teams (
     id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -228,6 +272,8 @@ CREATE TABLE teams (
     logo varchar(255),
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE teams ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_teams_name ON teams(name);
 
@@ -239,6 +285,8 @@ CREATE TABLE users (
     role text NOT NULL DEFAULT 'admin' CHECK (role = 'admin'),
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE users ADD PRIMARY KEY (id);
 
 -- =====================================
 -- PLAYERS ↔ SEASONS ↔ GROUPS ↔ TEAMS
@@ -254,6 +302,8 @@ CREATE TABLE players_seasons_groups_teams (
     is_transfer boolean NOT NULL DEFAULT false,
     is_present boolean NOT NULL DEFAULT true
 );
+
+ALTER TABLE players_seasons_groups_teams ADD PRIMARY KEY (id);
 
 CREATE INDEX idx_psgt_season_group_team
     ON players_seasons_groups_teams (season_group_team_id);

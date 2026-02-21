@@ -92,7 +92,7 @@ class PostsPresenter extends BasePresenter
    */
   public function renderAll(): void
   {
-    $this->template->posts = $this->postsRepository->getAll()->order('id DESC')->limit(20);
+    $this->template->posts = $this->postsRepository->getLatestPosts(20);
   }
 
   /**
@@ -169,7 +169,6 @@ class PostsPresenter extends BasePresenter
       $id = $this->getParameter('id');
 
       if ($id) {
-        // $this->postRow = $this->postsRepository->findById($id);
         $this->postRow->update($values);
       } else {
         $this->postRow = $this->postsRepository->insert($values);
@@ -186,7 +185,7 @@ class PostsPresenter extends BasePresenter
   protected function createComponentRemoveForm(): Form
   {
     return $this->removeFormFactory->create(function () {
-      $images = $this->postsRepository->getImages($this->postRow);
+      $images = $this->postsRepository->getImages($this->postRow->id);
 
       foreach ($images as $image) {
         $this->postImagesRepository->remove($image->id);

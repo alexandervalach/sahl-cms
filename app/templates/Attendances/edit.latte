@@ -1,0 +1,104 @@
+{block content}
+
+<section class="content">
+  <div class="clearfix">
+    <h1 n:block="title">Dochádzka</h1>
+    <p>
+      {$team1->name} {$fight->score1} : {$fight->score2} {$team2->name}
+    </p>
+    <p class="text-muted">
+      Zaškrtnutý hráč sa počíta ako hráč, ktorý zápas odohral. Je možné uložiť aj nulovú dochádzku.
+    </p>
+  </div>
+
+  <form n:name="attendanceForm" id="attendance-form">
+    <ul class="text-danger" n:if="$form->getOwnErrors()">
+      <li n:foreach="$form->getOwnErrors() as $error">{$error}</li>
+    </ul>
+
+    <div class="row">
+      <div class="col-xs-12 col-md-6 attendance-team">
+        <h3>{$team1->name}</h3>
+        <p>
+          <button type="button" class="btn btn-default btn-sm js-attendance-toggle" data-target="team1_players" data-checked="1">Označiť všetkých</button>
+          <button type="button" class="btn btn-default btn-sm js-attendance-toggle" data-target="team1_players" data-checked="0">Nikoho</button>
+        </p>
+        <div class="attendance-list">
+          {input team1_players}
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-md-6 attendance-team">
+        <h3>{$team2->name}</h3>
+        <p>
+          <button type="button" class="btn btn-default btn-sm js-attendance-toggle" data-target="team2_players" data-checked="1">Označiť všetkých</button>
+          <button type="button" class="btn btn-default btn-sm js-attendance-toggle" data-target="team2_players" data-checked="0">Nikoho</button>
+        </p>
+        <div class="attendance-list">
+          {input team2_players}
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <p>
+      <button type="button" class="btn btn-default js-attendance-all" data-checked="1">Označiť všetkých v oboch tímoch</button>
+      <button type="button" class="btn btn-default js-attendance-all" data-checked="0">Odznačiť všetkých</button>
+    </p>
+    <p>
+      {input save}
+      {input cancel}
+    </p>
+  </form>
+</section>
+
+{/block}
+
+{block styles}
+  {include parent}
+  <style>
+    .attendance-list label {
+      display: block;
+      font-weight: normal;
+      margin-bottom: 0.45rem;
+    }
+    .attendance-list input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+    .attendance-team {
+      margin-bottom: 1.5rem;
+    }
+  </style>
+{/block}
+
+{block scripts}
+  {include parent}
+  <script>
+    (function () {
+      var form = document.getElementById('attendance-form');
+      if (!form) {
+        return;
+      }
+
+      function setChecked(target, checked) {
+        form.querySelectorAll('input[name="' + target + '[]"]').forEach(function (checkbox) {
+          checkbox.checked = checked;
+        });
+      }
+
+      form.querySelectorAll('.js-attendance-toggle').forEach(function (button) {
+        button.addEventListener('click', function () {
+          setChecked(button.getAttribute('data-target'), button.getAttribute('data-checked') === '1');
+        });
+      });
+
+      form.querySelectorAll('.js-attendance-all').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var checked = button.getAttribute('data-checked') === '1';
+          setChecked('team1_players', checked);
+          setChecked('team2_players', checked);
+        });
+      });
+    }());
+  </script>
+{/block}

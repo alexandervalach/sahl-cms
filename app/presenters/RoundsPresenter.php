@@ -371,10 +371,10 @@ class RoundsPresenter extends BasePresenter
       $values->offsetSet('table_id', $table->id);
       // Unset some offset
       $values->offsetUnset('table_type_id');
-      $this->fightsRepository->insert($values);
+      $fight = $this->fightsRepository->insert($values);
 
-      $this->flashMessage(self::ITEM_ADDED_SUCCESSFULLY, self::SUCCESS);
-      $this->redirect('view', $this->roundRow->id);
+      $this->flashMessage('Zápas bol pridaný. Označte dochádzku hráčov.', self::SUCCESS);
+      $this->redirect('Attendances:edit', $fight->id);
     });
   }
 

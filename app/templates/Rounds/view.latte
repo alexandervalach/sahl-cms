@@ -33,6 +33,9 @@
         <a class="btn btn-large btn-default" n:href="Assistances:view $id" title="Zobraziť asistencie gólov">
           <span class="glyphicon glyphicon-star-empty"></span>
         </a>
+        <a class="btn btn-large {if $item->fight->attendance_recorded}btn-success{else}btn-warning{/if}" n:href="Attendances:edit $id" title="Evidovať dochádzku">
+          <span class="glyphicon glyphicon-check"></span> Dochádzka
+        </a>
         <a class="btn btn-large btn-danger" n:href="Fights:remove $id" title="Odstrániť zápas">
           <span class="glyphicon glyphicon-trash"></span>
         </a>

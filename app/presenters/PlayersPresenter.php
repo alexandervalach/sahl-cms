@@ -165,6 +165,13 @@ class PlayersPresenter extends BasePresenter
     $data['player']['number'] = $player->number;
     $data['player']['goals'] = $player->goals;
     $data['player']['assistances'] = $player->assistances;
+    $data['player']['games_played'] = $player->games_played;
+    $data['player']['regular_season_games_played'] = $player->regular_season_games_played;
+    $data['player']['regular_season_games'] = $player->regular_season_games;
+    $data['player']['recorded_regular_season_games'] = $player->recorded_regular_season_games;
+    $data['player']['regular_season_attendance_percent'] = $player->regular_season_attendance_percent;
+    $data['player']['has_25_percent'] = $player->has_25_percent;
+    $data['player']['attendance_complete'] = $player->attendance_complete;
     $data['player']['is_transfer'] = $player->is_transfer;
     $data['player']['player_type_id'] = $player->player_type_id;
     $data['team']['id'] = $this->teamRow->id;

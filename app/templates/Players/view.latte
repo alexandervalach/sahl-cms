@@ -53,6 +53,30 @@
             <td>{$player->goals + $player->assistances}</td>
           </tr>
         {/if}
+        <tr>
+          <td>Odohrané zápasy (Z)</td>
+          <td>{$player->games_played}</td>
+        </tr>
+        {if $user->loggedIn}
+          <tr>
+            <td>Základná časť</td>
+            <td>{$player->regular_season_games_played} / {$player->regular_season_games} ({$player->regular_season_attendance_percent} %)</td>
+          </tr>
+          <tr>
+            <td>Minimálne 25 % zápasov základnej časti</td>
+            <td>
+              {if $player->regular_season_games == 0}
+                —
+              {elseif !$player->attendance_complete}
+                <span class="label label-warning">Neúplná evidencia dochádzky</span>
+              {elseif $player->has_25_percent}
+                <span class="label label-success">Áno</span>
+              {else}
+                <span class="label label-danger">Nie</span>
+              {/if}
+            </td>
+          </tr>
+        {/if}
         <tr n:if="$player->is_transfer">
           <td colspan="2">Prestupový hráč</td>
         </tr>

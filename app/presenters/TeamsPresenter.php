@@ -19,7 +19,7 @@ use App\Model\TableTypesRepository;
 use App\Model\TeamsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
 use Nette\Application\UI\Form;
-use Nette\Application\BadRequetsException;
+use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\FileSystem;
 use Nette\IOException;
@@ -171,7 +171,7 @@ class TeamsPresenter extends BasePresenter
     $this->groupRow = $this->groupsRepository->findById($groupId);
 
     if (!$this->teamRow || !$this->groupRow) {
-      throw new BadRequetsException(self::ITEM_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this->seasonGroup = $this->seasonsGroupsRepository->getGroup($groupId);
@@ -200,7 +200,7 @@ class TeamsPresenter extends BasePresenter
   {
     $this->seasonRow = $this->seasonsGroupsTeamsRepository->findById($id);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
-      throw new BadRequetsException(self::ITEM_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $teams = $this->seasonsGroupsTeamsRepository->getForSeason($id);
@@ -227,7 +227,7 @@ class TeamsPresenter extends BasePresenter
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
-      throw new BadRequetsException(self::ITEM_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }
 

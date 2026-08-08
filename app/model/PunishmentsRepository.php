@@ -42,4 +42,38 @@ class PunishmentsRepository extends Repository {
       return $con->query($query, $seasonGroupId);
   }
 
+  /**
+   * @param int $seasonId
+   * @return ResultSet
+   */
+  public function getForArchivedSeason(int $seasonId): ResultSet
+  {
+    $con = $this->getConnection();
+
+    $query = 'SELECT pn.id AS id, pn.content, pn.round, pn.condition,
+       p.number AS player_number, p.name AS player_name, p.id AS player_id,
+       t.name AS team_name, t.logo AS team_logo, t.id AS team_id,
+       g.label AS group_label
+      FROM punishments AS pn
+      INNER JOIN players_seasons_groups_teams AS psgt
+        ON pn.player_season_group_team_id = psgt.id
+      INNER JOIN seasons_groups_teams AS sgt
+        ON psgt.season_group_team_id = sgt.id
+      INNER JOIN seasons_groups AS sg
+        ON sgt.season_group_id = sg.id
+      INNER JOIN groups AS g
+        ON g.id = sg.group_id
+      INNER JOIN players AS p
+        ON psgt.player_id = p.id
+      INNER JOIN teams AS t
+        ON sgt.team_id = t.id
+      WHERE sg.season_id = ?
+        AND pn.is_present = true
+        AND psgt.is_present = true
+        AND sgt.is_present = true
+      ORDER BY pn.id DESC';
+
+    return $con->query($query, $seasonId);
+  }
+
 }

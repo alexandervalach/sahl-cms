@@ -133,6 +133,64 @@ class PlayersRepository extends Repository
   }
 
   /**
+   * Player statistics for a complete archived season across all divisions.
+   *
+   * @param int $seasonId
+   * @return ResultSet
+   */
+  public function getForArchivedSeason(int $seasonId): ResultSet
+  {
+    $db = $this->getConnection();
+
+    return $db->query("SELECT
+        g.label AS group_label,
+        t.id AS team_id,
+        t.name AS team_name,
+        t.logo AS team_logo,
+        p.id AS id,
+        p.name,
+        p.number,
+        pt.label AS type_label,
+        pt.abbr AS type_abbr,
+        psgt.goals,
+        psgt.assistances,
+        psgt.is_transfer,
+        COALESCE(attendance_stats.games_played, 0)::int AS games_played
+      FROM seasons_groups AS sg
+      INNER JOIN groups AS g
+        ON g.id = sg.group_id
+      INNER JOIN seasons_groups_teams AS sgt
+        ON sgt.season_group_id = sg.id
+       AND sgt.is_present = true
+      INNER JOIN teams AS t
+        ON t.id = sgt.team_id
+      INNER JOIN players_seasons_groups_teams AS psgt
+        ON psgt.season_group_team_id = sgt.id
+       AND psgt.is_present = true
+      INNER JOIN players AS p
+        ON p.id = psgt.player_id
+      INNER JOIN player_types AS pt
+        ON pt.id = psgt.player_type_id
+      LEFT JOIN LATERAL (
+        SELECT COUNT(DISTINCT a.fight_id) AS games_played
+        FROM attendances AS a
+        INNER JOIN fights AS f
+          ON f.id = a.fight_id
+         AND f.is_present = true
+        WHERE a.player_season_group_team_id = psgt.id
+          AND a.is_present = true
+      ) AS attendance_stats ON true
+      WHERE sg.season_id = ?
+        AND sg.is_present = true
+        AND p.name != ?
+        AND p.name NOT LIKE ?
+      ORDER BY (psgt.goals + psgt.assistances) DESC,
+        psgt.goals DESC,
+        psgt.assistances DESC,
+        p.name", $seasonId, ' ', 'voľné miesto%');
+  }
+
+  /**
    * @param int $seasonGroupId
    * @return array
    */

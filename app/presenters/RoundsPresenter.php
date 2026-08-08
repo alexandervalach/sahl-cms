@@ -14,6 +14,7 @@ use App\Model\LinksRepository;
 use App\Model\PlayersRepository;
 use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\RoundsRepository;
@@ -36,6 +37,9 @@ class RoundsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var SeasonsRepository */
+  private $seasonsRepository;
 
   /** @var ActiveRow */
   private $groupRow;
@@ -116,11 +120,13 @@ class RoundsPresenter extends BasePresenter
       ModalRemoveFormFactory $modalRemoveFormFactory,
       GroupsRepository $groupsRepository,
       SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsRepository $seasonsRepository,
       GoalsRepository $goalsRepository
   ) {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->roundsRepository = $roundsRepository;
+    $this->seasonsRepository = $seasonsRepository;
     $this->fightsRepository = $fightsRepository;
     $this->tablesRepository = $tablesRepository;
     $this->tableEntriesRepository = $tableEntriesRepository;
@@ -236,13 +242,10 @@ class RoundsPresenter extends BasePresenter
    */
   public function actionArchAll(int $id): void
   {
-    /*
     $this->seasonRow = $this->seasonsRepository->findById($id);
-
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
-    */
   }
 
   /**
@@ -250,10 +253,8 @@ class RoundsPresenter extends BasePresenter
    */
   public function renderArchAll(int $id): void
   {
-    /*
-    $this->template->rounds = $this->roundsRepository->getArchived($id);
+    $this->template->rounds = $this->roundsRepository->getArchived($id)->order('id');
     $this->template->season = $this->seasonRow;
-    */
   }
 
   /**
@@ -262,17 +263,48 @@ class RoundsPresenter extends BasePresenter
    */
   public function actionArchView(int $seasonId, int $id): void
   {
-    /*
     $this->seasonRow = $this->seasonsRepository->findById($seasonId);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
-      throw new BadRequestException(self::SEASON_NOT_FOUND);
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $this->roundRow = $this->roundsRepository->findById($id);
-    if (!$this->roundRow || !$this->seasonRow->is_present) {
-      throw new BadRequestException(self::ROUND_NOT_FOUND);
+    $this->roundRow = $this->roundsRepository->getArchived($seasonId)
+      ->where('id', $id)
+      ->fetch();
+
+    if (!$this->roundRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
-    */
+
+    $fights = $this->fightsRepository->getForRound((int) $this->roundRow->id);
+    $data = [];
+
+    foreach ($fights as $fight) {
+      $data[$fight->id]['fight'] = $fight;
+      $data[$fight->id]['team1'] = $fight->ref('teams', 'team1_id');
+      $data[$fight->id]['team2'] = $fight->ref('teams', 'team2_id');
+      $data[$fight->id]['homeGoals'] = [];
+      $data[$fight->id]['guestGoals'] = [];
+
+      foreach ($this->goalsRepository->fetchForFight((int) $fight->id) as $goal) {
+        $goalType = $goal->is_home_player ? 'homeGoals' : 'guestGoals';
+        $data[$fight->id][$goalType][$goal->id]['number'] = $goal->goals;
+        $data[$fight->id][$goalType][$goal->id]['player']['name'] = $goal->player_name;
+      }
+
+      if ($fight->score1 > $fight->score2) {
+        $data[$fight->id]['class1'] = 'text-success';
+        $data[$fight->id]['class2'] = 'text-danger';
+      } elseif ($fight->score1 < $fight->score2) {
+        $data[$fight->id]['class1'] = 'text-danger';
+        $data[$fight->id]['class2'] = 'text-success';
+      } else {
+        $data[$fight->id]['class1'] = '';
+        $data[$fight->id]['class2'] = '';
+      }
+    }
+
+    $this->items = ArrayHash::from($data);
   }
 
   /**
@@ -281,35 +313,9 @@ class RoundsPresenter extends BasePresenter
    */
   public function renderArchView(int $seasonId, int $id): void
   {
-    /*
-    $i = 0;
-    $fightData = array();
-    $fights = $this->roundRow->related('fights');
-
-    foreach ($fights as $fight) {
-      $fightData[$i]['team_1'] = $fight->ref('teams', 'team1_id');
-      $fightData[$i]['team_2'] = $fight->ref('teams', 'team2_id');
-      $fightData[$i]['home_goals'] = $fight->related('goals')->where('home', 1)->order('goals DESC');
-      $fightData[$i]['guest_goals'] = $fight->related('goals')->where('home', 0)->order('goals DESC');
-
-      if ($fight->score1 > $fight->score2) {
-          $fightData[$i]['state_1'] = 'text-success';
-          $fightData[$i]['state_2'] = 'text-danger';
-      } else if ($fight->score1 < $fight->score2) {
-          $fightData[$i]['state_1'] = 'text-danger';
-          $fightData[$i]['state_2'] = 'text-success';
-      } else {
-          $fightData[$i]['state_1'] = $fight_data[$i]['state_2'] = '';
-      }
-      $i++;
-    }
-
-    $this->template->fights = $fights;
-    $this->template->fightData = $fightData;
-    $this->template->i = 0;
+    $this->template->items = $this->items;
     $this->template->round = $this->roundRow;
-    $this->template->archive = $this->seasonRow;
-    */
+    $this->template->season = $this->seasonRow;
   }
 
   /**

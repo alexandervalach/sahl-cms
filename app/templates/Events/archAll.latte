@@ -2,12 +2,19 @@
 
 <section class="content">
   <div class="clearfix">
-    <h1 n:block="title">Rozpis zápasov</h1>
+    <h1 n:block="title">Rozpis zápasov — {$archive->label}</h1>
   </div>
-  <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
-    <div class="clearfix overflow-container">
+
+  {if $events->count()}
+    <article n:foreach="$events as $event" class="clearfix text-center" style="padding: 2em">
+      <div class="clearfix overflow-container">
         {$event->content|noescape}
-    </div>
-    <hr n:if="!$iterator->last" />
-  </article>
+      </div>
+      <hr n:if="!$iterator->last" />
+    </article>
+  {else}
+    <p>V tejto sezóne nie je uložený žiaden rozpis zápasov.</p>
+  {/if}
 </section>
+
+{/block}

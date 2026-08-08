@@ -4,17 +4,19 @@ declare(strict_types = 1);
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Helpers\FormHelper;
 use App\Forms\PunishmentAddFormFactory;
 use App\Forms\RemoveFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PlayersRepository;
 use App\Model\PunishmentsRepository;
 use App\Model\SeasonsGroupsTeamsRepository;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
@@ -30,6 +32,9 @@ class PunishmentsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var SeasonsRepository */
+  private $seasonsRepository;
 
   /** @var array */
   private $punishments;
@@ -77,6 +82,7 @@ class PunishmentsPresenter extends BasePresenter
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
       GroupsRepository $groupsRepository,
       SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsRepository $seasonsRepository,
       PunishmentAddFormFactory $punishmentAddFormFactory,
       RemoveFormFactory $removeFormFactory
   )
@@ -84,6 +90,7 @@ class PunishmentsPresenter extends BasePresenter
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->playersRepository = $playersRepository;
+    $this->seasonsRepository = $seasonsRepository;
     $this->punishmentsRepository = $punishmentsRepository;
     $this->punishmentAddFormFactory = $punishmentAddFormFactory;
     $this->removeFormFactory = $removeFormFactory;
@@ -179,6 +186,9 @@ class PunishmentsPresenter extends BasePresenter
   public function actionArchAll(int $id): void
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
+    if (!$this->seasonRow || !$this->seasonRow->is_present) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
   }
 
   /**
@@ -187,7 +197,7 @@ class PunishmentsPresenter extends BasePresenter
   public function renderArchAll(int $id): void
   {
     $this->template->season = $this->seasonRow;
-    $this->template->punishments = $this->punishmentsRepository->getArchived($id);
+    $this->template->punishments = $this->punishmentsRepository->getForArchivedSeason($id)->fetchAll();
   }
 
   /**

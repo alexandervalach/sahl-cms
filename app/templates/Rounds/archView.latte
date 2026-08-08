@@ -1,45 +1,48 @@
 {block content}
 
 <section class="content">
+  <div class="clearfix">
+    <h1 n:block="title">{$round->label} — {$season->label}</h1>
+  </div>
 
-    <div class="clearfix">
-        <h1 n:block="title">{$round->name}</h1>
-    </div>
-
-    <div n:foreach="$fights as $fight" class="text-center">
-        <div class="row">
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fightData[$i]['state_1']}">
-                <h2>
-                    {$fightData[$i]['team_1']->name}<br />
-                    {$fight->score1}
-                </h2>
-                <ul n:if="$fightData[$i]['home_goals'] != NULL" style="padding: 0">
-                    <li><h4>Domáci</h4></li>
-                    <li n:foreach="$fightData[$i]['home_goals'] as $goal">
-                        {var $player = $goal->ref('players', 'player_id')}
-                        {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
-                    </li>
-                </ul>
-            </div>
-
-            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$fightData[$i]['state_2']}">
-                <h2>
-                    {$fightData[$i]['team_2']->name}<br />
-                    {$fight->score2}
-                </h2>
-                <ul n:if="$fight_data[$i]['guest_goals'] != NULL" style="padding: 0">
-                    <li><h4>Hostia</h4></li>
-                    <li n:foreach="$fightData[$i]['guest_goals'] as $goal">
-                        {var $player = $goal->ref('players', 'player_id')}
-                        {$player->name} {if $goal->goals > 1}{$goal->goals}{/if}
-                    </li>
-                </ul>
-            </div>
+  {foreach $items as $item}
+    <div class="clearfix text-center" style="margin-top: 1rem">
+      <div class="clearfix">
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$item->class1}">
+          <div class="clearfix">
+            {if $item->team1->logo and file_exists($imageFolder . '/' . $item->team1->logo)}
+              <img src="{$basePath}/{$imageFolder}/{$item->team1->logo}" width="20%" alt="{$item->team1->name}" />
+            {/if}
+          </div>
+          <h2>{$item->team1->name}</h2>
+          <h3>{$item->fight->score1}</h3>
+          <ul n:if="count($item->homeGoals)" class="clearfix">
+            <li><strong>Domáci</strong></li>
+            <li n:foreach="$item->homeGoals as $goal">
+              {$goal->player->name} {if $goal->number > 1}x {$goal->number}{/if}
+            </li>
+          </ul>
         </div>
-        <hr n:if="!$iterator->last" />
-        {var $i = $i + 1}
-    </div>
 
+        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$item->class2}">
+          <div class="clearfix">
+            {if $item->team2->logo and file_exists($imageFolder . '/' . $item->team2->logo)}
+              <img src="{$basePath}/{$imageFolder}/{$item->team2->logo}" width="20%" alt="{$item->team2->name}" />
+            {/if}
+          </div>
+          <h2>{$item->team2->name}</h2>
+          <h3>{$item->fight->score2}</h3>
+          <ul n:if="count($item->guestGoals)">
+            <li><strong>Hostia</strong></li>
+            <li n:foreach="$item->guestGoals as $goal">
+              {$goal->player->name} {if $goal->number > 1}x {$goal->number}{/if}
+            </li>
+          </ul>
+        </div>
+      </div>
+      <hr n:if="!$iterator->last" />
+    </div>
+  {/foreach}
 </section>
 
 {/block}

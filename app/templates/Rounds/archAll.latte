@@ -1,26 +1,28 @@
 {block content}
 
 <section class="content">
-
-    <div class="clearfix">
-        <h1 n:block="title">Kolá</h1>
-    </div>
-
+  <div class="clearfix">
+    <h1 n:block="title">Kolá a zápasy — {$season->label}</h1>
+  </div>
 </section>
 
-<div class="table-responsive" n:if="$rounds->count()">
+{if $rounds->count()}
+  <div class="table-responsive">
     <table class="table">
-        <thead>
-            <tr>
-                <th>Kolá</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr n:foreach="$rounds as $round">
-                <td><a n:href="archView $round->archive_id, $round">{$round->name}</a></td>
-            </tr>
-        </tbody>
+      <thead>
+        <tr>
+          <th>Kolo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr n:foreach="$rounds as $round">
+          <td><a n:href="archView $season->id, $round->id">{$round->label}</a></td>
+        </tr>
+      </tbody>
     </table>
-</div>
+  </div>
+{else}
+  <p>V tejto sezóne nie sú evidované žiadne kolá.</p>
+{/if}
 
 {/block}

@@ -10,6 +10,7 @@ use App\Forms\RemoveFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\EventsRepository;
@@ -27,6 +28,9 @@ class EventsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var SeasonsRepository */
+  private $seasonsRepository;
 
   /** @var EventsRepository */
   private $eventsRepository;
@@ -63,12 +67,14 @@ class EventsPresenter extends BasePresenter
       EventEditFormFactory $eventEditFormFactory,
       RemoveFormFactory $removeFormFactory,
       GroupsRepository $groupsRepository,
-      SeasonsGroupsRepository $seasonsGroupsRepository
+      SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsRepository $seasonsRepository
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->eventsRepository = $eventsRepository;
+    $this->seasonsRepository = $seasonsRepository;
     $this->eventAddFormFactory = $eventAddFormFactory;
     $this->eventEditFormFactory = $eventEditFormFactory;
     $this->removeFormFactory = $removeFormFactory;
@@ -139,6 +145,9 @@ class EventsPresenter extends BasePresenter
   public function actionArchAll(int $id): void
   {
     $this->seasonRow = $this->seasonsRepository->findById($id);
+    if (!$this->seasonRow || !$this->seasonRow->is_present) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
   }
 
   /**

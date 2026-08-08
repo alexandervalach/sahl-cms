@@ -1,31 +1,37 @@
 {block content}
 
-
 <section class="content">
-
-    <div class="clearfix">
-        <h1 n:block="title">Tímy</h1>
-    </div>
-
+  <div class="clearfix">
+    <h1 n:block="title">Tímy — {$archive->label}</h1>
+  </div>
 </section>
 
-{if $teams->count()}
-    <div class="table-responsive">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>P.č.</th>
-                    <th>Názov</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr n:foreach="$teams as $team">
-                    <td>{$iterator->counter}.</td>
-                    <td>{$team->name}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+{if count($teams)}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>P.č.</th>
+          <th>Divízia</th>
+          <th>Názov</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr n:foreach="$teams as $team">
+          <td>{$iterator->counter}.</td>
+          <td>{$team->group_label}</td>
+          <td>
+            {if $team->logo and file_exists($imageFolder . '/' . $team->logo)}
+              <img src="{$basePath}/{$imageFolder}/{$team->logo}" width="30px" alt="{$team->name}" />
+            {/if}
+            {$team->name}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+{else}
+  <p>V tejto sezóne nie sú evidované žiadne tímy.</p>
 {/if}
 
 {/block}

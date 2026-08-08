@@ -5,6 +5,7 @@ namespace App\Presenters;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\TablesRepository;
@@ -29,6 +30,9 @@ class TablesPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $archRow;
+
+  /** @var SeasonsRepository */
+  private $seasonsRepository;
 
   /** @var TablesRepository */
   private $tablesRepository;
@@ -60,12 +64,14 @@ class TablesPresenter extends BasePresenter
     TablesRepository $tablesRepository,
     SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
     GroupsRepository $groupsRepository,
-    SeasonsGroupsRepository $seasonsGroupsRepository
+    SeasonsGroupsRepository $seasonsGroupsRepository,
+    SeasonsRepository $seasonsRepository
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->tablesRepository = $tablesRepository;
+    $this->seasonsRepository = $seasonsRepository;
     $this->tables = [];
   }
 
@@ -115,6 +121,28 @@ class TablesPresenter extends BasePresenter
   public function actionArchAll(int $id): void
   {
     $this->archRow = $this->seasonsRepository->findById($id);
+    if (!$this->archRow || !$this->archRow->is_present) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
+
+    $tables = [];
+    foreach ($this->seasonsGroupsRepository->getForSeason($id) as $seasonGroup) {
+      $group = $this->groupsRepository->findById((int) $seasonGroup->group_id);
+      if (!$group) {
+        continue;
+      }
+
+      foreach ($this->tablesRepository->findByValue('season_group_id', $seasonGroup->id) as $table) {
+        $tables[$table->id]['data'] = $table;
+        $tables[$table->id]['entries'] = $table->related('table_entries')
+          ->where('is_present', true)
+          ->order('points DESC, (score1 - score2) DESC');
+        $tables[$table->id]['type'] = $table->ref('table_types', 'table_type_id');
+        $tables[$table->id]['group'] = $group;
+      }
+    }
+
+    $this->tables = $tables;
   }
 
   /**
@@ -122,18 +150,7 @@ class TablesPresenter extends BasePresenter
    */
   public function renderArchAll(int $id): void
   {
-    $tableTypes = $this->tableTypesRepository->findAll();
-    $tableRows = array();
-
-    foreach ($tableTypes as $type) {
-      $tableRows[$type->name] = $this->tablesRepository
-              ->findByValue('season_id', $this->archRow)
-              ->where('table_type = ?', $type)
-              ->order('points DESC, (score1 - score2) DESC');
-    }
-
-    $this->template->tables = $tableRows;
-    $this->template->tableTypes = $tableTypes;
+    $this->template->tables = ArrayHash::from($this->tables);
     $this->template->archive = $this->archRow;
   }
 

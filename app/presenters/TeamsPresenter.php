@@ -12,6 +12,7 @@ use App\Model\PlayersRepository;
 use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\PlayerTypesRepository;
 use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TableEntriesRepository;
 use App\Model\TablesRepository;
@@ -36,6 +37,9 @@ class TeamsPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var SeasonsRepository */
+  private $seasonsRepository;
 
   /** @var ActiveRow */
   private $groupRow;
@@ -120,6 +124,7 @@ class TeamsPresenter extends BasePresenter
       PlayersSeasonsGroupsTeamsRepository $playersSeasonsTeamsRepository,
       UploadFormFactory $uploadFormFactory,
       SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsRepository $seasonsRepository,
       ModalRemoveFormFactory $removeFormFactory,
       TablesRepository $tablesRepository,
       TableTypesRepository $tableTypesRepository,
@@ -129,6 +134,7 @@ class TeamsPresenter extends BasePresenter
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->groupsRepository = $groupsRepository;
+    $this->seasonsRepository = $seasonsRepository;
     $this->playersRepository = $playersRepository;
     $this->playerTypesRepository = $playerTypesRepository;
     $this->tablesRepository = $tablesRepository;
@@ -198,17 +204,12 @@ class TeamsPresenter extends BasePresenter
    */
   public function actionArchAll(int $id): void
   {
-    $this->seasonRow = $this->seasonsGroupsTeamsRepository->findById($id);
+    $this->seasonRow = $this->seasonsRepository->findById($id);
     if (!$this->seasonRow || !$this->seasonRow->is_present) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
-    $teams = $this->seasonsGroupsTeamsRepository->getForSeason($id);
-    $data = [];
-    foreach ($teams as $team) {
-      $data[$team->id] = $team->ref('teams', 'team_id');
-    }
-    $this->teams = ArrayHash::from($data);
+    $this->teams = $this->teamsRepository->fetchForArchivedSeason($id);
   }
 
   /**

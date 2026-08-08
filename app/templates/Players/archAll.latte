@@ -1,37 +1,44 @@
 {block content}
 
 <section class="content">
-
-    <div class="clearfix">
-        <h1 n:block="title">Štatistiky</h1>
-    </div>
-
+  <div class="clearfix">
+    <h1 n:block="title">Štatistiky — {$archive->label}</h1>
+  </div>
 </section>
 
-<div n:if="$stats->count()" class='table-responsive'>
-    <table class='table'>
-        <thead>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Meno a priezvisko</th>
-                <th>Číslo</th>
-                <th>Tím</th>
-                <th>Góly</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr n:foreach="$stats as $stat">
-                {var $current = $stat->goals}
-                <td>{if $current == $previous}{$i}.{else}{$i = $j + 1}.{/if}</td>
-                <td>{$stat->name}</td>
-                <td>{$stat->num}</td>
-                <td>{$stat->ref('team_id')->name}</td>
-                <td>{$stat->goals}</td>
-                {var $j = $j + 1}
-                {var $previous = $stat->goals}
-            </tr>
-        </tbody>
+{if count($stats)}
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>P.č.</th>
+          <th>Meno a priezvisko</th>
+          <th>Číslo</th>
+          <th>Divízia</th>
+          <th>Tím</th>
+          <th>Z</th>
+          <th>G</th>
+          <th>A</th>
+          <th>B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr n:foreach="$stats as $stat" {if $stat->is_transfer}class="borrowed-player"{/if}>
+          <td>{$iterator->counter}.</td>
+          <td>{$stat->name}{if $stat->type_abbr} - {$stat->type_abbr}{/if}</td>
+          <td>{if $stat->number != 0}{$stat->number}{/if}</td>
+          <td>{$stat->group_label}</td>
+          <td>{$stat->team_name}</td>
+          <td>{$stat->games_played}</td>
+          <td>{$stat->goals}</td>
+          <td>{$stat->assistances}</td>
+          <td><strong>{$stat->goals + $stat->assistances}</strong></td>
+        </tr>
+      </tbody>
     </table>
-</div>
+  </div>
+{else}
+  <p>V tejto sezóne nie sú evidované žiadne hráčske štatistiky.</p>
+{/if}
 
 {/block}

@@ -20,7 +20,7 @@ class TeamsRepository extends Repository
   protected function getForSeason($seasonId = null): ResultSet
   {
     $db = $this->getConnection();
-    $query = "SELECT sgt.id as season_group_id, g.id AS group_id, t.id AS id, t.name, t.logo, t.photo, g.label as group_label
+    $query = "SELECT sg.id AS season_group_id, sgt.id AS season_group_team_id, g.id AS group_id, t.id AS id, t.name, t.logo, t.photo, g.label AS group_label
       FROM seasons_groups AS sg
       INNER JOIN seasons_groups_teams AS sgt
       ON sgt.season_group_id = sg.id
@@ -39,6 +39,15 @@ class TeamsRepository extends Repository
   public function fetchForSeason(): array
   {
     return ($this->getForSeason(null))->fetchPairs(self::ID, self::NAME);
+  }
+
+  /**
+   * @param int $seasonId
+   * @return array
+   */
+  public function fetchForArchivedSeason(int $seasonId): array
+  {
+    return $this->getForSeason($seasonId)->fetchAll();
   }
 
   /**

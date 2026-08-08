@@ -12,6 +12,7 @@ use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\PlayersSeasonsGroupsTeamsRepository;
 use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\PlayersRepository;
@@ -36,6 +37,9 @@ class PlayersPresenter extends BasePresenter
 
   /** @var ActiveRow */
   private $archRow;
+
+  /** @var SeasonsRepository */
+  private $seasonsRepository;
 
   /** @var ArrayHash */
   private $playerData;
@@ -104,6 +108,7 @@ class PlayersPresenter extends BasePresenter
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
       GroupsRepository $groupsRepository,
       SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsRepository $seasonsRepository,
       ModalRemoveFormFactory $modalRemoveFormFactory,
       PlayersSeasonsGroupsTeamsRepository $playersSeasonsGroupsTeamsRepository,
       GoalsRepository $goalsRepository,
@@ -112,6 +117,7 @@ class PlayersPresenter extends BasePresenter
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->playersRepository = $playersRepository;
+    $this->seasonsRepository = $seasonsRepository;
     $this->playerTypesRepository = $playerTypesRepository;
     $this->modalRemoveFormFactory = $modalRemoveFormFactory;
     $this->playersSeasonsGroupsTeamsRepository = $playersSeasonsGroupsTeamsRepository;
@@ -200,24 +206,21 @@ class PlayersPresenter extends BasePresenter
   /**
    * @param $id
    */
-  public function actionArchAll($id): void
+  public function actionArchAll(int $id): void
   {
     $this->archRow = $this->seasonsRepository->findById($id);
+    if (!$this->archRow || !$this->archRow->is_present) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
   }
 
   /**
-   * @param $id
+   * @param int $id
    */
-  public function renderArchAll($id): void
+  public function renderArchAll(int $id): void
   {
-    $this->template->stats = $this->playersRepository->getArchived($id)
-            ->where('name != ?', ' ')
-            ->order('goals DESC, name DESC');
+    $this->template->stats = $this->playersRepository->getForArchivedSeason($id)->fetchAll();
     $this->template->archive = $this->archRow;
-    $this->template->i = 0;
-    $this->template->j = 0;
-    $this->template->current = 0;
-    $this->template->previous = 0;
   }
 
   /**

@@ -6,6 +6,7 @@ use App\Forms\RuleFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
 use App\Model\SeasonsGroupsRepository;
+use App\Model\SeasonsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
 use App\Model\RulesRepository;
@@ -26,6 +27,9 @@ class RulesPresenter extends BasePresenter {
 
   /** @var ActiveRow */
   private $seasonRow;
+
+  /** @var SeasonsRepository */
+  private $seasonsRepository;
 
   /** @var RulesRepository */
   private $rulesRepository;
@@ -54,12 +58,14 @@ class RulesPresenter extends BasePresenter {
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
       GroupsRepository $groupsRepository,
       SeasonsGroupsRepository $seasonsGroupsRepository,
+      SeasonsRepository $seasonsRepository,
       RuleFormFactory $ruleFormFactory
   )
   {
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->rulesRepository = $rulesRepository;
+    $this->seasonsRepository = $seasonsRepository;
     $this->ruleFormFactory = $ruleFormFactory;
   }
 

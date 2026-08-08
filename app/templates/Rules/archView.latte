@@ -2,12 +2,16 @@
 
 <section class="content">
   <div class="clearfix">
-    <h1 n:block="title">Pravidlá a smernice</h1>
+    <h1 n:block="title">Pravidlá a smernice — {$season->label}</h1>
   </div>
 
   {if $rule}
     <article class="overflow-container">
       {$rule->content|noescape}
     </article>
+  {else}
+    <p>V tejto sezóne nie sú uložené pravidlá a smernice.</p>
   {/if}
 </section>
+
+{/block}

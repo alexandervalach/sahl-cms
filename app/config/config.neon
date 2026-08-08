@@ -42,6 +42,7 @@ services:
 	- App\Model\RoundsRepository
 	- App\Model\RulesRepository
 	- App\Model\SeasonsRepository
+	- App\Model\SeasonArchiveService
 	- App\Model\SeasonsGroupsRepository
 	- App\Model\SeasonsGroupsTeamsRepository
 	- App\Model\SponsorsRepository

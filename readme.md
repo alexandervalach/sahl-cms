@@ -40,7 +40,11 @@ cd sahl-cms
 
 ### 2. Environment Configuration
 
-Create a `.env` file in the project root:
+Debugging mode is turned off by default and has to be enabled by setting `NETTE_DEBUG=1`
+
+For correct setup of APACHE or NGINX in production and setting file permissions correctly, please follow these awesome guides by CSIRT Slovakia: [NGINX Hardening Guide](https://csirt.sk/nginx) or [APACHE Hardening Guide](https://csirt.sk/apache).
+
+Create a `.env` file in the project root. You can use the `.env.example`:
 
 ```env
 # Web
@@ -48,7 +52,7 @@ WEB_PORT=8080
 APACHE_RUN_USER=www-data
 APACHE_RUN_GROUP=www-data
 # Development for Debug
-NETTE_DEBUG=1
+NETTE_DEBUG=0
 
 # Database
 DB_HOST=db

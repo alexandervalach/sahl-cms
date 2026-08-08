@@ -3,11 +3,12 @@
 <section class="content">
   <div class="clearfix" n:if="$user->loggedIn">
     <div class="pull-right">
-      <button type="button" class='btn btn-primary' data-toggle="modal" data-target="#add" title="Vytvoriť nový archív">
-        <span class="glyphicon glyphicon-plus"></span> Pridať
+      <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#archive-current-season" title="Archivovať aktuálnu sezónu">
+        <span class="glyphicon glyphicon-book"></span> Archivovať aktuálnu sezónu
       </button>
     </div>
   </div>
+
   <div class="clearfix">
     <h1 n:block="title">Archív</h1>
   </div>
@@ -32,16 +33,102 @@
   </div>
 {/if}
 
-<div n:if="$user->loggedIn" id="add" class="modal fade" role="dialog">
+<div n:if="$user->loggedIn" id="archive-current-season" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h3 class="modal-title">Pridať sezónu</h3>
+        <h3 class="modal-title">Archivovať aktuálnu sezónu</h3>
       </div>
       <div class="modal-body">
-        {control seasonForm}
+        <p>
+          Aktuálne kolá, zápasy, tabuľky, štatistiky, dochádzka, tresty, rozpis a pravidlá zostanú zachované v archíve.
+          Následne sa vytvorí čistá aktuálna sezóna s vybranými tímami.
+        </p>
+        <p>
+          Do novej sezóny sa neprenesú žiadni hráči. Každému vybranému tímu sa vytvorí nová prázdna
+          súpiska s presne <strong>30 miestami</strong> (<em>voľné miesto 1</em> až <em>voľné miesto 30</em>).
+          Počet hráčov ani voľných miest v archivovanej sezóne nemá na veľkosť novej súpisky vplyv;
+          jednotlivých hráčov nastavíte až následne.
+        </p>
+
+        {if $archiveTeamCount > 0}
+          <div class="form-group" id="archive-team-tools" data-empty-team-ids="{$archiveEmptyTeamIds}">
+            <label>Rýchly výber tímov</label>
+            <div>
+              <button type="button" class="btn btn-default btn-sm" data-archive-select="all">Označiť všetky</button>
+              <button type="button" class="btn btn-default btn-sm" data-archive-select="none">Nikoho</button>
+              <button type="button" class="btn btn-default btn-sm" data-archive-select="empty">Tímy s voľnými miestami</button>
+            </div>
+          </div>
+        {else}
+          <div class="alert alert-warning">
+            Aktuálna sezóna nemá žiadne aktívne tímy. Archív je možné vytvoriť aj tak; nová sezóna bude bez tímov.
+          </div>
+        {/if}
+
+        {control archiveForm}
       </div>
     </div>
   </div>
 </div>
+
+<script n:if="$user->loggedIn">
+(function () {
+  var modal = document.getElementById('archive-current-season');
+  if (!modal) {
+    return;
+  }
+
+  var tools = document.getElementById('archive-team-tools');
+  if (!tools) {
+    return;
+  }
+
+  var form = modal.querySelector('form');
+  if (!form) {
+    return;
+  }
+
+  function teamCheckboxes() {
+    return form.querySelectorAll('input[name="teams[]"]');
+  }
+
+  function setAll(checked) {
+    teamCheckboxes().forEach(function (checkbox) {
+      checkbox.checked = checked;
+    });
+  }
+
+  tools.querySelectorAll('[data-archive-select]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var action = button.getAttribute('data-archive-select');
+
+      if (action === 'all') {
+        setAll(true);
+        return;
+      }
+
+      if (action === 'none') {
+        setAll(false);
+        return;
+      }
+
+      if (action === 'empty') {
+        setAll(false);
+        var rawIds = tools.getAttribute('data-empty-team-ids') || '';
+        var ids = rawIds === '' ? [] : rawIds.split(',');
+
+        ids.forEach(function (id) {
+          var checkbox = form.querySelector('input[name="teams[]"][value="' + id + '"]');
+          if (checkbox) {
+            checkbox.checked = true;
+          }
+        });
+      }
+    });
+  });
+})();
+</script>
+
+{/block}

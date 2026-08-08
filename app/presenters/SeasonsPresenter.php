@@ -6,6 +6,7 @@ use App\Forms\ArchiveFormFactory;
 use App\Forms\SeasonFormFactory;
 use App\Model\GroupsRepository;
 use App\Model\LinksRepository;
+use App\Model\SeasonArchiveService;
 use App\Model\SeasonsGroupsRepository;
 use App\Model\SponsorsRepository;
 use App\Model\TeamsRepository;
@@ -15,6 +16,9 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Utils\ArrayHash;
+use Throwable;
+use Tracy\Debugger;
+use Tracy\ILogger;
 
 /**
  * Class SeasonsPresenter
@@ -28,30 +32,28 @@ class SeasonsPresenter extends BasePresenter
   /** @var SeasonsRepository */
   private $seasonsRepository;
 
+  /** @var SeasonArchiveService */
+  private $seasonArchiveService;
+
   /** @var ArchiveFormFactory */
   private $archiveFormFactory;
 
   /** @var SeasonFormFactory */
   private $seasonFormFactory;
 
-  /**
-   * SeasonsPresenter constructor.
-   * @param LinksRepository $linksRepository
-   * @param SponsorsRepository $sponsorsRepository
-   * @param TeamsRepository $teamsRepository
-   * @param SeasonsRepository $seasonsRepository
-   * @param SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository
-   * @param ArchiveFormFactory $archiveFormFactory
-   * @param SeasonFormFactory $seasonFormFactory
-   * @param SeasonsGroupsRepository $seasonsGroupsRepository
-   * @param GroupsRepository $groupsRepository
-   */
+  /** @var array<int, string> */
+  private $archiveTeamOptions = [];
+
+  /** @var array<int> */
+  private $teamsWithEmptyPlaces = [];
+
   public function __construct(
       LinksRepository $linksRepository,
       SponsorsRepository $sponsorsRepository,
       TeamsRepository $teamsRepository,
       SeasonsRepository $seasonsRepository,
       SeasonsGroupsTeamsRepository $seasonsGroupsTeamsRepository,
+      SeasonArchiveService $seasonArchiveService,
       ArchiveFormFactory $archiveFormFactory,
       SeasonFormFactory $seasonFormFactory,
       SeasonsGroupsRepository $seasonsGroupsRepository,
@@ -61,16 +63,49 @@ class SeasonsPresenter extends BasePresenter
     parent::__construct($groupsRepository, $linksRepository, $sponsorsRepository, $teamsRepository,
         $seasonsGroupsRepository, $seasonsGroupsTeamsRepository);
     $this->seasonsRepository = $seasonsRepository;
+    $this->seasonArchiveService = $seasonArchiveService;
     $this->archiveFormFactory = $archiveFormFactory;
     $this->seasonFormFactory = $seasonFormFactory;
   }
 
   /**
-   * Prepare data for season render
+   * Prepares the archive form. All current teams are selected by default.
+   */
+  public function actionAll(): void
+  {
+    if (!$this->user->isLoggedIn()) {
+      return;
+    }
+
+    foreach ($this->seasonArchiveService->getCurrentTeams() as $team) {
+      $id = (int) $team->season_group_team_id;
+      $emptyPlaces = (int) $team->empty_places;
+      $label = $team->group_label . ' — ' . $team->team_name;
+
+      if ($emptyPlaces > 0) {
+        $label .= ' (aktuálne voľné miesta: ' . $emptyPlaces . ')';
+        $this->teamsWithEmptyPlaces[] = $id;
+      }
+
+      $this->archiveTeamOptions[$id] = $label;
+    }
+
+    $form = $this['archiveForm'];
+    if (!$form->isSubmitted()) {
+      $form->setDefaults([
+        'teams' => array_keys($this->archiveTeamOptions),
+      ]);
+    }
+  }
+
+  /**
+   * Prepare data for archive list.
    */
   public function renderAll(): void
   {
-    $this->template->seasons = $this->seasonsRepository->getAll();
+    $this->template->seasons = $this->seasonsRepository->getAll()->order('id DESC');
+    $this->template->archiveTeamCount = count($this->archiveTeamOptions);
+    $this->template->archiveEmptyTeamIds = implode(',', $this->teamsWithEmptyPlaces);
   }
 
   /**
@@ -98,12 +133,12 @@ class SeasonsPresenter extends BasePresenter
   }
 
   /**
-   * Renders season form
-   * @return Form
+   * Add/edit archive label form.
    */
   protected function createComponentSeasonForm(): Form
   {
-    return $this->seasonFormFactory->create(function (Form $form, ArrayHash $values) {
+    return $this->seasonFormFactory->create(function (Form $form, ArrayHash $values): void {
+      $this->userIsLogged();
       $id = $this->getParameter('id');
 
       if ($id) {
@@ -119,172 +154,46 @@ class SeasonsPresenter extends BasePresenter
   }
 
   /**
-   * @return Form
+   * Archive current season form.
    */
   protected function createComponentArchiveForm(): Form
   {
-    return $this->archiveFormFactory->create(function (Form $form, ArrayHash $values) {
-      $this->submittedArchiveForm();
-    });
+    return $this->archiveFormFactory->create(
+      $this->archiveTeamOptions,
+      function (Form $form, ArrayHash $values): void {
+        $this->submittedArchiveForm($values);
+      },
+      function (): void {
+        $this->redirect('all');
+      }
+    );
   }
 
   /**
-   * Submitted remove form
+   * Archives the complete current season and creates a clean current season.
    */
-  public function submittedArchiveForm(): void
+  private function submittedArchiveForm(ArrayHash $values): void
   {
-    /*
-    $team_id = array();
-    $player_id = array();
-    $arch_id = array('season_id' => $this->seasonRow->id);
+    $this->userIsLogged();
 
-    $this->roundsRepository->archive($this->seasonRow->id);
-    $this->flashMessage('Kolá boli archivované', self::SUCCESS);
-    $this->eventsRepository->archive($this->seasonRow->id);
-    $this->flashMessage('Rozpis zápasov bol archivovaný', self::SUCCESS);
-    $this->rulesRepository->archive($this->seasonRow->id);
-    $this->flashMessage('Pravidlá a smernice boli archivované', self::SUCCESS);
+    try {
+      $archiveSeasonId = $this->seasonArchiveService->archiveCurrentSeason(
+        (string) $values->label,
+        (array) $values->teams
+      );
 
-    // Vytvoríme duplicitné záznamy tímov s novým archive id
-    $teams = $this->teamsRepository->getAsArray($this->seasonRow->id);
-
-    if ($teams != null) {
-      foreach ($teams as $team) {
-        $data = array(
-            'name' => $team->name,
-            'image' => $team->image,
-            'season_id' => $this->seasonRow->id
-        );
-
-        $id = $this->teamsRepository->insert($data);
-
-        if ($id == null) {
-            $this->flashMessage('Nastala chyba počas archivácie tímov', self::DANGER);
-            $this->redirect('all');
-        } else {
-            $team_id[$team->id] = $id;
-        }
-      }
-      $this->flashMessage('Tímy boli archivované', self::SUCCESS);
+      $this->flashMessage(
+        'Sezóna bola archivovaná a nová sezóna bola vytvorená s vybranými tímami.',
+        self::SUCCESS
+      );
+      $this->redirect('view', $archiveSeasonId);
+    } catch (Throwable $e) {
+      Debugger::log($e, ILogger::ERROR);
+      $this->flashMessage(
+        'Archiváciu sa nepodarilo dokončiť. Databázové zmeny boli vrátené späť.',
+        self::DANGER
+      );
+      $this->redirect('all');
     }
-
-    // Vytvoríme duplicitné záznamy o hráčoch s novým archive_id
-    $data = array();
-    $players = $this->playersRepository->getAsArray($this->seasonRow->id);
-    if ($players != null) {
-
-        foreach ($players as $player) {
-            if (isset($team_id[$player->team_id])) {
-                $data['team_id'] = $team_id[$player->team_id];
-                $data['type_id'] = $player->type_id;
-                $data['name'] = $player->name;
-                $data['num'] = $player->num;
-                $data['born'] = $player->born;
-                $data['goals'] = $player->goals;
-                $data['trans'] = $player->trans;
-                $this->playersRepository->insert($data);
-                $player_id[$player->id] = $id;
-            } else {
-                $this->flashMessage('Nastala chyba počas archivácie hráčov', self::DANGER);
-                break;
-            }
-        }
-        $this->flashMessage('Hráči boli archivovaní', self::SUCCESS);
-    }
-
-    $tables = $this->tablesRepository->findByValue('archive_id', null);
-
-    if ($tables->count()) {
-
-        $data = array(
-            'team_id' => null,
-            'archive_id' => $this->archiveRow->id
-        );
-
-        foreach ($tables as $table) {
-            if (isset($team_id[$table->team_id])) {
-                $data['team_id'] = $team_id[$table->team_id];
-                $table->update($data);
-            } else {
-                $this->flashMessage('Nastala chyba počas archivácie tabuliek', self::DANGER);
-                break;
-            }
-        }
-
-        $this->flashMessage('Tabuľky boli archivované', self::SUCCESS);
-    }
-
-    $puns = $this->punishmentsRepository->findByValue('archive_id', null);
-
-    if ($puns->count()) {
-
-        foreach ($puns as $pun) {
-
-            $data = array(
-                'player_id' => null,
-                'archive_id' => $this->archiveRow->id
-            );
-
-            if (isset($player_id[$pun->player_id])) {
-                $data['player_id'] = $player_id[$pun->player_id];
-                $pun->update($data);
-            } else {
-                $this->flashMessage('Nastala chyba počas archivácie trestov hráčov', self::DANGER);
-                break;
-            }
-        }
-
-        $this->flashMessage('Tresty boli archivované', self::SUCCESS);
-    }
-
-    $fights = $this->fightsRepository->findByValue('archive_id', null);
-
-    if ($fights->count()) {
-
-        $data = array(
-            'team1_id' => null,
-            'team2_id' => null,
-            'archive_id' => $this->archiveRow->id
-        );
-
-        foreach ($fights as $fight) {
-            if (isset($team_id[$fight->team1_id]) && isset($team_id[$fight->team2_id])) {
-                $data['team1_id'] = $team_id[$fight->team1_id];
-                $data['team2_id'] = $team_id[$fight->team2_id];
-                $fight->update($data);
-            } else {
-                $this->flashMessage('Počas archivácie výsledkov zápasov nastala chyba', self::DANGER);
-                break;
-            }
-        }
-
-        $this->flashMessage('Zápasy boli archivované', self::SUCCESS);
-    }
-
-    $goals = $this->goalsRepository->findByValue('archive_id', null);
-
-    if ($goals->count()) {
-
-        $data = array(
-            'player_id' => null,
-            'archive_id' => $this->archiveRow->id
-        );
-
-        foreach ($goals as $goal) {
-            if (isset($player_id[$goal->player_id])) {
-                $data['player_id'] = $player_id[$goal->player_id];
-                $id = $goal->update($data);
-            } else {
-                $this->flashMessage('Nastala chyba počas archivácie gólov', self::DANGER);
-                break;
-            }
-        }
-
-        $this->flashMessage('Góly boli archivované', self::SUCCESS);
-    }
-    */
-
-    $this->redirect('view', $this->seasonRow->id);
   }
-
 }

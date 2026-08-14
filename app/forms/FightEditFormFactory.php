@@ -9,6 +9,7 @@ use App\Model\TableTypesRepository;
 use App\Model\TeamsRepository;
 use Nette\SmartObject;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 
 /**
@@ -56,14 +57,19 @@ class FightEditFormFactory
     $tableTypes = $this->tableTypesRepository->fetchForSeason();
 
     $form = $this->formFactory->create();
+    $form->addProtection('Platnosť formulára vypršala. Obnovte stránku a skúste to znova.');
     $form->addSelect('team1_id', 'Tím 1*', $teams);
-    $form->addText('score1', 'Skóre tímu 1*')
-          ->setHtmlType('number')
+    $form->addInteger('score1', 'Skóre tímu 1*')
+          ->setRequired()
+          ->addRule(Form::MIN, 'Skóre nemôže byť záporné.', 0)
           ->setAttribute('placeholder', '1');
     $form->addSelect('team2_id', 'Tím 2*', $teams);
-    $form->addText('score2', 'Skóre tímu 2*')
-          ->setHtmlType('number')
+    $form->addInteger('score2', 'Skóre tímu 2*')
+          ->setRequired()
+          ->addRule(Form::MIN, 'Skóre nemôže byť záporné.', 0)
           ->setAttribute('placeholder', '0');
+    $form->addCheckbox('is_overtime', ' Výsledok po predĺžení')
+          ->setOption('description', 'Zaškrtnite iba vtedy, ak bol zápas rozhodnutý po predĺžení.');
     $form->addSelect('table_type_id', 'Tabuľka*', $tableTypes);
     $save = $form->addSubmit('save', 'Uložiť');
     $cancel = $form->addSubmit('cancel', 'Zrušiť')

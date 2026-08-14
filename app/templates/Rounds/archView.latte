@@ -7,6 +7,10 @@
 
   {foreach $items as $item}
     <div class="clearfix text-center" style="margin-top: 1rem">
+      <div n:if="$item->fight->is_overtime" class="fight-result-meta">
+        <span class="label label-primary">po predĺžení</span>
+      </div>
+
       <div class="clearfix">
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 {$item->class1}">
           <div class="clearfix">

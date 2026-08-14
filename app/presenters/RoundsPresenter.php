@@ -353,31 +353,30 @@ class RoundsPresenter extends BasePresenter
         return false;
       }
 
-      $table = $this->tablesRepository->getByTableTypeId($values->table_type_id, $this->seasonGroup->id);
-
-      if ($values->score1 > $values->score2) {
-        $state1 = 'win';
-        $state2 = 'lost';
-      } else if ($values->score2 > $values->score1) {
-        $state1 = 'lost';
-        $state2 = 'win';
-      } else {
-        $state1 = $state2 = 'tram';
+      if ((bool) $values->is_overtime && (int) $values->score1 === (int) $values->score2) {
+        $form->addError('Zápas po predĺžení nemôže skončiť remízou.');
+        return false;
       }
 
-      // Update table statistics
-      $this->tableEntriesRepository->updateEntry($table->id, $values->team1_id, $state1);
-      $this->tableEntriesRepository->updateEntry($table->id, $values->team2_id, $state2);
+      $table = $this->tablesRepository->getByTableTypeId($values->table_type_id, $this->seasonGroup->id);
 
-      $this->updateTablePoints($table->id, $values);
-      $this->updateScore($table->id, $values);
+      $fight = $this->tableEntriesRepository->getConnection()->transaction(function () use ($table, $values) {
+        $this->tableEntriesRepository->applyFightResult(
+          (int) $table->id,
+          (int) $values->team1_id,
+          (int) $values->team2_id,
+          (int) $values->score1,
+          (int) $values->score2,
+          (bool) $values->is_overtime
+        );
 
-      // Add new elements to ArrayHash to correspondent with DB columns
-      $values->offsetSet('round_id', $this->roundRow->id);
-      $values->offsetSet('table_id', $table->id);
-      // Unset some offset
-      $values->offsetUnset('table_type_id');
-      $fight = $this->fightsRepository->insert($values);
+        // Add new elements to ArrayHash to correspond with DB columns.
+        $values->offsetSet('round_id', $this->roundRow->id);
+        $values->offsetSet('table_id', $table->id);
+        $values->offsetUnset('table_type_id');
+
+        return $this->fightsRepository->insert($values);
+      });
 
       $this->flashMessage('Zápas bol pridaný. Označte dochádzku hráčov.', self::SUCCESS);
       $this->redirect('Attendances:edit', $fight->id);
@@ -390,46 +389,28 @@ class RoundsPresenter extends BasePresenter
   protected function createComponentRemoveForm(): Form
   {
     return $this->modalRemoveFormFactory->create(function () {
-      $fights = $this->fightsRepository->getForRound($this->roundRow->id);
+      $this->tableEntriesRepository->getConnection()->transaction(function () {
+        $fights = $this->fightsRepository->getForRound((int) $this->roundRow->id);
 
-      foreach ($fights as $fight) {
-        $this->fightsRepository->remove($fight->id);
-      }
+        foreach ($fights as $fight) {
+          $this->tableEntriesRepository->applyFightResult(
+            (int) $fight->table_id,
+            (int) $fight->team1_id,
+            (int) $fight->team2_id,
+            (int) $fight->score1,
+            (int) $fight->score2,
+            (bool) $fight->is_overtime,
+            -1
+          );
+          $this->fightsRepository->remove((int) $fight->id);
+        }
 
-      $this->roundsRepository->remove($this->roundRow->id);
+        $this->roundsRepository->remove((int) $this->roundRow->id);
+      });
+
       $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('all');
     });
-  }
-
-  /**
-   * Updates points based on fight result
-   * @param int $tableId
-   * @param ArrayHash $values
-   */
-  protected function updateTablePoints(int $tableId, ArrayHash $values): void
-  {
-    if ($values->score1 > $values->score2) {
-      $this->tableEntriesRepository->updatePoints($tableId, $values->team1_id, 2);
-    } elseif ($values->score2 > $values->score1) {
-      $this->tableEntriesRepository->updatePoints($tableId, $values->team2_id, 2);
-    } else {
-      $this->tableEntriesRepository->updatePoints($tableId, $values->team2_id, 1);
-      $this->tableEntriesRepository->updatePoints($tableId, $values->team1_id, 1);
-    }
-  }
-
-  /**
-   * Updates score for both teams
-   * @param int $tableId
-   * @param ArrayHash $values
-   */
-  protected function updateScore(int $tableId, ArrayHash $values): void
-  {
-    $this->tableEntriesRepository->updateEntry($tableId, $values->team1_id, 'score1', (int) $values->score1);
-    $this->tableEntriesRepository->updateEntry($tableId, $values->team1_id, 'score2', (int) $values->score2);
-    $this->tableEntriesRepository->updateEntry($tableId, $values->team2_id, 'score1', (int) $values->score2);
-    $this->tableEntriesRepository->updateEntry($tableId, $values->team2_id, 'score2', (int) $values->score1);
   }
 
   /**

@@ -2,7 +2,7 @@
 
 namespace App\Presenters;
 
-use App\FormHelper;
+use App\Helpers\FormHelper;
 use App\Forms\RemoveFormFactory;
 use App\Model\FightsRepository;
 use App\Model\GroupsRepository;
@@ -94,11 +94,12 @@ class FightsPresenter extends BasePresenter
   {
     $this->userIsLogged();
     $this->fightRow = $this->fightsRepository->findById($id);
-    $this->roundRow = $this->fightRow->ref('rounds', 'round_id');
 
     if (!$this->fightRow || !$this->fightRow->is_present) {
       throw new BadRequestException(self::FIGHT_NOT_FOUND);
     }
+
+    $this->roundRow = $this->fightRow->ref('rounds', 'round_id');
   }
 
   /**
@@ -117,11 +118,12 @@ class FightsPresenter extends BasePresenter
   {
     $this->userIsLogged();
     $this->fightRow = $this->fightsRepository->findById($id);
-    $this->roundRow = $this->fightRow->ref('rounds', 'round_id');
 
     if (!$this->fightRow || !$this->fightRow->is_present) {
       throw new BadRequestException(self::FIGHT_NOT_FOUND);
     }
+
+    $this->roundRow = $this->fightRow->ref('rounds', 'round_id');
   }
 
   /**
@@ -166,10 +168,17 @@ class FightsPresenter extends BasePresenter
   {
     $teams = $this->teamsRepository->getTeams();
     $form = new Form;
+    $form->addProtection('Platnosť formulára vypršala. Obnovte stránku a skúste to znova.');
     $form->addSelect('team1_id', 'Tím 1', $teams);
-    $form->addText('score1', 'Skóre 1');
+    $form->addInteger('score1', 'Skóre 1')
+      ->setRequired()
+      ->addRule(Form::MIN, 'Skóre nemôže byť záporné.', 0);
     $form->addSelect('team2_id', 'Tím 2', $teams);
-    $form->addText('score2', 'Skóre 2');
+    $form->addInteger('score2', 'Skóre 2')
+      ->setRequired()
+      ->addRule(Form::MIN, 'Skóre nemôže byť záporné.', 0);
+    $form->addCheckbox('is_overtime', ' Výsledok po predĺžení')
+      ->setOption('description', 'Zaškrtnite iba vtedy, ak bol zápas rozhodnutý po predĺžení.');
     $form->addHidden('round_id', (string) $this->roundRow->id);
     $form->addSubmit('save', 'Uložiť');
     $form->onSuccess[] = [$this, self::SUBMITTED_EDIT_FORM];
@@ -184,23 +193,20 @@ class FightsPresenter extends BasePresenter
   protected function createComponentRemoveForm(): Form
   {
     return $this->removeFormFactory->create(function () {
-      $state1 = $state2 = 'tram';
+      $this->tableEntriesRepository->getConnection()->transaction(function () {
+        $this->tableEntriesRepository->applyFightResult(
+          (int) $this->fightRow->table_id,
+          (int) $this->fightRow->team1_id,
+          (int) $this->fightRow->team2_id,
+          (int) $this->fightRow->score1,
+          (int) $this->fightRow->score2,
+          (bool) $this->fightRow->is_overtime,
+          -1
+        );
 
-      if ($this->fightRow->score1 > $this->fightRow->score2) {
-        $state1 = 'win';
-        $state2 = 'lost';
-      } else if ($this->fightRow->score2 > $this->fightRow->score1) {
-        $state1 = 'lost';
-        $state2 = 'win';
-      }
+        $this->fightsRepository->remove((int) $this->fightRow->id);
+      });
 
-      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team1_id, $state1, -1);
-      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team2_id, $state2, -1);
-
-      $this->updateTablePoints();
-      $this->updateScore();
-
-      $this->fightsRepository->remove($this->fightRow->id);
       $this->flashMessage(self::ITEM_REMOVED_SUCCESSFULLY, self::SUCCESS);
       $this->redirect('Rounds:view', $this->roundRow->id);
     }, function () {
@@ -219,40 +225,50 @@ class FightsPresenter extends BasePresenter
       $form->addError('Zvoľte dva rozdielne tímy.');
       return false;
     }
-    $values['round_id'] = $this->roundRow->id;
-    $this->fightRow->update($values);
+
+    if ((bool) $values->is_overtime && (int) $values->score1 === (int) $values->score2) {
+      $form->addError('Zápas po predĺžení nemôže skončiť remízou.');
+      return false;
+    }
+
+    $tableId = (int) $this->fightRow->table_id;
+
+    // Editing may change the teams as well. Both must already belong to the
+    // same standings table, otherwise there is no row that can be updated.
+    if (!$this->tableEntriesRepository->getByTableAndTeam((int) $values->team1_id, $tableId)
+        || !$this->tableEntriesRepository->getByTableAndTeam((int) $values->team2_id, $tableId)) {
+      $form->addError('Zvolené tímy nepatria do tabuľky tohto zápasu.');
+      return false;
+    }
+
+    $this->tableEntriesRepository->getConnection()->transaction(function () use ($tableId, $values) {
+      // First remove the old result from the table.
+      $this->tableEntriesRepository->applyFightResult(
+        $tableId,
+        (int) $this->fightRow->team1_id,
+        (int) $this->fightRow->team2_id,
+        (int) $this->fightRow->score1,
+        (int) $this->fightRow->score2,
+        (bool) $this->fightRow->is_overtime,
+        -1
+      );
+
+      $values['round_id'] = $this->roundRow->id;
+      $this->fightRow->update($values);
+
+      // Then apply the corrected result using the new 3/2/1/0 scoring.
+      $this->tableEntriesRepository->applyFightResult(
+        $tableId,
+        (int) $values->team1_id,
+        (int) $values->team2_id,
+        (int) $values->score1,
+        (int) $values->score2,
+        (bool) $values->is_overtime
+      );
+    });
+
     $this->flashMessage(self::ITEM_UPDATED, self::SUCCESS);
     $this->redirect('Rounds:view', $this->roundRow->id);
-  }
-
-  /**
-   * Updates points based on fight result
-   */
-  protected function updateTablePoints(): void
-  {
-    if ($this->fightRow) {
-      if ($this->fightRow->score1 > $this->fightRow->score2) {
-        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team1_id, -2);
-      } elseif ($this->fightRow->score2 > $this->fightRow->score1) {
-        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team2_id, -2);
-      } else {
-        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team2_id, -1);
-        $this->tableEntriesRepository->updatePoints($this->fightRow->table_id, $this->fightRow->team1_id, -1);
-      }
-    }
-  }
-
-  /**
-   * Updates score for both teams
-   */
-  protected function updateScore(): void
-  {
-    if ($this->fightRow) {
-      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team1_id, 'score1', -$this->fightRow->score1);
-      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team1_id, 'score2', -$this->fightRow->score2);
-      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team2_id, 'score1', -$this->fightRow->score2);
-      $this->tableEntriesRepository->updateEntry($this->fightRow->table_id, $this->fightRow->team2_id, 'score2', -$this->fightRow->score1);
-    }
   }
 
 }

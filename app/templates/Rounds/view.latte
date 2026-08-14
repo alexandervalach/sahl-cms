@@ -22,11 +22,9 @@
   {foreach $items as $id => $item}
     <div class="clearfix text-center" style="margin-top: 1rem">
       <div n:if="$user->loggedIn" style="margin-bottom: 1em">
-        <!--
-        <a class="btn btn-large btn-success" n:href="Fights:edit $id" title="Upraviť zápas">
+        <a class="btn btn-large btn-success" n:href="Fights:edit $id" title="Upraviť výsledok zápasu">
           <span class="glyphicon glyphicon-edit"></span>
         </a>
-        -->
         <a class="btn btn-large btn-default" n:href="Goals:view $id" title="Zobraziť góly">
           <span class="glyphicon glyphicon-star"></span>
         </a>
@@ -39,6 +37,10 @@
         <a class="btn btn-large btn-danger" n:href="Fights:remove $id" title="Odstrániť zápas">
           <span class="glyphicon glyphicon-trash"></span>
         </a>
+      </div>
+
+      <div n:if="$item->fight->is_overtime" class="fight-result-meta">
+        <span class="label label-primary">po predĺžení</span>
       </div>
 
       <div class="clearfix">
@@ -118,6 +120,9 @@
         <h3 class="modal-title">Pridať zápas</h3>
       </div>
       <div class="modal-body">
+        <div class="fight-scoring-note">
+          <strong>Bodovanie:</strong> výhra 3 b. · výhra po predĺžení 2 b. · prehra po predĺžení 1 b. · prehra 0 b.
+        </div>
         {control addFightForm}
       </div>
     </div>

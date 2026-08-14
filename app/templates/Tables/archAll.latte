@@ -8,7 +8,7 @@
 
 {if $tables->count()}
   <div n:foreach="$tables as $table" class="table-responsive">
-    <table class="table">
+    <table class="table standings-table">
       <caption>
         <h2 class="text-center">{$table['group']->label} — {$table['type']->label}</h2>
       </caption>
@@ -16,9 +16,11 @@
         <tr>
           <th>P.č.</th>
           <th>Tím</th>
-          <th title="Výhry"><span class="glyphicon glyphicon-thumbs-up"></span></th>
-          <th>Remízy</th>
-          <th title="Prehry"><span class="glyphicon glyphicon-thumbs-down"></span></th>
+          <th class="standings-stat" title="Výhry">V</th>
+          <th class="standings-stat" title="Výhry po predĺžení">VP</th>
+          <th class="standings-stat" title="Remízy">R</th>
+          <th class="standings-stat" title="Prehry po predĺžení">PP</th>
+          <th class="standings-stat" title="Prehry">P</th>
           <th>Skóre</th>
           <th>Rozdiel</th>
           <th>Body</th>
@@ -34,12 +36,14 @@
             {/if}
             {$team->name}
           </td>
-          <td>{$entry->win}</td>
-          <td>{$entry->tram}</td>
-          <td>{$entry->lost}</td>
+          <td class="standings-stat">{$entry->win}</td>
+          <td class="standings-stat standings-overtime">{$entry->overtime_win}</td>
+          <td class="standings-stat">{$entry->tram}</td>
+          <td class="standings-stat standings-overtime">{$entry->overtime_loss}</td>
+          <td class="standings-stat">{$entry->lost}</td>
           <td>{$entry->score1}:{$entry->score2}</td>
           <td>{$entry->score1 - $entry->score2}</td>
-          <td><strong class="text-danger">{$entry->points}</strong></td>
+          <td class="standings-points"><strong>{$entry->points}</strong></td>
         </tr>
       </tbody>
     </table>

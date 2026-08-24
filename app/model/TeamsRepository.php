@@ -95,17 +95,39 @@ class TeamsRepository extends Repository
   {
     $db = $this->getConnection();
 
-    $seasonGroupTeamIds = $db->query('SELECT id FROM seasons_groups_teams AS sgt
+    $seasonGroupIds = array_values( $seasonGroups->fetchPairs('id', 'id') );
+
+    if (!$seasonGroupIds) {
+      return [];
+    }
+
+    $seasonGroupTeamIds = $db->query(
+      'SELECT id
+      FROM seasons_groups_teams AS sgt
       WHERE sgt.season_group_id IN (?) AND
       (sgt.team_id = ? OR sgt.team_id = ?) AND
-      sgt.is_present = 1', $seasonGroups, $team1Id, $team2Id)->fetchPairs('id', 'id');
+      sgt.is_present = ?',
+      $seasonGroupIds,
+      $team1Id,
+      $team2Id,
+      1
+    )->fetchPairs('id', 'id');
 
-    // return $this->getPlayersForTeams($team1Id, $team2Id, $seasonGroupTeamIds)->fetchPairs('id', 'name');
-    $rows = $this->getPlayersForTeams($team1Id, $team2Id, $seasonGroupTeamIds)->fetchAll();
+    if (!$seasonGroupTeamIds) {
+      return [];
+    }
+
+    $rows = $this->getPlayersForTeams(
+      $team1Id,
+      $team2Id,
+      array_values($seasonGroupTeamIds)
+    )->fetchAll();
+
     $players = [];
 
     foreach ($rows as $row) {
-      $players[$row['id']] = $row['name'] . ' (' . $row['number'] . ')';
+      $players[(int) $row['id']] =
+        $row['name'] . ' (' . $row['number'] . ')';
     }
 
     return $players;

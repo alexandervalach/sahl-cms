@@ -76,18 +76,16 @@ class AttendancesPresenter extends BasePresenter
     }
 
     $table = $this->fightRow->ref('tables', 'table_id');
-    $this->team1Row = $this->teamsRepository->findById((int) $this->fightRow->team1_id);
-    $this->team2Row = $this->teamsRepository->findById((int) $this->fightRow->team2_id);
+    $this->team1Row = $this->teamsRepository->findById( (int) $this->fightRow->team1_id );
+    $this->team2Row = $this->teamsRepository->findById( (int) $this->fightRow->team2_id );
 
     if (!$table || !$this->team1Row || !$this->team2Row) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
 
     $this->seasonGroupId = (int) $table->season_group_id;
-    $this->team1Players = $this->attendancesRepository->fetchPlayersForFightTeam(
-      (int) $this->fightRow->team1_id, $this->seasonGroupId, $id);
-    $this->team2Players = $this->attendancesRepository->fetchPlayersForFightTeam(
-      (int) $this->fightRow->team2_id, $this->seasonGroupId, $id);
+    $this->team1Players = $this->attendancesRepository->fetchPlayersForFightTeam( (int) $this->fightRow->team1_id, $this->seasonGroupId, $id );
+    $this->team2Players = $this->attendancesRepository->fetchPlayersForFightTeam( (int) $this->fightRow->team2_id, $this->seasonGroupId, $id );
 
     $selected = $this->attendancesRepository->fetchSelectedForFight($id);
     $this['attendanceForm']->setDefaults([

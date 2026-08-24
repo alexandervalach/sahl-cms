@@ -104,9 +104,14 @@ class AssistancesPresenter extends BasePresenter
   {
     $this->userIsLogged();
     $this->fightRow = $this->fightsRepository->findById($id);
-    $this->roundRow = $this->roundsRepository->findById($this->fightRow->round_id);
 
-    if (!$this->fightRow || !$this->roundRow) {
+    if (!$this->fightRow) {
+      throw new BadRequestException(self::ITEM_NOT_FOUND);
+    }
+
+    $this->roundRow = $this->roundsRepository->findById( (int) $this->fightRow->round_id );
+
+    if (!$this->roundRow) {
       throw new BadRequestException(self::ITEM_NOT_FOUND);
     }
   }
@@ -116,10 +121,13 @@ class AssistancesPresenter extends BasePresenter
    */
   public function renderView(int $id): void
   {
-    $this->template->fight = $this->fightRow;
-    $this->template->assistances = ArrayHash::from($this->assistancesRepository->fetchForFight($this->fightRow->id));
-    $this->template->team1 = $this->fightRow->ref('team1_id');
-    $this->template->team2 = $this->fightRow->ref('team2_id');
+      $this->template->fight = $this->fightRow;
+      $this->template->assistances = ArrayHash::from(
+        $this->assistancesRepository->fetchForFight($this->fightRow->id)
+      );
+
+      $this->template->team1 = $this->teamsRepository->findById( (int) $this->fightRow->team1_id );
+      $this->template->team2 = $this->teamsRepository->findById( (int) $this->fightRow->team2_id );
   }
 
   /**
